@@ -29,7 +29,7 @@ Follow the links below to view the different parts of the analysis.
 ## Quality control {-}
 
 1. Empty droplet removal and demultiplexing
-    a) [Batch 0](01.0_remove_empty_droplets_batch0.Rmd)
+    a) [Batch 0](01.0_remove_empty_droplets_batch0.html)
     b) [Batch 1](01.1_remove_empty_droplets_demultiplex_batch1.html)
     c) [Batch 2](01.2_remove_empty_droplets_demultiplex_batch2.html)
     d) [Batch 3](01.3_remove_empty_droplets_demultiplex_batch3.html)
