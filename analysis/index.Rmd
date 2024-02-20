@@ -1,11 +1,112 @@
 ---
-title: "Home"
+title: "Inflammation of Paediatric Pulmonary Diseases"
+description: |
+author:
+  - name: Jovana Maksimovic and George Howitt
+date: "`r Sys.Date()`"
 site: workflowr::wflow_site
 output:
-  workflowr::wflow_html:
-    toc: false
-editor_options:
-  chunk_output_type: console
+  html_document: 
+    theme: cosmo
 ---
 
-Welcome to my research website.
+```{r, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, number_sections = FALSE)
+```
+
+Follow the links below to view the different parts of the analysis. 
+
+
+# Abstract {-}
+
+
+
+# Authors {-}
+
+
+ 
+# Analysis Overview {-}
+## Quality control {-}
+
+1. Empty droplet removal and demultiplexing
+    a) [Batch 0](01.0_remove_empty_droplets_batch0.Rmd)
+    b) [Batch 1](01.1_remove_empty_droplets_demultiplex_batch1.html)
+    c) [Batch 2](01.2_remove_empty_droplets_demultiplex_batch2.html)
+    d) [Batch 3](01.3_remove_empty_droplets_demultiplex_batch3.html)
+    e) [Batch 4](01.4_remove_empty_droplets_demultiplex_batch4.html)
+    f) [Batch 5](01.5_remove_empty_droplets_demultiplex_batch5.html)
+    f) [Batch 6](01.6_remove_empty_droplets_demultiplex_batch6.html)
+
+
+
+2. [Doublet calling](doubletCalling.html)
+
+
+3. [Preprocessing](preprocessing.html)
+
+
+4. [Azimuth annotation](azimuthAnnotation.html)
+
+
+5. [Preparation for downstream analysis](prepare.html)
+
+
+
+10. Create cell type data subsets
+    a)    - [Control](control_only.html)
+    b)    - [CF](CF_only.html)
+
+
+
+11. Integrate and cluster all samples
+    a)    - [Macs](marker_genes_macrophages_seu_int.html)
+    b)    - [TNK](marker_genes_Tcells_seu_int.html)
+    c)    - [Other cells](marker_genes_others_seu_int.html) 
+    
+
+
+12. Add manual annotations
+    a)    - [Macs](macrophages.cluster_labels.html)
+    b)    - [TNK](TNK.cluster_labels.html)
+    c)    - [Other cells](other.cluster_labels.html)
+     
+
+
+12. Proportions analysis
+    a)    - [Broad](C133_Neeland.broad_proportions.html)
+    b)    - [Fine](C133_Neeland.fine_proportions.html)
+    c)    - [Macrophages](C133_Neeland.macrophage_proportions.html)
+
+
+
+12. DGE within cell types
+    a)    - [Create pseudobulks](pseudobulk.manual_annotations.html)
+    b)    - [Macrophages](pseudobulk.macrophages_CF_DGE.html)
+    c)    - [Alveolar macrophages](pseudobulk.alveolar.macrophages_CF_DGE.html)
+    d)    - [Interstitial macrophages](pseudobulk.interstitial-macrophages_CF_DGE.html)
+    e)    - [Macro-lipid](pseudobulk.macro-lipid_CF_DGE.html)
+    f)    - [Monocyte-derived macrophages](pseudobulk.monocyte-derived-macs_CF_DGE.html)
+    g)    - [T-cells](pseudobulk.T-cells_CF_DGE.html)
+    
+
+    
+# Licenses {-}
+
+The code in this analysis is covered by the [MIT license][mit] and the written
+content on this website is covered by a [Creative Commons CC-BY][cc] license.
+
+
+# Citations {-}
+
+
+
+# Version Information  {-}
+
+**R version**: `r R.version.string`
+
+**Bioconductor version**: `r BiocManager::version()`
+
+
+[mit]: https://choosealicense.com/licenses/mit/ "MIT License"
+[cc]: https://choosealicense.com/licenses/cc-by-4.0/ "CC-BY License"
+
