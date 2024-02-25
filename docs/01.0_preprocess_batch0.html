@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2024-02-26" />
+
+<title>Preprocessing the C133_Neeland_batch0 data set</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">paed-inflammation-CITEseq</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Preprocessing the C133_Neeland_batch0 data
+set</h1>
+<h4 class="author">Jovana Maksimovic</h4>
+<h4 class="date">2024-02-26</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-02-26
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>paed-inflammation-CITEseq/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240216code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240216)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240216code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240216)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong00319de">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> 00319de
+</a>
+</p>
+</div>
+<div id="strongRepositoryversionstrong00319de"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version 00319de.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  analysis/01.1_preprocess_batch1.Rmd
+    Untracked:  analysis/01.2_preprocess_batch2.Rmd
+    Untracked:  analysis/01.3_preprocess_batch3.Rmd
+    Untracked:  analysis/01.4_preprocess_batch4.Rmd
+    Untracked:  analysis/01.5_preprocess_batch5.Rmd
+    Untracked:  analysis/01.6_preprocess_batch6.Rmd
+    Untracked:  analysis/02.0_decontx_quality_control.Rmd
+    Untracked:  analysis/03.0_quality_control.Rmd
+    Untracked:  analysis/04.0_flag_doublets.Rmd
+    Untracked:  code/dropletutils.R
+    Untracked:  code/utility.R
+    Untracked:  data/.DS_Store
+    Untracked:  data/C133_Neeland_batch0/
+    Untracked:  data/C133_Neeland_batch1/
+    Untracked:  data/C133_Neeland_batch2/
+    Untracked:  data/C133_Neeland_batch3/
+    Untracked:  data/C133_Neeland_batch4/
+    Untracked:  data/C133_Neeland_batch5/
+    Untracked:  data/C133_Neeland_batch6/
+    Untracked:  renv.lock
+    Untracked:  renv/
+
+Unstaged changes:
+    Modified:   .Rprofile
+    Modified:   .gitignore
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/01.0_preprocess_batch0.Rmd</code>) and HTML
+(<code>docs/01.0_preprocess_batch0.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+00319de
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-26
+</td>
+<td>
+wflow_publish("analysis/01.0_preprocess_batch0.Rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>suppressPackageStartupMessages({
+    library(here)
+    library(BiocStyle)
+    library(ggplot2)
+    library(cowplot)
+    library(patchwork)
+    library(tidyverse)
+    library(SingleCellExperiment)
+    library(DropletUtils)
+    library(scater)
+})
+
+source(here(&quot;code/utility.R&quot;))</code></pre>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>Bronchoalveolar lavage (BAL) samples were collected from 4
+individuals: 1 control sample and 3 cystic fibrosis (CF) samples. The
+samples were run on teh 10X Chromium and sequenced at the <a
+href="https://www.garvan.org.au/research/garvan-weizmann">Garvan-Weizmann
+Centre for Cellular Genomics (GWCCG)</a>. The multiplexed samples were
+sequenced on an Illumina NovaSeq 6000 (NovaSeq Control Software v1.3.1 /
+Real Time Analysis v3.3.3) ) using a NovaSeq S1 200 cycle kit (Illumina,
+20012864). The <code>cellranger count</code> pipeline (version 6.0.2)
+was used for alignment, filtering, barcode counting, and UMI counting
+from FASTQ files. The GRCh38 reference was used for the alignment. The
+number of cells from the pipeline was forced to 10,000. View the
+<strong>CellRanger</strong> capture-specific web summaries: <a
+href="A_web_summary.html">A</a>, <a href="B_web_summary.html">B</a>, <a
+href="C_web_summary.html">C</a>, <a href="D_web_summary.html">D</a>.</p>
+<pre class="r"><code>sample_metadata_df &lt;- read_csv(
+  here(&quot;data/C133_Neeland_batch0/data/sample_sheets/Sample_information.csv&quot;))
+
+knitr::kable(sample_metadata_df)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Participant</th>
+<th align="left">Sample</th>
+<th align="left">Sex</th>
+<th align="right">Age</th>
+<th align="left">Disease</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A1_Ctrl</td>
+<td align="left">C</td>
+<td align="left">M</td>
+<td align="right">3.00</td>
+<td align="left">Ctrl</td>
+</tr>
+<tr class="even">
+<td align="left">B1_CF</td>
+<td align="left">A</td>
+<td align="left">M</td>
+<td align="right">2.99</td>
+<td align="left">CF</td>
+</tr>
+<tr class="odd">
+<td align="left">C1_CF</td>
+<td align="left">B</td>
+<td align="left">M</td>
+<td align="right">2.99</td>
+<td align="left">CF</td>
+</tr>
+<tr class="even">
+<td align="left">D1_CF</td>
+<td align="left">D</td>
+<td align="left">M</td>
+<td align="right">3.03</td>
+<td align="left">CF</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="set-up-the-data" class="section level1">
+<h1>Set up the data</h1>
+<pre class="r"><code>sce_raw &lt;- readRDS(here(&quot;data&quot;, &quot;C133_Neeland_batch0&quot;,
+                    &quot;data&quot;, &quot;SCEs&quot;, &quot;C133_Neeland_batch0.CellRanger.SCE.rds&quot;))
+sce_raw$Capture &lt;- factor(sce_raw$Sample)
+capture_names &lt;- levels(sce_raw$Capture)
+capture_names &lt;- setNames(capture_names, capture_names)
+sce_raw$Sample &lt;- NULL
+sce_raw</code></pre>
+<pre><code>class: SingleCellExperiment 
+dim: 33538 8853584 
+metadata(1): Samples
+assays(1): counts
+rownames(33538): ENSG00000243485 ENSG00000237613 ... ENSG00000277475
+  ENSG00000268674
+rowData names(3): ID Symbol Type
+colnames(8853584): 1_AAACCCAAGAAACACT-1 1_AAACCCAAGAAACCCG-1 ...
+  4_TTTGTTGTCTTTGGAG-1 4_TTTGTTGTCTTTGGCT-1
+colData names(2): Barcode Capture
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(0):</code></pre>
+</div>
+<div id="call-cells-from-empty-droplets" class="section level1">
+<h1>Call cells from empty droplets</h1>
+<pre class="r"><code>par(mfrow = c(2, 2))
+lapply(capture_names, function(cn) {
+  sce_raw &lt;- sce_raw[, sce_raw$Capture == cn]
+  bcrank &lt;- barcodeRanks(counts(sce_raw))
+  # Only showing unique points for plotting speed.
+  uniq &lt;- !duplicated(bcrank$rank)
+  plot(
+    x = bcrank$rank[uniq],
+    y = bcrank$total[uniq],
+    log = &quot;xy&quot;,
+    xlab = &quot;Rank&quot;,
+    ylab = &quot;Total UMI count&quot;,
+    main = cn,
+    cex.lab = 1.2,
+    xlim = c(1, 500000),
+    ylim = c(1, 200000))
+  abline(h = metadata(bcrank)$inflection, col = &quot;darkgreen&quot;, lty = 2)
+  abline(h = metadata(bcrank)$knee, col = &quot;dodgerblue&quot;, lty = 2)
+})</code></pre>
+<div class="figure" style="text-align: center">
+<img src="figure/01.0_preprocess_batch0.Rmd/rankplot-1.png" alt="Total UMI count for each barcode in the dataset, plotted against its rank (in decreasing order of total counts). The inferred locations of the inflection (dark green dashed lines) and knee points (blue dashed lines) are also shown." width="672" />
+<p class="caption">
+Total UMI count for each barcode in the dataset, plotted against its
+rank (in decreasing order of total counts). The inferred locations of
+the inflection (dark green dashed lines) and knee points (blue dashed
+lines) are also shown.
+</p>
+</div>
+<p>Remove empty droplets.</p>
+<pre class="r"><code>empties &lt;- do.call(rbind, lapply(capture_names, function(cn) {
+  message(cn)
+  empties &lt;- readRDS(
+    here(&quot;data&quot;,
+         &quot;C133_Neeland_batch0&quot;,
+         &quot;data&quot;,
+         &quot;emptyDrops&quot;, paste0(cn, &quot;.emptyDrops.rds&quot;)))
+  empties$Capture &lt;- cn
+  empties
+}))
+tapply(
+  empties$FDR,
+  empties$Capture,
+  function(x) sum(x &lt;= 0.001, na.rm = TRUE)) |&gt;
+  knitr::kable(
+    caption = &quot;Number of non-empty droplets identified using `emptyDrops()` from **DropletUtils**.&quot;)</code></pre>
+<table>
+<caption>Number of non-empty droplets identified using
+<code>emptyDrops()</code> from <strong>DropletUtils</strong>.</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A</td>
+<td align="right">4980</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="right">6093</td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="right">11197</td>
+</tr>
+<tr class="even">
+<td align="left">D</td>
+<td align="right">12313</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>sce &lt;- sce_raw[, which(empties$FDR &lt;= 0.001)]
+sce</code></pre>
+<pre><code>class: SingleCellExperiment 
+dim: 33538 34583 
+metadata(1): Samples
+assays(1): counts
+rownames(33538): ENSG00000243485 ENSG00000237613 ... ENSG00000277475
+  ENSG00000268674
+rowData names(3): ID Symbol Type
+colnames(34583): 1_AAACCCAAGCTAGTTC-1 1_AAACCCACAAGATTGA-1 ...
+  4_TTTGTTGTCTAGTACG-1 4_TTTGTTGTCTCGAACA-1
+colData names(2): Barcode Capture
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(0):</code></pre>
+<div id="add-per-cell-quality-control-information"
+class="section level2">
+<h2>Add per cell quality control information</h2>
+<pre class="r"><code>sce &lt;- scuttle::addPerCellQC(sce)
+head(colData(sce)) %&gt;%
+  data.frame %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="30%" />
+<col width="27%" />
+<col width="11%" />
+<col width="8%" />
+<col width="13%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">Barcode</th>
+<th align="left">Capture</th>
+<th align="right">sum</th>
+<th align="right">detected</th>
+<th align="right">total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1_AAACCCAAGCTAGTTC-1</td>
+<td align="left">AAACCCAAGCTAGTTC-1</td>
+<td align="left">A</td>
+<td align="right">8126</td>
+<td align="right">2657</td>
+<td align="right">8126</td>
+</tr>
+<tr class="even">
+<td align="left">1_AAACCCACAAGATTGA-1</td>
+<td align="left">AAACCCACAAGATTGA-1</td>
+<td align="left">A</td>
+<td align="right">193</td>
+<td align="right">157</td>
+<td align="right">193</td>
+</tr>
+<tr class="odd">
+<td align="left">1_AAACCCACAGTCGCTG-1</td>
+<td align="left">AAACCCACAGTCGCTG-1</td>
+<td align="left">A</td>
+<td align="right">22141</td>
+<td align="right">4536</td>
+<td align="right">22141</td>
+</tr>
+<tr class="even">
+<td align="left">1_AAACCCAGTACCTAAC-1</td>
+<td align="left">AAACCCAGTACCTAAC-1</td>
+<td align="left">A</td>
+<td align="right">17230</td>
+<td align="right">4084</td>
+<td align="right">17230</td>
+</tr>
+<tr class="odd">
+<td align="left">1_AAACCCATCGATTGGT-1</td>
+<td align="left">AAACCCATCGATTGGT-1</td>
+<td align="left">A</td>
+<td align="right">32312</td>
+<td align="right">5092</td>
+<td align="right">32312</td>
+</tr>
+<tr class="even">
+<td align="left">1_AAACCCATCGTCTCAC-1</td>
+<td align="left">AAACCCATCGTCTCAC-1</td>
+<td align="left">A</td>
+<td align="right">28301</td>
+<td align="right">5044</td>
+<td align="right">28301</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="add-gene-based-annotation" class="section level2">
+<h2>Add gene-based annotation</h2>
+<p>Having quantified gene expression against the Ensembl gene
+annotation, we have Ensembl-style identifiers for the genes. These
+identifiers are used as they are unambiguous and highly stable. However,
+they are difficult to interpret compared to the gene symbols which are
+more commonly used in the literature. Given the Ensembl identifiers, we
+obtain the corresponding gene symbols using annotation packages
+available through Bioconductor. Henceforth, we will use gene symbols
+(where available) to refer to genes in our analysis and otherwise use
+the Ensembl-style gene identifiers<a href="#fn1" class="footnote-ref"
+id="fnref1"><sup>1</sup></a>.</p>
+<pre class="r"><code>sce &lt;- addGeneInformation(sce)
+# change rownames to gene symbol for easier plotting downstream
+rownames(sce) &lt;- rowData(sce)$Symbol
+sce</code></pre>
+<pre><code>class: SingleCellExperiment 
+dim: 33538 34583 
+metadata(1): Samples
+assays(1): counts
+rownames(33538): MIR1302-2HG FAM138A ... AC213203.1 FAM231C
+rowData names(20): ID Symbol ... is_mito is_pseudogene
+colnames(34583): 1_AAACCCAAGCTAGTTC-1 1_AAACCCACAAGATTGA-1 ...
+  4_TTTGTTGTCTAGTACG-1 4_TTTGTTGTCTCGAACA-1
+colData names(5): Barcode Capture sum detected total
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(0):</code></pre>
+</div>
+</div>
+<div id="remove-ambient-rna-contamination" class="section level1">
+<h1>Remove ambient RNA contamination</h1>
+<div id="run-decontx" class="section level2">
+<h2>Run decontX</h2>
+<pre class="r"><code>library(decontX)
+
+sce_decont &lt;- decontX(sce, background = sce_raw,
+                      batch = sce$Capture,
+                      bgBatch = sce_raw$Capture)
+sce_decont</code></pre>
+<pre><code>class: SingleCellExperiment 
+dim: 33538 34583 
+metadata(2): Samples decontX
+assays(2): counts decontXcounts
+rownames(33538): MIR1302-2HG FAM138A ... AC213203.1 FAM231C
+rowData names(20): ID Symbol ... is_mito is_pseudogene
+colnames(34583): 1_AAACCCAAGCTAGTTC-1 1_AAACCCACAAGATTGA-1 ...
+  4_TTTGTTGTCTAGTACG-1 4_TTTGTTGTCTCGAACA-1
+colData names(7): Barcode Capture ... decontX_contamination
+  decontX_clusters
+reducedDimNames(4): decontX_A_UMAP decontX_B_UMAP decontX_C_UMAP
+  decontX_D_UMAP
+mainExpName: Gene Expression
+altExpNames(0):</code></pre>
+</div>
+<div id="decontx-clusters" class="section level2">
+<h2>DecontX clusters</h2>
+<pre class="r"><code>library(celda) # To use plotting functions in celda
+
+p &lt;- lapply(capture_names, function(cn){
+  umap &lt;- reducedDim(sce_decont, glue::glue(&quot;decontX_{cn}_UMAP&quot;))
+  plotDimReduceCluster(x = sce_decont$decontX_clusters,
+                       dim1 = umap[, 1], dim2 = umap[, 2])
+})
+
+wrap_plots(p, ncol = 2)</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="decontx-contamination" class="section level2">
+<h2>DecontX contamination</h2>
+<pre class="r"><code>p &lt;- lapply(unique(sce$Capture), function(cn){
+  plotDecontXContamination(sce_decont, batch = cn)
+})
+
+wrap_plots(p, ncol = 2, guides = &quot;collect&quot;) &amp;
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="main-cell-type-markers-before-decontx" class="section level2">
+<h2>Main cell type markers (before decontX)</h2>
+<pre class="r"><code>sce_decont &lt;- logNormCounts(sce_decont) 
+
+p &lt;- lapply(capture_names, function(cn){
+  umap &lt;- reducedDim(sce_decont, glue::glue(&quot;decontX_{cn}_UMAP&quot;))
+  plotDimReduceFeature(as.matrix(logcounts(sce_decont)),
+                       dim1 = umap[, 1],
+                       dim2 = umap[, 2],
+                       features = c(&quot;CD3D&quot;, &quot;CD3E&quot;, # T-cells 
+                                    &quot;ITGAM&quot;, &quot;CD14&quot;, # Macs
+                                    &quot;CD79A&quot;, &quot;MS4A1&quot;, # B-cells
+                                    &quot;EPCAM&quot;, &quot;CDH1&quot;), # Epithelial
+                       exactMatch = TRUE,
+                       ncol = 2)
+})
+
+p</code></pre>
+<pre><code>$A</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+$B</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+$C</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+$D</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-10-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="main-cell-type-markers-after-decontx" class="section level2">
+<h2>Main cell type markers (after decontX)</h2>
+<pre class="r"><code>sce_decont &lt;- logNormCounts(sce_decont, assay.type = &quot;decontXcounts&quot;) 
+
+p &lt;- lapply(capture_names, function(cn){
+  umap &lt;- reducedDim(sce_decont, glue::glue(&quot;decontX_{cn}_UMAP&quot;))
+  plotDimReduceFeature(as.matrix(logcounts(sce_decont)),
+                       dim1 = umap[, 1],
+                       dim2 = umap[, 2],
+                       features = c(&quot;CD3D&quot;, &quot;CD3E&quot;, # T-cells 
+                                    &quot;ITGAM&quot;, &quot;CD14&quot;, # Macs
+                                    &quot;CD79A&quot;, &quot;MS4A1&quot;, # B-cells
+                                    &quot;EPCAM&quot;, &quot;CDH1&quot;), # Epithelial
+                       exactMatch = TRUE,
+                       ncol = 2)
+})
+
+p</code></pre>
+<pre><code>$A</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+$B</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+$C</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-11-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+$D</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-11-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cell-marker-expression-comparison" class="section level2">
+<h2>Cell marker % expression comparison</h2>
+<pre class="r"><code>markers &lt;- list(Tcell_Markers = c(&quot;CD3D&quot;, &quot;CD3E&quot;),
+    Bcell_Markers = c(&quot;CD79A&quot;, &quot;CD79B&quot;, &quot;MS4A1&quot;),
+    Macrophage_Markers = c(&quot;ITGAM&quot;, &quot;CD14&quot;, &quot;CD68&quot;),
+    Epithelial_Markers = c(&quot;EPCAM&quot;, &quot;CDH1&quot;, &quot;MUC1&quot;))
+cell_type_mappings &lt;- data.frame(row.names = c(&quot;Tcells&quot;, &quot;Bcells&quot;, &quot;Macrophages&quot;, &quot;Epithelial&quot;),
+                               A = c(&quot;A-5&quot;, &quot;A-1&quot;, &quot;A-3&quot;, &quot;A-2&quot;),
+                               B = c(&quot;B-4&quot;, &quot;B-5&quot;, &quot;B-2&quot;, &quot;B-3&quot;),
+                               C = c(&quot;C-2&quot;, &quot;C-6&quot;, &quot;C-1&quot;, &quot;C-3&quot;),
+                               D = c(&quot;D-3&quot;, &quot;D-4&quot;, &quot;D-1&quot;, &quot;D-2&quot;))
+
+p &lt;- lapply(capture_names, function(cn){
+  plotDecontXMarkerPercentage(sce_decont[,sce_decont$Capture == cn],
+                              markers = markers,
+                              groupClusters = as.list(setNames(cell_type_mappings[, cn],
+                                                            rownames(cell_type_mappings))),
+                              assayName = c(&quot;counts&quot;, &quot;decontXcounts&quot;))
+})
+
+p</code></pre>
+<pre><code>$A</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+$B</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+$C</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-12-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+$D</code></pre>
+<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-12-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="save-data" class="section level1">
+<h1>Save data</h1>
+<pre class="r"><code># without ambient RNA removal
+saveRDS(
+   sce,
+   here(&quot;data&quot;,
+        &quot;C133_Neeland_batch0&quot;,
+        &quot;data&quot;,
+        &quot;SCEs&quot;,
+        &quot;C133_Neeland_batch0.preprocessed.SCE.rds&quot;))
+
+# with ambient RNA removal
+counts(sce) &lt;- assay(sce_decont, &quot;decontXcounts&quot;)
+saveRDS(
+   sce,
+   here(&quot;data&quot;,
+        &quot;C133_Neeland_batch0&quot;,
+        &quot;data&quot;,
+        &quot;SCEs&quot;,
+        &quot;C133_Neeland_batch0.decontx.preprocessed.SCE.rds&quot;))</code></pre>
+</div>
+<div id="session-info" class="section level1 appendix">
+<h1 class="appendix">Session info</h1>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.3.2 (2023-10-31)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.3
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Melbourne
+tzcode source: internal
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices datasets  utils     methods  
+[8] base     
+
+other attached packages:
+ [1] celda_1.18.1                           
+ [2] Matrix_1.6-5                           
+ [3] decontX_1.0.0                          
+ [4] msigdbr_7.5.1                          
+ [5] Homo.sapiens_1.3.1                     
+ [6] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
+ [7] org.Hs.eg.db_3.18.0                    
+ [8] GO.db_3.18.0                           
+ [9] OrganismDbi_1.44.0                     
+[10] EnsDb.Hsapiens.v86_2.99.0              
+[11] ensembldb_2.26.0                       
+[12] AnnotationFilter_1.26.0                
+[13] GenomicFeatures_1.54.3                 
+[14] AnnotationDbi_1.64.1                   
+[15] scater_1.30.1                          
+[16] scuttle_1.12.0                         
+[17] DropletUtils_1.22.0                    
+[18] SingleCellExperiment_1.24.0            
+[19] SummarizedExperiment_1.32.0            
+[20] Biobase_2.62.0                         
+[21] GenomicRanges_1.54.1                   
+[22] GenomeInfoDb_1.38.6                    
+[23] IRanges_2.36.0                         
+[24] S4Vectors_0.40.2                       
+[25] BiocGenerics_0.48.1                    
+[26] MatrixGenerics_1.14.0                  
+[27] matrixStats_1.2.0                      
+[28] lubridate_1.9.3                        
+[29] forcats_1.0.0                          
+[30] stringr_1.5.1                          
+[31] dplyr_1.1.4                            
+[32] purrr_1.0.2                            
+[33] readr_2.1.5                            
+[34] tidyr_1.3.1                            
+[35] tibble_3.2.1                           
+[36] tidyverse_2.0.0                        
+[37] patchwork_1.2.0                        
+[38] cowplot_1.1.3                          
+[39] ggplot2_3.4.4                          
+[40] BiocStyle_2.30.0                       
+[41] here_1.0.1                             
+[42] workflowr_1.7.1                        
+
+loaded via a namespace (and not attached):
+  [1] R.methodsS3_1.8.2         vroom_1.6.5              
+  [3] progress_1.2.3            goftest_1.2-3            
+  [5] Biostrings_2.70.2         HDF5Array_1.30.0         
+  [7] rstan_2.32.5              vctrs_0.6.5              
+  [9] spatstat.random_3.2-2     digest_0.6.34            
+ [11] png_0.1-8                 git2r_0.33.0             
+ [13] ggrepel_0.9.5             deldir_2.0-2             
+ [15] parallelly_1.37.0         combinat_0.0-8           
+ [17] renv_1.0.3                MASS_7.3-60.0.1          
+ [19] reshape2_1.4.4            foreach_1.5.2            
+ [21] httpuv_1.6.14             withr_3.0.0              
+ [23] xfun_0.42                 ellipsis_0.3.2           
+ [25] survival_3.5-8            memoise_2.0.1            
+ [27] ggbeeswarm_0.7.2          zoo_1.8-12               
+ [29] pbapply_1.7-2             R.oo_1.26.0              
+ [31] prettyunits_1.2.0         KEGGREST_1.42.0          
+ [33] promises_1.2.1            httr_1.4.7               
+ [35] restfulr_0.0.15           globals_0.16.2           
+ [37] fitdistrplus_1.1-11       rhdf5filters_1.14.1      
+ [39] ps_1.7.6                  rhdf5_2.46.1             
+ [41] rstudioapi_0.15.0         miniUI_0.1.1.1           
+ [43] generics_0.1.3            processx_3.8.3           
+ [45] babelgene_22.9            curl_5.2.0               
+ [47] zlibbioc_1.48.0           ScaledMatrix_1.10.0      
+ [49] polyclip_1.10-6           GenomeInfoDbData_1.2.11  
+ [51] SparseArray_1.2.4         RcppEigen_0.3.3.9.4      
+ [53] RBGL_1.78.0               doParallel_1.0.17        
+ [55] xtable_1.8-4              evaluate_0.23            
+ [57] S4Arrays_1.2.0            BiocFileCache_2.10.1     
+ [59] hms_1.1.3                 irlba_2.3.5.1            
+ [61] colorspace_2.1-0          filelock_1.0.3           
+ [63] ROCR_1.0-11               reticulate_1.35.0        
+ [65] spatstat.data_3.0-4       magrittr_2.0.3           
+ [67] lmtest_0.9-40             later_1.3.2              
+ [69] viridis_0.6.5             lattice_0.22-5           
+ [71] spatstat.geom_3.2-8       future.apply_1.11.1      
+ [73] getPass_0.2-4             scattermore_1.2          
+ [75] XML_3.99-0.16.1           RcppAnnoy_0.0.22         
+ [77] pillar_1.9.0              StanHeaders_2.32.5       
+ [79] nlme_3.1-164              iterators_1.0.14         
+ [81] compiler_4.3.2            beachmat_2.18.1          
+ [83] RSpectra_0.16-1           stringi_1.8.3            
+ [85] tensor_1.5                GenomicAlignments_1.38.2 
+ [87] MCMCprecision_0.4.0       plyr_1.8.9               
+ [89] crayon_1.5.2              abind_1.4-5              
+ [91] BiocIO_1.12.0             locfit_1.5-9.8           
+ [93] sp_2.1-3                  bit_4.0.5                
+ [95] whisker_0.4.1             codetools_0.2-19         
+ [97] BiocSingular_1.18.0       bslib_0.6.1              
+ [99] QuickJSR_1.1.3            plotly_4.10.4            
+[101] mime_0.12                 splines_4.3.2            
+[103] Rcpp_1.0.12               fastDummies_1.7.3        
+[105] dbplyr_2.4.0              sparseMatrixStats_1.14.0 
+[107] knitr_1.45                blob_1.2.4               
+[109] utf8_1.2.4                WriteXLS_6.5.0           
+[111] fs_1.6.3                  listenv_0.9.1            
+[113] DelayedMatrixStats_1.24.0 pkgbuild_1.4.3           
+[115] callr_3.7.3               statmod_1.5.0            
+[117] tzdb_0.4.0                pkgconfig_2.0.3          
+[119] tools_4.3.2               cachem_1.0.8             
+[121] RSQLite_2.3.5             viridisLite_0.4.2        
+[123] DBI_1.2.1                 fastmap_1.1.1            
+[125] rmarkdown_2.25            scales_1.3.0             
+[127] grid_4.3.2                ica_1.0-3                
+[129] Seurat_5.0.1              Rsamtools_2.18.0         
+[131] sass_0.4.8                BiocManager_1.30.22      
+[133] dotCall64_1.1-1           graph_1.80.0             
+[135] RANN_2.6.1                farver_2.1.1             
+[137] yaml_2.3.8                rtracklayer_1.62.0       
+[139] cli_3.6.2                 dbscan_1.1-12            
+[141] leiden_0.4.3.1            lifecycle_1.0.4          
+[143] uwot_0.1.16               BiocParallel_1.36.0      
+[145] timechange_0.3.0          gtable_0.3.4             
+[147] rjson_0.2.21              ggridges_0.5.6           
+[149] progressr_0.14.0          parallel_4.3.2           
+[151] limma_3.58.1              jsonlite_1.8.8           
+[153] edgeR_4.0.15              RcppHNSW_0.6.0           
+[155] bitops_1.0-7              bit64_4.0.5              
+[157] Rtsne_0.17                spatstat.utils_3.0-4     
+[159] BiocNeighbors_1.20.2      SeuratObject_5.0.1       
+[161] RcppParallel_5.1.7        jquerylib_0.1.4          
+[163] highr_0.10                dqrng_0.3.2              
+[165] loo_2.6.0                 enrichR_3.2              
+[167] R.utils_2.12.3            lazyeval_0.2.2           
+[169] shiny_1.8.0               htmltools_0.5.7          
+[171] sctransform_0.4.1         rappdirs_0.3.3           
+[173] glue_1.7.0                spam_2.10-0              
+[175] XVector_0.42.0            RCurl_1.98-1.14          
+[177] rprojroot_2.0.4           gridExtra_2.3            
+[179] igraph_2.0.1.1            R6_2.5.1                 
+[181] labeling_0.4.3            cluster_2.1.6            
+[183] Rhdf5lib_1.24.2           rstantools_2.4.0         
+[185] DelayedArray_0.28.0       tidyselect_1.2.0         
+[187] vipor_0.4.7               ProtGenerics_1.34.0      
+[189] xml2_1.3.6                inline_0.3.19            
+[191] future_1.33.1             rsvd_1.0.5               
+[193] munsell_0.5.0             KernSmooth_2.23-22       
+[195] data.table_1.15.0         htmlwidgets_1.6.4        
+[197] RColorBrewer_1.1-3        biomaRt_2.58.2           
+[199] rlang_1.1.3               spatstat.sparse_3.0-3    
+[201] spatstat.explore_3.2-6    fansi_1.0.6              
+[203] beeswarm_0.4.0           </code></pre>
+</div>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>Some care is taken to account for missing and duplicate
+gene symbols; missing symbols are replaced with the Ensembl identifier
+and duplicated symbols are concatenated with the (unique) Ensembl
+identifiers.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
