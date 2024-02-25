@@ -1,0 +1,257 @@
+---
+title: "Preprocessing the C133_Neeland_batch0 data set"
+description: |
+author:
+  - name: Jovana Maksimovic
+date: "`r Sys.Date()`"
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r setup}
+suppressPackageStartupMessages({
+    library(here)
+    library(BiocStyle)
+    library(ggplot2)
+    library(cowplot)
+    library(patchwork)
+    library(tidyverse)
+    library(SingleCellExperiment)
+    library(DropletUtils)
+    library(scater)
+})
+
+source(here("code/utility.R"))
+```
+
+
+# Overview
+
+Bronchoalveolar lavage (BAL) samples were collected from 4 individuals: 1 control sample and 3 cystic fibrosis (CF) samples. The samples were run on teh 10X Chromium and sequenced at the [Garvan-Weizmann Centre for Cellular Genomics (GWCCG)](https://www.garvan.org.au/research/garvan-weizmann). The multiplexed samples were sequenced on an Illumina NovaSeq 6000 (NovaSeq Control Software v1.3.1 / Real Time Analysis v3.3.3) ) using a NovaSeq S1 200 cycle kit (Illumina, 20012864). The `cellranger count` pipeline (version 6.0.2) was used for alignment, filtering, barcode counting, and UMI counting from FASTQ files. The GRCh38 reference was used for the alignment. The number of cells from the pipeline was forced to 10,000. 
+View the **CellRanger** capture-specific web summaries: [A](A_web_summary.html), [B](B_web_summary.html), [C](C_web_summary.html), [D](D_web_summary.html).
+
+```{r}
+sample_metadata_df <- read_csv(
+  here("data/C133_Neeland_batch0/data/sample_sheets/Sample_information.csv"))
+
+knitr::kable(sample_metadata_df)
+```
+
+# Set up the data
+
+```{r}
+sce_raw <- readRDS(here("data", "C133_Neeland_batch0",
+                    "data", "SCEs", "C133_Neeland_batch0.CellRanger.SCE.rds"))
+sce_raw$Capture <- factor(sce_raw$Sample)
+capture_names <- levels(sce_raw$Capture)
+capture_names <- setNames(capture_names, capture_names)
+sce_raw$Sample <- NULL
+sce_raw
+```
+
+# Call cells from empty droplets
+
+```{r rankplot, fig.cap = "Total UMI count for each barcode in the dataset, plotted against its rank (in decreasing order of total counts). The inferred locations of the inflection (dark green dashed lines) and knee points (blue dashed lines) are also shown.", fig.asp = 1, results = "hide"}
+
+par(mfrow = c(2, 2))
+lapply(capture_names, function(cn) {
+  sce_raw <- sce_raw[, sce_raw$Capture == cn]
+  bcrank <- barcodeRanks(counts(sce_raw))
+  # Only showing unique points for plotting speed.
+  uniq <- !duplicated(bcrank$rank)
+  plot(
+    x = bcrank$rank[uniq],
+    y = bcrank$total[uniq],
+    log = "xy",
+    xlab = "Rank",
+    ylab = "Total UMI count",
+    main = cn,
+    cex.lab = 1.2,
+    xlim = c(1, 500000),
+    ylim = c(1, 200000))
+  abline(h = metadata(bcrank)$inflection, col = "darkgreen", lty = 2)
+  abline(h = metadata(bcrank)$knee, col = "dodgerblue", lty = 2)
+})
+```
+
+Remove empty droplets.
+
+```{r}
+empties <- do.call(rbind, lapply(capture_names, function(cn) {
+  message(cn)
+  empties <- readRDS(
+    here("data",
+         "C133_Neeland_batch0",
+         "data",
+         "emptyDrops", paste0(cn, ".emptyDrops.rds")))
+  empties$Capture <- cn
+  empties
+}))
+tapply(
+  empties$FDR,
+  empties$Capture,
+  function(x) sum(x <= 0.001, na.rm = TRUE)) |>
+  knitr::kable(
+    caption = "Number of non-empty droplets identified using `emptyDrops()` from **DropletUtils**.")
+
+sce <- sce_raw[, which(empties$FDR <= 0.001)]
+sce
+```
+
+## Add per cell quality control information
+
+```{r}
+sce <- scuttle::addPerCellQC(sce)
+head(colData(sce)) %>%
+  data.frame %>%
+  knitr::kable()
+```
+
+## Add gene-based annotation
+
+Having quantified gene expression against the Ensembl gene annotation, we have Ensembl-style identifiers for the genes. 
+These identifiers are used as they are unambiguous and highly stable. 
+However, they are difficult to interpret compared to the gene symbols which are more commonly used in the literature.
+Given the Ensembl identifiers, we obtain the corresponding gene symbols using annotation packages available through Bioconductor.
+Henceforth, we will use gene symbols (where available) to refer to genes in our analysis and otherwise use the Ensembl-style gene identifiers^[Some care is taken to account for missing and duplicate gene symbols; missing symbols are replaced with the Ensembl identifier and duplicated symbols are concatenated with the (unique) Ensembl identifiers.].
+
+```{r, warning=FALSE, message=FALSE}
+sce <- addGeneInformation(sce)
+# change rownames to gene symbol for easier plotting downstream
+rownames(sce) <- rowData(sce)$Symbol
+sce
+```
+
+# Remove ambient RNA contamination
+## Run decontX
+
+```{r, message=FALSE}
+library(decontX)
+
+sce_decont <- decontX(sce, background = sce_raw,
+                      batch = sce$Capture,
+                      bgBatch = sce_raw$Capture)
+sce_decont
+```
+
+## DecontX clusters
+
+```{r, fig.asp=0.8}
+library(celda) # To use plotting functions in celda
+
+p <- lapply(capture_names, function(cn){
+  umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP"))
+  plotDimReduceCluster(x = sce_decont$decontX_clusters,
+                       dim1 = umap[, 1], dim2 = umap[, 2])
+})
+
+wrap_plots(p, ncol = 2)
+```
+
+## DecontX contamination
+
+```{r, fig.asp=1}
+p <- lapply(unique(sce$Capture), function(cn){
+  plotDecontXContamination(sce_decont, batch = cn)
+})
+
+wrap_plots(p, ncol = 2, guides = "collect") &
+  theme(legend.position = "bottom")
+```
+
+
+## Main cell type markers (before decontX)
+
+```{r, fig.asp=1}
+sce_decont <- logNormCounts(sce_decont) 
+
+p <- lapply(capture_names, function(cn){
+  umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP"))
+  plotDimReduceFeature(as.matrix(logcounts(sce_decont)),
+                       dim1 = umap[, 1],
+                       dim2 = umap[, 2],
+                       features = c("CD3D", "CD3E", # T-cells 
+                                    "ITGAM", "CD14", # Macs
+                                    "CD79A", "MS4A1", # B-cells
+                                    "EPCAM", "CDH1"), # Epithelial
+                       exactMatch = TRUE,
+                       ncol = 2)
+})
+
+p
+```
+
+## Main cell type markers (after decontX)
+
+```{r, fig.asp=1}
+sce_decont <- logNormCounts(sce_decont, assay.type = "decontXcounts") 
+
+p <- lapply(capture_names, function(cn){
+  umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP"))
+  plotDimReduceFeature(as.matrix(logcounts(sce_decont)),
+                       dim1 = umap[, 1],
+                       dim2 = umap[, 2],
+                       features = c("CD3D", "CD3E", # T-cells 
+                                    "ITGAM", "CD14", # Macs
+                                    "CD79A", "MS4A1", # B-cells
+                                    "EPCAM", "CDH1"), # Epithelial
+                       exactMatch = TRUE,
+                       ncol = 2)
+})
+
+p
+```
+
+## Cell marker % expression comparison
+
+```{r}
+markers <- list(Tcell_Markers = c("CD3D", "CD3E"),
+    Bcell_Markers = c("CD79A", "CD79B", "MS4A1"),
+    Macrophage_Markers = c("ITGAM", "CD14", "CD68"),
+    Epithelial_Markers = c("EPCAM", "CDH1", "MUC1"))
+cell_type_mappings <- data.frame(row.names = c("Tcells", "Bcells", "Macrophages", "Epithelial"),
+                               A = c("A-5", "A-1", "A-3", "A-2"),
+                               B = c("B-4", "B-5", "B-2", "B-3"),
+                               C = c("C-2", "C-6", "C-1", "C-3"),
+                               D = c("D-3", "D-4", "D-1", "D-2"))
+
+p <- lapply(capture_names, function(cn){
+  plotDecontXMarkerPercentage(sce_decont[,sce_decont$Capture == cn],
+                              markers = markers,
+                              groupClusters = as.list(setNames(cell_type_mappings[, cn],
+                                                            rownames(cell_type_mappings))),
+                              assayName = c("counts", "decontXcounts"))
+})
+
+p
+```
+
+# Save data
+
+```{r}
+# without ambient RNA removal
+saveRDS(
+   sce,
+   here("data",
+        "C133_Neeland_batch0",
+        "data",
+        "SCEs",
+        "C133_Neeland_batch0.preprocessed.SCE.rds"))
+
+# with ambient RNA removal
+counts(sce) <- assay(sce_decont, "decontXcounts")
+saveRDS(
+   sce,
+   here("data",
+        "C133_Neeland_batch0",
+        "data",
+        "SCEs",
+        "C133_Neeland_batch0.decontx.preprocessed.SCE.rds"))
+```
+
+# Session info {.appendix}
+
