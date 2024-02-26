@@ -1,0 +1,559 @@
+---
+title: "Demultiplexing the C133_Neeland_batch4 data set"
+description: |
+author:
+  - name: Peter Hickey and Jovana Maksimovic
+date: "`r Sys.Date()`"
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r setup}
+suppressPackageStartupMessages({
+    library(here)
+    library(readxl)
+    library(BiocStyle)
+    library(ggplot2)
+    library(cowplot)
+    library(patchwork)
+    library(demuxmix)
+    library(tidyverse)
+    library(SingleCellExperiment)
+    library(DropletUtils)
+    library(scater)
+})
+```
+
+
+# Overview
+
+- There are 8 samples in this batch.
+- Each sample comes from a different donor (i.e. each sample is genetically distinct).
+- Each has a unique HTO label.
+
+We used simple HTO labelling whereby each sample is labelled with 1 HTO, shown in the table below:
+
+```{r}
+sample_metadata_df <- read_excel(
+  here("data/C133_Neeland_batch4/data/sample_sheets/CITEseq_48 samples_design_2.xlsx"),
+  col_types = 
+    c("text", "text", "text", "numeric", "text", "numeric", "text", "date"))
+sample_metadata_df$`HASHTAG ID` <- paste0(
+  "Human_HTO_",
+  sample_metadata_df$`HASHTAG ID`)
+knitr::kable(sample_metadata_df[sample_metadata_df$Batch == 4, ])
+```
+
+# Setting up the data
+
+```{r}
+sce <- readRDS(here("data", "C133_Neeland_batch4",
+                    "data", "SCEs", "C133_Neeland_batch4.CellRanger.SCE.rds"))
+sce$Capture <- factor(sce$Sample)
+capture_names <- levels(sce$Capture)
+capture_names <- setNames(capture_names, capture_names)
+sce$Sample <- NULL
+sce
+```
+
+# Calling cells from empty droplets
+
+```{r rankplot, fig.cap = "Total UMI count for each barcode in the dataset, plotted against its rank (in decreasing order of total counts). The inferred locations of the inflection (dark green dashed lines) and knee points (blue dashed lines) are also shown.", fig.asp = 1 / 2, results = "hide"}
+
+par(mfrow = c(1, 2))
+lapply(capture_names, function(cn) {
+  sce <- sce[, sce$Capture == cn]
+  bcrank <- barcodeRanks(counts(sce))
+  # Only showing unique points for plotting speed.
+  uniq <- !duplicated(bcrank$rank)
+  plot(
+    x = bcrank$rank[uniq],
+    y = bcrank$total[uniq],
+    log = "xy",
+    xlab = "Rank",
+    ylab = "Total UMI count",
+    main = cn,
+    cex.lab = 1.2,
+    xlim = c(1, 500000),
+    ylim = c(1, 200000))
+  abline(h = metadata(bcrank)$inflection, col = "darkgreen", lty = 2)
+  abline(h = metadata(bcrank)$knee, col = "dodgerblue", lty = 2)
+})
+```
+
+Remove empty droplets.
+
+```{r}
+empties <- do.call(rbind, lapply(capture_names, function(cn) {
+  message(cn)
+  empties <- readRDS(
+    here("data",
+         "C133_Neeland_batch4",
+         "data",
+         "emptyDrops", paste0(cn, ".emptyDrops.rds")))
+  empties$Capture <- cn
+  empties
+}))
+tapply(
+  empties$FDR,
+  empties$Capture,
+  function(x) sum(x <= 0.001, na.rm = TRUE)) |>
+  knitr::kable(
+    caption = "Number of non-empty droplets identified using `emptyDrops()` from **DropletUtils**.")
+
+sce <- sce[, which(empties$FDR <= 0.001)]
+sce
+```
+
+# Adding per cell quality control information
+
+```{r}
+sce <- scuttle::addPerCellQC(sce)
+head(colData(sce)) %>%
+  data.frame %>%
+  knitr::kable()
+```
+
+
+# Demultiplexing with hashtag oligos (HTOs) {.tabset}
+
+```{r}
+is_adt <- grepl("^A[0-9]+", rownames(altExp(sce, "Antibody Capture")))
+is_hto <- grepl("^Human_HTO", rownames(altExp(sce, "Antibody Capture")))
+altExp(sce, "HTO") <- altExp(sce, "Antibody Capture")[is_hto, ]
+altExp(sce, "ADT") <- altExp(sce, "Antibody Capture")[is_adt, ]
+altExp(sce, "Antibody Capture") <- NULL
+hto_counts <- counts(altExp(sce, "HTO"))
+xmax <- ceiling(max(log2(hto_counts + 1)))
+```
+
+## C133_batch4_1
+
+```{r hto-hist-1, fig.cap = "Number of UMIs for each HTO across all non-empty droplets.", fig.asp = 1, results = "hide"}
+par(mfrow = c(3, 3))
+lapply(rownames(hto_counts), function(i) {
+  hist(
+    log2(hto_counts[i, sce$Capture == "C133_batch4_1"] + 1),
+    xlab = "log2(UMIs + 1)", 
+    main = paste0("C133_1: ", i), 
+    xlim = c(0, xmax), 
+    breaks = seq(0, xmax, 0.5),
+    cex.main = 0.8)
+})
+```
+
+Prepare the data.
+
+```{r}
+hto <- as.matrix(counts(altExp(sce[, sce$Capture == "C133_batch4_1"], "HTO")))
+hto <- hto[rownames(hto) != "Human_HTO_9",]
+detected <- sce$detected[sce$Capture == "C133_batch4_1"]
+
+df <- data.frame(t(hto), 
+                 detected = detected, 
+                 hto = colSums(hto))
+
+df %>% 
+  pivot_longer(cols = starts_with("Human_HTO")) %>%
+  mutate(logged = log(value + 1)) %>%
+  ggplot(aes(x = logged)) +
+  geom_density(adjust = 5) +
+  facet_wrap(~name, scales = "free")
+
+df %>% 
+  pivot_longer(cols = starts_with("Human_HTO")) %>%
+  ggplot(aes(x = detected, y = hto)) +
+  geom_density_2d() +
+  facet_wrap(~name) 
+```
+
+Run demultiplexing.
+
+```{r}
+dmm <- demuxmix(hto = hto, 
+                rna = detected,
+                model = "naive")
+summary(dmm)
+```
+
+Examine results.
+
+```{r}
+p <- vector("list", nrow(hto))
+for(i in 1:nrow(hto)){
+  p[[i]] <- plotDmmHistogram(dmm, hto = i) + 
+    coord_cartesian(ylim = c(0, 0.001),
+                    xlim = c(-50, 1000)) +
+    theme(axis.title = element_text(size = 8),
+          axis.text = element_text(size = 6))
+}
+
+wrap_plots(p , ncol = 3) 
+```
+
+```{r}
+p <- vector("list", nrow(hto))
+for(i in 1:nrow(hto)){
+  p[[i]] <- plotDmmPosteriorP(dmm, hto = i) + 
+    theme(axis.title = element_text(size = 8),
+          axis.text = element_text(size = 6))
+}
+
+wrap_plots(p , ncol = 3) 
+```
+
+
+```{r}
+pAcpt(dmm) <- 0
+classes1 <- dmmClassify(dmm)
+classes1$dmmHTO <- ifelse(classes1$Type == "multiplet", "Doublet",
+                           ifelse(classes1$Type %in% c("negative", "uncertain"), 
+                                  "Negative", classes1$HTO))
+table(classes1$dmmHTO)
+```
+
+
+## C133_batch4_2 
+
+```{r hto-hist-2, fig.cap = "Number of UMIs for each HTO across all non-empty droplets.", fig.asp = 1, results = "hide"}
+par(mfrow = c(3, 3))
+lapply(rownames(hto_counts), function(i) {
+  hist(
+    log2(hto_counts[i, sce$Capture == "C133_batch4_2"] + 1),
+    xlab = "log2(UMIs + 1)", 
+    main = paste0("C133_2: ", i), 
+    xlim = c(0, xmax), 
+    breaks = seq(0, xmax, 0.5),
+    cex.main = 0.8)
+})
+```
+Prepare the data.
+
+```{r}
+hto <- as.matrix(counts(altExp(sce[, sce$Capture == "C133_batch4_2"], "HTO")))
+hto <- hto[rownames(hto) != "Human_HTO_9",]
+detected <- sce$detected[sce$Capture == "C133_batch4_2"]
+
+df <- data.frame(t(hto), 
+                 detected = detected, 
+                 hto = colSums(hto))
+
+df %>% 
+  pivot_longer(cols = starts_with("Human_HTO")) %>%
+  mutate(logged = log(value + 1)) %>%
+  ggplot(aes(x = logged)) +
+  geom_density(adjust = 5) +
+  facet_wrap(~name, scales = "free")
+
+df %>% 
+  pivot_longer(cols = starts_with("Human_HTO")) %>%
+  ggplot(aes(x = detected, y = hto)) +
+  geom_density_2d() +
+  facet_wrap(~name) 
+```
+
+Run demultiplexing.
+
+```{r}
+dmm <- demuxmix(hto = hto, 
+                rna = detected,
+                model = "naive")
+summary(dmm)
+```
+
+Examine results.
+
+```{r}
+p <- vector("list", nrow(hto))
+for(i in 1:nrow(hto)){
+  p[[i]] <- plotDmmHistogram(dmm, hto = i) + 
+    coord_cartesian(ylim = c(0, 0.001),
+                    xlim = c(-50, 1000)) +
+    theme(axis.title = element_text(size = 8),
+          axis.text = element_text(size = 6))
+}
+
+wrap_plots(p , ncol = 3) 
+```
+
+```{r}
+p <- vector("list", nrow(hto))
+for(i in 1:nrow(hto)){
+  p[[i]] <- plotDmmPosteriorP(dmm, hto = i) + 
+    theme(axis.title = element_text(size = 8),
+          axis.text = element_text(size = 6))
+}
+
+wrap_plots(p , ncol = 3) 
+```
+
+```{r}
+pAcpt(dmm) <- 0
+classes2 <- dmmClassify(dmm)
+classes2$dmmHTO <- ifelse(classes2$Type == "multiplet", "Doublet",
+                           ifelse(classes2$Type %in% c("negative", "uncertain"), 
+                                  "Negative", classes2$HTO))
+table(classes2$dmmHTO)
+```
+
+# {-}
+
+# Save HTO assignments
+
+```{r}
+classes <- rbind(classes1, classes2)
+all(rownames(classes) == colnames(sce))
+sce$dmmHTO <- factor(classes$dmmHTO, 
+                     levels = c(sort(unique(grep("Human",
+                                               classes$dmmHTO,
+                                               value = TRUE))), 
+                                "Doublet",
+                                "Negative"))
+```
+
+# Demultiplexing cells without genotype reference
+
+## Matching donors across captures
+
+```{r, message = FALSE}
+library(vcfR)
+f <- sapply(capture_names, function(cn) {
+  here("data",
+       "C133_Neeland_batch4",
+       "data",
+       "vireo", cn, "GT_donors.vireo.vcf.gz")
+})
+x <- lapply(f, read.vcfR, verbose = FALSE)
+# Create unique ID for each locus in each capture.
+y <- lapply(x, function(xx) {
+  paste(
+  xx@fix[,"CHROM"],
+  xx@fix[,"POS"],
+  xx@fix[,"REF"],
+  xx@fix[,"ALT"],
+  sep = "_")
+})
+# Only keep the loci in common between the 2 captures.
+i <- lapply(y, function(yy) {
+  na.omit(match(Reduce(intersect, y), yy))
+})
+# Construct genotype matrix at common loci from the 2 captures.
+donor_names <- paste0("donor", 0:6)
+g <- mapply(
+  function(xx, ii) {
+    apply(
+      xx@gt[ii, donor_names],
+      2,
+      function(x) sapply(strsplit(x, ":"), `[[`, 1))
+  },
+  xx = x,
+  ii = i,
+  SIMPLIFY = FALSE)
+# Count number of genotype matches between pairs of donors (one from each 
+# capture) and convert to a proportion.
+z <- lapply(2:length(capture_names), function(k) {
+  zz <- matrix(
+    NA_real_,
+    nrow = length(donor_names),
+    ncol = length(donor_names),
+    dimnames = list(donor_names, donor_names))
+  for (ii in rownames(zz)) {
+    for (jj in colnames(zz)) {
+      zz[ii, jj] <- sum(g[[1]][, ii] == g[[k]][, jj]) / nrow(g[[1]])
+    }
+  }
+  zz
+})
+```
+
+```{r genotype-heatmap, fig.cap = "Proportion of matching genotypes between pairs of captures.", fig.asp = 1}
+heatmaps <- lapply(seq_along(z), function(k) {
+pheatmap::pheatmap(
+  z[[k]],
+  color = viridisLite::inferno(101),
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  main = "Proportion of matching genotypes",
+  display_numbers = TRUE,
+  number_color = "grey50",
+  labels_row = paste0("C133_batch4_1: ", rownames(z[[k]])),
+  labels_col = paste0("C133_batch4_", k + 1, ": ", colnames(z[[k]])),
+  silent = TRUE,
+  fontsize = 10)
+})
+
+gridExtra::grid.arrange(grobs = lapply(heatmaps, `[[`, "gtable"), ncol = 1)
+```
+
+The table below gives the best matches between the captures.
+
+```{r}
+best_match_df <- data.frame(
+  c(
+    list(rownames(z[[1]])),
+    lapply(seq_along(z), function(k) {
+      apply(
+        z[[k]], 
+        1,
+        function(x) colnames(z[[k]])[which.max(x)])
+    })),
+  row.names = NULL)
+colnames(best_match_df) <- capture_names
+best_match_df$GeneticDonor <- LETTERS[seq_along(donor_names)]
+best_match_df <- dplyr::select(best_match_df, GeneticDonor, everything())
+
+knitr::kable(
+  best_match_df, 
+  caption = "Best match of donors between the scRNA-seq captures.")
+```
+
+## Assigning barcodes to donors
+
+```{r}
+vireo_df <- do.call(
+  rbind,
+  c(
+    lapply(capture_names, function(cn) {
+      # Read data
+      vireo_df <- read.table(
+        here("data",
+             "C133_Neeland_batch4",
+             "data",
+             "vireo", cn, "donor_ids.tsv"),
+        header = TRUE)
+      
+      # Replace `donor[0-9]+` with `donor_[A-Z]` using `best_match_df`.
+      best_match <- setNames(
+        c(best_match_df[["GeneticDonor"]], "Doublet", "Unknown"),
+        c(best_match_df[[cn]], "doublet", "unassigned"))
+      vireo_df$GeneticDonor <- factor(
+        best_match[vireo_df$donor_id],
+        levels = c(best_match_df[["GeneticDonor"]], "Doublet", "Unknown"))
+      vireo_df$donor_id <- NULL
+      vireo_df$best_singlet <- best_match[vireo_df$best_singlet]
+      vireo_df$best_doublet <- sapply(
+        strsplit(vireo_df$best_doublet, ","),
+        function(x) {
+          paste0(best_match[x[[1]]], ",", best_match[x[[2]]])
+        })
+      
+      # Add additional useful metadata
+      vireo_df$Confident <- factor(
+        vireo_df$GeneticDonor == vireo_df$best_singlet,
+        levels = c(TRUE, FALSE))
+      vireo_df$Capture <- cn
+      
+      # Reorder so matches SCE.
+      captureNumber <- sub("C133_batch4_", "", cn)
+      vireo_df$colname <- paste0(captureNumber, "_", vireo_df$cell)
+      j <- match(colnames(sce)[sce$Capture == cn], vireo_df$colname)
+      stopifnot(!anyNA(j))
+      vireo_df <- vireo_df[j, ]
+      vireo_df
+    }),
+    list(make.row.names = FALSE)))
+```
+
+## Vireo summary
+
+We add the parsed outputs of **vireo** to the *colData* of the *SingleCellExperiment* object so that we can incorporate it into downstream analyses.
+
+```{r}
+stopifnot(identical(colnames(sce), vireo_df$colname))
+sce$GeneticDonor <- vireo_df$GeneticDonor
+# NOTE: We exclude redundant columns.
+sce$vireo <- DataFrame(
+  vireo_df[, setdiff(
+    colnames(vireo_df), 
+    c("cell", "colname", "Capture", "GeneticDonor"))])
+```
+
+```{r genetic-demultiplexing-best, fig.cap = "Number (top) and proportion (bottom) of droplets assigned to each donor based on genetics (best singlet), and if these were confidently or not confidently assigned, overall (left) and within each capture (right)."}
+tmp_df <- data.frame(
+    best_singlet = sce$vireo$best_singlet, 
+    Confident = sce$vireo$Confident,
+    Capture = sce$Capture)
+p1 <- ggplot(tmp_df) + 
+  geom_bar(
+    aes(x = best_singlet, fill = Confident), 
+    position = position_stack(reverse = TRUE)) + 
+  coord_flip() +
+  ylab("Number of droplets") +
+  xlab("Best singlet") +
+  theme_cowplot(font_size = 7)
+p2 <- ggplot(tmp_df) + 
+  geom_bar(
+    aes(x = best_singlet, fill = Confident), 
+    position = position_fill(reverse = TRUE)) + 
+  coord_flip() +
+  ylab("Proportion of droplets") +
+  xlab("Best singlet") +
+  theme_cowplot(font_size = 7)
+
+(p1 + p1 + facet_grid(~Capture) + plot_layout(widths = c(1, 2))) / 
+  (p2 + p2 + facet_grid(~Capture) + plot_layout(widths = c(1, 2))) +
+  plot_layout(guides = "collect")
+```
+
+```{r genetic-demultiplexing-final, fig.cap = "Number and proportion of droplets assigned to each donor based on genetics (final assignment), and if these were confidently or not confidently assigned, overall (left) and within each capture (right).", fig.asp = 1 / 3}
+p3 <- ggplot(
+  data.frame(
+    GeneticDonor = sce$GeneticDonor, 
+    Confident = sce$vireo$Confident,
+    Capture = sce$Capture)) + 
+  geom_bar(
+    aes(x = GeneticDonor, fill = Confident), 
+    position = position_stack(reverse = TRUE)) + 
+  coord_flip() +
+  ylab("Number of droplets") +
+  xlab("Final donor assignment") +
+  theme_cowplot(font_size = 7)
+
+(p3 + p3 + facet_grid(~Capture) + plot_layout(widths = c(1, 2))) +
+  plot_layout(guides = "collect")
+```
+
+
+# Overall summary
+
+```{r hto-genetic-donor, fig.asp = 1, fig.cap = "Number of droplets assigned to each `dmmHTO`/`GeneticDonor` combination, overall (top) and within each capture (bottom)"}
+p <- scater::plotColData(
+  sce,
+  "dmmHTO", 
+  "GeneticDonor", 
+  colour_by = "GeneticDonor", 
+  other_fields = "Capture") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  guides(colour = "none")
+p / (p + facet_grid(~Capture))
+```
+
+```{r}
+janitor::tabyl(
+  as.data.frame(colData(sce)[, c("dmmHTO", "GeneticDonor")]),
+  dmmHTO,
+  GeneticDonor) |>
+  janitor::adorn_title(placement = "combined") |>
+  janitor::adorn_totals("both") |>
+  knitr::kable(
+    caption = "Number of droplets assigned to each `dmmHTO`/`GeneticDonor` combination.")
+```
+
+# Save data
+
+```{r}
+saveRDS(
+   sce,
+   here("data",
+        "C133_Neeland_batch4",
+        "data",
+        "SCEs",
+        "C133_Neeland_batch4.preprocessed.SCE.rds"))
+```
+
+# Session info {.appendix}
+
