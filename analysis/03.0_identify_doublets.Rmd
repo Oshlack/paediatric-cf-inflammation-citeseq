@@ -1,0 +1,225 @@
+---
+title: "Identify doublets in C133_Neeland data"
+subtitle: "Batches 0-6"
+author: "Jovana Maksimovic"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+site: workflowr::wflow_site
+output:
+  bookdown::html_document2:
+    base_format: workflowr::wflow_html
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+    number_sections: true
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# Load libraries
+
+```{r, message=FALSE, warning=FALSE}
+suppressPackageStartupMessages({
+  library(BiocStyle)
+  library(tidyverse)
+  library(here)
+  library(glue)
+  library(patchwork)
+  library(scran)
+  library(scater)
+  library(scuttle)
+  library(scDblFinder)
+  library(scds)
+  library(scMerge)
+  library(ggupset)
+})
+```
+
+# Load data
+
+```{r}
+outs <- list.files(here("data",
+       paste0("C133_Neeland_batch", 0:6),
+       "data", 
+       "SCEs"), pattern = "doublets_called",
+                   full.names = TRUE)
+
+if(length(outs) < 7){
+  files <- list.files(here("data",
+                           paste0("C133_Neeland_batch", 0:6),
+                           "data", 
+                           "SCEs"), 
+                      pattern = "quality_filtered",
+                      full.names = TRUE)
+  
+  sceLst <- sapply(files, function(fn){
+    readRDS(file = fn)
+  })
+  
+} else {
+  sceLst <- sapply(outs, function(fn){
+    readRDS(file = fn)
+  })
+  
+}
+
+sceLst
+```
+
+# Call doublets
+Use scds and scDblFinder to try to identify within-sample doublets. Doublets are called on each capture separately. 
+
+```{r, message=FALSE, warning=FALSE}
+if(length(outs) < length(sceLst)){
+  
+  sceLst <- sapply(sceLst, function(sce){
+    colnames(colData(sce))[grepl("^C|^c", 
+                                   colnames(colData(sce)), 
+                                   perl = TRUE)] <- "Capture"
+    capture_names <- levels(sce$Capture)
+    
+    ## Annotate doublets for one capture at a time
+    capLst <- sapply(capture_names, function(cn){
+      keep <- sce$Capture == cn
+      
+      ## Annotate doublets using scds three step process as run in Demuxafy
+      cap <- bcds(sce[, keep], 
+                  retRes = TRUE, estNdbl = TRUE)
+      cap <- cxds(cap, retRes = TRUE, estNdbl = TRUE)
+      cap <- cxds_bcds_hybrid(cap, estNdbl = TRUE)
+      ## Annotate doublets using scDblFInder with rate estimate from Demuxafy
+      cap <- scDblFinder(cap, dbr = ncol(cap)/1000*0.008)
+      cap
+      
+    })
+    
+    tmp <- sce_cbind(capLst, 
+                     method = "intersect", 
+                     exprs = c("counts"), 
+                     cut_off_batch = 0,
+                     cut_off_overall = 0,
+                     colData_names = TRUE)
+    
+    if(!is_empty(altExpNames(sce))){
+      altExp(tmp, "HTO") <- altExp(sce, "HTO")
+      altExp(tmp, "ADT") <- altExp(sce, "ADT")
+      
+    }
+    tmp
+    
+  })
+  
+}
+```
+
+
+## Number of doublet called made by different methods
+
+```{r}
+p <- lapply(sceLst, function(sce){
+colData(sce) %>%
+  data.frame %>%
+    mutate(scds = ifelse(hybrid_call, "Doublet", "Singlet"),
+         scdf = ifelse(scDblFinder.class == "doublet", "Doublet", "Singlet")) %>%
+  dplyr::select(GeneticDonor, scds, scdf) %>% 
+  rownames_to_column(var = "cell") %>%
+  mutate(vireo_dbl = (GeneticDonor == "Doublet"),
+         scds_dbl = (scds == "Doublet"),
+         scdf_dbl = (scdf == "Doublet")) %>%
+  dplyr::select(cell, vireo_dbl, scds_dbl, scdf_dbl) %>% 
+  pivot_longer(cols = c(vireo_dbl, scds_dbl, scdf_dbl), names_to = "method") %>%
+  dplyr::filter(value == TRUE) %>%
+  group_by(cell) %>%
+  summarise(data = list(method)) %>%
+  rowwise() -> dat
+
+  ggplot(dat, aes(x = data)) +
+    geom_bar() +
+    scale_x_upset(n_intersections = 20) +
+    geom_text(stat = 'count', aes(label = after_stat(count)), 
+              vjust = -0.5, size = 2.5)
+})
+
+p
+```
+
+
+## Vireo doublets as percentage
+
+```{r}
+sapply(sceLst, function(sce){
+  sum(sce$GeneticDonor == "Doublet")/nrow(sce)*100
+})
+```
+
+
+## Number of droplets per capture
+
+```{r}
+sapply(sceLst, function(sce){
+  table(sce$Capture)
+})
+```
+
+
+## Doublet QC metrics
+
+```{r}
+p <- lapply(sceLst, function(sce){
+  if(!"sum" %in% colnames(colData(sce))){
+    ## add per cell QC metrics if they are missing
+    sce <- addPerCellQC(sce)
+    
+  }
+  
+  colData(sce) %>%
+    data.frame %>%
+    mutate(scds = ifelse(hybrid_call, "Doublet", "Singlet"),
+           scdf = ifelse(scDblFinder.class == "doublet", "Doublet", "Singlet")) %>%
+    rownames_to_column(var = "cell") %>%
+    mutate(vireo_dbl = (GeneticDonor == "Doublet"),
+           scds_dbl = (scds == "Doublet"),
+           scdf_dbl = (scdf == "Doublet")) %>%
+    pivot_longer(cols = c(vireo_dbl, scds_dbl, scdf_dbl),
+                 names_to = "method") -> dat
+  
+  p1 <- ggplot(dat, aes(x = method, y = sum, fill = value)) +
+    geom_violin(scale = "count") +
+    scale_y_log10() +
+    labs(fill = "Doublet")
+  
+  p2 <- ggplot(dat, aes(x = method, y = detected, fill = value)) +
+    geom_violin(scale = "count")  +
+    labs(fill = "Doublet")
+  
+  (p1 | p2) + plot_layout(guides = "collect")
+})
+
+p
+```
+
+
+# Save data
+
+```{r}
+batches <- str_extract(names(sceLst), "batch[0-6]")
+
+sapply(1:length(sceLst), function(i){
+  out <- here("data",
+              paste0("C133_Neeland_", batches[i]),
+              "data", 
+              "SCEs", 
+              glue("C133_Neeland_{batches[i]}.doublets_called.SCE.rds"))
+  if(!file.exists(out)) saveRDS(sceLst[[i]], out)
+  fs::file_chmod(out, "664")
+  if(any(str_detect(fs::group_ids()$group_name, 
+                    "oshlack_lab"))) fs::file_chown(out, 
+                                                    group_id = "oshlack_lab")
+})
+```
+
+
+# Session info {.appendix}
+
