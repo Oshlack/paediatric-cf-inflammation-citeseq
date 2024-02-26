@@ -1,0 +1,423 @@
+---
+title: "Quality control of C133_Neeland data"
+subtitle: "Batches 0-6"
+author: "Jovana Maksimovic"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+site: workflowr::wflow_site
+output:
+  bookdown::html_document2:
+    base_format: workflowr::wflow_html
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+    number_sections: true
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# Load libraries
+
+```{r, message=FALSE, warning=FALSE}
+suppressPackageStartupMessages({
+  library(BiocStyle)
+  library(tidyverse)
+  library(here)
+  library(glue)
+  library(patchwork)
+  library(scran)
+  library(scater)
+  library(scuttle)
+  library(cowplot)
+})
+
+source(here("code","utility.R"))
+```
+
+# Load data
+
+```{r}
+files <- list.files(here("data",
+                         paste0("C133_Neeland_batch", 0:6),
+                         "data",
+                         "SCEs"),
+                    pattern = "preprocessed",
+                    full.names = TRUE)
+               
+sceLst <- sapply(files, function(fn){
+  readRDS(file = fn)
+})
+
+sceLst
+```
+
+
+## Incorporating gene-based annotation
+
+Having quantified gene expression against the Ensembl gene annotation, we have Ensembl-style identifiers for the genes. 
+These identifiers are used as they are unambiguous and highly stable. 
+However, they are difficult to interpret compared to the gene symbols which are more commonly used in the literature.
+Given the Ensembl identifiers, we obtain the corresponding gene symbols using annotation packages available through Bioconductor.
+Henceforth, we will use gene symbols (where available) to refer to genes in our analysis and otherwise use the Ensembl-style gene identifiers^[Some care is taken to account for missing and duplicate gene symbols; missing symbols are replaced with the Ensembl identifier and duplicated symbols are concatenated with the (unique) Ensembl identifiers.].
+
+```{r, warning=FALSE, message=FALSE}
+sceLst <- sapply(sceLst, function(sce){
+  add_gene_information(sce)
+})
+```
+
+
+# Quality control
+
+## Define the quality control metrics
+
+Low-quality cells need to be removed to ensure that technical effects do not distort downstream analysis results.
+We use several quality control (QC) metrics to measure the quality of the cells:
+
+- `sum`: This measures the library size of the cells, which is the total sum of counts across both genes and spike-in transcripts. We want cells to have high library sizes as this means more RNA has been successfully captured during library preparation. 
+- `detected`: This is the number of expressed features^[The number of expressed features refers to the number of genes which have non-zero counts (i.e. they have been identified in the cell at least once)] in each cell. Cells with few expressed features are likely to be of poor quality, as the diverse transcript population has not been successful captured. 
+- `subsets_Mito_percent`: This measures the proportion of UMIs which are mapped to mitochondrial RNA. If there is a higher than expected proportion of mitochondrial RNA this is often symptomatic of a cell which is under stress and is therefore of low quality and will not be used for the analysis. 
+- `subsets_Ribo_percent`: This measures the proportion of UMIs which are mapped to ribosomal protein genes. If there is a higher than expected proportion of ribosomal protein gene expression this is often symptomatic of a cell which is of compromised quality and we may want to exclude it from the analysis. 
+
+In summary, we aim to identify cells with low library sizes, few expressed genes, and very high percentages of mitochondrial and ribosomal protein gene expression.
+
+```{r}
+sceLst <- sapply(sceLst, function(sce){
+  
+  colData(sce) <- colData(sce)[, !str_detect(colnames(colData(sce)), 
+                                             "sum|detected|percent|total")]
+  sce <- addPerCellQC(sce, 
+                      subsets = list(Mito = which(rowData(sce)$is_mito), 
+                                     Ribo = which(rowData(sce)$is_ribo)))
+  
+  sce
+})
+```
+
+
+## Visualise the QC metrics
+
+Figure \@ref(fig:qcplot-by-genetic-donor) shows that the vast majority of samples are good-quality:
+
+As we would expect, the `doublet` droplets have larger library sizes and more genes detected.
+The `unassigned` droplets generally have smaller library sizes and fewer genes detected.
+
+```{r qcplot-by-genetic-donor, fig.cap = "Distributions of various QC metrics for all cells in the dataset. This includes the library sizes, number of genes detected, and percentage of reads mapped to mitochondrial genes.", fig.asp = 2 / 3}
+# for batch 0 each capture is from a different donor
+sceLst[[1]]$GeneticDonor <- sceLst[[1]]$Capture
+
+p <- vector("list", length(sceLst))
+for(i in 1:length(sceLst)){
+  sce <- sceLst[[i]]
+  
+  
+  p1 <- plotColData(
+    sce,
+    "sum",
+    x = "GeneticDonor",
+    other_fields = c("Capture"),
+    colour_by = "GeneticDonor",
+    point_size = 1) +
+    scale_y_log10() +
+    theme(axis.text.x = element_blank()) +
+    geom_hline(yintercept = 500,
+               linetype = "dotted") +
+    annotation_logticks(
+      sides = "l",
+      short = unit(0.03, "cm"),
+      mid = unit(0.06, "cm"),
+      long = unit(0.09, "cm"))
+  p2 <- plotColData(
+    sce,
+    "detected",
+    x = "GeneticDonor",
+    other_fields = c("Capture"),
+    colour_by = "GeneticDonor",
+    point_size = 1) +
+    theme(axis.text.x = element_blank())
+  p3 <- plotColData(
+    sce,
+    "subsets_Mito_percent",
+    x = "GeneticDonor",
+    other_fields = c("Capture"),
+    colour_by = "GeneticDonor",
+    point_size = 1) +
+    theme(axis.text.x = element_blank())
+  p4 <- plotColData(
+    sce,
+    "subsets_Ribo_percent",
+    x = "GeneticDonor",
+    other_fields = c("Capture"),
+    colour_by = "GeneticDonor",
+    point_size = 1) +
+    theme(axis.text.x = element_blank())
+  
+  p[[i]] <- p1 + p2 + p3 + p4 + 
+    plot_layout(guides = "collect", ncol = 2) +
+    plot_annotation(title = glue("Batch {i-1}"))
+}
+
+p
+```
+
+
+## Identify outliers by each metric
+
+Filtering on the mitochondrial proportion can identify stressed/damaged cells and so we seek to identify droplets with unusually large mitochondrial proportions (i.e. outliers). Outlier thresholds are defined based on the median absolute deviation (MADs) from the median value of the metric across all cells. Here, we opt to use `donor`-specific thresholds to account for `donor`-specific differences^[It is important to note that we only using droplets assigned to a sample (i.e. we ignore `unassigned` droplets) for the calculation of these thresholds.].
+
+The following table summarises the QC cutoffs:
+
+```{r, results='asis'}
+# for batch 0, remove droplets with library size < 500 for consistency with other batches
+sceLst[[1]] <- sceLst[[1]][, sceLst[[1]]$sum >= 500]
+
+# identify % mito outliers
+sceLst <- sapply(sceLst, function(sce){
+  sce$mito_drop <- isOutlier(
+    metric = sce$subsets_Mito_percent, 
+    nmads = 3, 
+    type = "higher",
+    batch = sce$GeneticDonor,
+    subset = !grepl("Unknown", sce$GeneticDonor))
+  
+  data.frame(
+    sample = factor(
+      colnames(attributes(sce$mito_drop)$thresholds),
+      levels(sce$GeneticDonor)),
+    lower = attributes(sce$mito_drop)$thresholds["higher", ]) %>%
+    arrange(sample) %>%
+    knitr::kable(caption = "Sample-specific %mito cutoffs", digits = 1) %>%
+    print()
+  
+  sce
+})
+```
+
+The vast majority of cells are retained for all samples.
+
+```{r, results='asis'}
+sceFlt <- sapply(sceLst, function(sce){
+  scePre <- sce
+  keep <- !sce$mito_drop
+  scePre$keep <- keep
+  sce <- sce[, keep]
+  
+  data.frame(
+    ByMito = tapply(
+      scePre$mito_drop, 
+      scePre$GeneticDonor, 
+      sum,
+      na.rm = TRUE),
+    Remaining = as.vector(unname(table(sce$GeneticDonor))),
+    PercRemaining = round(
+      100 * as.vector(unname(table(sce$GeneticDonor))) /
+        as.vector(
+          unname(
+            table(scePre$GeneticDonor))), 1)) %>%
+    tibble::rownames_to_column("GeneticDonor") %>%
+    dplyr::arrange(dplyr::desc(PercRemaining)) %>%
+    knitr::kable(
+      caption = "Number of droplets removed by each QC step and the number of droplets remaining.") %>%
+    print()
+  
+  sce
+})
+```
+
+Of concern is whether the cells removed during QC preferentially derive from particular experimental groups.
+Reassuringly, Figure \@ref(fig:barplot-highlighting-outliers) shows that this is not the case.
+
+```{r barplot-highlighting-outliers, fig.cap = "Droplets removed during QC, stratified by `Sample`. ", fig.asp = 1.5}
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  flt <- sceFlt[[i]]
+  
+  sce$keep <- colnames(sce) %in% colnames(flt)
+  ggcells(sce) +
+    geom_bar(aes(x = GeneticDonor, fill = keep)) + 
+    ylab("Number of droplets") + 
+    theme_cowplot(font_size = 7) + 
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    facet_grid(GeneticDonor ~ ., scales = "free_y")
+})
+
+p
+```
+
+Finally, Figure \@ref(fig:qcplot-highlighting-outliers) compares the QC metrics of the discarded and retained droplets.
+
+```{r qcplot-highlighting-outliers, fig.cap = "Distribution of QC metrics for each plate in the dataset. Each point represents a cell and is colored according to whether it was discarded during the QC process. Note that a cell will only be kept if it passes the relevant threshold for all QC metrics.", fig.asp = 1}
+
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  flt <- sceFlt[[i]]
+  
+  sce$keep <- colnames(sce) %in% colnames(flt)
+  
+  p1 <- plotColData(
+    sce,
+    "sum",
+    x = "GeneticDonor",
+    colour_by = "keep",
+    point_size = 0.5) +
+    scale_y_log10() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    annotation_logticks(
+      sides = "l",
+      short = unit(0.03, "cm"),
+      mid = unit(0.06, "cm"),
+      long = unit(0.09, "cm"))
+  p2 <- plotColData(
+    sce,
+    "detected",
+    x = "GeneticDonor",
+    colour_by = "keep",
+    point_size = 0.5) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  p3 <- plotColData(
+    sce,
+    "subsets_Mito_percent",
+    x = "GeneticDonor",
+    colour_by = "keep",
+    point_size = 0.5) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  p4 <- plotColData(
+    sce,
+    "subsets_Ribo_percent",
+    x = "GeneticDonor",
+    colour_by = "keep",
+    point_size = 0.5) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  p1 + p2 + p3 + p4 + plot_layout(guides = "collect")
+})
+
+p
+```
+
+## Filter out unassigned droplets
+
+Remove droplets that could not be assigned using genetics.
+
+```{r}
+sceFlt <- sapply(sceFlt, function(sce){
+  
+  sce <- sce[, sce$GeneticDonor != "Unknown"]
+  sce
+})
+```
+
+
+# QC summary
+
+We had already removed droplets that have unusually small library sizes or number of genes detected by the process of identifying empty droplets.
+We have now further removed droplets whose mitochondrial proportions we deem to be an outlier.
+
+To conclude, Figure \@ref(fig:qcplot-post-outlier-removal) shows that following QC that most samples have similar QC metrics, as is to be expected, and Figure\@ref(fig:experiment-by-donor-postqc) summarises the experimental design following QC.
+
+```{r qcplot-post-outlier-removal, fig.cap = "Distributions of various QC metrics for all cells in the dataset passing QC. This includes the library sizes and proportion of reads mapped to mitochondrial genes.", fig.asp = 1}
+p <- lapply(sceFlt, function(sce){
+  p1 <- plotColData(
+    sce,
+    "sum",
+    x = "GeneticDonor",
+    other_fields = c("Capture", "GeneticDonor"),
+    colour_by = "GeneticDonor",
+    point_size = 0.5) +
+    scale_y_log10() +
+    theme(axis.text.x = element_blank()) +
+    annotation_logticks(
+      sides = "l",
+      short = unit(0.03, "cm"),
+      mid = unit(0.06, "cm"),
+      long = unit(0.09, "cm"))
+  p2 <- plotColData(
+    sce,
+    "detected",
+    x = "GeneticDonor",
+    other_fields = c("Capture", "GeneticDonor"),
+    colour_by = "GeneticDonor",
+    point_size = 0.5) +
+    theme(axis.text.x = element_blank())
+  p3 <- plotColData(
+    sce,
+    "subsets_Mito_percent",
+    x = "GeneticDonor",
+    other_fields = c("Capture", "GeneticDonor"),
+    colour_by = "GeneticDonor",
+    point_size = 0.5) +
+    theme(axis.text.x = element_blank())
+  p4 <- plotColData(
+    sce,
+    "subsets_Ribo_percent",
+    x = "GeneticDonor",
+    other_fields = c("Capture", "GeneticDonor"),
+    colour_by = "GeneticDonor",
+    point_size = 0.5) +
+    theme(axis.text.x = element_blank())
+  p1 + p2 + p3 + p4 + plot_layout(guides = "collect", ncol = 2)
+})
+
+p
+```
+
+Update `batch0` object to include `dmmHTO` column to align with other batches.
+
+```{r}
+batch <- grepl("batch0", names(sceFlt))
+sceFlt[batch][[1]]$dmmHTO <- sceFlt[batch][[1]]$Capture
+```
+
+```{r experiment-by-donor-postqc, fig.asp = 1.5, fig.cap = "Breakdown of the samples following QC."}
+p <- lapply(sceFlt, function(sce){
+  p1 <- ggcells(sce) + 
+    geom_bar(
+      aes(x = GeneticDonor, fill = dmmHTO),
+      position = position_fill(reverse = TRUE)) +
+    coord_flip() +
+    ylab("Frequency") +
+    theme_cowplot(font_size = 10) 
+  p2 <- ggcells(sce) + 
+    geom_bar(
+      aes(x = GeneticDonor, fill = Capture),
+      position = position_fill(reverse = TRUE)) +
+    coord_flip() +
+    ylab("Frequency") +
+    theme_cowplot(font_size = 10)
+  p3 <- ggcells(sce) + 
+    geom_bar(aes(x = GeneticDonor, fill = GeneticDonor)) + 
+    coord_flip() + 
+    ylab("Number of droplets") + 
+    theme_cowplot(font_size = 10) + 
+    geom_text(stat='count', aes(x = GeneticDonor, label=..count..), hjust=1.5, size=2) +
+    guides(fill = FALSE)
+  p1 / p2 / p3 + plot_layout(guides = "collect")
+})
+
+p
+```
+
+
+# Save data
+
+```{r}
+batches <- str_extract(names(sceFlt), "batch[0-6]")
+
+sapply(1:length(sceFlt), function(i){
+  out <- here("data",
+              paste0("C133_Neeland_", batches[i]),
+              "data", 
+              "SCEs", 
+              glue("C133_Neeland_{batches[i]}.quality_filtered.SCE.rds"))
+  if(!file.exists(out)) saveRDS(sceFlt[[i]], out)
+  fs::file_chmod(out, "664")
+  if(any(str_detect(fs::group_ids()$group_name, 
+                    "oshlack_lab"))) fs::file_chown(out, 
+                                                    group_id = "oshlack_lab")
+})
+```
+
+
+# Session info {.appendix}
+
