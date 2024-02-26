@@ -64,8 +64,12 @@ Henceforth, we will use gene symbols (where available) to refer to genes in our 
 
 ```{r, warning=FALSE, message=FALSE}
 sceLst <- sapply(sceLst, function(sce){
-  add_gene_information(sce)
+  sce <- add_gene_information(sce)
+  rownames(sce) <- rowData(sce)$Symbol
+  sce
 })
+
+sceLst
 ```
 
 
