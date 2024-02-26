@@ -513,13 +513,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong00319de">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong025ceae">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 00319de
+aria-hidden="true"></span> <strong>Repository version:</strong> 025ceae
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong00319de"
+<div id="strongRepositoryversionstrong025ceae"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -528,7 +528,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 00319de.
+The results in this page were generated with repository version 025ceae.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -548,15 +548,8 @@ Ignored files:
 
 Untracked files:
     Untracked:  .DS_Store
-    Untracked:  analysis/01.1_preprocess_batch1.Rmd
-    Untracked:  analysis/01.2_preprocess_batch2.Rmd
-    Untracked:  analysis/01.3_preprocess_batch3.Rmd
-    Untracked:  analysis/01.4_preprocess_batch4.Rmd
-    Untracked:  analysis/01.5_preprocess_batch5.Rmd
-    Untracked:  analysis/01.6_preprocess_batch6.Rmd
-    Untracked:  analysis/02.0_decontx_quality_control.Rmd
-    Untracked:  analysis/03.0_quality_control.Rmd
-    Untracked:  analysis/04.0_flag_doublets.Rmd
+    Untracked:  analysis/02.0_quality_control.Rmd
+    Untracked:  analysis/03.0_call_doublets.Rmd
     Untracked:  code/dropletutils.R
     Untracked:  code/utility.R
     Untracked:  data/.DS_Store
@@ -619,6 +612,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+025ceae
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-26
+</td>
+<td>
+wflow_publish(c("analysis/index.Rmd", "analysis/01*"))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+da8df16
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -720,13 +747,13 @@ knitr::kable(sample_metadata_df)</code></pre>
 </div>
 <div id="set-up-the-data" class="section level1">
 <h1>Set up the data</h1>
-<pre class="r"><code>sce_raw &lt;- readRDS(here(&quot;data&quot;, &quot;C133_Neeland_batch0&quot;,
+<pre class="r"><code>sce &lt;- readRDS(here(&quot;data&quot;, &quot;C133_Neeland_batch0&quot;,
                     &quot;data&quot;, &quot;SCEs&quot;, &quot;C133_Neeland_batch0.CellRanger.SCE.rds&quot;))
-sce_raw$Capture &lt;- factor(sce_raw$Sample)
-capture_names &lt;- levels(sce_raw$Capture)
+sce$Capture &lt;- factor(sce$Sample)
+capture_names &lt;- levels(sce$Capture)
 capture_names &lt;- setNames(capture_names, capture_names)
-sce_raw$Sample &lt;- NULL
-sce_raw</code></pre>
+sce$Sample &lt;- NULL
+sce</code></pre>
 <pre><code>class: SingleCellExperiment 
 dim: 33538 8853584 
 metadata(1): Samples
@@ -745,8 +772,8 @@ altExpNames(0):</code></pre>
 <h1>Call cells from empty droplets</h1>
 <pre class="r"><code>par(mfrow = c(2, 2))
 lapply(capture_names, function(cn) {
-  sce_raw &lt;- sce_raw[, sce_raw$Capture == cn]
-  bcrank &lt;- barcodeRanks(counts(sce_raw))
+  sce &lt;- sce[, sce$Capture == cn]
+  bcrank &lt;- barcodeRanks(counts(sce))
   # Only showing unique points for plotting speed.
   uniq &lt;- !duplicated(bcrank$rank)
   plot(
@@ -770,6 +797,43 @@ rank (in decreasing order of total counts). The inferred locations of
 the inflection (dark green dashed lines) and knee points (blue dashed
 lines) are also shown.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-rankplot-1">
+Past versions of rankplot-1.png
+</button>
+</p>
+<div id="fig-rankplot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+da8df16
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <p>Remove empty droplets.</p>
 <pre class="r"><code>empties &lt;- do.call(rbind, lapply(capture_names, function(cn) {
@@ -816,7 +880,7 @@ tapply(
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>sce &lt;- sce_raw[, which(empties$FDR &lt;= 0.001)]
+<pre class="r"><code>sce &lt;- sce[, which(empties$FDR &lt;= 0.001)]
 sce</code></pre>
 <pre><code>class: SingleCellExperiment 
 dim: 33538 34583 
@@ -937,170 +1001,98 @@ colData names(5): Barcode Capture sum detected total
 reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(0):</code></pre>
-</div>
-</div>
-<div id="remove-ambient-rna-contamination" class="section level1">
-<h1>Remove ambient RNA contamination</h1>
-<div id="run-decontx" class="section level2">
-<h2>Run decontX</h2>
-<pre class="r"><code>library(decontX)
-
-sce_decont &lt;- decontX(sce, background = sce_raw,
-                      batch = sce$Capture,
-                      bgBatch = sce_raw$Capture)
-sce_decont</code></pre>
-<pre><code>class: SingleCellExperiment 
-dim: 33538 34583 
-metadata(2): Samples decontX
-assays(2): counts decontXcounts
-rownames(33538): MIR1302-2HG FAM138A ... AC213203.1 FAM231C
-rowData names(20): ID Symbol ... is_mito is_pseudogene
-colnames(34583): 1_AAACCCAAGCTAGTTC-1 1_AAACCCACAAGATTGA-1 ...
-  4_TTTGTTGTCTAGTACG-1 4_TTTGTTGTCTCGAACA-1
-colData names(7): Barcode Capture ... decontX_contamination
-  decontX_clusters
-reducedDimNames(4): decontX_A_UMAP decontX_B_UMAP decontX_C_UMAP
-  decontX_D_UMAP
-mainExpName: Gene Expression
-altExpNames(0):</code></pre>
-</div>
-<div id="decontx-clusters" class="section level2">
-<h2>DecontX clusters</h2>
-<pre class="r"><code>library(celda) # To use plotting functions in celda
-
-p &lt;- lapply(capture_names, function(cn){
-  umap &lt;- reducedDim(sce_decont, glue::glue(&quot;decontX_{cn}_UMAP&quot;))
-  plotDimReduceCluster(x = sce_decont$decontX_clusters,
-                       dim1 = umap[, 1], dim2 = umap[, 2])
-})
-
-wrap_plots(p, ncol = 2)</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
-<div id="decontx-contamination" class="section level2">
-<h2>DecontX contamination</h2>
-<pre class="r"><code>p &lt;- lapply(unique(sce$Capture), function(cn){
-  plotDecontXContamination(sce_decont, batch = cn)
-})
-
-wrap_plots(p, ncol = 2, guides = &quot;collect&quot;) &amp;
-  theme(legend.position = &quot;bottom&quot;)</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
-<div id="main-cell-type-markers-before-decontx" class="section level2">
-<h2>Main cell type markers (before decontX)</h2>
-<pre class="r"><code>sce_decont &lt;- logNormCounts(sce_decont) 
-
-p &lt;- lapply(capture_names, function(cn){
-  umap &lt;- reducedDim(sce_decont, glue::glue(&quot;decontX_{cn}_UMAP&quot;))
-  plotDimReduceFeature(as.matrix(logcounts(sce_decont)),
-                       dim1 = umap[, 1],
-                       dim2 = umap[, 2],
-                       features = c(&quot;CD3D&quot;, &quot;CD3E&quot;, # T-cells 
-                                    &quot;ITGAM&quot;, &quot;CD14&quot;, # Macs
-                                    &quot;CD79A&quot;, &quot;MS4A1&quot;, # B-cells
-                                    &quot;EPCAM&quot;, &quot;CDH1&quot;), # Epithelial
-                       exactMatch = TRUE,
-                       ncol = 2)
-})
-
-p</code></pre>
-<pre><code>$A</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>
-$B</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>
-$C</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>
-$D</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-10-4.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
-<div id="main-cell-type-markers-after-decontx" class="section level2">
-<h2>Main cell type markers (after decontX)</h2>
-<pre class="r"><code>sce_decont &lt;- logNormCounts(sce_decont, assay.type = &quot;decontXcounts&quot;) 
-
-p &lt;- lapply(capture_names, function(cn){
-  umap &lt;- reducedDim(sce_decont, glue::glue(&quot;decontX_{cn}_UMAP&quot;))
-  plotDimReduceFeature(as.matrix(logcounts(sce_decont)),
-                       dim1 = umap[, 1],
-                       dim2 = umap[, 2],
-                       features = c(&quot;CD3D&quot;, &quot;CD3E&quot;, # T-cells 
-                                    &quot;ITGAM&quot;, &quot;CD14&quot;, # Macs
-                                    &quot;CD79A&quot;, &quot;MS4A1&quot;, # B-cells
-                                    &quot;EPCAM&quot;, &quot;CDH1&quot;), # Epithelial
-                       exactMatch = TRUE,
-                       ncol = 2)
-})
-
-p</code></pre>
-<pre><code>$A</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>
-$B</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>
-$C</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-11-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>
-$D</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-11-4.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
-<div id="cell-marker-expression-comparison" class="section level2">
-<h2>Cell marker % expression comparison</h2>
-<pre class="r"><code>markers &lt;- list(Tcell_Markers = c(&quot;CD3D&quot;, &quot;CD3E&quot;),
-    Bcell_Markers = c(&quot;CD79A&quot;, &quot;CD79B&quot;, &quot;MS4A1&quot;),
-    Macrophage_Markers = c(&quot;ITGAM&quot;, &quot;CD14&quot;, &quot;CD68&quot;),
-    Epithelial_Markers = c(&quot;EPCAM&quot;, &quot;CDH1&quot;, &quot;MUC1&quot;))
-cell_type_mappings &lt;- data.frame(row.names = c(&quot;Tcells&quot;, &quot;Bcells&quot;, &quot;Macrophages&quot;, &quot;Epithelial&quot;),
-                               A = c(&quot;A-5&quot;, &quot;A-1&quot;, &quot;A-3&quot;, &quot;A-2&quot;),
-                               B = c(&quot;B-4&quot;, &quot;B-5&quot;, &quot;B-2&quot;, &quot;B-3&quot;),
-                               C = c(&quot;C-2&quot;, &quot;C-6&quot;, &quot;C-1&quot;, &quot;C-3&quot;),
-                               D = c(&quot;D-3&quot;, &quot;D-4&quot;, &quot;D-1&quot;, &quot;D-2&quot;))
-
-p &lt;- lapply(capture_names, function(cn){
-  plotDecontXMarkerPercentage(sce_decont[,sce_decont$Capture == cn],
-                              markers = markers,
-                              groupClusters = as.list(setNames(cell_type_mappings[, cn],
-                                                            rownames(cell_type_mappings))),
-                              assayName = c(&quot;counts&quot;, &quot;decontXcounts&quot;))
-})
-
-p</code></pre>
-<pre><code>$A</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>
-$B</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>
-$C</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-12-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>
-$D</code></pre>
-<p><img src="figure/01.0_preprocess_batch0.Rmd/unnamed-chunk-12-4.png" width="672" style="display: block; margin: auto;" /></p>
+<!-- # Remove ambient RNA contamination -->
+<!-- ## Run decontX -->
+<!-- ```{r, message=FALSE} -->
+<!-- library(decontX) -->
+<!-- sce_decont <- decontX(sce, background = sce_raw, -->
+<!--                       batch = sce$Capture, -->
+<!--                       bgBatch = sce_raw$Capture) -->
+<!-- sce_decont -->
+<!-- ``` -->
+<!-- ## DecontX clusters -->
+<!-- ```{r, fig.asp=0.8} -->
+<!-- library(celda) # To use plotting functions in celda -->
+<!-- p <- lapply(capture_names, function(cn){ -->
+<!--   umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP")) -->
+<!--   plotDimReduceCluster(x = sce_decont$decontX_clusters, -->
+<!--                        dim1 = umap[, 1], dim2 = umap[, 2]) -->
+<!-- }) -->
+<!-- wrap_plots(p, ncol = 2) -->
+<!-- ``` -->
+<!-- ## DecontX contamination -->
+<!-- ```{r, fig.asp=1} -->
+<!-- p <- lapply(unique(sce$Capture), function(cn){ -->
+<!--   plotDecontXContamination(sce_decont, batch = cn) -->
+<!-- }) -->
+<!-- wrap_plots(p, ncol = 2, guides = "collect") & -->
+<!--   theme(legend.position = "bottom") -->
+<!-- ``` -->
+<!-- ## Main cell type markers (before decontX) -->
+<!-- ```{r, fig.asp=1} -->
+<!-- sce_decont <- logNormCounts(sce_decont)  -->
+<!-- p <- lapply(capture_names, function(cn){ -->
+<!--   umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP")) -->
+<!--   plotDimReduceFeature(as.matrix(logcounts(sce_decont)), -->
+<!--                        dim1 = umap[, 1], -->
+<!--                        dim2 = umap[, 2], -->
+<!--                        features = c("CD3D", "CD3E", # T-cells  -->
+<!--                                     "ITGAM", "CD14", # Macs -->
+<!--                                     "CD79A", "MS4A1", # B-cells -->
+<!--                                     "EPCAM", "CDH1"), # Epithelial -->
+<!--                        exactMatch = TRUE, -->
+<!--                        ncol = 2) -->
+<!-- }) -->
+<!-- p -->
+<!-- ``` -->
+<!-- ## Main cell type markers (after decontX) -->
+<!-- ```{r, fig.asp=1} -->
+<!-- sce_decont <- logNormCounts(sce_decont, assay.type = "decontXcounts")  -->
+<!-- p <- lapply(capture_names, function(cn){ -->
+<!--   umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP")) -->
+<!--   plotDimReduceFeature(as.matrix(logcounts(sce_decont)), -->
+<!--                        dim1 = umap[, 1], -->
+<!--                        dim2 = umap[, 2], -->
+<!--                        features = c("CD3D", "CD3E", # T-cells  -->
+<!--                                     "ITGAM", "CD14", # Macs -->
+<!--                                     "CD79A", "MS4A1", # B-cells -->
+<!--                                     "EPCAM", "CDH1"), # Epithelial -->
+<!--                        exactMatch = TRUE, -->
+<!--                        ncol = 2) -->
+<!-- }) -->
+<!-- p -->
+<!-- ``` -->
+<!-- ## Cell marker % expression comparison -->
+<!-- ```{r} -->
+<!-- markers <- list(Tcell_Markers = c("CD3D", "CD3E"), -->
+<!--     Bcell_Markers = c("CD79A", "CD79B", "MS4A1"), -->
+<!--     Macrophage_Markers = c("ITGAM", "CD14", "CD68"), -->
+<!--     Epithelial_Markers = c("EPCAM", "CDH1", "MUC1")) -->
+<!-- cell_type_mappings <- data.frame(row.names = c("Tcells", "Bcells", "Macrophages", "Epithelial"), -->
+<!--                                A = c("A-5", "A-1", "A-3", "A-2"), -->
+<!--                                B = c("B-4", "B-5", "B-2", "B-3"), -->
+<!--                                C = c("C-2", "C-6", "C-1", "C-3"), -->
+<!--                                D = c("D-3", "D-4", "D-1", "D-2")) -->
+<!-- p <- lapply(capture_names, function(cn){ -->
+<!--   plotDecontXMarkerPercentage(sce_decont[,sce_decont$Capture == cn], -->
+<!--                               markers = markers, -->
+<!--                               groupClusters = as.list(setNames(cell_type_mappings[, cn], -->
+<!--                                                             rownames(cell_type_mappings))), -->
+<!--                               assayName = c("counts", "decontXcounts")) -->
+<!-- }) -->
+<!-- p -->
+<!-- ``` -->
 </div>
 </div>
 <div id="save-data" class="section level1">
 <h1>Save data</h1>
-<pre class="r"><code># without ambient RNA removal
-saveRDS(
+<pre class="r"><code>saveRDS(
    sce,
    here(&quot;data&quot;,
         &quot;C133_Neeland_batch0&quot;,
         &quot;data&quot;,
         &quot;SCEs&quot;,
-        &quot;C133_Neeland_batch0.preprocessed.SCE.rds&quot;))
-
-# with ambient RNA removal
-counts(sce) &lt;- assay(sce_decont, &quot;decontXcounts&quot;)
-saveRDS(
-   sce,
-   here(&quot;data&quot;,
-        &quot;C133_Neeland_batch0&quot;,
-        &quot;data&quot;,
-        &quot;SCEs&quot;,
-        &quot;C133_Neeland_batch0.decontx.preprocessed.SCE.rds&quot;))</code></pre>
+        &quot;C133_Neeland_batch0.preprocessed.SCE.rds&quot;))</code></pre>
 </div>
 <div id="session-info" class="section level1 appendix">
 <h1 class="appendix">Session info</h1>
@@ -1132,152 +1124,111 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] celda_1.18.1                           
- [2] Matrix_1.6-5                           
- [3] decontX_1.0.0                          
- [4] msigdbr_7.5.1                          
- [5] Homo.sapiens_1.3.1                     
- [6] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
- [7] org.Hs.eg.db_3.18.0                    
- [8] GO.db_3.18.0                           
- [9] OrganismDbi_1.44.0                     
-[10] EnsDb.Hsapiens.v86_2.99.0              
-[11] ensembldb_2.26.0                       
-[12] AnnotationFilter_1.26.0                
-[13] GenomicFeatures_1.54.3                 
-[14] AnnotationDbi_1.64.1                   
-[15] scater_1.30.1                          
-[16] scuttle_1.12.0                         
-[17] DropletUtils_1.22.0                    
-[18] SingleCellExperiment_1.24.0            
-[19] SummarizedExperiment_1.32.0            
-[20] Biobase_2.62.0                         
-[21] GenomicRanges_1.54.1                   
-[22] GenomeInfoDb_1.38.6                    
-[23] IRanges_2.36.0                         
-[24] S4Vectors_0.40.2                       
-[25] BiocGenerics_0.48.1                    
-[26] MatrixGenerics_1.14.0                  
-[27] matrixStats_1.2.0                      
-[28] lubridate_1.9.3                        
-[29] forcats_1.0.0                          
-[30] stringr_1.5.1                          
-[31] dplyr_1.1.4                            
-[32] purrr_1.0.2                            
-[33] readr_2.1.5                            
-[34] tidyr_1.3.1                            
-[35] tibble_3.2.1                           
-[36] tidyverse_2.0.0                        
-[37] patchwork_1.2.0                        
-[38] cowplot_1.1.3                          
-[39] ggplot2_3.4.4                          
-[40] BiocStyle_2.30.0                       
-[41] here_1.0.1                             
-[42] workflowr_1.7.1                        
+ [1] msigdbr_7.5.1                          
+ [2] Homo.sapiens_1.3.1                     
+ [3] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
+ [4] org.Hs.eg.db_3.18.0                    
+ [5] GO.db_3.18.0                           
+ [6] OrganismDbi_1.44.0                     
+ [7] EnsDb.Hsapiens.v86_2.99.0              
+ [8] ensembldb_2.26.0                       
+ [9] AnnotationFilter_1.26.0                
+[10] GenomicFeatures_1.54.3                 
+[11] AnnotationDbi_1.64.1                   
+[12] scater_1.30.1                          
+[13] scuttle_1.12.0                         
+[14] DropletUtils_1.22.0                    
+[15] SingleCellExperiment_1.24.0            
+[16] SummarizedExperiment_1.32.0            
+[17] Biobase_2.62.0                         
+[18] GenomicRanges_1.54.1                   
+[19] GenomeInfoDb_1.38.6                    
+[20] IRanges_2.36.0                         
+[21] S4Vectors_0.40.2                       
+[22] BiocGenerics_0.48.1                    
+[23] MatrixGenerics_1.14.0                  
+[24] matrixStats_1.2.0                      
+[25] lubridate_1.9.3                        
+[26] forcats_1.0.0                          
+[27] stringr_1.5.1                          
+[28] dplyr_1.1.4                            
+[29] purrr_1.0.2                            
+[30] readr_2.1.5                            
+[31] tidyr_1.3.1                            
+[32] tibble_3.2.1                           
+[33] tidyverse_2.0.0                        
+[34] patchwork_1.2.0                        
+[35] cowplot_1.1.3                          
+[36] ggplot2_3.4.4                          
+[37] BiocStyle_2.30.0                       
+[38] here_1.0.1                             
+[39] workflowr_1.7.1                        
 
 loaded via a namespace (and not attached):
-  [1] R.methodsS3_1.8.2         vroom_1.6.5              
-  [3] progress_1.2.3            goftest_1.2-3            
-  [5] Biostrings_2.70.2         HDF5Array_1.30.0         
-  [7] rstan_2.32.5              vctrs_0.6.5              
-  [9] spatstat.random_3.2-2     digest_0.6.34            
- [11] png_0.1-8                 git2r_0.33.0             
- [13] ggrepel_0.9.5             deldir_2.0-2             
- [15] parallelly_1.37.0         combinat_0.0-8           
- [17] renv_1.0.3                MASS_7.3-60.0.1          
- [19] reshape2_1.4.4            foreach_1.5.2            
- [21] httpuv_1.6.14             withr_3.0.0              
- [23] xfun_0.42                 ellipsis_0.3.2           
- [25] survival_3.5-8            memoise_2.0.1            
- [27] ggbeeswarm_0.7.2          zoo_1.8-12               
- [29] pbapply_1.7-2             R.oo_1.26.0              
- [31] prettyunits_1.2.0         KEGGREST_1.42.0          
- [33] promises_1.2.1            httr_1.4.7               
- [35] restfulr_0.0.15           globals_0.16.2           
- [37] fitdistrplus_1.1-11       rhdf5filters_1.14.1      
- [39] ps_1.7.6                  rhdf5_2.46.1             
- [41] rstudioapi_0.15.0         miniUI_0.1.1.1           
- [43] generics_0.1.3            processx_3.8.3           
- [45] babelgene_22.9            curl_5.2.0               
- [47] zlibbioc_1.48.0           ScaledMatrix_1.10.0      
- [49] polyclip_1.10-6           GenomeInfoDbData_1.2.11  
- [51] SparseArray_1.2.4         RcppEigen_0.3.3.9.4      
- [53] RBGL_1.78.0               doParallel_1.0.17        
- [55] xtable_1.8-4              evaluate_0.23            
- [57] S4Arrays_1.2.0            BiocFileCache_2.10.1     
- [59] hms_1.1.3                 irlba_2.3.5.1            
- [61] colorspace_2.1-0          filelock_1.0.3           
- [63] ROCR_1.0-11               reticulate_1.35.0        
- [65] spatstat.data_3.0-4       magrittr_2.0.3           
- [67] lmtest_0.9-40             later_1.3.2              
- [69] viridis_0.6.5             lattice_0.22-5           
- [71] spatstat.geom_3.2-8       future.apply_1.11.1      
- [73] getPass_0.2-4             scattermore_1.2          
- [75] XML_3.99-0.16.1           RcppAnnoy_0.0.22         
- [77] pillar_1.9.0              StanHeaders_2.32.5       
- [79] nlme_3.1-164              iterators_1.0.14         
- [81] compiler_4.3.2            beachmat_2.18.1          
- [83] RSpectra_0.16-1           stringi_1.8.3            
- [85] tensor_1.5                GenomicAlignments_1.38.2 
- [87] MCMCprecision_0.4.0       plyr_1.8.9               
- [89] crayon_1.5.2              abind_1.4-5              
- [91] BiocIO_1.12.0             locfit_1.5-9.8           
- [93] sp_2.1-3                  bit_4.0.5                
- [95] whisker_0.4.1             codetools_0.2-19         
- [97] BiocSingular_1.18.0       bslib_0.6.1              
- [99] QuickJSR_1.1.3            plotly_4.10.4            
-[101] mime_0.12                 splines_4.3.2            
-[103] Rcpp_1.0.12               fastDummies_1.7.3        
-[105] dbplyr_2.4.0              sparseMatrixStats_1.14.0 
-[107] knitr_1.45                blob_1.2.4               
-[109] utf8_1.2.4                WriteXLS_6.5.0           
-[111] fs_1.6.3                  listenv_0.9.1            
-[113] DelayedMatrixStats_1.24.0 pkgbuild_1.4.3           
-[115] callr_3.7.3               statmod_1.5.0            
-[117] tzdb_0.4.0                pkgconfig_2.0.3          
-[119] tools_4.3.2               cachem_1.0.8             
-[121] RSQLite_2.3.5             viridisLite_0.4.2        
-[123] DBI_1.2.1                 fastmap_1.1.1            
-[125] rmarkdown_2.25            scales_1.3.0             
-[127] grid_4.3.2                ica_1.0-3                
-[129] Seurat_5.0.1              Rsamtools_2.18.0         
-[131] sass_0.4.8                BiocManager_1.30.22      
-[133] dotCall64_1.1-1           graph_1.80.0             
-[135] RANN_2.6.1                farver_2.1.1             
-[137] yaml_2.3.8                rtracklayer_1.62.0       
-[139] cli_3.6.2                 dbscan_1.1-12            
-[141] leiden_0.4.3.1            lifecycle_1.0.4          
-[143] uwot_0.1.16               BiocParallel_1.36.0      
-[145] timechange_0.3.0          gtable_0.3.4             
-[147] rjson_0.2.21              ggridges_0.5.6           
-[149] progressr_0.14.0          parallel_4.3.2           
-[151] limma_3.58.1              jsonlite_1.8.8           
-[153] edgeR_4.0.15              RcppHNSW_0.6.0           
-[155] bitops_1.0-7              bit64_4.0.5              
-[157] Rtsne_0.17                spatstat.utils_3.0-4     
-[159] BiocNeighbors_1.20.2      SeuratObject_5.0.1       
-[161] RcppParallel_5.1.7        jquerylib_0.1.4          
-[163] highr_0.10                dqrng_0.3.2              
-[165] loo_2.6.0                 enrichR_3.2              
-[167] R.utils_2.12.3            lazyeval_0.2.2           
-[169] shiny_1.8.0               htmltools_0.5.7          
-[171] sctransform_0.4.1         rappdirs_0.3.3           
-[173] glue_1.7.0                spam_2.10-0              
-[175] XVector_0.42.0            RCurl_1.98-1.14          
-[177] rprojroot_2.0.4           gridExtra_2.3            
-[179] igraph_2.0.1.1            R6_2.5.1                 
-[181] labeling_0.4.3            cluster_2.1.6            
-[183] Rhdf5lib_1.24.2           rstantools_2.4.0         
-[185] DelayedArray_0.28.0       tidyselect_1.2.0         
-[187] vipor_0.4.7               ProtGenerics_1.34.0      
-[189] xml2_1.3.6                inline_0.3.19            
-[191] future_1.33.1             rsvd_1.0.5               
-[193] munsell_0.5.0             KernSmooth_2.23-22       
-[195] data.table_1.15.0         htmlwidgets_1.6.4        
-[197] RColorBrewer_1.1-3        biomaRt_2.58.2           
-[199] rlang_1.1.3               spatstat.sparse_3.0-3    
-[201] spatstat.explore_3.2-6    fansi_1.0.6              
-[203] beeswarm_0.4.0           </code></pre>
+  [1] later_1.3.2               BiocIO_1.12.0            
+  [3] bitops_1.0-7              filelock_1.0.3           
+  [5] R.oo_1.26.0               graph_1.80.0             
+  [7] XML_3.99-0.16.1           lifecycle_1.0.4          
+  [9] edgeR_4.0.15              rprojroot_2.0.4          
+ [11] processx_3.8.3            lattice_0.22-5           
+ [13] vroom_1.6.5               magrittr_2.0.3           
+ [15] limma_3.58.1              sass_0.4.8               
+ [17] rmarkdown_2.25            jquerylib_0.1.4          
+ [19] yaml_2.3.8                httpuv_1.6.14            
+ [21] DBI_1.2.1                 abind_1.4-5              
+ [23] zlibbioc_1.48.0           R.utils_2.12.3           
+ [25] RCurl_1.98-1.14           rappdirs_0.3.3           
+ [27] git2r_0.33.0              GenomeInfoDbData_1.2.11  
+ [29] ggrepel_0.9.5             irlba_2.3.5.1            
+ [31] dqrng_0.3.2               DelayedMatrixStats_1.24.0
+ [33] codetools_0.2-19          DelayedArray_0.28.0      
+ [35] xml2_1.3.6                tidyselect_1.2.0         
+ [37] ScaledMatrix_1.10.0       viridis_0.6.5            
+ [39] BiocFileCache_2.10.1      GenomicAlignments_1.38.2 
+ [41] jsonlite_1.8.8            BiocNeighbors_1.20.2     
+ [43] tools_4.3.2               progress_1.2.3           
+ [45] Rcpp_1.0.12               glue_1.7.0               
+ [47] gridExtra_2.3             SparseArray_1.2.4        
+ [49] xfun_0.42                 HDF5Array_1.30.0         
+ [51] withr_3.0.0               BiocManager_1.30.22      
+ [53] fastmap_1.1.1             rhdf5filters_1.14.1      
+ [55] fansi_1.0.6               callr_3.7.3              
+ [57] digest_0.6.34             rsvd_1.0.5               
+ [59] timechange_0.3.0          R6_2.5.1                 
+ [61] colorspace_2.1-0          biomaRt_2.58.2           
+ [63] RSQLite_2.3.5             R.methodsS3_1.8.2        
+ [65] utf8_1.2.4                generics_0.1.3           
+ [67] renv_1.0.3                rtracklayer_1.62.0       
+ [69] prettyunits_1.2.0         httr_1.4.7               
+ [71] S4Arrays_1.2.0            whisker_0.4.1            
+ [73] pkgconfig_2.0.3           gtable_0.3.4             
+ [75] blob_1.2.4                XVector_0.42.0           
+ [77] htmltools_0.5.7           RBGL_1.78.0              
+ [79] ProtGenerics_1.34.0       scales_1.3.0             
+ [81] png_0.1-8                 knitr_1.45               
+ [83] rstudioapi_0.15.0         tzdb_0.4.0               
+ [85] rjson_0.2.21              curl_5.2.0               
+ [87] cachem_1.0.8              rhdf5_2.46.1             
+ [89] parallel_4.3.2            vipor_0.4.7              
+ [91] restfulr_0.0.15           pillar_1.9.0             
+ [93] grid_4.3.2                vctrs_0.6.5              
+ [95] promises_1.2.1            BiocSingular_1.18.0      
+ [97] dbplyr_2.4.0              beachmat_2.18.1          
+ [99] beeswarm_0.4.0            evaluate_0.23            
+[101] cli_3.6.2                 locfit_1.5-9.8           
+[103] compiler_4.3.2            Rsamtools_2.18.0         
+[105] rlang_1.1.3               crayon_1.5.2             
+[107] ps_1.7.6                  getPass_0.2-4            
+[109] fs_1.6.3                  ggbeeswarm_0.7.2         
+[111] stringi_1.8.3             viridisLite_0.4.2        
+[113] BiocParallel_1.36.0       babelgene_22.9           
+[115] munsell_0.5.0             Biostrings_2.70.2        
+[117] lazyeval_0.2.2            Matrix_1.6-5             
+[119] hms_1.1.3                 sparseMatrixStats_1.14.0 
+[121] bit64_4.0.5               Rhdf5lib_1.24.2          
+[123] KEGGREST_1.42.0           statmod_1.5.0            
+[125] highr_0.10                memoise_2.0.1            
+[127] bslib_0.6.1               bit_4.0.5                </code></pre>
 </div>
 </div>
 <div class="footnotes footnotes-end-of-document">
