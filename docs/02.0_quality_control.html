@@ -514,13 +514,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong335d800">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstronge846b43">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 335d800
+aria-hidden="true"></span> <strong>Repository version:</strong> e846b43
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong335d800"
+<div id="strongRepositoryversionstronge846b43"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -529,7 +529,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 335d800.
+The results in this page were generated with repository version e846b43.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -616,6 +616,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+e846b43
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+<td>
+wflow_publish("analysis/02.0_quality_control.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -787,8 +821,109 @@ available through Bioconductor. Henceforth, we will use gene symbols
 the Ensembl-style gene identifiers<a href="#fn1" class="footnote-ref"
 id="fnref1"><sup>1</sup></a>.</p>
 <pre class="r"><code>sceLst &lt;- sapply(sceLst, function(sce){
-  add_gene_information(sce)
-})</code></pre>
+  sce &lt;- add_gene_information(sce)
+  rownames(sce) &lt;- rowData(sce)$Symbol
+  sce
+})
+
+sceLst</code></pre>
+<pre><code>$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch0/data/SCEs/C133_Neeland_batch0.preprocessed.SCE.rds`
+class: SingleCellExperiment 
+dim: 33538 34583 
+metadata(1): Samples
+assays(1): counts
+rownames(33538): MIR1302-2HG FAM138A ... AC213203.1 FAM231C
+rowData names(20): ID Symbol ... is_mito is_pseudogene
+colnames(34583): 1_AAACCCAAGCTAGTTC-1 1_AAACCCACAAGATTGA-1 ...
+  4_TTTGTTGTCTAGTACG-1 4_TTTGTTGTCTCGAACA-1
+colData names(5): Barcode Capture sum detected total
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(0):
+
+$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`
+class: SingleCellExperiment 
+dim: 36601 24823 
+metadata(1): Samples
+assays(1): counts
+rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rowData names(20): ID Symbol ... is_mito is_pseudogene
+colnames(24823): 1_AAACCCACACTTCCTG-1 1_AAACCCACAGACAAAT-1 ...
+  2_TTTGTTGTCATTGGTG-1 2_TTTGTTGTCGATGGAG-1
+colData names(11): Barcode Capture ... GeneticDonor vireo
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(2): HTO ADT
+
+$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`
+class: SingleCellExperiment 
+dim: 36601 53160 
+metadata(1): Samples
+assays(1): counts
+rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rowData names(20): ID Symbol ... is_mito is_pseudogene
+colnames(53160): 1_AAACCCAAGACCTGGA-1 1_AAACCCAAGACTGTTC-1 ...
+  2_TTTGTTGTCTCATGGA-1 2_TTTGTTGTCTCCAAGA-1
+colData names(11): Barcode Capture ... GeneticDonor vireo
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(2): HTO ADT
+
+$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`
+class: SingleCellExperiment 
+dim: 36601 64842 
+metadata(1): Samples
+assays(1): counts
+rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rowData names(20): ID Symbol ... is_mito is_pseudogene
+colnames(64842): 1_AAACCCAAGCAGCACA-1 1_AAACCCAAGCATCTTG-1 ...
+  2_TTTGTTGTCTAGGCCG-1 2_TTTGTTGTCTCGGCTT-1
+colData names(11): Barcode Capture ... GeneticDonor vireo
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(2): HTO ADT
+
+$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`
+class: SingleCellExperiment 
+dim: 36601 50208 
+metadata(1): Samples
+assays(1): counts
+rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rowData names(20): ID Symbol ... is_mito is_pseudogene
+colnames(50208): 1_AAACCCAAGCGTTAGG-1 1_AAACCCAAGGATTTGA-1 ...
+  2_TTTGTTGTCGACGATT-1 2_TTTGTTGTCTAGGCCG-1
+colData names(11): Barcode Capture ... GeneticDonor vireo
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(2): HTO ADT
+
+$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`
+class: SingleCellExperiment 
+dim: 36601 50668 
+metadata(1): Samples
+assays(1): counts
+rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rowData names(20): ID Symbol ... is_mito is_pseudogene
+colnames(50668): 1_AAACCCAAGAAGATCT-1 1_AAACCCAAGATGCAGC-1 ...
+  2_TTTGTTGTCGGATTAC-1 2_TTTGTTGTCTGAGAGG-1
+colData names(11): Barcode Capture ... GeneticDonor vireo
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(2): HTO ADT
+
+$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`
+class: SingleCellExperiment 
+dim: 36601 51119 
+metadata(1): Samples
+assays(1): counts
+rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rowData names(20): ID Symbol ... is_mito is_pseudogene
+colnames(51119): 1_AAACCCAAGAAGCGCT-1 1_AAACCCAAGACTCATC-1 ...
+  2_TTTGTTGTCGAGAATA-1 2_TTTGTTGTCTACTGAG-1
+colData names(11): Barcode Capture ... GeneticDonor vireo
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(2): HTO ADT</code></pre>
 </div>
 </div>
 <div id="quality-control" class="section level1">
@@ -905,6 +1040,43 @@ includes the library sizes, number of genes detected, and percentage of
 reads mapped to mitochondrial genes.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-by-genetic-donor-1">
+Past versions of qcplot-by-genetic-donor-1.png
+</button>
+</p>
+<div id="fig-qcplot-by-genetic-donor-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[2]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -914,6 +1086,43 @@ Distributions of various QC metrics for all cells in the dataset. This
 includes the library sizes, number of genes detected, and percentage of
 reads mapped to mitochondrial genes.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-by-genetic-donor-2">
+Past versions of qcplot-by-genetic-donor-2.png
+</button>
+</p>
+<div id="fig-qcplot-by-genetic-donor-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <pre><code>
 [[3]]</code></pre>
@@ -925,6 +1134,43 @@ includes the library sizes, number of genes detected, and percentage of
 reads mapped to mitochondrial genes.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-by-genetic-donor-3">
+Past versions of qcplot-by-genetic-donor-3.png
+</button>
+</p>
+<div id="fig-qcplot-by-genetic-donor-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[4]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -934,6 +1180,43 @@ Distributions of various QC metrics for all cells in the dataset. This
 includes the library sizes, number of genes detected, and percentage of
 reads mapped to mitochondrial genes.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-by-genetic-donor-4">
+Past versions of qcplot-by-genetic-donor-4.png
+</button>
+</p>
+<div id="fig-qcplot-by-genetic-donor-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <pre><code>
 [[5]]</code></pre>
@@ -945,6 +1228,43 @@ includes the library sizes, number of genes detected, and percentage of
 reads mapped to mitochondrial genes.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-by-genetic-donor-5">
+Past versions of qcplot-by-genetic-donor-5.png
+</button>
+</p>
+<div id="fig-qcplot-by-genetic-donor-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[6]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -955,6 +1275,43 @@ includes the library sizes, number of genes detected, and percentage of
 reads mapped to mitochondrial genes.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-by-genetic-donor-6">
+Past versions of qcplot-by-genetic-donor-6.png
+</button>
+</p>
+<div id="fig-qcplot-by-genetic-donor-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[7]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -964,6 +1321,43 @@ Distributions of various QC metrics for all cells in the dataset. This
 includes the library sizes, number of genes detected, and percentage of
 reads mapped to mitochondrial genes.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-by-genetic-donor-7">
+Past versions of qcplot-by-genetic-donor-7.png
+</button>
+</p>
+<div id="fig-qcplot-by-genetic-donor-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div id="identify-outliers-by-each-metric" class="section level2">
@@ -1839,6 +2233,43 @@ p</code></pre>
 Droplets removed during QC, stratified by <code>Sample</code>.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-barplot-highlighting-outliers-1">
+Past versions of barplot-highlighting-outliers-1.png
+</button>
+</p>
+<div id="fig-barplot-highlighting-outliers-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[2]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -1846,6 +2277,43 @@ Droplets removed during QC, stratified by <code>Sample</code>.
 <p class="caption">
 Droplets removed during QC, stratified by <code>Sample</code>.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-barplot-highlighting-outliers-2">
+Past versions of barplot-highlighting-outliers-2.png
+</button>
+</p>
+<div id="fig-barplot-highlighting-outliers-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <pre><code>
 [[3]]</code></pre>
@@ -1855,6 +2323,43 @@ Droplets removed during QC, stratified by <code>Sample</code>.
 Droplets removed during QC, stratified by <code>Sample</code>.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-barplot-highlighting-outliers-3">
+Past versions of barplot-highlighting-outliers-3.png
+</button>
+</p>
+<div id="fig-barplot-highlighting-outliers-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[4]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -1862,6 +2367,43 @@ Droplets removed during QC, stratified by <code>Sample</code>.
 <p class="caption">
 Droplets removed during QC, stratified by <code>Sample</code>.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-barplot-highlighting-outliers-4">
+Past versions of barplot-highlighting-outliers-4.png
+</button>
+</p>
+<div id="fig-barplot-highlighting-outliers-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <pre><code>
 [[5]]</code></pre>
@@ -1871,6 +2413,43 @@ Droplets removed during QC, stratified by <code>Sample</code>.
 Droplets removed during QC, stratified by <code>Sample</code>.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-barplot-highlighting-outliers-5">
+Past versions of barplot-highlighting-outliers-5.png
+</button>
+</p>
+<div id="fig-barplot-highlighting-outliers-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[6]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -1879,6 +2458,43 @@ Droplets removed during QC, stratified by <code>Sample</code>.
 Droplets removed during QC, stratified by <code>Sample</code>.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-barplot-highlighting-outliers-6">
+Past versions of barplot-highlighting-outliers-6.png
+</button>
+</p>
+<div id="fig-barplot-highlighting-outliers-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[7]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -1886,6 +2502,43 @@ Droplets removed during QC, stratified by <code>Sample</code>.
 <p class="caption">
 Droplets removed during QC, stratified by <code>Sample</code>.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-barplot-highlighting-outliers-7">
+Past versions of barplot-highlighting-outliers-7.png
+</button>
+</p>
+<div id="fig-barplot-highlighting-outliers-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <p>Finally, Figure @ref(fig:qcplot-highlighting-outliers) compares the
 QC metrics of the discarded and retained droplets.</p>
@@ -1943,6 +2596,43 @@ during the QC process. Note that a cell will only be kept if it passes
 the relevant threshold for all QC metrics.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-highlighting-outliers-1">
+Past versions of qcplot-highlighting-outliers-1.png
+</button>
+</p>
+<div id="fig-qcplot-highlighting-outliers-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[2]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -1953,6 +2643,43 @@ represents a cell and is colored according to whether it was discarded
 during the QC process. Note that a cell will only be kept if it passes
 the relevant threshold for all QC metrics.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-highlighting-outliers-2">
+Past versions of qcplot-highlighting-outliers-2.png
+</button>
+</p>
+<div id="fig-qcplot-highlighting-outliers-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <pre><code>
 [[3]]</code></pre>
@@ -1965,6 +2692,43 @@ during the QC process. Note that a cell will only be kept if it passes
 the relevant threshold for all QC metrics.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-highlighting-outliers-3">
+Past versions of qcplot-highlighting-outliers-3.png
+</button>
+</p>
+<div id="fig-qcplot-highlighting-outliers-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[4]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -1975,6 +2739,43 @@ represents a cell and is colored according to whether it was discarded
 during the QC process. Note that a cell will only be kept if it passes
 the relevant threshold for all QC metrics.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-highlighting-outliers-4">
+Past versions of qcplot-highlighting-outliers-4.png
+</button>
+</p>
+<div id="fig-qcplot-highlighting-outliers-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <pre><code>
 [[5]]</code></pre>
@@ -1987,6 +2788,43 @@ during the QC process. Note that a cell will only be kept if it passes
 the relevant threshold for all QC metrics.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-highlighting-outliers-5">
+Past versions of qcplot-highlighting-outliers-5.png
+</button>
+</p>
+<div id="fig-qcplot-highlighting-outliers-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[6]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -1998,6 +2836,43 @@ during the QC process. Note that a cell will only be kept if it passes
 the relevant threshold for all QC metrics.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-highlighting-outliers-6">
+Past versions of qcplot-highlighting-outliers-6.png
+</button>
+</p>
+<div id="fig-qcplot-highlighting-outliers-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[7]]</code></pre>
 <div class="figure" style="text-align: center">
@@ -2008,6 +2883,43 @@ represents a cell and is colored according to whether it was discarded
 during the QC process. Note that a cell will only be kept if it passes
 the relevant threshold for all QC metrics.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-highlighting-outliers-7">
+Past versions of qcplot-highlighting-outliers-7.png
+</button>
+</p>
+<div id="fig-qcplot-highlighting-outliers-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div id="filter-out-unassigned-droplets" class="section level2">
@@ -2082,6 +2994,43 @@ QC. This includes the library sizes and proportion of reads mapped to
 mitochondrial genes.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-post-outlier-removal-1">
+Past versions of qcplot-post-outlier-removal-1.png
+</button>
+</p>
+<div id="fig-qcplot-post-outlier-removal-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
@@ -2091,6 +3040,43 @@ Distributions of various QC metrics for all cells in the dataset passing
 QC. This includes the library sizes and proportion of reads mapped to
 mitochondrial genes.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-post-outlier-removal-2">
+Past versions of qcplot-post-outlier-removal-2.png
+</button>
+</p>
+<div id="fig-qcplot-post-outlier-removal-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`</code></pre>
@@ -2102,6 +3088,43 @@ QC. This includes the library sizes and proportion of reads mapped to
 mitochondrial genes.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-post-outlier-removal-3">
+Past versions of qcplot-post-outlier-removal-3.png
+</button>
+</p>
+<div id="fig-qcplot-post-outlier-removal-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
@@ -2111,6 +3134,43 @@ Distributions of various QC metrics for all cells in the dataset passing
 QC. This includes the library sizes and proportion of reads mapped to
 mitochondrial genes.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-post-outlier-removal-4">
+Past versions of qcplot-post-outlier-removal-4.png
+</button>
+</p>
+<div id="fig-qcplot-post-outlier-removal-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`</code></pre>
@@ -2122,6 +3182,43 @@ QC. This includes the library sizes and proportion of reads mapped to
 mitochondrial genes.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-post-outlier-removal-5">
+Past versions of qcplot-post-outlier-removal-5.png
+</button>
+</p>
+<div id="fig-qcplot-post-outlier-removal-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
@@ -2132,6 +3229,43 @@ QC. This includes the library sizes and proportion of reads mapped to
 mitochondrial genes.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-post-outlier-removal-6">
+Past versions of qcplot-post-outlier-removal-6.png
+</button>
+</p>
+<div id="fig-qcplot-post-outlier-removal-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
@@ -2141,6 +3275,43 @@ Distributions of various QC metrics for all cells in the dataset passing
 QC. This includes the library sizes and proportion of reads mapped to
 mitochondrial genes.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-qcplot-post-outlier-removal-7">
+Past versions of qcplot-post-outlier-removal-7.png
+</button>
+</p>
+<div id="fig-qcplot-post-outlier-removal-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <p>Update <code>batch0</code> object to include <code>dmmHTO</code>
 column to align with other batches.</p>
@@ -2179,6 +3350,43 @@ p</code></pre>
 Breakdown of the samples following QC.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment-by-donor-postqc-1">
+Past versions of experiment-by-donor-postqc-1.png
+</button>
+</p>
+<div id="fig-experiment-by-donor-postqc-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
@@ -2186,6 +3394,43 @@ $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-C
 <p class="caption">
 Breakdown of the samples following QC.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment-by-donor-postqc-2">
+Past versions of experiment-by-donor-postqc-2.png
+</button>
+</p>
+<div id="fig-experiment-by-donor-postqc-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`</code></pre>
@@ -2195,6 +3440,43 @@ $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-C
 Breakdown of the samples following QC.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment-by-donor-postqc-3">
+Past versions of experiment-by-donor-postqc-3.png
+</button>
+</p>
+<div id="fig-experiment-by-donor-postqc-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
@@ -2202,6 +3484,43 @@ $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-C
 <p class="caption">
 Breakdown of the samples following QC.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment-by-donor-postqc-4">
+Past versions of experiment-by-donor-postqc-4.png
+</button>
+</p>
+<div id="fig-experiment-by-donor-postqc-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`</code></pre>
@@ -2211,6 +3530,43 @@ $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-C
 Breakdown of the samples following QC.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment-by-donor-postqc-5">
+Past versions of experiment-by-donor-postqc-5.png
+</button>
+</p>
+<div id="fig-experiment-by-donor-postqc-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
@@ -2219,6 +3575,43 @@ $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-C
 Breakdown of the samples following QC.
 </p>
 </div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment-by-donor-postqc-6">
+Past versions of experiment-by-donor-postqc-6.png
+</button>
+</p>
+<div id="fig-experiment-by-donor-postqc-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
@@ -2226,6 +3619,43 @@ $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-C
 <p class="caption">
 Breakdown of the samples following QC.
 </p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment-by-donor-postqc-7">
+Past versions of experiment-by-donor-postqc-7.png
+</button>
+</p>
+<div id="fig-experiment-by-donor-postqc-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+ab023d9
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div id="save-data" class="section level1">
