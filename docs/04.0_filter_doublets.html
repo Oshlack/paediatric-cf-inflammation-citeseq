@@ -515,13 +515,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong59f1b28">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong2176c1e">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 59f1b28
+aria-hidden="true"></span> <strong>Repository version:</strong> 2176c1e
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong59f1b28"
+<div id="strongRepositoryversionstrong2176c1e"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -530,7 +530,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 59f1b28.
+The results in this page were generated with repository version 2176c1e.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -547,11 +547,10 @@ were generated:
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
 
 Untracked files:
     Untracked:  .DS_Store
-    Untracked:  analysis/05.0_remove_ambient.R
+    Untracked:  analysis/05.0_remove_ambient.Rmd
     Untracked:  analysis/06.0_azimuth_annotation.Rmd
     Untracked:  analysis/06.1_azimuth_annotation_decontx.Rmd
     Untracked:  code/dropletutils.R
@@ -572,6 +571,7 @@ Unstaged changes:
     Modified:   .Rprofile
     Modified:   .gitignore
     Modified:   analysis/01.0_preprocess_batch0.Rmd
+    Modified:   analysis/01.1_preprocess_batch1.Rmd
 
 </code></pre>
 <p>
@@ -617,6 +617,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+c2985bb
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -671,11 +688,12 @@ sceLst &lt;- sapply(files, function(fn){
 sceLst</code></pre>
 <pre><code>$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch0/data/SCEs/C133_Neeland_batch0.doublets_called.SCE.rds`
 class: SingleCellExperiment 
-dim: 33514 26939 
+dim: 33538 26939 
 metadata(0):
 assays(1): counts
-rownames(33514): MIR1302-2HG FAM138A ... AC213203.1 FAM231C
-rowData names(0):
+rownames(33538): ENSG00000243485 ENSG00000237613 ... ENSG00000277475
+  ENSG00000268674
+rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(26939): 1_AAACCCAAGCTAGTTC-1 1_AAACCCACAGTCGCTG-1 ...
   4_TTTGTTGTCTAGTACG-1 4_TTTGTTGTCTCGAACA-1
 colData names(25): Barcode Capture ... scDblFinder.cxds_score batch
@@ -685,11 +703,12 @@ altExpNames(0):
 
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.doublets_called.SCE.rds`
 class: SingleCellExperiment 
-dim: 36591 21970 
+dim: 36601 21970 
 metadata(0):
 assays(1): counts
-rownames(36591): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
-rowData names(0):
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
+rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(21970): 1_AAACCCACACTTCCTG-1 1_AAACCCACAGACAAAT-1 ...
   2_TTTGTTGTCATTGGTG-1 2_TTTGTTGTCGATGGAG-1
 colData names(32): Barcode Capture ... scDblFinder.cxds_score batch
@@ -699,11 +718,12 @@ altExpNames(2): HTO ADT
 
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.doublets_called.SCE.rds`
 class: SingleCellExperiment 
-dim: 36591 45711 
+dim: 36601 45711 
 metadata(0):
 assays(1): counts
-rownames(36591): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
-rowData names(0):
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
+rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(45711): 1_AAACCCAAGACCTGGA-1 1_AAACCCAAGACTGTTC-1 ...
   2_TTTGTTGTCTCATGGA-1 2_TTTGTTGTCTCCAAGA-1
 colData names(32): Barcode Capture ... scDblFinder.cxds_score batch
@@ -713,11 +733,12 @@ altExpNames(2): HTO ADT
 
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.doublets_called.SCE.rds`
 class: SingleCellExperiment 
-dim: 36591 58038 
+dim: 36601 58038 
 metadata(0):
 assays(1): counts
-rownames(36591): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
-rowData names(0):
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
+rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(58038): 1_AAACCCAAGCAGCACA-1 1_AAACCCAAGCATCTTG-1 ...
   2_TTTGTTGTCTAGGCCG-1 2_TTTGTTGTCTCGGCTT-1
 colData names(32): Barcode Capture ... scDblFinder.cxds_score batch
@@ -727,11 +748,12 @@ altExpNames(2): HTO ADT
 
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.doublets_called.SCE.rds`
 class: SingleCellExperiment 
-dim: 36591 45760 
+dim: 36601 45760 
 metadata(0):
 assays(1): counts
-rownames(36591): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
-rowData names(0):
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
+rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(45760): 1_AAACCCAAGCGTTAGG-1 1_AAACCCAAGGATTTGA-1 ...
   2_TTTGTTGTCGACGATT-1 2_TTTGTTGTCTAGGCCG-1
 colData names(32): Barcode Capture ... scDblFinder.cxds_score batch
@@ -741,11 +763,12 @@ altExpNames(2): HTO ADT
 
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.doublets_called.SCE.rds`
 class: SingleCellExperiment 
-dim: 36591 44715 
+dim: 36601 44715 
 metadata(0):
 assays(1): counts
-rownames(36591): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
-rowData names(0):
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
+rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(44715): 1_AAACCCAAGAAGATCT-1 1_AAACCCAAGATGCAGC-1 ...
   2_TTTGTTGTCGGATTAC-1 2_TTTGTTGTCTGAGAGG-1
 colData names(32): Barcode Capture ... scDblFinder.cxds_score batch
@@ -755,11 +778,12 @@ altExpNames(2): HTO ADT
 
 $`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.doublets_called.SCE.rds`
 class: SingleCellExperiment 
-dim: 36591 46485 
+dim: 36601 46485 
 metadata(0):
 assays(1): counts
-rownames(36591): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
-rowData names(0):
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
+rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(46485): 1_AAACCCAAGAAGCGCT-1 1_AAACCCAAGACTCATC-1 ...
   2_TTTGTTGTCGAGAATA-1 2_TTTGTTGTCTACTGAG-1
 colData names(32): Barcode Capture ... scDblFinder.cxds_score batch
@@ -1959,6 +1983,43 @@ using HTOs.</p>
 
 wrap_plots(p, ncol = 2)</code></pre>
 <p><img src="figure/04.0_filter_doublets.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+c2985bb
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="no.-of-doublets-called-per-batch" class="section level2">
 <h2>No. of doublets called per batch</h2>
@@ -1989,6 +2050,43 @@ wrap_plots(p, ncol = 2)</code></pre>
 
 wrap_plots(p, ncol = 2)</code></pre>
 <p><img src="figure/04.0_filter_doublets.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+c2985bb
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="doublet-filtering" class="section level1">
@@ -2027,19 +2125,19 @@ doublets calls per capture are shown below.</p>
 <tbody>
 <tr class="odd">
 <td align="left">A</td>
-<td align="right">3.428571</td>
+<td align="right">3.104529</td>
 </tr>
 <tr class="even">
 <td align="left">B</td>
-<td align="right">3.187721</td>
+<td align="right">3.236475</td>
 </tr>
 <tr class="odd">
 <td align="left">C</td>
-<td align="right">5.843478</td>
+<td align="right">6.003251</td>
 </tr>
 <tr class="even">
 <td align="left">D</td>
-<td align="right">5.784768</td>
+<td align="right">5.830370</td>
 </tr>
 </tbody>
 </table>
@@ -2055,12 +2153,12 @@ doublets calls per capture are shown below.</p>
 <tbody>
 <tr class="odd">
 <td align="left">C133_batch1_1</td>
-<td align="right">2.485437</td>
+<td align="right">2.545172</td>
 <td align="right">7.79128</td>
 </tr>
 <tr class="even">
 <td align="left">C133_batch1_2</td>
-<td align="right">2.930832</td>
+<td align="right">2.533237</td>
 <td align="right">11.10678</td>
 </tr>
 </tbody>
@@ -2077,12 +2175,12 @@ doublets calls per capture are shown below.</p>
 <tbody>
 <tr class="odd">
 <td align="left">C133_batch2_1</td>
-<td align="right">1.645618</td>
+<td align="right">1.635894</td>
 <td align="right">29.69542</td>
 </tr>
 <tr class="even">
 <td align="left">C133_batch2_2</td>
-<td align="right">1.793442</td>
+<td align="right">1.523074</td>
 <td align="right">57.17682</td>
 </tr>
 </tbody>
@@ -2099,12 +2197,12 @@ doublets calls per capture are shown below.</p>
 <tbody>
 <tr class="odd">
 <td align="left">C133_batch3_1</td>
-<td align="right">2.337662</td>
+<td align="right">2.370001</td>
 <td align="right">24.63025</td>
 </tr>
 <tr class="even">
 <td align="left">C133_batch3_2</td>
-<td align="right">2.563921</td>
+<td align="right">2.425704</td>
 <td align="right">20.25649</td>
 </tr>
 </tbody>
@@ -2121,12 +2219,12 @@ doublets calls per capture are shown below.</p>
 <tbody>
 <tr class="odd">
 <td align="left">C133_batch4_1</td>
-<td align="right">3.317708</td>
+<td align="right">3.619517</td>
 <td align="right">18.65984</td>
 </tr>
 <tr class="even">
 <td align="left">C133_batch4_2</td>
-<td align="right">2.584865</td>
+<td align="right">2.475446</td>
 <td align="right">22.84497</td>
 </tr>
 </tbody>
@@ -2143,12 +2241,12 @@ doublets calls per capture are shown below.</p>
 <tbody>
 <tr class="odd">
 <td align="left">C133_batch5_1</td>
-<td align="right">3.175048</td>
+<td align="right">3.343934</td>
 <td align="right">13.83751</td>
 </tr>
 <tr class="even">
 <td align="left">C133_batch5_2</td>
-<td align="right">3.221979</td>
+<td align="right">3.217268</td>
 <td align="right">18.20225</td>
 </tr>
 </tbody>
@@ -2165,12 +2263,12 @@ doublets calls per capture are shown below.</p>
 <tbody>
 <tr class="odd">
 <td align="left">C133_batch6_1</td>
-<td align="right">1.378029</td>
+<td align="right">1.518363</td>
 <td align="right">42.77545</td>
 </tr>
 <tr class="even">
 <td align="left">C133_batch6_2</td>
-<td align="right">1.459050</td>
+<td align="right">1.508269</td>
 <td align="right">31.80439</td>
 </tr>
 </tbody>
@@ -2196,8 +2294,45 @@ p &lt;- lapply(1:length(sceLst), function(i){
 })
 
 wrap_plots(p, ncol = 2)</code></pre>
-<p><img src="figure/04.0_filter_doublets.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" />
-Then, filter out doublets.</p>
+<p><img src="figure/04.0_filter_doublets.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+c2985bb
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Then, filter out doublets.</p>
 <pre class="r"><code>sceLst &lt;- lapply(sceLst, function(sce){
   sce[, !(sce$ProcessedHTO %in% c(&quot;Doublet&quot;) | 
                                   (sce$hybrid_call &amp; sce$scDblFinder.class == &quot;doublet&quot;))]
@@ -2219,6 +2354,43 @@ p &lt;- lapply(1:length(sceLst), function(i){
 
 wrap_plots(p, ncol = 2)</code></pre>
 <p><img src="figure/04.0_filter_doublets.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+c2985bb
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Finally, filter out negatives cells.</p>
 <pre class="r"><code>sceLst &lt;- lapply(sceLst, function(sce){
   sce[, !(sce$sample.id %in% &quot;Negative&quot;)]
@@ -2240,6 +2412,43 @@ p &lt;- lapply(1:length(sceLst), function(i){
 
 wrap_plots(p, ncol = 2)</code></pre>
 <p><img src="figure/04.0_filter_doublets.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+c2985bb
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cell-counts-per-sample-after-filtering" class="section level1">
 <h1>Cell counts per sample after filtering</h1>
@@ -2258,6 +2467,43 @@ wrap_plots(p, ncol = 2)</code></pre>
 
 wrap_plots(p, ncol = 2)</code></pre>
 <p><img src="figure/04.0_filter_doublets.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+c2985bb
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="qc-per-sample-after-filtering" class="section level1">
 <h1>QC per sample after filtering</h1>
@@ -2292,6 +2538,43 @@ wrap_plots(p, ncol = 2)</code></pre>
 wrap_plots(p, ncol = 1) &amp;
   theme(axis.title.y = element_text(size = 9))</code></pre>
 <p><img src="figure/04.0_filter_doublets.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+c2985bb
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="save-data" class="section level1">
 <h1>Save data</h1>
