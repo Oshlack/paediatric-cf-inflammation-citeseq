@@ -102,6 +102,8 @@ if(length(outs) < length(sceLst)){
                      cut_off_overall = 0,
                      colData_names = TRUE)
     
+    if(all(rownames(tmp) == rownames(sce))) rowData(tmp) <- rowData(sce)
+    
     if(!is_empty(altExpNames(sce))){
       altExp(tmp, "HTO") <- altExp(sce, "HTO")
       altExp(tmp, "ADT") <- altExp(sce, "ADT")
