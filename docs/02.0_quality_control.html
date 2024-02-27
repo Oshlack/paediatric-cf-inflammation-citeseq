@@ -514,13 +514,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstronge846b43">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong4741d87">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> e846b43
+aria-hidden="true"></span> <strong>Repository version:</strong> 4741d87
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstronge846b43"
+<div id="strongRepositoryversionstrong4741d87"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -529,7 +529,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version e846b43.
+The results in this page were generated with repository version 4741d87.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -549,9 +549,7 @@ Ignored files:
 
 Untracked files:
     Untracked:  .DS_Store
-    Untracked:  analysis/03.0_identify_doublets.Rmd
-    Untracked:  analysis/04.0_filter_doublets.Rmd
-    Untracked:  analysis/05.0_remove_ambient.R
+    Untracked:  analysis/05.0_remove_ambient.Rmd
     Untracked:  analysis/06.0_azimuth_annotation.Rmd
     Untracked:  analysis/06.1_azimuth_annotation_decontx.Rmd
     Untracked:  code/dropletutils.R
@@ -564,6 +562,7 @@ Untracked files:
     Untracked:  data/C133_Neeland_batch4/
     Untracked:  data/C133_Neeland_batch5/
     Untracked:  data/C133_Neeland_batch6/
+    Untracked:  data/CZI_samples_design_with_micro.xlsx
     Untracked:  renv.lock
     Untracked:  renv/
 
@@ -571,6 +570,7 @@ Unstaged changes:
     Modified:   .Rprofile
     Modified:   .gitignore
     Modified:   analysis/01.0_preprocess_batch0.Rmd
+    Modified:   analysis/01.1_preprocess_batch1.Rmd
 
 </code></pre>
 <p>
@@ -616,6 +616,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+4741d87
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+<td>
+wflow_publish("analysis/02.0_quality_control.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+cab70ad
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -822,7 +856,6 @@ the Ensembl-style gene identifiers<a href="#fn1" class="footnote-ref"
 id="fnref1"><sup>1</sup></a>.</p>
 <pre class="r"><code>sceLst &lt;- sapply(sceLst, function(sce){
   sce &lt;- add_gene_information(sce)
-  rownames(sce) &lt;- rowData(sce)$Symbol
   sce
 })
 
@@ -832,7 +865,8 @@ class: SingleCellExperiment
 dim: 33538 34583 
 metadata(1): Samples
 assays(1): counts
-rownames(33538): MIR1302-2HG FAM138A ... AC213203.1 FAM231C
+rownames(33538): ENSG00000243485 ENSG00000237613 ... ENSG00000277475
+  ENSG00000268674
 rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(34583): 1_AAACCCAAGCTAGTTC-1 1_AAACCCACAAGATTGA-1 ...
   4_TTTGTTGTCTAGTACG-1 4_TTTGTTGTCTCGAACA-1
@@ -846,7 +880,8 @@ class: SingleCellExperiment
 dim: 36601 24823 
 metadata(1): Samples
 assays(1): counts
-rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
 rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(24823): 1_AAACCCACACTTCCTG-1 1_AAACCCACAGACAAAT-1 ...
   2_TTTGTTGTCATTGGTG-1 2_TTTGTTGTCGATGGAG-1
@@ -860,7 +895,8 @@ class: SingleCellExperiment
 dim: 36601 53160 
 metadata(1): Samples
 assays(1): counts
-rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
 rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(53160): 1_AAACCCAAGACCTGGA-1 1_AAACCCAAGACTGTTC-1 ...
   2_TTTGTTGTCTCATGGA-1 2_TTTGTTGTCTCCAAGA-1
@@ -874,7 +910,8 @@ class: SingleCellExperiment
 dim: 36601 64842 
 metadata(1): Samples
 assays(1): counts
-rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
 rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(64842): 1_AAACCCAAGCAGCACA-1 1_AAACCCAAGCATCTTG-1 ...
   2_TTTGTTGTCTAGGCCG-1 2_TTTGTTGTCTCGGCTT-1
@@ -888,7 +925,8 @@ class: SingleCellExperiment
 dim: 36601 50208 
 metadata(1): Samples
 assays(1): counts
-rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
 rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(50208): 1_AAACCCAAGCGTTAGG-1 1_AAACCCAAGGATTTGA-1 ...
   2_TTTGTTGTCGACGATT-1 2_TTTGTTGTCTAGGCCG-1
@@ -902,7 +940,8 @@ class: SingleCellExperiment
 dim: 36601 50668 
 metadata(1): Samples
 assays(1): counts
-rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
 rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(50668): 1_AAACCCAAGAAGATCT-1 1_AAACCCAAGATGCAGC-1 ...
   2_TTTGTTGTCGGATTAC-1 2_TTTGTTGTCTGAGAGG-1
@@ -916,7 +955,8 @@ class: SingleCellExperiment
 dim: 36601 51119 
 metadata(1): Samples
 assays(1): counts
-rownames(36601): MIR1302-2HG FAM138A ... AC007325.4 AC007325.2
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
 rowData names(20): ID Symbol ... is_mito is_pseudogene
 colnames(51119): 1_AAACCCAAGAAGCGCT-1 1_AAACCCAAGACTCATC-1 ...
   2_TTTGTTGTCGAGAATA-1 2_TTTGTTGTCTACTGAG-1
