@@ -1,0 +1,370 @@
+---
+title: "Filter doublets and add sample information to C133_Neeland data"
+subtitle: "Batches 0-6"
+author: "Jovana Maksimovic"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+site: workflowr::wflow_site
+output:
+  bookdown::html_document2:
+    base_format: workflowr::wflow_html
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+    number_sections: true
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# Load libraries
+
+```{r, message=FALSE, warning=FALSE}
+suppressPackageStartupMessages({
+  library(BiocStyle)
+  library(tidyverse)
+  library(here)
+  library(glue)
+  library(patchwork)
+  library(paletteer)
+  library(readxl)
+  library(ggupset)
+  library(stringr)
+})
+
+```
+
+
+# Load Data
+
+```{r}
+files <- list.files(here("data",
+                         paste0("C133_Neeland_batch", 0:6),
+                         "data", 
+                         "SCEs"), 
+                      pattern = "doublets_called",
+                      full.names = TRUE)
+  
+sceLst <- sapply(files, function(fn){
+    readRDS(file = fn)
+})
+
+sceLst
+```
+
+
+# Load sample information
+
+```{r}
+ext_metadata_df <- read_excel(
+  here("data/CZI_samples_design_with_micro.xlsx"),
+  col_types = 
+    c("text", "numeric", "text", "text", "text", "numeric", "numeric", "text",
+      "numeric", "text", "numeric", "numeric", "numeric", "numeric",
+      "text", "text", "text")) %>%
+  mutate(HASHTAG = paste0("Human_HTO_", HASHTAG)) %>%
+  mutate(sample.id = ave(Donor_ID, Donor_ID, 
+                         FUN = function(i) paste0("sample_", i, '.', seq_along(i)))) %>%
+  dplyr::rename(Batch = BATCH, 
+                Donor = Donor_ID, 
+                Hashtag = HASHTAG,
+                arest.id = AREST_ID) %>%
+  mutate(Donor = as.factor(Donor))
+knitr::kable(ext_metadata_df)
+```
+
+
+# Assign sample IDs to cells
+
+For genetically distinct samples, cells are assigned to a sample using the genetic assignment; the sample information is then assigned using the corresponding HTO. For longitudinal samples *only*, both cells and sample information are assigned to the individual samples using HTOs. 
+
+```{r}
+sceLst <- sapply(1:length(sceLst), function(i){
+  message(i)
+  sce <- sceLst[[i]]
+  
+  # convert genetic and HTO labels to character
+  sce$GeneticDonor <- as.character(sce$GeneticDonor)
+  sce$dmmHTO <- ifelse(!stringr::str_detect(sce$dmmHTO, "Human_HTO_") & 
+                         !(stringr::str_detect(sce$dmmHTO, "Doublet|Negative")),
+                       paste0("Human_HTO_", sce$dmmHTO),
+                       as.character(sce$dmmHTO))
+  
+  # match genetics and HTOs
+  tab <- table(sce$GeneticDonor, sce$dmmHTO)
+  tab <- tab[!rownames(tab) %in% c("Doublet","Unknown"),
+             !colnames(tab) %in% c("Doublet","Negative")]
+  # extract all genetically unique samples in this batch
+  sub <- tab[rowSums(tab/rowSums(tab) > 0.2) == 1, , drop = FALSE]
+  # create dictionary to translate genetics to HTO
+  dict <- apply(sub, 1, function(x){
+    colnames(tab)[which(x == max(x))]
+  })
+  dict <- c(dict, "Doublet" = "Doublet", "Unknown" = "Negative")
+ 
+  sce$ProcessedHTO <- NA
+  # assign HTO based on genetics
+  genetics <- sce$GeneticDonor %in% names(dict)
+  sce$ProcessedHTO[genetics] <- unname(dict[sce$GeneticDonor[genetics]])
+  
+  # if there are longitudinal samples also assign HTO based on hashtags
+  if(dim(sub)[1] != dim(sub)[2]){
+    HTO <- !sce$GeneticDonor %in% names(dict)
+    sce$ProcessedHTO[HTO] <- sce$dmmHTO[HTO]
+    
+  }
+  
+  # add sample metadata based on processed HTO
+  colData(sce) %>%
+    data.frame() %>%
+    rownames_to_column("cell") %>%
+    left_join(ext_metadata_df %>% 
+                dplyr::filter(Batch == (i-1)) %>%
+                data.frame, 
+              by = c("ProcessedHTO" = "Hashtag")) %>%
+    mutate(sample.id = ifelse(is.na(sample.id), 
+                              ProcessedHTO,
+                              sample.id)) %>%
+    column_to_rownames("cell") %>% 
+    DataFrame() -> colData(sce)
+  
+  sce
+})
+
+```
+## Number of cells per sample
+
+```{r, fig.asp=1.75}
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  colData(sce) %>%
+    data.frame() %>%
+    ggplot(aes(x = sample.id, fill = Donor)) +
+    geom_bar(position = position_dodge()) + 
+    geom_text(aes(label = ..count..),
+              stat = "count", vjust = 1.5, 
+              colour = "black", size = 2) +
+    theme(legend.position = "none") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+    ggtitle(glue("batch {i-1}"))
+})
+
+wrap_plots(p, ncol = 2)
+```
+
+## No. of doublets called per batch
+
+```{r, fig.asp=2}
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  colData(sce) %>%
+    data.frame() %>%
+    mutate(scds = ifelse(hybrid_call, "Doublet", "Singlet"),
+           scdf = ifelse(scDblFinder.class == "doublet", "Doublet", "Singlet")) %>%
+    dplyr::select(ProcessedHTO, scds, scdf, Capture) %>% 
+    rownames_to_column(var = "cell") %>%
+    mutate(vireo_dmm_dbl = (ProcessedHTO == "Doublet"),
+           scds_dbl = (scds == "Doublet"),
+           scdf_dbl = (scdf == "Doublet")) %>%
+    dplyr::select(cell, vireo_dmm_dbl, scds_dbl, scdf_dbl, Capture) %>% 
+    pivot_longer(cols = c(vireo_dmm_dbl, scds_dbl, scdf_dbl), names_to = "method") %>%
+    dplyr::filter(value == TRUE) %>%
+    group_by(cell) %>%
+    summarise(data = list(method), Capture) %>%
+    rowwise() %>%
+    ggplot(aes(x = data)) +
+    geom_bar() +
+    scale_x_upset(n_intersections = 20) +
+    geom_text(stat = 'count', aes(label = after_stat(count)), 
+              vjust = -0.5, size = 2) +
+    ggtitle(glue("batch {i-1}"))
+})
+
+wrap_plots(p, ncol = 2)
+```
+
+
+# Doublet filtering
+
+We HAVE to filter out cells that are called doublets by either `vireo` or `demuxmix` (for relevant samples only) because we have no singlet assignment to a sample for them. We also HAVE to filter out negative cells as they also have no singlet assignment. We will also filter out cells that are called doublets by BOTH `scds` and `scDblFinder` (both methods were suggested in the demuxafy paper) that are not already in the `vireo/demuxmix doublet pool`. The percentages for those doublets calls per capture are shown below.
+
+```{r, results='asis'}
+lapply(sceLst, function(sce){
+  scds_scdf <- table(sce$Capture, sce$hybrid_call & sce$scDblFinder.class == "doublet" &
+                       !sce$ProcessedHTO == "Doublet")
+  vireo_dmm <- table(sce$Capture, sce$ProcessedHTO == "Doublet")
+  
+  if(length(levels(sce$Capture)) < 4) {
+    data.frame(scds_scdf_dbl = scds_scdf[,2]/scds_scdf[,1]*100,
+               vireo_dmm_dbl = vireo_dmm[,2]/vireo_dmm[,1]*100) -> tab
+  } else {
+    data.frame(scds_scdf_dbl = scds_scdf[,2]/scds_scdf[,1]*100) -> tab
+  }
+  
+  tab %>% knitr::kable()
+})
+```
+
+First, filter out *wheeze* and *CSLD* samples as we will focus only on *CF*.
+
+```{r, fig.asp=1.75}
+sceLst <- lapply(sceLst, function(sce){
+  sce[, !sce$Disease %in% c("Wheeze", "CSLD")]
+})
+
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  colData(sce) %>%
+    data.frame() %>%
+    ggplot(aes(x = sample.id, fill = Donor)) +
+    geom_bar(position = position_dodge()) + 
+    geom_text(aes(label = ..count..),
+              stat = "count", vjust = 1.5, 
+              colour = "black", size = 2) +
+    theme(legend.position = "none") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+    ggtitle(glue("batch {i-1}"))
+})
+
+wrap_plots(p, ncol = 2)
+```
+Then, filter out doublets.
+
+```{r, fig.asp=1.75}
+sceLst <- lapply(sceLst, function(sce){
+  sce[, !(sce$ProcessedHTO %in% c("Doublet") | 
+                                  (sce$hybrid_call & sce$scDblFinder.class == "doublet"))]
+})
+
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  colData(sce) %>%
+    data.frame() %>%
+    ggplot(aes(x = sample.id, fill = Donor)) +
+    geom_bar(position = position_dodge()) + 
+    geom_text(aes(label = ..count..),
+              stat = "count", vjust = 1.5, 
+              colour = "black", size = 2) +
+    theme(legend.position = "none") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+    ggtitle(glue("batch {i-1}"))
+})
+
+wrap_plots(p, ncol = 2)
+```
+
+
+Finally, filter out negatives cells.
+
+```{r, fig.asp=1.75}
+sceLst <- lapply(sceLst, function(sce){
+  sce[, !(sce$sample.id %in% "Negative")]
+})
+
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  colData(sce) %>%
+    data.frame() %>%
+    ggplot(aes(x = sample.id, fill = Donor)) +
+    geom_bar(position = position_dodge()) + 
+    geom_text(aes(label = ..count..),
+              stat = "count", vjust = 1.5, 
+              colour = "black", size = 2) +
+    theme(legend.position = "none") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+    ggtitle(glue("batch {i-1}"))
+})
+
+wrap_plots(p, ncol = 2)
+```
+
+# Cell counts per sample after filtering
+
+```{r, fig.asp=1.75}
+p <- lapply(sceLst, function(sce){
+  colData(sce) %>%
+    data.frame() %>%
+    mutate(donor.fct = factor(Donor, labels = 1:length(unique(Donor)))) %>%
+    ggplot(aes(x = sample.id, fill = donor.fct)) +
+    geom_bar(position = position_dodge()) + 
+    geom_text(aes(label = ..count..),
+              stat = "count", vjust = 1.5, 
+              colour = "black", size = 2) +
+    theme(legend.position = "none") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+})
+
+wrap_plots(p, ncol = 2)
+```
+
+# QC per sample after filtering
+
+```{r, fig.asp=3}
+p <- lapply(sceLst, function(sce){
+  colData(sce) %>%
+    data.frame() %>% 
+    mutate(donor.fct = factor(Donor, labels = 1:length(unique(Donor)))) %>%
+    ggplot(aes(x = sample.id, y = sum,
+               fill = donor.fct)) +
+    geom_violin() +
+    scale_y_log10() +
+    theme(legend.position = "none") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+    labs(x = "Sample",
+         y = "Library size (log10 scale)") -> p1
+  
+  colData(sce) %>%
+    data.frame() %>% 
+    mutate(donor.fct = factor(Donor, labels = 1:length(unique(Donor)))) %>%
+    ggplot(aes(x = sample.id, y = detected,
+               fill = donor.fct)) +
+    geom_violin() +
+    scale_y_log10() +
+    theme(legend.position = "none") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+    labs(x = "Sample",
+         y = "No. genes detected (log10 scale)") -> p2
+  
+  p1 + p2
+})
+
+wrap_plots(p, ncol = 1) &
+  theme(axis.title.y = element_text(size = 9))
+```
+
+
+# Save data
+
+```{r}
+batches <- str_extract(files, "batch[0-6]")
+
+sapply(1:length(sceLst), function(i){
+  out <- here("data",
+              paste0("C133_Neeland_", batches[i]),
+              "data", 
+              "SCEs", 
+              glue("C133_Neeland_{batches[i]}.doublets_filtered.SCE.rds"))
+  if(!file.exists(out)) saveRDS(sceLst[[i]], out)
+  fs::file_chmod(out, "664")
+  if(any(str_detect(fs::group_ids()$group_name, 
+                    "oshlack_lab"))) fs::file_chown(out, 
+                                                    group_id = "oshlack_lab")
+})
+```
+
+# Session info {.appendix}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
