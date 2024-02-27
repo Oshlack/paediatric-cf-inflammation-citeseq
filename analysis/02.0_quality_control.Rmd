@@ -52,8 +52,6 @@ sceLst <- sapply(files, function(fn){
 
 sceLst
 ```
-
-
 ## Incorporating gene-based annotation
 
 Having quantified gene expression against the Ensembl gene annotation, we have Ensembl-style identifiers for the genes. 
@@ -65,13 +63,11 @@ Henceforth, we will use gene symbols (where available) to refer to genes in our 
 ```{r, warning=FALSE, message=FALSE}
 sceLst <- sapply(sceLst, function(sce){
   sce <- add_gene_information(sce)
-  rownames(sce) <- rowData(sce)$Symbol
   sce
 })
 
 sceLst
 ```
-
 
 # Quality control
 
