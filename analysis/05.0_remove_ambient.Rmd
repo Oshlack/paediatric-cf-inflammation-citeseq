@@ -1,0 +1,253 @@
+---
+title: "Remove ambient RNA from C133_Neeland data"
+description: "Batches 0-6"
+author:
+  - name: Jovana Maksimovic
+date: "`r Sys.Date()`"
+editor_options: 
+  chunk_output_type: inline
+---
+  
+```{r, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r setup}
+suppressPackageStartupMessages({
+  library(here)
+  library(BiocStyle)
+  library(ggplot2)
+  library(cowplot)
+  library(patchwork)
+  library(tidyverse)
+  library(SingleCellExperiment)
+  library(DropletUtils)
+  library(scater)
+  library(decontX)
+  library(celda)
+})
+```
+
+
+
+# Load data
+
+```{r}
+files <- list.files(here("data",
+                         paste0("C133_Neeland_batch", 0:6),
+                         "data",
+                         "SCEs"),
+                    pattern = "doublets_filtered",
+                    full.names = TRUE)
+               
+sceLst <- sapply(files, function(fn){
+  readRDS(file = fn)
+})
+
+sceLst
+```
+
+
+# Remove ambient RNA contamination
+## Run decontX
+
+```{r}
+sceLst <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  
+  sce_raw <- readRDS(str_replace(names(sceLst)[i], 
+                     "doublets_filtered",
+                     "CellRanger"))
+  
+  if(length(levels(sce$Capture)) < 4){
+    sce_decont <- decontX(sce, background = sce_raw)
+    
+  } else {
+    sce_decont <- decontX(sce, background = sce_raw,
+                          batch = sce$Capture,
+                          bgBatch = sce_raw$Sample)
+    
+  }
+  sce_decont
+  
+})
+```
+
+
+## DecontX clusters
+
+```{r}
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  
+  if(length(levels(sce$Capture)) < 4){
+    umap <- reducedDim(sce, glue::glue("decontX_UMAP"))
+    plotDimReduceCluster(x = sce$decontX_clusters,
+                         dim1 = umap[, 1], dim2 = umap[, 2])
+    
+  } else {
+    capture_names <- levels(sce$Capture)
+    
+    p <- lapply(capture_names, function(cn){
+      umap <- reducedDim(sce, glue::glue("decontX_{cn}_UMAP"))
+      plotDimReduceCluster(x = sce$decontX_clusters,
+                           dim1 = umap[, 1], dim2 = umap[, 2])
+    })
+    wrap_plots(p, ncol = 2)
+    
+  }
+  
+})
+
+p
+```
+
+## DecontX contamination
+
+```{r}
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  
+  if(length(levels(sce$Capture)) < 4){  
+    plotDecontXContamination(sce)
+    
+  } else {
+    capture_names <- levels(sce$Capture)
+    
+    p <- lapply(capture_names, function(cn){
+      plotDecontXContamination(sce, batch = cn)
+    })
+    
+    wrap_plots(p, ncol = 2, guides = "collect") &
+      theme(legend.position = "bottom",
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 8))
+    
+  }
+})
+
+p
+```
+
+
+## Main cell type markers (before decontX)
+
+```{r, fig.asp=1.5}
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  
+  if(length(levels(sce$Capture)) < 4){
+    sce_decont <- logNormCounts(sce)
+    rownames(sce_decont) <- rowData(sce_decont)$Symbol
+    
+    umap <- reducedDim(sce_decont, glue::glue("decontX_UMAP"))
+    plotDimReduceFeature(as.matrix(logcounts(sce_decont)),
+                         dim1 = umap[, 1],
+                         dim2 = umap[, 2],
+                         features = c("CD3D", "CD3E", # T-cells
+                                      "ITGAM", "CD14", # Macs
+                                      "CD79A", "MS4A1", # B-cells
+                                      "EPCAM", "CDH1"), # Epithelial
+                         exactMatch = TRUE,
+                         ncol = 2)
+    
+  } else {
+    sce_decont <- logNormCounts(sce)
+    rownames(sce_decont) <- rowData(sce_decont)$Symbol
+    capture_names <- levels(sce$Capture)
+    
+    p <- lapply(capture_names, function(cn){
+      umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP"))
+      plotDimReduceFeature(as.matrix(logcounts(sce_decont)),
+                           dim1 = umap[, 1],
+                           dim2 = umap[, 2],
+                           features = c("CD3D", "CD3E", # T-cells
+                                        "ITGAM", "CD14", # Macs
+                                        "CD79A", "MS4A1", # B-cells
+                                        "EPCAM", "CDH1"), # Epithelial
+                           exactMatch = TRUE,
+                           ncol = 2)
+    })
+    
+    wrap_plots(p, ncol = 2, guides = "collect") &
+      theme(legend.position = "bottom",
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 8))
+    
+  }
+})
+
+p
+```
+
+
+## Main cell type markers (after decontX)
+
+```{r, fig.asp=1.5}
+p <- lapply(1:length(sceLst), function(i){
+  sce <- sceLst[[i]]
+  
+  if(length(levels(sce$Capture)) < 4){
+    sce_decont <- logNormCounts(sce, assay.type = "decontXcounts")
+    rownames(sce_decont) <- rowData(sce_decont)$Symbol
+    
+    umap <- reducedDim(sce_decont, glue::glue("decontX_UMAP"))
+    plotDimReduceFeature(as.matrix(logcounts(sce_decont)),
+                         dim1 = umap[, 1],
+                         dim2 = umap[, 2],
+                         features = c("CD3D", "CD3E", # T-cells
+                                      "ITGAM", "CD14", # Macs
+                                      "CD79A", "MS4A1", # B-cells
+                                      "EPCAM", "CDH1"), # Epithelial
+                         exactMatch = TRUE,
+                         ncol = 2)
+    
+  } else {
+    sce_decont <- logNormCounts(sce, assay.type = "decontXcounts")
+    rownames(sce_decont) <- rowData(sce_decont)$Symbol
+    capture_names <- levels(sce_decont$Capture)
+    
+    p <- lapply(capture_names, function(cn){
+      umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP"))
+      plotDimReduceFeature(as.matrix(logcounts(sce_decont)),
+                           dim1 = umap[, 1],
+                           dim2 = umap[, 2],
+                           features = c("CD3D", "CD3E", # T-cells
+                                        "ITGAM", "CD14", # Macs
+                                        "CD79A", "MS4A1", # B-cells
+                                        "EPCAM", "CDH1"), # Epithelial
+                           exactMatch = TRUE,
+                           ncol = 2)
+    })
+    
+    wrap_plots(p, ncol = 2, guides = "collect") &
+      theme(legend.position = "bottom",
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 8))
+    
+  }
+})
+
+p
+```
+
+# Save data
+
+```{r}
+batches <- str_extract(files, "batch[0-6]")
+
+sapply(1:length(sceLst), function(i){
+  out <- here("data",
+              paste0("C133_Neeland_", batches[i]),
+              "data", 
+              "SCEs", 
+              glue::glue("C133_Neeland_{batches[i]}.ambient_removed.SCE.rds"))
+  if(!file.exists(out)) saveRDS(sceLst[[i]], out)
+  fs::file_chmod(out, "664")
+  if(any(str_detect(fs::group_ids()$group_name, 
+                    "oshlack_lab"))) fs::file_chown(out, 
+                                                    group_id = "oshlack_lab")
+})
+```
+
+# Session Info
