@@ -515,13 +515,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong40e4391">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstronga26da65">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 40e4391
+aria-hidden="true"></span> <strong>Repository version:</strong> a26da65
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong40e4391"
+<div id="strongRepositoryversionstronga26da65"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -530,7 +530,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 40e4391.
+The results in this page were generated with repository version a26da65.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -550,6 +550,7 @@ Ignored files:
 
 Untracked files:
     Untracked:  .DS_Store
+    Untracked:  analysis/07.0_split_cell_groups.Rmd
     Untracked:  code/dropletutils.R
     Untracked:  code/utility.R
     Untracked:  data/.DS_Store
@@ -560,6 +561,10 @@ Untracked files:
     Untracked:  data/C133_Neeland_batch4/
     Untracked:  data/C133_Neeland_batch5/
     Untracked:  data/C133_Neeland_batch6/
+    Untracked:  data/C133_Neeland_full_clean.SEU.rds
+    Untracked:  data/C133_Neeland_full_clean_macrophages.SEU.rds
+    Untracked:  data/C133_Neeland_full_clean_other_cells.SEU.rds
+    Untracked:  data/C133_Neeland_full_clean_t_cells.SEU.rds
     Untracked:  data/CZI_samples_design_with_micro.xlsx
     Untracked:  renv.lock
     Untracked:  renv/
@@ -615,6 +620,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+a26da65
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-29
+</td>
+<td>
+wflow_publish("analysis/06.1_azimuth_annotation_decontx.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+919e790
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -837,8 +876,10 @@ An object of class Seurat
 Active assay: RNA (36591 features, 0 variable features)</code></pre>
 </div>
 </div>
-<div id="annotate" class="section level1">
-<h1>Annotate</h1>
+<div id="azimuth-annotate" class="section level1">
+<h1>Azimuth annotate</h1>
+<p>Annotate cells in each batch using the Human Lung Cell Atlas v2.0
+reference.</p>
 <pre class="r"><code>options(timeout = max(1000000, getOption(&quot;timeout&quot;)))
 batches &lt;- str_extract(names(seuLst), &quot;batch[0-6]&quot;)
 
@@ -860,6 +901,12 @@ seuLst &lt;- sapply(1:length(seuLst), function(i){
                                                                 &quot;ADT&quot;)))
       
     }
+    
+    saveRDS(seu, out)
+    fs::file_chmod(out, &quot;664&quot;)
+    if(any(str_detect(fs::group_ids()$group_name, 
+                      &quot;oshlack_lab&quot;))) fs::file_chown(out, 
+                                                      group_id = &quot;oshlack_lab&quot;)
     
   } else {
     seu &lt;- readRDS(out)
@@ -930,37 +977,353 @@ Active assay: RNA (36591 features, 0 variable features)
 p</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/06.1_azimuth_annotation_decontx.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+919e790
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[2]]</code></pre>
 <p><img src="figure/06.1_azimuth_annotation_decontx.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-2">
+Past versions of unnamed-chunk-6-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+919e790
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[3]]</code></pre>
 <p><img src="figure/06.1_azimuth_annotation_decontx.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-3">
+Past versions of unnamed-chunk-6-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+919e790
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[4]]</code></pre>
 <p><img src="figure/06.1_azimuth_annotation_decontx.Rmd/unnamed-chunk-6-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-4">
+Past versions of unnamed-chunk-6-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+919e790
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[5]]</code></pre>
 <p><img src="figure/06.1_azimuth_annotation_decontx.Rmd/unnamed-chunk-6-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-5">
+Past versions of unnamed-chunk-6-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+919e790
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[6]]</code></pre>
 <p><img src="figure/06.1_azimuth_annotation_decontx.Rmd/unnamed-chunk-6-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-6">
+Past versions of unnamed-chunk-6-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+919e790
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[7]]</code></pre>
 <p><img src="figure/06.1_azimuth_annotation_decontx.Rmd/unnamed-chunk-6-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-7">
+Past versions of unnamed-chunk-6-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+919e790
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-29
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="save-data" class="section level1">
-<h1>Save data</h1>
-<pre class="r"><code>names(seuLst) &lt;- names(sceLst)
-batches &lt;- str_extract(names(seuLst), &quot;batch[0-6]&quot;)
+</div>
+</div>
+<div id="merge-batches-and-save-object" class="section level1">
+<h1>Merge batches and save object</h1>
+<p>Create a single <code>Seurat</code> object and clean-up the
+metadata.</p>
+<pre class="r"><code>out &lt;- here(&quot;data/C133_Neeland_full_clean_decontx.SEU.rds&quot;)
 
-sapply(1:length(seuLst), function(i){
-  out &lt;-  here(&quot;data&quot;,
-               paste0(&quot;C133_Neeland_&quot;, batches[i]),
-               &quot;data&quot;, 
-               &quot;SCEs&quot;, 
-               glue(&quot;C133_Neeland_{batches[i]}.azimuth_annotated_decontx.SEU.rds&quot;))
-  if(!file.exists(out)) saveRDS(seuLst[[i]], out)
+if(!file.exists(out)){
+  seu &lt;- merge(seuLst[[1]], 
+               y = c(seuLst[2:7]))
+  rm(seuLst)
+  gc()
+  
+  meta_regex &lt;- &quot;altexps|vireo|hashedDrops|refAssay|batch|Sample|sum|^detected|^dmmHTO|^Capture.|^total|mito_|percent.mt|orig|_call|_score|^scDblFinder|subsets&quot;
+  keep &lt;- !str_detect(colnames(seu@meta.data), meta_regex)
+  seu@meta.data &lt;- seu@meta.data[, keep]
+  
+  saveRDS(seu, out)
+  fs::file_chmod(out, &quot;664&quot;)
+  if(any(str_detect(fs::group_ids()$group_name, 
+                    &quot;oshlack_lab&quot;))) fs::file_chown(out, 
+                                                    group_id = &quot;oshlack_lab&quot;)
+  
+} else {
+  rm(seuLst)
+  gc()
+  seu &lt;- readRDS(out)
+  
+}
+
+seu</code></pre>
+<pre><code>An object of class Seurat 
+38360 features across 196687 samples within 2 assays 
+Active assay: RNA (38197 features, 0 variable features)
+ 1 other assay present: ADTs</code></pre>
+</div>
+<div id="save-cell-type-group-objects" class="section level1">
+<h1>Save cell type group objects</h1>
+<p>Subset cell type groups.</p>
+<pre class="r"><code>cellsLst &lt;- list(macrophages = seu[, seu$predicted.ann_level_3 == &quot;Macrophages&quot;],
+                 t_cells = seu[, seu$predicted.ann_level_3 %in% c(&quot;T cell lineage&quot;, 
+                                                                  &quot;Innate lymphoid cell NK&quot;)],
+                 other_cells = seu[, !seu$predicted.ann_level_3 %in% c(&quot;Macrophages&quot;, 
+                                                                       &quot;T cell lineage&quot;, 
+                                                                       &quot;Innate lymphoid cell NK&quot;)])
+
+cellsLst</code></pre>
+<pre><code>$macrophages
+An object of class Seurat 
+38360 features across 165553 samples within 2 assays 
+Active assay: RNA (38197 features, 0 variable features)
+ 1 other assay present: ADTs
+
+$t_cells
+An object of class Seurat 
+38360 features across 15447 samples within 2 assays 
+Active assay: RNA (38197 features, 0 variable features)
+ 1 other assay present: ADTs
+
+$other_cells
+An object of class Seurat 
+38360 features across 15687 samples within 2 assays 
+Active assay: RNA (38197 features, 0 variable features)
+ 1 other assay present: ADTs</code></pre>
+<p>Save objects.</p>
+<pre class="r"><code>sapply(1:length(cellsLst), function(i){
+  out &lt;- here(&quot;data&quot;,
+              glue(&quot;C133_Neeland_full_clean_decontx_{names(cellsLst[i])}.SEU.rds&quot;))
+  
+  if(!file.exists(out)) saveRDS(cellsLst[[i]], out)
   fs::file_chmod(out, &quot;664&quot;)
   if(any(str_detect(fs::group_ids()$group_name, 
                     &quot;oshlack_lab&quot;))) fs::file_chown(out, 
@@ -973,18 +1336,6 @@ NULL
 NULL
 
 [[3]]
-NULL
-
-[[4]]
-NULL
-
-[[5]]
-NULL
-
-[[6]]
-NULL
-
-[[7]]
 NULL</code></pre>
 </div>
 <div id="session-info" class="section level1 appendix">
