@@ -75,7 +75,10 @@ seuLst <- sapply(sceLst, function(sce){
 seuLst
 ```
 
-# Annotate 
+
+# Azimuth annotate 
+
+Annotate cells in each batch using the Human Lung Cell Atlas v2.0 reference.
 
 ```{r, warning=FALSE, message=FALSE}
 options(timeout = max(1000000, getOption("timeout")))
@@ -99,6 +102,12 @@ seuLst <- sapply(1:length(seuLst), function(i){
                                                                 "ADT")))
       
     }
+    
+    saveRDS(seu, out)
+    fs::file_chmod(out, "664")
+    if(any(str_detect(fs::group_ids()$group_name, 
+                      "oshlack_lab"))) fs::file_chown(out, 
+                                                      group_id = "oshlack_lab")
     
   } else {
     seu <- readRDS(out)
@@ -127,26 +136,68 @@ p
 ```
 
 
-# Save data
+# Merge batches and save object
+
+Create a single `Seurat` object and clean-up the metadata.
 
 ```{r}
-names(seuLst) <- names(sceLst)
-batches <- str_extract(names(seuLst), "batch[0-6]")
+out <- here("data/C133_Neeland_full_clean.SEU.rds")
 
-sapply(1:length(seuLst), function(i){
-  out <-  here("data",
-               paste0("C133_Neeland_", batches[i]),
-               "data", 
-               "SCEs", 
-               glue("C133_Neeland_{batches[i]}.azimuth_annotated.SEU.rds"))
-  if(!file.exists(out)) saveRDS(seuLst[[i]], out)
+if(!file.exists(out)){
+  seu <- merge(seuLst[[1]], 
+               y = c(seuLst[2:7]))
+  rm(seuLst)
+  gc()
+  
+  meta_regex <- "altexps|vireo|hashedDrops|refAssay|batch|Sample|sum|^detected|^dmmHTO|^Capture.|^total|mito_|percent.mt|orig|_call|_score|^scDblFinder|subsets"
+  keep <- !str_detect(colnames(seu@meta.data), meta_regex)
+  seu@meta.data <- seu@meta.data[, keep]
+  
+  saveRDS(seu, out)
+  fs::file_chmod(out, "664")
+  if(any(str_detect(fs::group_ids()$group_name, 
+                    "oshlack_lab"))) fs::file_chown(out, 
+                                                    group_id = "oshlack_lab")
+  
+} else {
+  rm(seuLst)
+  gc()
+  seu <- readRDS(out)
+  
+}
+
+seu
+```
+
+# Save cell type group objects
+
+Subset cell type groups.
+
+```{r}
+cellsLst <- list(macrophages = seu[, seu$predicted.ann_level_3 == "Macrophages"],
+                 t_cells = seu[, seu$predicted.ann_level_3 %in% c("T cell lineage", 
+                                                                  "Innate lymphoid cell NK")],
+                 other_cells = seu[, !seu$predicted.ann_level_3 %in% c("Macrophages", 
+                                                                       "T cell lineage", 
+                                                                       "Innate lymphoid cell NK")])
+
+cellsLst
+```
+
+Save objects.
+
+```{r}
+sapply(1:length(cellsLst), function(i){
+  out <- here("data",
+              glue("C133_Neeland_full_clean_{names(cellsLst[i])}.SEU.rds"))
+  
+  if(!file.exists(out)) saveRDS(cellsLst[[i]], out)
   fs::file_chmod(out, "664")
   if(any(str_detect(fs::group_ids()$group_name, 
                     "oshlack_lab"))) fs::file_chown(out, 
                                                     group_id = "oshlack_lab")
 })
 ```
-
 
 # Session info {.appendix}
 
