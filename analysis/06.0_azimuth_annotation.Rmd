@@ -153,6 +153,15 @@ if(!file.exists(out)){
   keep <- !str_detect(colnames(seu@meta.data), meta_regex)
   seu@meta.data <- seu@meta.data[, keep]
   
+  # extract RNA counts
+  rna <- seu[["RNA"]]@counts
+  # remove genes that are not expressed in any cells
+  rna <- rna[rowSums(rna) != 0, ]
+  # remove genes that are not expressed in >=50 cells across the full dataset
+  rna <- rna[nexprs(rna, byrow = TRUE) >= 50,]
+  
+  seu[["RNA"]] <- CreateAssayObject(counts = rna)
+  
   saveRDS(seu, out)
   fs::file_chmod(out, "664")
   if(any(str_detect(fs::group_ids()$group_name, 
