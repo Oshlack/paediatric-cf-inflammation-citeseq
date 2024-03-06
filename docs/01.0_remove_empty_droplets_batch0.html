@@ -10,9 +10,9 @@
 
 
 
-<meta name="date" content="2024-02-26" />
+<meta name="date" content="2024-02-21" />
 
-<title>Preprocessing the C133_Neeland_batch0 data set</title>
+<title>Demultiplexing the C133_Neeland_batch0 data set</title>
 
 <script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -350,10 +350,10 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Preprocessing the C133_Neeland_batch0 data
+<h1 class="title toc-ignore">Demultiplexing the C133_Neeland_batch0 data
 set</h1>
-<h4 class="author">Jovana Maksimovic</h4>
-<h4 class="date">2024-02-26</h4>
+<h4 class="author">Peter Hickey and Jovana Maksimovic</h4>
+<h4 class="date">2024-02-21</h4>
 
 </div>
 
@@ -382,7 +382,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-02-26
+<strong>Last updated:</strong> 2024-02-21
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -420,10 +420,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -516,13 +516,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong7701592">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstronge719a2c">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 7701592
+aria-hidden="true"></span> <strong>Repository version:</strong> e719a2c
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong7701592"
+<div id="strongRepositoryversionstronge719a2c"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -531,7 +531,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 7701592.
+The results in this page were generated with repository version e719a2c.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -551,10 +551,16 @@ Ignored files:
 
 Untracked files:
     Untracked:  .DS_Store
-    Untracked:  analysis/02.0_quality_control.Rmd
-    Untracked:  analysis/03.0_call_doublets.Rmd
+    Untracked:  analysis/01.0_remove_empty_droplets_batch0.Rmd
+    Untracked:  analysis/01.1_remove_empty_droplets_demultiplex_batch1.Rmd
+    Untracked:  analysis/01.2_remove_empty_droplets_demultiplex_batch2.Rmd
+    Untracked:  analysis/01.3_remove_empty_droplets_demultiplex_batch3.Rmd
+    Untracked:  analysis/01.4_remove_empty_droplets_demultiplex_batch4.Rmd
+    Untracked:  analysis/01.5_remove_empty_droplets_demultiplex_batch5.Rmd
+    Untracked:  analysis/01.6_remove_empty_droplets_demultiplex_batch6.Rmd
+    Untracked:  analysis/03.0_quality_control.Rmd
+    Untracked:  analysis/04.0_flag_doublets.Rmd
     Untracked:  code/dropletutils.R
-    Untracked:  code/utility.R
     Untracked:  data/.DS_Store
     Untracked:  data/C133_Neeland_batch0/
     Untracked:  data/C133_Neeland_batch1/
@@ -569,7 +575,6 @@ Untracked files:
 Unstaged changes:
     Modified:   .Rprofile
     Modified:   .gitignore
-    Modified:   analysis/01.0_preprocess_batch0.Rmd
 
 </code></pre>
 <p>
@@ -584,109 +589,10 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
-These are the previous versions of the repository in which changes were
-made to the R Markdown
-(<code>analysis/01.0_preprocess_batch0.Rmd</code>) and HTML
-(<code>docs/01.0_preprocess_batch0.html</code>) files. If you’ve
-configured a remote Git repository (see <code>?wflow_git_remote</code>),
-click on the hyperlinks in the table below to view the files as they
-were in that past version.
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-html
-</td>
-<td>
-ecfde3d
-</td>
-<td>
-Jovana Maksimovic
-</td>
-<td>
-2024-02-26
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-025ceae
-</td>
-<td>
-Jovana Maksimovic
-</td>
-<td>
-2024-02-26
-</td>
-<td>
-wflow_publish(c("analysis/index.Rmd", "analysis/01*"))
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-da8df16
-</td>
-<td>
-Jovana Maksimovic
-</td>
-<td>
-2024-02-26
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-00319de
-</td>
-<td>
-Jovana Maksimovic
-</td>
-<td>
-2024-02-26
-</td>
-<td>
-wflow_publish("analysis/01.0_preprocess_batch0.Rmd")
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
@@ -764,8 +670,8 @@ knitr::kable(sample_metadata_df)</code></pre>
 </tbody>
 </table>
 </div>
-<div id="set-up-the-data" class="section level1">
-<h1>Set up the data</h1>
+<div id="setting-up-the-data" class="section level1">
+<h1>Setting up the data</h1>
 <pre class="r"><code>sce &lt;- readRDS(here(&quot;data&quot;, &quot;C133_Neeland_batch0&quot;,
                     &quot;data&quot;, &quot;SCEs&quot;, &quot;C133_Neeland_batch0.CellRanger.SCE.rds&quot;))
 sce$Capture &lt;- factor(sce$Sample)
@@ -787,8 +693,8 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(0):</code></pre>
 </div>
-<div id="call-cells-from-empty-droplets" class="section level1">
-<h1>Call cells from empty droplets</h1>
+<div id="calling-cells-from-empty-droplets" class="section level1">
+<h1>Calling cells from empty droplets</h1>
 <pre class="r"><code>par(mfrow = c(2, 2))
 lapply(capture_names, function(cn) {
   sce &lt;- sce[, sce$Capture == cn]
@@ -809,50 +715,13 @@ lapply(capture_names, function(cn) {
   abline(h = metadata(bcrank)$knee, col = &quot;dodgerblue&quot;, lty = 2)
 })</code></pre>
 <div class="figure" style="text-align: center">
-<img src="figure/01.0_preprocess_batch0.Rmd/rankplot-1.png" alt="Total UMI count for each barcode in the dataset, plotted against its rank (in decreasing order of total counts). The inferred locations of the inflection (dark green dashed lines) and knee points (blue dashed lines) are also shown." width="672" />
+<img src="figure/01.0_remove_empty_droplets_batch0.Rmd/rankplot-1.png" alt="Total UMI count for each barcode in the dataset, plotted against its rank (in decreasing order of total counts). The inferred locations of the inflection (dark green dashed lines) and knee points (blue dashed lines) are also shown." width="672" />
 <p class="caption">
 Total UMI count for each barcode in the dataset, plotted against its
 rank (in decreasing order of total counts). The inferred locations of
 the inflection (dark green dashed lines) and knee points (blue dashed
 lines) are also shown.
 </p>
-</div>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-rankplot-1">
-Past versions of rankplot-1.png
-</button>
-</p>
-<div id="fig-rankplot-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-da8df16
-</td>
-<td>
-Jovana Maksimovic
-</td>
-<td>
-2024-02-26
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 <p>Remove empty droplets.</p>
 <pre class="r"><code>empties &lt;- do.call(rbind, lapply(capture_names, function(cn) {
@@ -914,9 +783,10 @@ colData names(2): Barcode Capture
 reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(0):</code></pre>
-<div id="add-per-cell-quality-control-information"
-class="section level2">
-<h2>Add per cell quality control information</h2>
+</div>
+<div id="adding-per-cell-quality-control-information"
+class="section level1">
+<h1>Adding per cell quality control information</h1>
 <pre class="r"><code>sce &lt;- scuttle::addPerCellQC(sce)
 head(colData(sce)) %&gt;%
   data.frame %&gt;%
@@ -991,88 +861,6 @@ head(colData(sce)) %&gt;%
 </tr>
 </tbody>
 </table>
-<!-- # Remove ambient RNA contamination -->
-<!-- ## Run decontX -->
-<!-- ```{r, message=FALSE} -->
-<!-- library(decontX) -->
-<!-- sce_decont <- decontX(sce, background = sce_raw, -->
-<!--                       batch = sce$Capture, -->
-<!--                       bgBatch = sce_raw$Capture) -->
-<!-- sce_decont -->
-<!-- ``` -->
-<!-- ## DecontX clusters -->
-<!-- ```{r, fig.asp=0.8} -->
-<!-- library(celda) # To use plotting functions in celda -->
-<!-- p <- lapply(capture_names, function(cn){ -->
-<!--   umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP")) -->
-<!--   plotDimReduceCluster(x = sce_decont$decontX_clusters, -->
-<!--                        dim1 = umap[, 1], dim2 = umap[, 2]) -->
-<!-- }) -->
-<!-- wrap_plots(p, ncol = 2) -->
-<!-- ``` -->
-<!-- ## DecontX contamination -->
-<!-- ```{r, fig.asp=1} -->
-<!-- p <- lapply(unique(sce$Capture), function(cn){ -->
-<!--   plotDecontXContamination(sce_decont, batch = cn) -->
-<!-- }) -->
-<!-- wrap_plots(p, ncol = 2, guides = "collect") & -->
-<!--   theme(legend.position = "bottom") -->
-<!-- ``` -->
-<!-- ## Main cell type markers (before decontX) -->
-<!-- ```{r, fig.asp=1} -->
-<!-- sce_decont <- logNormCounts(sce_decont)  -->
-<!-- p <- lapply(capture_names, function(cn){ -->
-<!--   umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP")) -->
-<!--   plotDimReduceFeature(as.matrix(logcounts(sce_decont)), -->
-<!--                        dim1 = umap[, 1], -->
-<!--                        dim2 = umap[, 2], -->
-<!--                        features = c("CD3D", "CD3E", # T-cells  -->
-<!--                                     "ITGAM", "CD14", # Macs -->
-<!--                                     "CD79A", "MS4A1", # B-cells -->
-<!--                                     "EPCAM", "CDH1"), # Epithelial -->
-<!--                        exactMatch = TRUE, -->
-<!--                        ncol = 2) -->
-<!-- }) -->
-<!-- p -->
-<!-- ``` -->
-<!-- ## Main cell type markers (after decontX) -->
-<!-- ```{r, fig.asp=1} -->
-<!-- sce_decont <- logNormCounts(sce_decont, assay.type = "decontXcounts")  -->
-<!-- p <- lapply(capture_names, function(cn){ -->
-<!--   umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP")) -->
-<!--   plotDimReduceFeature(as.matrix(logcounts(sce_decont)), -->
-<!--                        dim1 = umap[, 1], -->
-<!--                        dim2 = umap[, 2], -->
-<!--                        features = c("CD3D", "CD3E", # T-cells  -->
-<!--                                     "ITGAM", "CD14", # Macs -->
-<!--                                     "CD79A", "MS4A1", # B-cells -->
-<!--                                     "EPCAM", "CDH1"), # Epithelial -->
-<!--                        exactMatch = TRUE, -->
-<!--                        ncol = 2) -->
-<!-- }) -->
-<!-- p -->
-<!-- ``` -->
-<!-- ## Cell marker % expression comparison -->
-<!-- ```{r} -->
-<!-- markers <- list(Tcell_Markers = c("CD3D", "CD3E"), -->
-<!--     Bcell_Markers = c("CD79A", "CD79B", "MS4A1"), -->
-<!--     Macrophage_Markers = c("ITGAM", "CD14", "CD68"), -->
-<!--     Epithelial_Markers = c("EPCAM", "CDH1", "MUC1")) -->
-<!-- cell_type_mappings <- data.frame(row.names = c("Tcells", "Bcells", "Macrophages", "Epithelial"), -->
-<!--                                A = c("A-5", "A-1", "A-3", "A-2"), -->
-<!--                                B = c("B-4", "B-5", "B-2", "B-3"), -->
-<!--                                C = c("C-2", "C-6", "C-1", "C-3"), -->
-<!--                                D = c("D-3", "D-4", "D-1", "D-2")) -->
-<!-- p <- lapply(capture_names, function(cn){ -->
-<!--   plotDecontXMarkerPercentage(sce_decont[,sce_decont$Capture == cn], -->
-<!--                               markers = markers, -->
-<!--                               groupClusters = as.list(setNames(cell_type_mappings[, cn], -->
-<!--                                                             rownames(cell_type_mappings))), -->
-<!--                               assayName = c("counts", "decontXcounts")) -->
-<!-- }) -->
-<!-- p -->
-<!-- ``` -->
-</div>
 </div>
 <div id="save-data" class="section level1">
 <h1>Save data</h1>
@@ -1082,7 +870,7 @@ head(colData(sce)) %&gt;%
         &quot;C133_Neeland_batch0&quot;,
         &quot;data&quot;,
         &quot;SCEs&quot;,
-        &quot;C133_Neeland_batch0.preprocessed.SCE.rds&quot;))</code></pre>
+        &quot;C133_Neeland_batch0.emptyDrops.SCE.rds&quot;))</code></pre>
 </div>
 <div id="session-info" class="section level1 appendix">
 <h1 class="appendix">Session info</h1>

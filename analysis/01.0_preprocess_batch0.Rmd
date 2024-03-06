@@ -24,8 +24,6 @@ suppressPackageStartupMessages({
     library(DropletUtils)
     library(scater)
 })
-
-source(here("code/utility.R"))
 ```
 
 
@@ -111,124 +109,6 @@ head(colData(sce)) %>%
   knitr::kable()
 ```
 
-## Add gene-based annotation
-
-Having quantified gene expression against the Ensembl gene annotation, we have Ensembl-style identifiers for the genes. 
-These identifiers are used as they are unambiguous and highly stable. 
-However, they are difficult to interpret compared to the gene symbols which are more commonly used in the literature.
-Given the Ensembl identifiers, we obtain the corresponding gene symbols using annotation packages available through Bioconductor.
-Henceforth, we will use gene symbols (where available) to refer to genes in our analysis and otherwise use the Ensembl-style gene identifiers^[Some care is taken to account for missing and duplicate gene symbols; missing symbols are replaced with the Ensembl identifier and duplicated symbols are concatenated with the (unique) Ensembl identifiers.].
-
-```{r, warning=FALSE, message=FALSE}
-sce <- addGeneInformation(sce)
-# change rownames to gene symbol for easier plotting downstream
-rownames(sce) <- rowData(sce)$Symbol
-sce
-```
-
-<!-- # Remove ambient RNA contamination -->
-<!-- ## Run decontX -->
-
-<!-- ```{r, message=FALSE} -->
-<!-- library(decontX) -->
-
-<!-- sce_decont <- decontX(sce, background = sce_raw, -->
-<!--                       batch = sce$Capture, -->
-<!--                       bgBatch = sce_raw$Capture) -->
-<!-- sce_decont -->
-<!-- ``` -->
-
-<!-- ## DecontX clusters -->
-
-<!-- ```{r, fig.asp=0.8} -->
-<!-- library(celda) # To use plotting functions in celda -->
-
-<!-- p <- lapply(capture_names, function(cn){ -->
-<!--   umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP")) -->
-<!--   plotDimReduceCluster(x = sce_decont$decontX_clusters, -->
-<!--                        dim1 = umap[, 1], dim2 = umap[, 2]) -->
-<!-- }) -->
-
-<!-- wrap_plots(p, ncol = 2) -->
-<!-- ``` -->
-
-<!-- ## DecontX contamination -->
-
-<!-- ```{r, fig.asp=1} -->
-<!-- p <- lapply(unique(sce$Capture), function(cn){ -->
-<!--   plotDecontXContamination(sce_decont, batch = cn) -->
-<!-- }) -->
-
-<!-- wrap_plots(p, ncol = 2, guides = "collect") & -->
-<!--   theme(legend.position = "bottom") -->
-<!-- ``` -->
-
-
-<!-- ## Main cell type markers (before decontX) -->
-
-<!-- ```{r, fig.asp=1} -->
-<!-- sce_decont <- logNormCounts(sce_decont)  -->
-
-<!-- p <- lapply(capture_names, function(cn){ -->
-<!--   umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP")) -->
-<!--   plotDimReduceFeature(as.matrix(logcounts(sce_decont)), -->
-<!--                        dim1 = umap[, 1], -->
-<!--                        dim2 = umap[, 2], -->
-<!--                        features = c("CD3D", "CD3E", # T-cells  -->
-<!--                                     "ITGAM", "CD14", # Macs -->
-<!--                                     "CD79A", "MS4A1", # B-cells -->
-<!--                                     "EPCAM", "CDH1"), # Epithelial -->
-<!--                        exactMatch = TRUE, -->
-<!--                        ncol = 2) -->
-<!-- }) -->
-
-<!-- p -->
-<!-- ``` -->
-
-<!-- ## Main cell type markers (after decontX) -->
-
-<!-- ```{r, fig.asp=1} -->
-<!-- sce_decont <- logNormCounts(sce_decont, assay.type = "decontXcounts")  -->
-
-<!-- p <- lapply(capture_names, function(cn){ -->
-<!--   umap <- reducedDim(sce_decont, glue::glue("decontX_{cn}_UMAP")) -->
-<!--   plotDimReduceFeature(as.matrix(logcounts(sce_decont)), -->
-<!--                        dim1 = umap[, 1], -->
-<!--                        dim2 = umap[, 2], -->
-<!--                        features = c("CD3D", "CD3E", # T-cells  -->
-<!--                                     "ITGAM", "CD14", # Macs -->
-<!--                                     "CD79A", "MS4A1", # B-cells -->
-<!--                                     "EPCAM", "CDH1"), # Epithelial -->
-<!--                        exactMatch = TRUE, -->
-<!--                        ncol = 2) -->
-<!-- }) -->
-
-<!-- p -->
-<!-- ``` -->
-
-<!-- ## Cell marker % expression comparison -->
-
-<!-- ```{r} -->
-<!-- markers <- list(Tcell_Markers = c("CD3D", "CD3E"), -->
-<!--     Bcell_Markers = c("CD79A", "CD79B", "MS4A1"), -->
-<!--     Macrophage_Markers = c("ITGAM", "CD14", "CD68"), -->
-<!--     Epithelial_Markers = c("EPCAM", "CDH1", "MUC1")) -->
-<!-- cell_type_mappings <- data.frame(row.names = c("Tcells", "Bcells", "Macrophages", "Epithelial"), -->
-<!--                                A = c("A-5", "A-1", "A-3", "A-2"), -->
-<!--                                B = c("B-4", "B-5", "B-2", "B-3"), -->
-<!--                                C = c("C-2", "C-6", "C-1", "C-3"), -->
-<!--                                D = c("D-3", "D-4", "D-1", "D-2")) -->
-
-<!-- p <- lapply(capture_names, function(cn){ -->
-<!--   plotDecontXMarkerPercentage(sce_decont[,sce_decont$Capture == cn], -->
-<!--                               markers = markers, -->
-<!--                               groupClusters = as.list(setNames(cell_type_mappings[, cn], -->
-<!--                                                             rownames(cell_type_mappings))), -->
-<!--                               assayName = c("counts", "decontXcounts")) -->
-<!-- }) -->
-
-<!-- p -->
-<!-- ``` -->
 
 # Save data
 

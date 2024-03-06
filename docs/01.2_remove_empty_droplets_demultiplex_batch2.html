@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2024-02-21" />
+
+<title>Demultiplexing the C133_Neeland_batch2 data set</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">paed-inflammation-CITEseq</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Demultiplexing the C133_Neeland_batch2 data
+set</h1>
+<h4 class="author">Peter Hickey and Jovana Maksimovic</h4>
+<h4 class="date">2024-02-21</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-02-21
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>paed-inflammation-CITEseq/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240216code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240216)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240216code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240216)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstronge719a2c">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> e719a2c
+</a>
+</p>
+</div>
+<div id="strongRepositoryversionstronge719a2c"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version e719a2c.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  analysis/01.0_remove_empty_droplets_batch0.Rmd
+    Untracked:  analysis/01.1_remove_empty_droplets_demultiplex_batch1.Rmd
+    Untracked:  analysis/01.2_remove_empty_droplets_demultiplex_batch2.Rmd
+    Untracked:  analysis/01.3_remove_empty_droplets_demultiplex_batch3.Rmd
+    Untracked:  analysis/01.4_remove_empty_droplets_demultiplex_batch4.Rmd
+    Untracked:  analysis/01.5_remove_empty_droplets_demultiplex_batch5.Rmd
+    Untracked:  analysis/01.6_remove_empty_droplets_demultiplex_batch6.Rmd
+    Untracked:  analysis/03.0_quality_control.Rmd
+    Untracked:  analysis/04.0_flag_doublets.Rmd
+    Untracked:  code/dropletutils.R
+    Untracked:  data/.DS_Store
+    Untracked:  data/C133_Neeland_batch0/
+    Untracked:  data/C133_Neeland_batch1/
+    Untracked:  data/C133_Neeland_batch2/
+    Untracked:  data/C133_Neeland_batch3/
+    Untracked:  data/C133_Neeland_batch4/
+    Untracked:  data/C133_Neeland_batch5/
+    Untracked:  data/C133_Neeland_batch6/
+    Untracked:  renv.lock
+    Untracked:  renv/
+
+Unstaged changes:
+    Modified:   .Rprofile
+    Modified:   .gitignore
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>suppressPackageStartupMessages({
+    library(here)
+    library(readxl)
+    library(BiocStyle)
+    library(ggplot2)
+    library(cowplot)
+    library(patchwork)
+    library(demuxmix)
+    library(tidyverse)
+    library(SingleCellExperiment)
+    library(DropletUtils)
+    library(scater)
+})</code></pre>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<ul>
+<li>There are 8 samples in this batch.</li>
+<li>Each sample comes from a different donor (i.e. each sample is
+genetically distinct).</li>
+<li>Each has a unique HTO label.</li>
+</ul>
+<p>We used simple HTO labelling whereby each sample is labelled with 1
+HTO, shown in the table below:</p>
+<pre class="r"><code>sample_metadata_df &lt;- read_excel(
+  here(&quot;data/C133_Neeland_batch2/data/sample_sheets/CITEseq_48 samples_design_2.xlsx&quot;),
+  col_types = 
+    c(&quot;text&quot;, &quot;text&quot;, &quot;text&quot;, &quot;numeric&quot;, &quot;text&quot;, &quot;numeric&quot;, &quot;text&quot;, &quot;date&quot;))
+sample_metadata_df$`HASHTAG ID` &lt;- paste0(
+  &quot;Human_HTO_&quot;,
+  sample_metadata_df$`HASHTAG ID`)
+knitr::kable(sample_metadata_df[sample_metadata_df$Batch == 2, ])</code></pre>
+<table>
+<colgroup>
+<col width="7%" />
+<col width="15%" />
+<col width="16%" />
+<col width="11%" />
+<col width="5%" />
+<col width="7%" />
+<col width="16%" />
+<col width="20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Donor</th>
+<th align="left">Sample name</th>
+<th align="left">Disease</th>
+<th align="right">Age</th>
+<th align="left">Sex</th>
+<th align="right">Batch</th>
+<th align="left">HASHTAG ID</th>
+<th align="left">DATE OF CAPTURE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">9</td>
+<td align="left">Wheeze</td>
+<td align="right">3.665753</td>
+<td align="left">M</td>
+<td align="right">2</td>
+<td align="left">Human_HTO_6</td>
+<td align="left">2021-09-06</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">10</td>
+<td align="left">True control</td>
+<td align="right">8.397260</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="left">Human_HTO_7</td>
+<td align="left">2021-09-06</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">11.1</td>
+<td align="left">CF</td>
+<td align="right">2.947945</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="left">Human_HTO_9</td>
+<td align="left">2021-09-06</td>
+</tr>
+<tr class="even">
+<td align="left">11</td>
+<td align="left">11.2</td>
+<td align="left">CF</td>
+<td align="right">4.572603</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="left">Human_HTO_10</td>
+<td align="left">2021-09-06</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">11.3</td>
+<td align="left">CF</td>
+<td align="right">4.917808</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="left">Human_HTO_12</td>
+<td align="left">2021-09-06</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">12.1</td>
+<td align="left">CF</td>
+<td align="right">2.969863</td>
+<td align="left">M</td>
+<td align="right">2</td>
+<td align="left">Human_HTO_13</td>
+<td align="left">2021-09-06</td>
+</tr>
+<tr class="odd">
+<td align="left">12</td>
+<td align="left">12.2</td>
+<td align="left">CF</td>
+<td align="right">4.057534</td>
+<td align="left">M</td>
+<td align="right">2</td>
+<td align="left">Human_HTO_14</td>
+<td align="left">2021-09-06</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">12.3</td>
+<td align="left">CF</td>
+<td align="right">5.093151</td>
+<td align="left">M</td>
+<td align="right">2</td>
+<td align="left">Human_HTO_15</td>
+<td align="left">2021-09-06</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="setting-up-the-data" class="section level1">
+<h1>Setting up the data</h1>
+<pre class="r"><code>sce &lt;- readRDS(here(&quot;data&quot;, &quot;C133_Neeland_batch2&quot;,
+                    &quot;data&quot;, &quot;SCEs&quot;, &quot;C133_Neeland_batch2.CellRanger.SCE.rds&quot;))
+sce$Capture &lt;- factor(sce$Sample)
+capture_names &lt;- levels(sce$Capture)
+capture_names &lt;- setNames(capture_names, capture_names)
+sce$Sample &lt;- NULL
+sce</code></pre>
+<pre><code>class: SingleCellExperiment 
+dim: 36601 6612251 
+metadata(1): Samples
+assays(1): counts
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
+rowData names(3): ID Symbol Type
+colnames(6612251): 1_AAACCCAAGAAACACT-1 1_AAACCCAAGAAACCAT-1 ...
+  2_TTTGTTGTCTTTGCAT-1 2_TTTGTTGTCTTTGGAG-1
+colData names(2): Barcode Capture
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(1): Antibody Capture</code></pre>
+</div>
+<div id="calling-cells-from-empty-droplets" class="section level1">
+<h1>Calling cells from empty droplets</h1>
+<pre class="r"><code>par(mfrow = c(1, 2))
+lapply(capture_names, function(cn) {
+  sce &lt;- sce[, sce$Capture == cn]
+  bcrank &lt;- barcodeRanks(counts(sce))
+  # Only showing unique points for plotting speed.
+  uniq &lt;- !duplicated(bcrank$rank)
+  plot(
+    x = bcrank$rank[uniq],
+    y = bcrank$total[uniq],
+    log = &quot;xy&quot;,
+    xlab = &quot;Rank&quot;,
+    ylab = &quot;Total UMI count&quot;,
+    main = cn,
+    cex.lab = 1.2,
+    xlim = c(1, 500000),
+    ylim = c(1, 200000))
+  abline(h = metadata(bcrank)$inflection, col = &quot;darkgreen&quot;, lty = 2)
+  abline(h = metadata(bcrank)$knee, col = &quot;dodgerblue&quot;, lty = 2)
+})</code></pre>
+<div class="figure" style="text-align: center">
+<img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/rankplot-1.png" alt="Total UMI count for each barcode in the dataset, plotted against its rank (in decreasing order of total counts). The inferred locations of the inflection (dark green dashed lines) and knee points (blue dashed lines) are also shown." width="672" />
+<p class="caption">
+Total UMI count for each barcode in the dataset, plotted against its
+rank (in decreasing order of total counts). The inferred locations of
+the inflection (dark green dashed lines) and knee points (blue dashed
+lines) are also shown.
+</p>
+</div>
+<p>Remove empty droplets.</p>
+<pre class="r"><code>empties &lt;- do.call(rbind, lapply(capture_names, function(cn) {
+  message(cn)
+  empties &lt;- readRDS(
+    here(&quot;data&quot;,
+         &quot;C133_Neeland_batch2&quot;,
+         &quot;data&quot;,
+         &quot;emptyDrops&quot;, paste0(cn, &quot;.emptyDrops.rds&quot;)))
+  empties$Capture &lt;- cn
+  empties
+}))
+tapply(
+  empties$FDR,
+  empties$Capture,
+  function(x) sum(x &lt;= 0.001, na.rm = TRUE)) |&gt;
+  knitr::kable(
+    caption = &quot;Number of non-empty droplets identified using `emptyDrops()` from **DropletUtils**.&quot;)</code></pre>
+<table>
+<caption>Number of non-empty droplets identified using
+<code>emptyDrops()</code> from <strong>DropletUtils</strong>.</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">C133_batch2_1</td>
+<td align="right">23753</td>
+</tr>
+<tr class="even">
+<td align="left">C133_batch2_2</td>
+<td align="right">29407</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>sce &lt;- sce[, which(empties$FDR &lt;= 0.001)]
+sce</code></pre>
+<pre><code>class: SingleCellExperiment 
+dim: 36601 53160 
+metadata(1): Samples
+assays(1): counts
+rownames(36601): ENSG00000243485 ENSG00000237613 ... ENSG00000278817
+  ENSG00000277196
+rowData names(3): ID Symbol Type
+colnames(53160): 1_AAACCCAAGACCTGGA-1 1_AAACCCAAGACTGTTC-1 ...
+  2_TTTGTTGTCTCATGGA-1 2_TTTGTTGTCTCCAAGA-1
+colData names(2): Barcode Capture
+reducedDimNames(0):
+mainExpName: Gene Expression
+altExpNames(1): Antibody Capture</code></pre>
+</div>
+<div id="adding-per-cell-quality-control-information"
+class="section level1">
+<h1>Adding per cell quality control information</h1>
+<pre class="r"><code>sce &lt;- scuttle::addPerCellQC(sce)
+head(colData(sce)) %&gt;%
+  data.frame %&gt;%
+  knitr::kable()</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="12%" />
+<col width="11%" />
+<col width="8%" />
+<col width="2%" />
+<col width="5%" />
+<col width="17%" />
+<col width="20%" />
+<col width="19%" />
+<col width="3%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">Barcode</th>
+<th align="left">Capture</th>
+<th align="right">sum</th>
+<th align="right">detected</th>
+<th align="right">altexps_Antibody.Capture_sum</th>
+<th align="right">altexps_Antibody.Capture_detected</th>
+<th align="right">altexps_Antibody.Capture_percent</th>
+<th align="right">total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1_AAACCCAAGACCTGGA-1</td>
+<td align="left">AAACCCAAGACCTGGA-1</td>
+<td align="left">C133_batch2_1</td>
+<td align="right">7891</td>
+<td align="right">2571</td>
+<td align="right">2715</td>
+<td align="right">154</td>
+<td align="right">25.59872</td>
+<td align="right">10606</td>
+</tr>
+<tr class="even">
+<td align="left">1_AAACCCAAGACTGTTC-1</td>
+<td align="left">AAACCCAAGACTGTTC-1</td>
+<td align="left">C133_batch2_1</td>
+<td align="right">6160</td>
+<td align="right">2035</td>
+<td align="right">9563</td>
+<td align="right">167</td>
+<td align="right">60.82173</td>
+<td align="right">15723</td>
+</tr>
+<tr class="odd">
+<td align="left">1_AAACCCAAGAGCCATG-1</td>
+<td align="left">AAACCCAAGAGCCATG-1</td>
+<td align="left">C133_batch2_1</td>
+<td align="right">5190</td>
+<td align="right">1919</td>
+<td align="right">2424</td>
+<td align="right">159</td>
+<td align="right">31.83609</td>
+<td align="right">7614</td>
+</tr>
+<tr class="even">
+<td align="left">1_AAACCCAAGAGGACTC-1</td>
+<td align="left">AAACCCAAGAGGACTC-1</td>
+<td align="left">C133_batch2_1</td>
+<td align="right">8594</td>
+<td align="right">2746</td>
+<td align="right">10553</td>
+<td align="right">163</td>
+<td align="right">55.11568</td>
+<td align="right">19147</td>
+</tr>
+<tr class="odd">
+<td align="left">1_AAACCCAAGATGATTG-1</td>
+<td align="left">AAACCCAAGATGATTG-1</td>
+<td align="left">C133_batch2_1</td>
+<td align="right">6089</td>
+<td align="right">2217</td>
+<td align="right">3779</td>
+<td align="right">159</td>
+<td align="right">38.29550</td>
+<td align="right">9868</td>
+</tr>
+<tr class="even">
+<td align="left">1_AAACCCAAGCGCACAA-1</td>
+<td align="left">AAACCCAAGCGCACAA-1</td>
+<td align="left">C133_batch2_1</td>
+<td align="right">3273</td>
+<td align="right">1406</td>
+<td align="right">1976</td>
+<td align="right">160</td>
+<td align="right">37.64527</td>
+<td align="right">5249</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="demultiplexing-with-hashtag-oligos-htos"
+class="section level1 tabset">
+<h1 class="tabset">Demultiplexing with hashtag oligos (HTOs)</h1>
+<pre class="r"><code>is_adt &lt;- grepl(&quot;^A[0-9]+&quot;, rownames(altExp(sce, &quot;Antibody Capture&quot;)))
+is_hto &lt;- grepl(&quot;^Human_HTO&quot;, rownames(altExp(sce, &quot;Antibody Capture&quot;)))
+altExp(sce, &quot;HTO&quot;) &lt;- altExp(sce, &quot;Antibody Capture&quot;)[is_hto, ]
+altExp(sce, &quot;ADT&quot;) &lt;- altExp(sce, &quot;Antibody Capture&quot;)[is_adt, ]
+altExp(sce, &quot;Antibody Capture&quot;) &lt;- NULL
+hto_counts &lt;- counts(altExp(sce, &quot;HTO&quot;))
+xmax &lt;- ceiling(max(log2(hto_counts + 1)))</code></pre>
+<div id="c133_batch2_1" class="section level2">
+<h2>C133_batch2_1</h2>
+<pre class="r"><code>par(mfrow = c(3, 3))
+lapply(rownames(hto_counts), function(i) {
+  hist(
+    log2(hto_counts[i, sce$Capture == &quot;C133_batch2_1&quot;] + 1),
+    xlab = &quot;log2(UMIs + 1)&quot;, 
+    main = paste0(&quot;C133_1: &quot;, i), 
+    xlim = c(0, xmax), 
+    breaks = seq(0, xmax, 0.5),
+    cex.main = 0.8)
+})</code></pre>
+<div class="figure" style="text-align: center">
+<img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/hto-hist-1-1.png" alt="Number of UMIs for each HTO across all non-empty droplets." width="672" />
+<p class="caption">
+Number of UMIs for each HTO across all non-empty droplets.
+</p>
+</div>
+<p>Prepare the data.</p>
+<pre class="r"><code>hto &lt;- as.matrix(counts(altExp(sce[, sce$Capture == &quot;C133_batch2_1&quot;], &quot;HTO&quot;)))
+detected &lt;- sce$detected[sce$Capture == &quot;C133_batch2_1&quot;]
+
+df &lt;- data.frame(t(hto), 
+                 detected = detected, 
+                 hto = colSums(hto))
+
+df %&gt;% 
+  pivot_longer(cols = starts_with(&quot;Human_HTO&quot;)) %&gt;%
+  mutate(logged = log(value + 1)) %&gt;%
+  ggplot(aes(x = logged)) +
+  geom_density(adjust = 5) +
+  facet_wrap(~name, scales = &quot;free&quot;)</code></pre>
+<p><img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df %&gt;% 
+  pivot_longer(cols = starts_with(&quot;Human_HTO&quot;)) %&gt;%
+  ggplot(aes(x = detected, y = hto)) +
+  geom_density_2d() +
+  facet_wrap(~name) </code></pre>
+<p><img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Run demultiplexing.</p>
+<pre class="r"><code>dmm &lt;- demuxmix(hto = hto, 
+                rna = detected,
+                model = &quot;naive&quot;)
+summary(dmm)</code></pre>
+<pre><code>          Class NumObs    RelFreq   MedProb    ExpFPs       FDR
+1  Human_HTO_10   2866 0.12742308 0.7904544  705.2727 0.2460826
+2  Human_HTO_12   1452 0.06455629 0.7769471  369.3228 0.2543545
+3  Human_HTO_13   2378 0.10572648 0.8074798  564.1196 0.2372244
+4  Human_HTO_14   1895 0.08425218 0.7970796  460.2876 0.2428958
+5  Human_HTO_15   1527 0.06789081 0.7895507  375.2009 0.2457111
+6   Human_HTO_6   1947 0.08656411 0.7746205  505.1135 0.2594317
+7   Human_HTO_7   1071 0.04761693 0.7772905  275.3354 0.2570826
+8   Human_HTO_9   1711 0.07607149 0.7996587  408.6939 0.2388626
+9       singlet  14847 0.66010137 0.7890803 3663.3464 0.2467398
+10    multiplet   4829 0.21469856 0.7580791 1355.1782 0.2806333
+11     negative   2816 0.12520007 0.7051019  909.5577 0.3229963
+12    uncertain   1261         NA        NA        NA        NA</code></pre>
+<p>Examine results.</p>
+<pre class="r"><code>p &lt;- vector(&quot;list&quot;, nrow(hto))
+for(i in 1:nrow(hto)){
+  p[[i]] &lt;- plotDmmHistogram(dmm, hto = i) + 
+    coord_cartesian(ylim = c(0, 0.001),
+                    xlim = c(-50, 1000)) +
+    theme(axis.title = element_text(size = 8),
+          axis.text = element_text(size = 6))
+}
+
+wrap_plots(p , ncol = 3) </code></pre>
+<p><img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>p &lt;- vector(&quot;list&quot;, nrow(hto))
+for(i in 1:nrow(hto)){
+  p[[i]] &lt;- plotDmmPosteriorP(dmm, hto = i) + 
+    theme(axis.title = element_text(size = 8),
+          axis.text = element_text(size = 6))
+}
+
+wrap_plots(p , ncol = 3) </code></pre>
+<p><img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pAcpt(dmm) &lt;- 0
+classes1 &lt;- dmmClassify(dmm)
+classes1$dmmHTO &lt;- ifelse(classes1$Type == &quot;multiplet&quot;, &quot;Doublet&quot;,
+                           ifelse(classes1$Type %in% c(&quot;negative&quot;, &quot;uncertain&quot;), 
+                                  &quot;Negative&quot;, classes1$HTO))
+table(classes1$dmmHTO)</code></pre>
+<pre><code>
+     Doublet Human_HTO_10 Human_HTO_12 Human_HTO_13 Human_HTO_14 Human_HTO_15 
+        5420         2917         1491         2434         1935         1564 
+ Human_HTO_6  Human_HTO_7  Human_HTO_9     Negative 
+        2019         1117         1769         3087 </code></pre>
+</div>
+<div id="c133_batch2_2" class="section level2">
+<h2>C133_batch2_2</h2>
+<pre class="r"><code>par(mfrow = c(3, 3))
+lapply(rownames(hto_counts), function(i) {
+  hist(
+    log2(hto_counts[i, sce$Capture == &quot;C133_batch2_2&quot;] + 1),
+    xlab = &quot;log2(UMIs + 1)&quot;, 
+    main = paste0(&quot;C133_2: &quot;, i), 
+    xlim = c(0, xmax), 
+    breaks = seq(0, xmax, 0.5),
+    cex.main = 0.8)
+})</code></pre>
+<div class="figure" style="text-align: center">
+<img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/hto-hist-2-1.png" alt="Number of UMIs for each HTO across all non-empty droplets." width="672" />
+<p class="caption">
+Number of UMIs for each HTO across all non-empty droplets.
+</p>
+</div>
+<p>Prepare the data.</p>
+<pre class="r"><code>hto &lt;- as.matrix(counts(altExp(sce[, sce$Capture == &quot;C133_batch2_2&quot;], &quot;HTO&quot;)))
+detected &lt;- sce$detected[sce$Capture == &quot;C133_batch2_2&quot;]
+
+df &lt;- data.frame(t(hto), 
+                 detected = detected, 
+                 hto = colSums(hto))
+
+df %&gt;% 
+  pivot_longer(cols = starts_with(&quot;Human_HTO&quot;)) %&gt;%
+  mutate(logged = log(value + 1)) %&gt;%
+  ggplot(aes(x = logged)) +
+  geom_density(adjust = 5) +
+  facet_wrap(~name, scales = &quot;free&quot;)</code></pre>
+<p><img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df %&gt;% 
+  pivot_longer(cols = starts_with(&quot;Human_HTO&quot;)) %&gt;%
+  ggplot(aes(x = detected, y = hto)) +
+  geom_density_2d() +
+  facet_wrap(~name) </code></pre>
+<p><img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Run demultiplexing.</p>
+<pre class="r"><code>dmm &lt;- demuxmix(hto = hto, 
+                rna = detected,
+                model = &quot;naive&quot;)
+summary(dmm)</code></pre>
+<pre><code>          Class NumObs    RelFreq   MedProb    ExpFPs       FDR
+1  Human_HTO_10   2904 0.12348514 0.6646074 1041.6423 0.3586922
+2  Human_HTO_12   1376 0.05851086 0.6396228  522.7114 0.3798775
+3  Human_HTO_13   1860 0.07909172 0.6550031  684.6002 0.3680646
+4  Human_HTO_14   1653 0.07028958 0.6551081  603.1705 0.3648945
+5  Human_HTO_15   1535 0.06527193 0.6626550  557.3451 0.3630913
+6   Human_HTO_6   1837 0.07811370 0.6518793  679.4484 0.3698685
+7   Human_HTO_7   1059 0.04503125 0.6447616  397.6371 0.3754835
+8   Human_HTO_9   1487 0.06323085 0.6657127  533.7296 0.3589304
+9       singlet  13711 0.58302505 0.6558067 5020.2847 0.3661501
+10    multiplet   5104 0.21703449 0.6455794 1877.2924 0.3678081
+11     negative   4702 0.19994047 0.5881868 1979.1232 0.4209109
+12    uncertain   5890         NA        NA        NA        NA</code></pre>
+<p>Examine results.</p>
+<pre class="r"><code>p &lt;- vector(&quot;list&quot;, nrow(hto))
+for(i in 1:nrow(hto)){
+  p[[i]] &lt;- plotDmmHistogram(dmm, hto = i) + 
+    coord_cartesian(ylim = c(0, 0.001),
+                    xlim = c(-50, 1000)) +
+    theme(axis.title = element_text(size = 8),
+          axis.text = element_text(size = 6))
+}
+
+wrap_plots(p , ncol = 3) </code></pre>
+<p><img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>p &lt;- vector(&quot;list&quot;, nrow(hto))
+for(i in 1:nrow(hto)){
+  p[[i]] &lt;- plotDmmPosteriorP(dmm, hto = i) + 
+    theme(axis.title = element_text(size = 8),
+          axis.text = element_text(size = 6))
+}
+
+wrap_plots(p , ncol = 3) </code></pre>
+<p><img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pAcpt(dmm) &lt;- 0
+classes2 &lt;- dmmClassify(dmm)
+classes2$dmmHTO &lt;- ifelse(classes2$Type == &quot;multiplet&quot;, &quot;Doublet&quot;,
+                           ifelse(classes2$Type %in% c(&quot;negative&quot;, &quot;uncertain&quot;), 
+                                  &quot;Negative&quot;, classes2$HTO))
+table(classes2$dmmHTO)</code></pre>
+<pre><code>
+     Doublet Human_HTO_10 Human_HTO_12 Human_HTO_13 Human_HTO_14 Human_HTO_15 
+        7715         3269         1552         2179         1895         1777 
+ Human_HTO_6  Human_HTO_7  Human_HTO_9     Negative 
+        2123         1210         1665         6022 </code></pre>
+</div>
+</div>
+<div id="section" class="section level1 unnumbered">
+<h1 class="unnumbered"></h1>
+</div>
+<div id="save-hto-assignments" class="section level1">
+<h1>Save HTO assignments</h1>
+<pre class="r"><code>classes &lt;- rbind(classes1, classes2)
+all(rownames(classes) == colnames(sce))</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>sce$dmmHTO &lt;- factor(classes$dmmHTO, 
+                     levels = c(sort(unique(grep(&quot;Human&quot;,
+                                               classes$dmmHTO,
+                                               value = TRUE))), 
+                                &quot;Doublet&quot;,
+                                &quot;Negative&quot;))</code></pre>
+</div>
+<div id="demultiplexing-cells-without-genotype-reference"
+class="section level1">
+<h1>Demultiplexing cells without genotype reference</h1>
+<div id="matching-donors-across-captures" class="section level2">
+<h2>Matching donors across captures</h2>
+<pre class="r"><code>library(vcfR)
+f &lt;- sapply(capture_names, function(cn) {
+  here(&quot;data&quot;,
+       &quot;C133_Neeland_batch2&quot;,
+       &quot;data&quot;,
+       &quot;vireo&quot;, cn, &quot;GT_donors.vireo.vcf.gz&quot;)
+})
+x &lt;- lapply(f, read.vcfR, verbose = FALSE)
+# Create unique ID for each locus in each capture.
+y &lt;- lapply(x, function(xx) {
+  paste(
+  xx@fix[,&quot;CHROM&quot;],
+  xx@fix[,&quot;POS&quot;],
+  xx@fix[,&quot;REF&quot;],
+  xx@fix[,&quot;ALT&quot;],
+  sep = &quot;_&quot;)
+})
+# Only keep the loci in common between the 2 captures.
+i &lt;- lapply(y, function(yy) {
+  na.omit(match(Reduce(intersect, y), yy))
+})
+# Construct genotype matrix at common loci from the 2 captures.
+donor_names &lt;- paste0(&quot;donor&quot;, 0:3)
+g &lt;- mapply(
+  function(xx, ii) {
+    apply(
+      xx@gt[ii, donor_names],
+      2,
+      function(x) sapply(strsplit(x, &quot;:&quot;), `[[`, 1))
+  },
+  xx = x,
+  ii = i,
+  SIMPLIFY = FALSE)
+# Count number of genotype matches between pairs of donors (one from each 
+# capture) and convert to a proportion.
+z &lt;- lapply(2:length(capture_names), function(k) {
+  zz &lt;- matrix(
+    NA_real_,
+    nrow = length(donor_names),
+    ncol = length(donor_names),
+    dimnames = list(donor_names, donor_names))
+  for (ii in rownames(zz)) {
+    for (jj in colnames(zz)) {
+      zz[ii, jj] &lt;- sum(g[[1]][, ii] == g[[k]][, jj]) / nrow(g[[1]])
+    }
+  }
+  zz
+})</code></pre>
+<pre class="r"><code>heatmaps &lt;- lapply(seq_along(z), function(k) {
+pheatmap::pheatmap(
+  z[[k]],
+  color = viridisLite::inferno(101),
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  main = &quot;Proportion of matching genotypes&quot;,
+  display_numbers = TRUE,
+  number_color = &quot;grey50&quot;,
+  labels_row = paste0(&quot;C133_batch2_1: &quot;, rownames(z[[k]])),
+  labels_col = paste0(&quot;C133_batch2_&quot;, k + 1, &quot;: &quot;, colnames(z[[k]])),
+  silent = TRUE,
+  fontsize = 10)
+})
+
+gridExtra::grid.arrange(grobs = lapply(heatmaps, `[[`, &quot;gtable&quot;), ncol = 1)</code></pre>
+<div class="figure" style="text-align: center">
+<img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/genotype-heatmap-1.png" alt="Proportion of matching genotypes between pairs of captures." width="672" />
+<p class="caption">
+Proportion of matching genotypes between pairs of captures.
+</p>
+</div>
+<p>The table below gives the best matches between the captures.</p>
+<pre class="r"><code>best_match_df &lt;- data.frame(
+  c(
+    list(rownames(z[[1]])),
+    lapply(seq_along(z), function(k) {
+      apply(
+        z[[k]], 
+        1,
+        function(x) colnames(z[[k]])[which.max(x)])
+    })),
+  row.names = NULL)
+colnames(best_match_df) &lt;- capture_names
+best_match_df$GeneticDonor &lt;- LETTERS[seq_along(donor_names)]
+best_match_df &lt;- dplyr::select(best_match_df, GeneticDonor, everything())
+
+knitr::kable(
+  best_match_df, 
+  caption = &quot;Best match of donors between the scRNA-seq captures.&quot;)</code></pre>
+<table>
+<caption>Best match of donors between the scRNA-seq captures.</caption>
+<thead>
+<tr class="header">
+<th align="left">GeneticDonor</th>
+<th align="left">C133_batch2_1</th>
+<th align="left">C133_batch2_2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A</td>
+<td align="left">donor0</td>
+<td align="left">donor3</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="left">donor1</td>
+<td align="left">donor1</td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="left">donor2</td>
+<td align="left">donor0</td>
+</tr>
+<tr class="even">
+<td align="left">D</td>
+<td align="left">donor3</td>
+<td align="left">donor2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="assigning-barcodes-to-donors" class="section level2">
+<h2>Assigning barcodes to donors</h2>
+<pre class="r"><code>vireo_df &lt;- do.call(
+  rbind,
+  c(
+    lapply(capture_names, function(cn) {
+      # Read data
+      vireo_df &lt;- read.table(
+        here(&quot;data&quot;,
+             &quot;C133_Neeland_batch2&quot;,
+             &quot;data&quot;,
+             &quot;vireo&quot;, cn, &quot;donor_ids.tsv&quot;),
+        header = TRUE)
+      
+      # Replace `donor[0-9]+` with `donor_[A-Z]` using `best_match_df`.
+      best_match &lt;- setNames(
+        c(best_match_df[[&quot;GeneticDonor&quot;]], &quot;Doublet&quot;, &quot;Unknown&quot;),
+        c(best_match_df[[cn]], &quot;doublet&quot;, &quot;unassigned&quot;))
+      vireo_df$GeneticDonor &lt;- factor(
+        best_match[vireo_df$donor_id],
+        levels = c(best_match_df[[&quot;GeneticDonor&quot;]], &quot;Doublet&quot;, &quot;Unknown&quot;))
+      vireo_df$donor_id &lt;- NULL
+      vireo_df$best_singlet &lt;- best_match[vireo_df$best_singlet]
+      vireo_df$best_doublet &lt;- sapply(
+        strsplit(vireo_df$best_doublet, &quot;,&quot;),
+        function(x) {
+          paste0(best_match[x[[1]]], &quot;,&quot;, best_match[x[[2]]])
+        })
+      
+      # Add additional useful metadata
+      vireo_df$Confident &lt;- factor(
+        vireo_df$GeneticDonor == vireo_df$best_singlet,
+        levels = c(TRUE, FALSE))
+      vireo_df$Capture &lt;- cn
+      
+      # Reorder so matches SCE.
+      captureNumber &lt;- sub(&quot;C133_batch2_&quot;, &quot;&quot;, cn)
+      vireo_df$colname &lt;- paste0(captureNumber, &quot;_&quot;, vireo_df$cell)
+      j &lt;- match(colnames(sce)[sce$Capture == cn], vireo_df$colname)
+      stopifnot(!anyNA(j))
+      vireo_df &lt;- vireo_df[j, ]
+      vireo_df
+    }),
+    list(make.row.names = FALSE)))</code></pre>
+</div>
+<div id="vireo-summary" class="section level2">
+<h2>Vireo summary</h2>
+<p>We add the parsed outputs of <strong>vireo</strong> to the
+<em>colData</em> of the <em>SingleCellExperiment</em> object so that we
+can incorporate it into downstream analyses.</p>
+<pre class="r"><code>stopifnot(identical(colnames(sce), vireo_df$colname))
+sce$GeneticDonor &lt;- vireo_df$GeneticDonor
+# NOTE: We exclude redundant columns.
+sce$vireo &lt;- DataFrame(
+  vireo_df[, setdiff(
+    colnames(vireo_df), 
+    c(&quot;cell&quot;, &quot;colname&quot;, &quot;Capture&quot;, &quot;GeneticDonor&quot;))])</code></pre>
+<pre class="r"><code>tmp_df &lt;- data.frame(
+    best_singlet = sce$vireo$best_singlet, 
+    Confident = sce$vireo$Confident,
+    Capture = sce$Capture)
+p1 &lt;- ggplot(tmp_df) + 
+  geom_bar(
+    aes(x = best_singlet, fill = Confident), 
+    position = position_stack(reverse = TRUE)) + 
+  coord_flip() +
+  ylab(&quot;Number of droplets&quot;) +
+  xlab(&quot;Best singlet&quot;) +
+  theme_cowplot(font_size = 7)
+p2 &lt;- ggplot(tmp_df) + 
+  geom_bar(
+    aes(x = best_singlet, fill = Confident), 
+    position = position_fill(reverse = TRUE)) + 
+  coord_flip() +
+  ylab(&quot;Proportion of droplets&quot;) +
+  xlab(&quot;Best singlet&quot;) +
+  theme_cowplot(font_size = 7)
+
+(p1 + p1 + facet_grid(~Capture) + plot_layout(widths = c(1, 2))) / 
+  (p2 + p2 + facet_grid(~Capture) + plot_layout(widths = c(1, 2))) +
+  plot_layout(guides = &quot;collect&quot;)</code></pre>
+<div class="figure" style="text-align: center">
+<img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/genetic-demultiplexing-best-1.png" alt="Number (top) and proportion (bottom) of droplets assigned to each donor based on genetics (best singlet), and if these were confidently or not confidently assigned, overall (left) and within each capture (right)." width="672" />
+<p class="caption">
+Number (top) and proportion (bottom) of droplets assigned to each donor
+based on genetics (best singlet), and if these were confidently or not
+confidently assigned, overall (left) and within each capture (right).
+</p>
+</div>
+<pre class="r"><code>p3 &lt;- ggplot(
+  data.frame(
+    GeneticDonor = sce$GeneticDonor, 
+    Confident = sce$vireo$Confident,
+    Capture = sce$Capture)) + 
+  geom_bar(
+    aes(x = GeneticDonor, fill = Confident), 
+    position = position_stack(reverse = TRUE)) + 
+  coord_flip() +
+  ylab(&quot;Number of droplets&quot;) +
+  xlab(&quot;Final donor assignment&quot;) +
+  theme_cowplot(font_size = 7)
+
+(p3 + p3 + facet_grid(~Capture) + plot_layout(widths = c(1, 2))) +
+  plot_layout(guides = &quot;collect&quot;)</code></pre>
+<div class="figure" style="text-align: center">
+<img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/genetic-demultiplexing-final-1.png" alt="Number and proportion of droplets assigned to each donor based on genetics (final assignment), and if these were confidently or not confidently assigned, overall (left) and within each capture (right)." width="672" />
+<p class="caption">
+Number and proportion of droplets assigned to each donor based on
+genetics (final assignment), and if these were confidently or not
+confidently assigned, overall (left) and within each capture (right).
+</p>
+</div>
+</div>
+</div>
+<div id="overall-summary" class="section level1">
+<h1>Overall summary</h1>
+<pre class="r"><code>p &lt;- scater::plotColData(
+  sce,
+  &quot;dmmHTO&quot;, 
+  &quot;GeneticDonor&quot;, 
+  colour_by = &quot;GeneticDonor&quot;, 
+  other_fields = &quot;Capture&quot;) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  guides(colour = &quot;none&quot;)
+p / (p + facet_grid(~Capture))</code></pre>
+<div class="figure" style="text-align: center">
+<img src="figure/01.2_remove_empty_droplets_demultiplex_batch2.Rmd/hto-genetic-donor-1.png" alt="Number of droplets assigned to each `dmmHTO`/`GeneticDonor` combination, overall (top) and within each capture (bottom)" width="672" />
+<p class="caption">
+Number of droplets assigned to each
+<code>dmmHTO</code>/<code>GeneticDonor</code> combination, overall (top)
+and within each capture (bottom)
+</p>
+</div>
+<pre class="r"><code>janitor::tabyl(
+  as.data.frame(colData(sce)[, c(&quot;dmmHTO&quot;, &quot;GeneticDonor&quot;)]),
+  dmmHTO,
+  GeneticDonor) |&gt;
+  janitor::adorn_title(placement = &quot;combined&quot;) |&gt;
+  janitor::adorn_totals(&quot;both&quot;) |&gt;
+  knitr::kable(
+    caption = &quot;Number of droplets assigned to each `dmmHTO`/`GeneticDonor` combination.&quot;)</code></pre>
+<table>
+<caption>Number of droplets assigned to each
+<code>dmmHTO</code>/<code>GeneticDonor</code> combination.</caption>
+<colgroup>
+<col width="31%" />
+<col width="9%" />
+<col width="7%" />
+<col width="7%" />
+<col width="9%" />
+<col width="12%" />
+<col width="12%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">dmmHTO/GeneticDonor</th>
+<th align="right">A</th>
+<th align="right">B</th>
+<th align="right">C</th>
+<th align="right">D</th>
+<th align="right">Doublet</th>
+<th align="right">Unknown</th>
+<th align="right">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Human_HTO_10</td>
+<td align="right">5424</td>
+<td align="right">9</td>
+<td align="right">8</td>
+<td align="right">67</td>
+<td align="right">463</td>
+<td align="right">215</td>
+<td align="right">6186</td>
+</tr>
+<tr class="even">
+<td align="left">Human_HTO_12</td>
+<td align="right">2766</td>
+<td align="right">4</td>
+<td align="right">5</td>
+<td align="right">47</td>
+<td align="right">130</td>
+<td align="right">91</td>
+<td align="right">3043</td>
+</tr>
+<tr class="odd">
+<td align="left">Human_HTO_13</td>
+<td align="right">28</td>
+<td align="right">1</td>
+<td align="right">6</td>
+<td align="right">4350</td>
+<td align="right">125</td>
+<td align="right">103</td>
+<td align="right">4613</td>
+</tr>
+<tr class="even">
+<td align="left">Human_HTO_14</td>
+<td align="right">31</td>
+<td align="right">5</td>
+<td align="right">4</td>
+<td align="right">3557</td>
+<td align="right">148</td>
+<td align="right">85</td>
+<td align="right">3830</td>
+</tr>
+<tr class="odd">
+<td align="left">Human_HTO_15</td>
+<td align="right">47</td>
+<td align="right">6</td>
+<td align="right">7</td>
+<td align="right">2901</td>
+<td align="right">210</td>
+<td align="right">170</td>
+<td align="right">3341</td>
+</tr>
+<tr class="even">
+<td align="left">Human_HTO_6</td>
+<td align="right">48</td>
+<td align="right">1</td>
+<td align="right">3556</td>
+<td align="right">90</td>
+<td align="right">253</td>
+<td align="right">194</td>
+<td align="right">4142</td>
+</tr>
+<tr class="odd">
+<td align="left">Human_HTO_7</td>
+<td align="right">29</td>
+<td align="right">1544</td>
+<td align="right">11</td>
+<td align="right">66</td>
+<td align="right">303</td>
+<td align="right">374</td>
+<td align="right">2327</td>
+</tr>
+<tr class="even">
+<td align="left">Human_HTO_9</td>
+<td align="right">3105</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="right">39</td>
+<td align="right">196</td>
+<td align="right">86</td>
+<td align="right">3434</td>
+</tr>
+<tr class="odd">
+<td align="left">Doublet</td>
+<td align="right">2952</td>
+<td align="right">373</td>
+<td align="right">632</td>
+<td align="right">2896</td>
+<td align="right">5656</td>
+<td align="right">626</td>
+<td align="right">13135</td>
+</tr>
+<tr class="even">
+<td align="left">Negative</td>
+<td align="right">1648</td>
+<td align="right">180</td>
+<td align="right">478</td>
+<td align="right">3350</td>
+<td align="right">1607</td>
+<td align="right">1846</td>
+<td align="right">9109</td>
+</tr>
+<tr class="odd">
+<td align="left">Total</td>
+<td align="right">16078</td>
+<td align="right">2127</td>
+<td align="right">4711</td>
+<td align="right">17363</td>
+<td align="right">9091</td>
+<td align="right">3790</td>
+<td align="right">53160</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="save-data" class="section level1">
+<h1>Save data</h1>
+<pre class="r"><code>saveRDS(
+   sce,
+   here(&quot;data&quot;,
+        &quot;C133_Neeland_batch2&quot;,
+        &quot;data&quot;,
+        &quot;SCEs&quot;,
+        &quot;C133_Neeland_batch2.demuxmix.SCE.rds&quot;))</code></pre>
+</div>
+<div id="session-info" class="section level1 appendix">
+<h1 class="appendix">Session info</h1>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.3.2 (2023-10-31)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.3
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Melbourne
+tzcode source: internal
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices datasets  utils     methods  
+[8] base     
+
+other attached packages:
+ [1] vcfR_1.15.0                 scater_1.30.1              
+ [3] scuttle_1.12.0              DropletUtils_1.22.0        
+ [5] SingleCellExperiment_1.24.0 SummarizedExperiment_1.32.0
+ [7] Biobase_2.62.0              GenomicRanges_1.54.1       
+ [9] GenomeInfoDb_1.38.6         IRanges_2.36.0             
+[11] S4Vectors_0.40.2            BiocGenerics_0.48.1        
+[13] MatrixGenerics_1.14.0       matrixStats_1.2.0          
+[15] lubridate_1.9.3             forcats_1.0.0              
+[17] stringr_1.5.1               dplyr_1.1.4                
+[19] purrr_1.0.2                 readr_2.1.5                
+[21] tidyr_1.3.1                 tibble_3.2.1               
+[23] tidyverse_2.0.0             demuxmix_1.4.0             
+[25] patchwork_1.2.0             cowplot_1.1.3              
+[27] ggplot2_3.4.4               BiocStyle_2.30.0           
+[29] readxl_1.4.3                here_1.0.1                 
+[31] workflowr_1.7.1            
+
+loaded via a namespace (and not attached):
+  [1] RColorBrewer_1.1-3        rstudioapi_0.15.0        
+  [3] jsonlite_1.8.8            magrittr_2.0.3           
+  [5] ggbeeswarm_0.7.2          farver_2.1.1             
+  [7] rmarkdown_2.25            fs_1.6.3                 
+  [9] zlibbioc_1.48.0           vctrs_0.6.5              
+ [11] DelayedMatrixStats_1.24.0 RCurl_1.98-1.14          
+ [13] janitor_2.2.0             htmltools_0.5.7          
+ [15] S4Arrays_1.2.0            BiocNeighbors_1.20.2     
+ [17] cellranger_1.1.0          Rhdf5lib_1.24.2          
+ [19] SparseArray_1.2.4         rhdf5_2.46.1             
+ [21] sass_0.4.8                bslib_0.6.1              
+ [23] cachem_1.0.8              whisker_0.4.1            
+ [25] lifecycle_1.0.4           pkgconfig_2.0.3          
+ [27] rsvd_1.0.5                Matrix_1.6-5             
+ [29] R6_2.5.1                  fastmap_1.1.1            
+ [31] snakecase_0.11.1          GenomeInfoDbData_1.2.11  
+ [33] digest_0.6.34             colorspace_2.1-0         
+ [35] ps_1.7.6                  rprojroot_2.0.4          
+ [37] dqrng_0.3.2               irlba_2.3.5.1            
+ [39] vegan_2.6-4               beachmat_2.18.1          
+ [41] labeling_0.4.3            fansi_1.0.6              
+ [43] timechange_0.3.0          mgcv_1.9-1               
+ [45] httr_1.4.7                abind_1.4-5              
+ [47] compiler_4.3.2            withr_3.0.0              
+ [49] BiocParallel_1.36.0       viridis_0.6.5            
+ [51] highr_0.10                HDF5Array_1.30.0         
+ [53] R.utils_2.12.3            MASS_7.3-60.0.1          
+ [55] DelayedArray_0.28.0       permute_0.9-7            
+ [57] tools_4.3.2               vipor_0.4.7              
+ [59] ape_5.7-1                 beeswarm_0.4.0           
+ [61] httpuv_1.6.14             R.oo_1.26.0              
+ [63] glue_1.7.0                callr_3.7.3              
+ [65] nlme_3.1-164              rhdf5filters_1.14.1      
+ [67] promises_1.2.1            grid_4.3.2               
+ [69] getPass_0.2-4             cluster_2.1.6            
+ [71] memuse_4.2-3              generics_0.1.3           
+ [73] isoband_0.2.7             gtable_0.3.4             
+ [75] tzdb_0.4.0                R.methodsS3_1.8.2        
+ [77] pinfsc50_1.3.0            hms_1.1.3                
+ [79] BiocSingular_1.18.0       ScaledMatrix_1.10.0      
+ [81] utf8_1.2.4                XVector_0.42.0           
+ [83] ggrepel_0.9.5             pillar_1.9.0             
+ [85] limma_3.58.1              later_1.3.2              
+ [87] splines_4.3.2             lattice_0.22-5           
+ [89] renv_1.0.3                tidyselect_1.2.0         
+ [91] locfit_1.5-9.8            knitr_1.45               
+ [93] git2r_0.33.0              gridExtra_2.3            
+ [95] edgeR_4.0.15              xfun_0.42                
+ [97] statmod_1.5.0             pheatmap_1.0.12          
+ [99] stringi_1.8.3             yaml_2.3.8               
+[101] evaluate_0.23             codetools_0.2-19         
+[103] BiocManager_1.30.22       cli_3.6.2                
+[105] munsell_0.5.0             processx_3.8.3           
+[107] jquerylib_0.1.4           Rcpp_1.0.12              
+[109] parallel_4.3.2            sparseMatrixStats_1.14.0 
+[111] bitops_1.0-7              viridisLite_0.4.2        
+[113] scales_1.3.0              crayon_1.5.2             
+[115] rlang_1.1.3              </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
