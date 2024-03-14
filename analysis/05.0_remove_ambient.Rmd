@@ -25,6 +25,7 @@ suppressPackageStartupMessages({
   library(scater)
   library(decontX)
   library(celda)
+  library(dsb)
 })
 ```
 
@@ -51,7 +52,18 @@ sceLst
 # Remove ambient RNA contamination
 ## Run decontX
 
-```{r}
+During this step we will also denoise the ADT data for each batch using DSB as outlined in this [workflow](https://cran.r-project.org/web/packages/dsb/vignettes/end_to_end_workflow.html#step4).
+
+```{r, warning=FALSE, message=FALSE}
+# identify isotype controls for DSB ADT normalisation
+read_csv(file = here("data",
+                     "C133_Neeland_batch1",
+                     "data",
+                     "sample_sheets",
+                     "ADT_features.csv")) %>%
+  dplyr::filter(grepl("[Ii]sotype", id)) %>%
+  pull(name) -> isotype_controls
+
 sceLst <- lapply(1:length(sceLst), function(i){
   sce <- sceLst[[i]]
   
@@ -62,6 +74,35 @@ sceLst <- lapply(1:length(sceLst), function(i){
   if(length(levels(sce$Capture)) < 4){
     sce_decont <- decontX(sce, background = sce_raw)
     
+    # get isotype controls
+    rowData(altExp(sce, "ADT")) %>%
+      data.frame %>%
+      dplyr::filter(grepl("[Ii]sotype", Symbol)) %>%
+      pull(ID) -> isotype_controls
+
+    # get ADT counts for "cells"
+    adt <- counts(altExp(sce, "ADT"))
+    # get ADT counts for background
+    adt_background <- counts(altExp(sce_raw, "Antibody Capture"))
+    # exclude all "cells" from background matrix
+    adt_background <- adt_background[!str_detect(rownames(adt_background), "HTO"),]
+    adt_background <- adt_background[,!colnames(adt_background) %in% colnames(adt)]
+    # exclude droplets with >500 RNA counts
+    adt_background <- adt_background[, colSums(adt_background) < 500]
+    
+    # normalize and denoise with dsb 
+    adt_dsb <- DSBNormalizeProtein(
+      cell_protein_matrix = adt, 
+      empty_drop_matrix = adt_background, 
+      denoise.counts = TRUE, 
+      use.isotype.control = TRUE, 
+      isotype.control.name.vec = isotype_controls)
+    
+    # add normalised dsb ADT assay
+    tmp <- SingleCellExperiment(list(counts = adt_dsb),
+                                     rowData = rowData(altExp(sce_decont, "ADT")))
+    altExp(sce_decont, "ADT.dsb") <- tmp
+      
   } else {
     sce_decont <- decontX(sce, background = sce_raw,
                           batch = sce$Capture,
