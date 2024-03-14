@@ -98,8 +98,10 @@ seuLst <- sapply(1:length(seuLst), function(i){
     seu@reductions$ref.umap <- tmp@reductions$ref.umap
     
     if(!is_empty(altExpNames(sceLst[[i]]))){
-      seu[["ADTs"]] <- CreateAssayObject(counts = counts(altExp(sceLst[[i]], 
+      seu[["ADT"]] <- CreateAssayObject(counts = counts(altExp(sceLst[[i]], 
                                                                 "ADT")))
+      seu[["ADT.dsb"]] <- CreateAssayObject(counts = counts(altExp(sceLst[[i]], 
+                                                                "ADT.dsb")))
       
     }
     
@@ -141,7 +143,9 @@ p
 Create a single `Seurat` object and clean-up the metadata.
 
 ```{r}
-out <- here("data/C133_Neeland_full_clean.SEU.rds")
+out <- here("data",
+            "C133_Neeland_merged",
+            "C133_Neeland_full_clean.SEU.rds")
 
 if(!file.exists(out)){
   seu <- merge(seuLst[[1]], 
@@ -198,6 +202,7 @@ Save objects.
 ```{r}
 sapply(1:length(cellsLst), function(i){
   out <- here("data",
+              "C133_Neeland_merged",
               glue("C133_Neeland_full_clean_{names(cellsLst[i])}.SEU.rds"))
   
   if(!file.exists(out)) saveRDS(cellsLst[[i]], out)
