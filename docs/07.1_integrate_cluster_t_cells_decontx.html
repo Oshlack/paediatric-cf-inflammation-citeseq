@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jovana Maksimovic and George Howitt" />
+
+<meta name="date" content="2024-03-19" />
+
+<title>Integrate and cluster T cells</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">paed-inflammation-CITEseq</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Integrate and cluster T cells</h1>
+<h4 class="author">Jovana Maksimovic and George Howitt</h4>
+<h4 class="date">March 19, 2024</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-03-19
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>paed-inflammation-CITEseq/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240216code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240216)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240216code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240216)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtree3e9ce40d940e7ba45c3525f26758f86b2f10fec7targetblank3e9ce40a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/3e9ce40d940e7ba45c3525f26758f86b2f10fec7" target="_blank">3e9ce40</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtree3e9ce40d940e7ba45c3525f26758f86b2f10fec7targetblank3e9ce40a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/3e9ce40d940e7ba45c3525f26758f86b2f10fec7" target="_blank">3e9ce40</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    data/C133_Neeland_batch0/
+    Ignored:    data/C133_Neeland_batch1/
+    Ignored:    data/C133_Neeland_batch2/
+    Ignored:    data/C133_Neeland_batch3/
+    Ignored:    data/C133_Neeland_batch4/
+    Ignored:    data/C133_Neeland_batch5/
+    Ignored:    data/C133_Neeland_batch6/
+    Ignored:    data/C133_Neeland_merged/
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
+
+Untracked files:
+    Untracked:  analysis/scar.Rmd
+    Untracked:  analysis/scar.nb.html
+    Untracked:  output/cluster_markers/ADT/
+    Untracked:  output/cluster_markers/ADT_decontx/
+    Untracked:  output/cluster_markers/RNA/
+    Untracked:  output/cluster_markers/RNA_decontx/
+
+Unstaged changes:
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c0.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c1.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c10.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c11.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c12.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c13.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c14.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c15.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c16.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c17.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c18.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c19.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c2.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c20.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c21.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c3.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c4.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c5.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c6.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c7.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c8.csv
+    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c9.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c0.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c1.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c10.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c11.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c12.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c13.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c14.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c15.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c16.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c17.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c18.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c19.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c2.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c20.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c21.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c3.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c4.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c5.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c6.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c7.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c8.csv
+    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c9.csv
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/07.1_integrate_cluster_t_cells_decontx.Rmd</code>) and
+HTML (<code>docs/07.1_integrate_cluster_t_cells_decontx.html</code>)
+files. If you’ve configured a remote Git repository (see
+<code>?wflow_git_remote</code>), click on the hyperlinks in the table
+below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/3e9ce40d940e7ba45c3525f26758f86b2f10fec7/analysis/07.1_integrate_cluster_t_cells_decontx.Rmd" target="_blank">3e9ce40</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-03-19
+</td>
+<td>
+wflow_publish(c("analysis/index.Rmd", "analysis/<em>integrate</em>"))
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>Load libraries.</p>
+<pre class="r"><code>suppressPackageStartupMessages({
+ library(SingleCellExperiment)
+ library(edgeR)
+ library(tidyverse)
+ library(ggplot2)
+ library(Seurat)
+ library(glmGamPoi)
+ library(dittoSeq)
+ library(here)
+ library(clustree)
+ library(patchwork)
+ library(AnnotationDbi)
+ library(org.Hs.eg.db)
+ library(glue)
+ library(speckle)
+ library(tidyHeatmap)
+ library(dsb)
+})</code></pre>
+<div id="load-data" class="section level1">
+<h1>Load data</h1>
+<p>Load T-cell subset Seurat object.</p>
+<pre class="r"><code>ambient &lt;- &quot;_decontx&quot;
+seu &lt;- readRDS(here(&quot;data&quot;,
+                    &quot;C133_Neeland_merged&quot;,
+                    glue(&quot;C133_Neeland_full_clean{ambient}_t_cells.SEU.rds&quot;)))
+seu</code></pre>
+<pre><code>An object of class Seurat 
+20299 features across 15511 samples within 3 assays 
+Active assay: RNA (19973 features, 0 variable features)
+ 2 other assays present: ADT, ADT.dsb</code></pre>
+</div>
+<div id="data-integration" class="section level1">
+<h1>Data integration</h1>
+<p>Visualise batch effects.</p>
+<pre class="r"><code>seu &lt;- ScaleData(seu) %&gt;%
+  FindVariableFeatures() %&gt;%
+  RunPCA(dims = 1:30, verbose = FALSE) %&gt;%
+  RunUMAP(dims = 1:30, verbose = FALSE)
+
+DimPlot(seu, group.by = &quot;Batch&quot;, reduction = &quot;umap&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="cell-cycle-effect" class="section level2">
+<h2>Cell cycle effect</h2>
+<p>Assign each cell a score, based on its expression of G2/M and S phase
+markers as described in the Seurat workflow <a
+href="https://satijalab.org/seurat/articles/cell_cycle_vignette.html">here</a>.</p>
+<pre class="r"><code>s.genes &lt;- cc.genes.updated.2019$s.genes
+g2m.genes &lt;- cc.genes.updated.2019$g2m.genes
+
+seu &lt;- CellCycleScoring(seu, s.features = s.genes, g2m.features = g2m.genes, 
+                        set.ident = TRUE)</code></pre>
+<p>PCA of cell cycle genes.</p>
+<pre class="r"><code>DimPlot(seu, group.by = &quot;Phase&quot;) -&gt; p1
+
+seu %&gt;%
+  RunPCA(features = c(s.genes, g2m.genes),
+                      dims = 1:30, verbose = FALSE) %&gt;%
+  DimPlot(reduction = &quot;pca&quot;) -&gt; p2
+
+(p2 / p1) + plot_layout(guides = &quot;collect&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Distribution of cell cycle markers.</p>
+<pre class="r"><code># Visualize the distribution of cell cycle markers across
+RidgePlot(seu, features = c(&quot;PCNA&quot;, &quot;TOP2A&quot;, &quot;MCM6&quot;, &quot;MKI67&quot;), ncol = 2,
+          log = TRUE)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Using the <code>Seurat</code> <em>Alternate Workflow</em> from <a
+href="https://satijalab.org/seurat/articles/cell_cycle_vignette.html">here</a>,
+calculate the difference between the G2M and S phase scores so that
+signals separating non-cycling cells and cycling cells will be
+maintained, but differences in cell cycle phase among proliferating
+cells (which are often uninteresting), can be regressed out of the
+data.</p>
+<pre class="r"><code>seu$CC.Difference &lt;- seu$S.Score - seu$G2M.Score</code></pre>
+</div>
+<div id="integrate-rna-data" class="section level2">
+<h2>Integrate RNA data</h2>
+<p>Split by <em>batch</em> for integration. Normalise with
+<code>SCTransform</code>. Increase the strength of alignment by
+increasing <code>k.anchor</code> parameter to 20 as recommended in
+Seurat Fast integration with RPCA <a
+href="https://satijalab.org/seurat/articles/integration_rpca.html">vignette</a>.</p>
+<p>First, integrate the RNA data.</p>
+<pre class="r"><code>out &lt;- here(&quot;data&quot;,
+            &quot;C133_Neeland_merged&quot;,
+            glue(&quot;C133_Neeland_full_clean{ambient}_integrated_t_cells.SEU.rds&quot;))
+
+if(!file.exists(out)){
+  DefaultAssay(seu) &lt;- &quot;RNA&quot;
+  VariableFeatures(seu) &lt;- NULL
+  seu[[&quot;pca&quot;]] &lt;- NULL
+  seu[[&quot;umap&quot;]] &lt;- NULL
+  
+  seuLst &lt;- SplitObject(seu, split.by = &quot;Batch&quot;)
+  rm(seu)
+  gc()
+  
+  # normalise with SCTransform and regress out cell cycle score difference
+  seuLst &lt;- lapply(X = seuLst, FUN = SCTransform, method = &quot;glmGamPoi&quot;,
+                   vars.to.regress = &quot;CC.Difference&quot;)
+  # integrate RNA data
+  features &lt;- SelectIntegrationFeatures(object.list = seuLst,
+                                        nfeatures = 3000)
+  seuLst &lt;- PrepSCTIntegration(object.list = seuLst, anchor.features = features)
+  seuLst &lt;- lapply(X = seuLst, FUN = RunPCA, features = features)
+  anchors &lt;- FindIntegrationAnchors(object.list = seuLst,
+                                    normalization.method = &quot;SCT&quot;,
+                                    anchor.features = features,
+                                    k.anchor = 20,
+                                    dims = 1:30, reduction = &quot;rpca&quot;)
+  seu &lt;- IntegrateData(anchorset = anchors, 
+                       k.weight = min(100, min(sapply(seuLst, ncol)) - 5),
+                       normalization.method = &quot;SCT&quot;,
+                       dims = 1:30)
+  
+  DefaultAssay(seu) &lt;- &quot;integrated&quot;
+  seu &lt;- RunPCA(seu, dims = 1:30, verbose = FALSE) %&gt;%
+    RunUMAP(dims = 1:30, verbose = FALSE)
+
+  saveRDS(seu, file = out)
+  fs::file_chmod(out, &quot;664&quot;)
+  if(any(str_detect(fs::group_ids()$group_name, 
+                    &quot;oshlack_lab&quot;))) fs::file_chown(out, 
+                                                    group_id = &quot;oshlack_lab&quot;)
+  
+} else {
+  seu &lt;- readRDS(file = out)
+  
+}</code></pre>
+</div>
+<div id="integrate-adt-data" class="section level2">
+<h2>Integrate ADT data</h2>
+<pre class="r"><code>out &lt;- here(&quot;data&quot;,
+            &quot;C133_Neeland_merged&quot;,
+            glue(&quot;C133_Neeland_full_clean{ambient}_integrated_t_cells.ADT.SEU.rds&quot;))
+
+# get ADT meta data
+read.csv(file = here(&quot;data&quot;,
+                     &quot;C133_Neeland_batch1&quot;,
+                     &quot;data&quot;,
+                     &quot;sample_sheets&quot;,
+                     &quot;ADT_features.csv&quot;)) -&gt; adt_data 
+# cleanup ADT meta data
+pattern &lt;- &quot;anti-human/mouse |anti-human/mouse/rat |anti-mouse/human &quot;
+adt_data$name &lt;- gsub(pattern, &quot;&quot;, adt_data$name)
+# change ADT rownames to antibody names
+DefaultAssay(seu) &lt;- &quot;ADT&quot;
+if(all(rownames(seu[[&quot;ADT&quot;]]@counts) == adt_data$id)){
+  adt_counts &lt;- seu[[&quot;ADT&quot;]]@counts
+  rownames(adt_counts) &lt;- adt_data$name
+  seu[[&quot;ADT&quot;]] &lt;- CreateAssayObject(counts = adt_counts)
+}
+
+if(!file.exists(out)){
+  tmp &lt;- DietSeurat(subset(seu, cells = which(seu$Batch != 0)), 
+                    assays = &quot;ADT&quot;)
+  DefaultAssay(tmp) &lt;- &quot;ADT&quot;
+  
+  seuLst &lt;- SplitObject(tmp, split.by = &quot;Batch&quot;)
+  seuLst &lt;- lapply(X = seuLst, FUN = function(x) {
+    # set all ADT as variable features
+    VariableFeatures(x) &lt;- rownames(x)
+    x &lt;- NormalizeData(x, normalization.method = &quot;CLR&quot;, margin = 2)
+    x
+  })
+  features &lt;- SelectIntegrationFeatures(object.list = seuLst)
+  seuLst &lt;- lapply(X = seuLst, FUN = function(x) {
+    x &lt;- ScaleData(x, features = features, verbose = FALSE) %&gt;%
+      RunPCA(features = features, verbose = FALSE)
+    x
+  })
+  anchors &lt;- FindIntegrationAnchors(object.list = seuLst, reduction = &quot;rpca&quot;,
+                                    dims = 1:30)
+  tmp &lt;- IntegrateData(anchorset = anchors, dims = 1:30)
+  
+  DefaultAssay(tmp) &lt;- &quot;integrated&quot;
+  tmp &lt;- ScaleData(tmp) %&gt;%
+    RunPCA(dims = 1:30, verbose = FALSE) %&gt;%
+    RunUMAP(dims = 1:30, verbose = FALSE)
+
+  # create combined object that only contains cells with RNA+ADT data
+  seuADT &lt;- subset(seu, cells = which(seu$Batch !=0))
+  seuADT[[&quot;integrated.adt&quot;]] &lt;- tmp[[&quot;integrated&quot;]]
+  seuADT[[&quot;pca.adt&quot;]] &lt;- tmp[[&quot;pca&quot;]]
+  seuADT[[&quot;umap.adt&quot;]] &lt;- tmp[[&quot;umap&quot;]]
+
+  saveRDS(seuADT, file = out)
+  fs::file_chmod(out, &quot;664&quot;)
+  if(any(str_detect(fs::group_ids()$group_name, 
+                    &quot;oshlack_lab&quot;))) fs::file_chown(out, 
+                                                    group_id = &quot;oshlack_lab&quot;)
+  
+} else {
+  seuADT &lt;- readRDS(file = out)
+  
+}</code></pre>
+</div>
+<div id="view-integrated-data" class="section level2">
+<h2>View integrated data</h2>
+<pre class="r"><code>DefaultAssay(seuADT) &lt;- &quot;integrated&quot;
+
+DimPlot(seu, group.by = &quot;Batch&quot;, reduction = &quot;umap&quot;) -&gt; p1
+DimPlot(seuADT, group.by = &quot;Batch&quot;, reduction = &quot;umap&quot;) -&gt; p2
+DimPlot(seuADT, group.by = &quot;Batch&quot;, reduction = &quot;umap.adt&quot;) -&gt; p3
+
+(p1 / ((p2 | p3) +
+  plot_layout(guides = &quot;collect&quot;))) &amp;
+  theme(axis.title = element_text(size = 8),
+        axis.text = element_text(size = 8)) </code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>DimPlot(seu, group.by = &quot;Phase&quot;, reduction = &quot;umap&quot;) -&gt; p1
+DimPlot(seuADT, group.by = &quot;Phase&quot;, reduction = &quot;umap&quot;) -&gt; p2
+DimPlot(seuADT, group.by = &quot;Phase&quot;, reduction = &quot;umap.adt&quot;) -&gt; p3
+
+(p1 / ((p2 | p3) +
+  plot_layout(guides = &quot;collect&quot;))) &amp;
+  theme(axis.title = element_text(size = 8),
+        axis.text = element_text(size = 8)) </code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="cluster-data" class="section level1">
+<h1>Cluster data</h1>
+<p>Perform clustering only on data that has ADT i.e. exclude batch
+0.</p>
+<div id="dimensionality-reduction-rna" class="section level2">
+<h2>Dimensionality reduction (RNA)</h2>
+<p>Exclude any mitochondrial, ribosomal, immunoglobulin and HLA genes
+from variable genes list, to encourage clustering by cell type.</p>
+<pre class="r"><code># remove HLA, immunoglobulin, RNA, MT, and RP genes from variable genes list
+var_regex = &#39;^HLA-|^IG[HJKL]|^RNA|^MT-|^RP&#39; 
+hvg &lt;- grep(var_regex, VariableFeatures(seuADT), invert = TRUE, value = TRUE)
+# assign edited variable gene list back to object 
+VariableFeatures(seuADT) &lt;- hvg
+
+# redo PCA and UMAP 
+seuADT &lt;- RunPCA(seuADT, dims = 1:30, verbose = FALSE) %&gt;%
+    RunUMAP(dims = 1:30, verbose = FALSE)
+
+DimHeatmap(seuADT, dims = 1:30, cells = 500, balanced = TRUE,
+           reduction = &quot;pca&quot;, assays = &quot;integrated&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-12-1.png" width="864" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ElbowPlot(seuADT, ndims = 30, reduction = &quot;pca&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dimensionality-reduction-adt" class="section level2">
+<h2>Dimensionality reduction (ADT)</h2>
+<pre class="r"><code>DimHeatmap(seuADT, dims = 1:30, cells = 500, balanced = TRUE,
+           reduction = &quot;pca.adt&quot;, assays = &quot;integrated.adt&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-14-1.png" width="864" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ElbowPlot(seuADT, ndims = 30, reduction = &quot;pca.adt&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="run-wnn-clustering" class="section level2">
+<h2>Run WNN clustering</h2>
+<p>Perform clustering at a range of resolutions and visualise to see
+which is appropriate to proceed with.</p>
+<pre class="r"><code>out &lt;- here(&quot;data&quot;,
+            &quot;C133_Neeland_merged&quot;,
+            glue(&quot;C133_Neeland_full_clean{ambient}_integrated_clustered_t_cells.ADT.SEU.rds&quot;))
+
+if(!file.exists(out)){
+  DefaultAssay(seuADT) &lt;- &quot;integrated&quot;
+  seuADT &lt;- FindMultiModalNeighbors(seuADT, reduction.list = list(&quot;pca&quot;, &quot;pca.adt&quot;), 
+                                 dims.list = list(1:30, 1:10), 
+                                 modality.weight.name = &quot;RNA.weight&quot;)
+  seuADT &lt;- FindClusters(seuADT, algorithm = 3, 
+                      resolution = seq(0.1, 1, by = 0.1),
+                      graph.name = &quot;wsnn&quot;)
+  seuADT &lt;- RunUMAP(seuADT, dims = 1:30, nn.name = &quot;weighted.nn&quot;, 
+                 reduction.name = &quot;wnn.umap&quot;, reduction.key = &quot;wnnUMAP_&quot;,
+                 return.model = TRUE)
+  saveRDS(seuADT, file = out)
+  fs::file_chmod(out, &quot;664&quot;)
+  if(any(str_detect(fs::group_ids()$group_name, 
+                    &quot;oshlack_lab&quot;))) fs::file_chown(out, 
+                                                    group_id = &quot;oshlack_lab&quot;)
+  
+} else {
+  seuADT &lt;- readRDS(file = out)
+  
+}
+
+clustree::clustree(seuADT, prefix = &quot;wsnn_res.&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="view-clusters" class="section level2">
+<h2>View clusters</h2>
+<p>Choose most appropriate resolution based on <code>clustree</code>
+plot above.</p>
+<pre class="r"><code>grp &lt;- &quot;wsnn_res.0.6&quot;
+# change factor ordering
+seuADT@meta.data[,grp] &lt;- fct_inseq(seuADT@meta.data[,grp])
+
+DimPlot(seuADT, group.by = grp, label = T) + 
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Weighting of RNA and ADT data per cluster.</p>
+<pre class="r"><code> VlnPlot(seuADT, features = &quot;integrated.weight&quot;, group.by = grp, sort = TRUE, 
+         pt.size = 0.1) +
+  NoLegend()</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="reference-mapping" class="section level1">
+<h1>Reference mapping</h1>
+<p>Batch 0 only has RNA data and was not included in the WNN clustering
+of batched 1-6. To add this data we will map it to the WNN clustered
+reference.</p>
+<div id="map-data" class="section level2">
+<h2>Map data</h2>
+<p>Find transfer anchors.</p>
+<pre class="r"><code># use WNN clustered batches 1-6 as reference
+reference &lt;- seuADT
+DefaultAssay(seu) &lt;- &quot;RNA&quot;
+# batch 0 RNA data is the query
+query &lt;- DietSeurat(subset(seu, cells = which(seu$Batch == 0)),
+                    assays = &quot;RNA&quot;)
+
+DefaultAssay(reference) &lt;- &quot;integrated&quot;
+
+anchors &lt;- FindTransferAnchors(
+  reference = reference,
+  query = query,
+  normalization.method = &quot;SCT&quot;,
+  reference.reduction = &quot;pca&quot;,
+  dims = 1:50
+)</code></pre>
+<p>Map batch 0 samples onto reference.</p>
+<pre class="r"><code>query &lt;- MapQuery(
+  anchorset = anchors,
+  query = query,
+  reference = reference,
+  refdata = list(
+    wsnn = grp,
+    ADT = &quot;ADT&quot;
+  ),
+  reference.reduction = &quot;pca&quot;, 
+  reduction.model = &quot;wnn.umap&quot;
+)
+
+query</code></pre>
+<pre><code>An object of class Seurat 
+20156 features across 5106 samples within 3 assays 
+Active assay: RNA (19973 features, 0 variable features)
+ 2 other assays present: prediction.score.wsnn, ADT
+ 2 dimensional reductions calculated: ref.pca, ref.umap</code></pre>
+<p>Visualise batch 0 samples on reference UMAP.</p>
+<pre class="r"><code>query$predicted.wsnn &lt;- fct_inseq(query$predicted.wsnn)
+
+DimPlot(query, reduction = &quot;ref.umap&quot;, group.by = &quot;predicted.wsnn&quot;, 
+        label = TRUE, label.size = 3 ,repel = TRUE) + 
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Distribution of <code>Azimuth</code> prediction scores per WNN
+cluster.</p>
+<pre class="r"><code>ggplot(query@meta.data, aes(x = predicted.wsnn, 
+                            y = predicted.wsnn.score,
+                            fill = predicted.wsnn)) +
+  geom_boxplot() + NoLegend()</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="compute-combined-umap" class="section level2">
+<h2>Compute combined UMAP</h2>
+<p>Computing a new UMAP can help to identify any cell states present in
+the query but not reference.</p>
+<pre class="r"><code># merge reference (integrated + WNN clustered) and query (RNA only samples)
+reference$id &lt;- &#39;reference&#39;
+query$id &lt;- &#39;query&#39;
+DefaultAssay(reference) &lt;- &quot;integrated&quot;
+refquery &lt;- merge(DietSeurat(reference,
+                             assays = c(&quot;RNA&quot;,&quot;ADT&quot;,&quot;integrated&quot;,&quot;SCT&quot;),
+                             dimreducs = c(&quot;pca&quot;)),
+                  DietSeurat(query,
+                             assays = c(&quot;RNA&quot;),
+                             dimreducs = &quot;ref.pca&quot;))
+refquery[[&quot;pca&quot;]] &lt;- merge(reference[[&quot;pca&quot;]], query[[&quot;ref.pca&quot;]])
+refquery &lt;- RunUMAP(refquery, reduction = &#39;pca&#39;, dims = 1:50, assay = &quot;integrated&quot;)</code></pre>
+<p>View combined UMAP.</p>
+<pre class="r"><code># combine cluster annotations from reference and query
+refquery@meta.data[, grp] &lt;- ifelse(is.na(refquery@meta.data[,grp]),
+                          refquery$predicted.wsnn,
+                          refquery@meta.data[,grp])
+# change factor ordering
+refquery@meta.data[,grp] &lt;- fct_inseq(refquery@meta.data[,grp])
+
+DimPlot(refquery, reduction = &quot;umap&quot;, group.by = grp, 
+             label = TRUE, label.size = 3) + NoLegend() </code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>DimPlot(refquery, reduction = &quot;umap&quot;, group.by = &quot;Phase&quot;, 
+             label = FALSE, label.size = 3)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>DimPlot(refquery, reduction = &quot;umap&quot;, group.by = &quot;Disease&quot;, 
+             label = FALSE, label.size = 3)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Save results.</p>
+<pre class="r"><code>out &lt;- here(&quot;data&quot;,
+            &quot;C133_Neeland_merged&quot;,
+            glue(&quot;C133_Neeland_full_clean{ambient}_integrated_clustered_mapped_t_cells.ADT.SEU.rds&quot;))
+if(!file.exists(out)){
+  saveRDS(refquery, file = out)
+  fs::file_chmod(out, &quot;664&quot;)
+  if(any(str_detect(fs::group_ids()$group_name, 
+                    &quot;oshlack_lab&quot;))) fs::file_chown(out, 
+                                                    group_id = &quot;oshlack_lab&quot;)
+}</code></pre>
+</div>
+<div id="examine-combined-clusters" class="section level2">
+<h2>Examine combined clusters</h2>
+<p>Number of cells per cluster.</p>
+<pre class="r"><code>refquery@meta.data %&gt;%
+  ggplot(aes(x = !!sym(grp), fill = !!sym(grp))) +
+  geom_bar() +
+  geom_text(aes(label = ..count..), stat = &quot;count&quot;,
+            vjust = -0.5, colour = &quot;black&quot;, size = 2) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  NoLegend()</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Visualise quality metrics by cluster. Cluster 17 potentially contains
+low quality cells.</p>
+<pre class="r"><code>refquery@meta.data %&gt;%
+  ggplot(aes(x = !!sym(grp),
+             y = nCount_RNA,
+             fill = !!sym(grp))) +
+  geom_violin(scale = &quot;area&quot;) +
+  scale_y_log10() +
+  NoLegend() -&gt; p2
+
+refquery@meta.data %&gt;%
+  ggplot(aes(x = !!sym(grp),
+             y = nFeature_RNA,
+             fill = !!sym(grp))) +
+  geom_violin(scale = &quot;area&quot;) +
+  scale_y_log10() +
+  NoLegend() -&gt; p3
+
+(p2 / p3) &amp; theme(text = element_text(size = 8))</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-27-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Check the batch composition of each of the clusters. Cluster 17 does
+not contain any cells from batch 0; could be a quality issue or the cell
+type was not captured in batch 0?</p>
+<pre class="r"><code>dittoBarPlot(refquery,
+             var = &quot;Batch&quot;, 
+             group.by = grp)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-28-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Check the sample compositions of combined clusters.</p>
+<pre class="r"><code>dittoBarPlot(refquery,
+             var = &quot;sample.id&quot;, 
+             group.by = grp) + ggtitle(&quot;Samples&quot;) +
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="rna-marker-gene-analysis" class="section level1">
+<h1>RNA marker gene analysis</h1>
+<p>Adapted from Dr. Belinda Phipson’s <a
+href="https://bphipson.github.io/Human_Development_snRNAseq/14-MarkerAnalysisBCT.html">work</a>
+for <span class="citation">[@Sim2021-cg]</span>.</p>
+<div id="test-for-marker-genes-using-limma" class="section level2">
+<h2>Test for marker genes using <code>limma</code></h2>
+<pre class="r"><code># limma-trend for DE
+Idents(refquery) &lt;- grp
+
+logcounts &lt;- normCounts(DGEList(as.matrix(refquery[[&quot;RNA&quot;]]@counts)),
+                        log = TRUE, prior.count = 0.5)
+entrez &lt;- AnnotationDbi::mapIds(org.Hs.eg.db,
+                                keys = rownames(logcounts),
+                                column = c(&quot;ENTREZID&quot;),
+                                keytype = &quot;SYMBOL&quot;,
+                                multiVals = &quot;first&quot;)
+# remove genes without entrez IDs as these are difficult to interpret biologically
+logcounts &lt;- logcounts[!is.na(entrez),]
+# remove confounding genes from counts table e.g. mitochondrial, ribosomal etc.
+logcounts &lt;- logcounts[!str_detect(rownames(logcounts), var_regex),]
+
+maxclust &lt;- length(levels(Idents(refquery))) - 1
+
+clustgrp &lt;- paste0(&quot;c&quot;, Idents(refquery))
+clustgrp &lt;- factor(clustgrp, levels = paste0(&quot;c&quot;, 0:maxclust))
+donor &lt;- factor(seu$sample.id)
+batch &lt;- factor(seu$Batch)
+
+design &lt;- model.matrix(~ 0 + clustgrp + donor)
+colnames(design)[1:(length(levels(clustgrp)))] &lt;- levels(clustgrp)
+
+# Create contrast matrix
+mycont &lt;- matrix(NA, ncol = length(levels(clustgrp)),
+                 nrow = length(levels(clustgrp)))
+rownames(mycont) &lt;- colnames(mycont) &lt;- levels(clustgrp)
+diag(mycont) &lt;- 1
+mycont[upper.tri(mycont)] &lt;- -1/(length(levels(factor(clustgrp))) - 1)
+mycont[lower.tri(mycont)] &lt;- -1/(length(levels(factor(clustgrp))) - 1)
+
+# Fill out remaining rows with 0s
+zero.rows &lt;- matrix(0, ncol = length(levels(clustgrp)),
+                    nrow = (ncol(design) - length(levels(clustgrp))))
+fullcont &lt;- rbind(mycont, zero.rows)
+rownames(fullcont) &lt;- colnames(design)
+
+fit &lt;- lmFit(logcounts, design)
+
+fit.cont &lt;- contrasts.fit(fit, contrasts = fullcont)
+fit.cont &lt;- eBayes(fit.cont, trend = TRUE, robust = TRUE)
+
+summary(decideTests(fit.cont))</code></pre>
+<pre><code>          c0    c1    c2    c3    c4    c5    c6    c7    c8    c9   c10   c11
+Down    1614   825  3626  1523  1869   474   448  1024   418   432   611   517
+NotSig 13488 13418 11780 13353 12165 14550 14559 14101 14460 14419 14628 13872
+Up       520  1379   216   746  1588   598   615   497   744   771   383  1233
+         c12   c13   c14   c15   c16   c17   c18   c19
+Down     463    81    89    25    88   184   101    62
+NotSig 14783 15243 12657 15501 15270 14647 15121 14834
+Up       376   298  2876    96   264   791   400   726</code></pre>
+<p>Test relative to a threshold (TREAT).</p>
+<pre class="r"><code>tr &lt;- treat(fit.cont, lfc = 0.25)
+dt &lt;- decideTests(tr)
+summary(dt)</code></pre>
+<pre><code>          c0    c1    c2    c3    c4    c5    c6    c7    c8    c9   c10   c11
+Down       8    14    28    19    84     5    12    30    24    12    12    32
+NotSig 15587 15575 15591 15583 15531 15583 15580 15568 15569 15582 15592 15528
+Up        27    33     3    20     7    34    30    24    29    28    18    62
+         c12   c13   c14   c15   c16   c17   c18   c19
+Down      12     1    12     0     1    23    12     5
+NotSig 15578 15564 15335 15622 15602 15559 15574 15569
+Up        32    57   275     0    19    40    36    48</code></pre>
+<p>Mean-difference (MD) plots per cluster.</p>
+<pre class="r"><code>par(mfrow=c(4,3))
+par(mar=c(2,3,1,2))
+
+for(i in 1:ncol(mycont)){
+  plotMD(tr, coef = i, status = dt[,i], hl.cex = 0.5)
+  abline(h = 0, col = &quot;lightgrey&quot;)
+  lines(lowess(tr$Amean, tr$coefficients[,i]), lwd = 1.5, col = 4)
+}</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-32-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="limma-marker-gene-dotplot" class="section level2">
+<h2><code>limma</code> marker gene dotplot</h2>
+<pre class="r"><code>DefaultAssay(refquery) &lt;- &quot;RNA&quot;
+contnames &lt;- colnames(mycont)
+top_markers &lt;- NULL
+n_markers &lt;- 10
+
+for(i in 1:ncol(mycont)){
+  top &lt;- topTreat(tr, coef = i, n = Inf)
+  top_markers &lt;- c(top_markers, 
+                   setNames(rownames(top)[1:n_markers], 
+                            rep(contnames[i], n_markers)))
+}
+
+top_markers &lt;- top_markers[!is.na(top_markers)]
+top_markers &lt;- top_markers[!duplicated(top_markers)]
+cols &lt;- paletteer::paletteer_d(&quot;pals::glasbey&quot;)[factor(names(top_markers))]
+
+DotPlot(refquery,    
+        features = unname(top_markers),
+        group.by = grp,
+        cols = c(&quot;azure1&quot;, &quot;blueviolet&quot;),
+        dot.scale = 3, assay = &quot;SCT&quot;) +
+    RotatedAxis() +
+    FontSize(y.text = 8, x.text = 12) +
+    labs(y = element_blank(), x = element_blank()) +
+    coord_flip() +
+  theme(axis.text.y = element_text(color = cols)) +
+  ggtitle(&quot;Top 10 cluster marker genes (no duplicates)&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="save-marker-genes-and-pathways" class="section level2">
+<h2>Save marker genes and pathways</h2>
+<p>The Broad MSigDB Reactome pathways are tested for each contrast using
+<code>cameraPR</code> from <em>limma</em>. The <code>cameraPR</code>
+method tests whether a set of genes is highly ranked relative to other
+genes in terms of differential expression, accounting for inter-gene
+correlation.</p>
+<p>Prepare gene sets of interest.</p>
+<pre class="r"><code>if(!file.exists(here(&quot;data/Hs.c2.cp.reactome.v7.1.entrez.rds&quot;)))
+  download.file(&quot;https://bioinf.wehi.edu.au/MSigDB/v7.1/Hs.c2.cp.reactome.v7.1.entrez.rds&quot;,
+                here(&quot;data/Hs.c2.cp.reactome.v7.1.entrez.rds&quot;))
+
+Hs.c2.reactome &lt;- readRDS(here(&quot;data/Hs.c2.cp.reactome.v7.1.entrez.rds&quot;))
+
+gns &lt;- AnnotationDbi::mapIds(org.Hs.eg.db, 
+                             keys = rownames(tr), 
+                             column = c(&quot;ENTREZID&quot;),
+                             keytype = &quot;SYMBOL&quot;,
+                             multiVals = &quot;first&quot;)</code></pre>
+<p>Run pathway analysis and save results to file.</p>
+<pre class="r"><code>options(scipen=-1, digits = 6)
+contnames &lt;- colnames(mycont)
+dirName &lt;- here(&quot;output&quot;,
+                &quot;cluster_markers&quot;,
+                glue(&quot;RNA{ambient}&quot;),
+                &quot;t_cells&quot;)
+
+if(!dir.exists(dirName)) dir.create(dirName, recursive = TRUE)
+
+for(c in colnames(tr)){
+  top &lt;- topTreat(tr, coef = c, n = Inf)
+  top &lt;- top[top$logFC &gt; 0, ]
+
+  write.csv(top[1:100, ] %&gt;%
+              rownames_to_column(var = &quot;Symbol&quot;),
+            file = glue(&quot;{dirName}/up-cluster-limma-{c}.csv&quot;),
+            sep = &quot;,&quot;,
+            quote = FALSE,
+            col.names = NA,
+            row.names = TRUE)
+
+  # get marker indices
+  c2.id &lt;- ids2indices(Hs.c2.reactome, unname(gns[rownames(tr)]))
+  # gene set testing results
+  cameraPR(tr$t[,glue(&quot;{c}&quot;)], c2.id) %&gt;%
+    rownames_to_column(var = &quot;Pathway&quot;) %&gt;%
+    dplyr::filter(Direction == &quot;Up&quot;) %&gt;%
+    slice_head(n = 50) %&gt;%
+    write.csv(file = here(glue(&quot;{dirName}/REACTOME-cluster-limma-{c}.csv&quot;)),
+            sep = &quot;,&quot;,
+            quote = FALSE,
+            col.names = NA,
+            row.names = TRUE)
+}</code></pre>
+</div>
+</div>
+<div id="adt-marker-analysis" class="section level1">
+<h1>ADT marker analysis</h1>
+<div id="find-all-marker-adt-using-limma" class="section level2">
+<h2>Find all marker ADT using <code>limma</code></h2>
+<pre class="r"><code># identify isotype controls for DSB ADT normalisation
+read_csv(file = here(&quot;data&quot;,
+                     &quot;C133_Neeland_batch1&quot;,
+                     &quot;data&quot;,
+                     &quot;sample_sheets&quot;,
+                     &quot;ADT_features.csv&quot;)) %&gt;%
+  dplyr::filter(grepl(&quot;[Ii]sotype&quot;, name)) %&gt;%
+  pull(name) -&gt; isotype_controls
+
+# normalise ADT using DSB normalisation
+adt &lt;- seuADT[[&quot;ADT&quot;]]@counts
+adt_dsb &lt;- ModelNegativeADTnorm(cell_protein_matrix = adt,
+                                denoise.counts = TRUE,
+                                use.isotype.control = TRUE,
+                                isotype.control.name.vec = isotype_controls)</code></pre>
+<pre><code>[1] &quot;fitting models to each cell for dsb technical component and removing cell to cell technical noise&quot;</code></pre>
+<p>Running the <code>limma</code> analysis on the normalised counts.</p>
+<pre class="r"><code># limma-trend for DE
+Idents(seuADT) &lt;- grp
+
+#logcounts &lt;- seuADT[[&quot;integrated.adt&quot;]]@data
+logcounts &lt;- adt_dsb
+# remove isotype controls from marker analysis
+logcounts &lt;- logcounts[!rownames(logcounts) %in% isotype_controls,]
+maxclust &lt;- length(levels(Idents(seuADT))) - 1
+
+clustgrp &lt;- paste0(&quot;c&quot;, Idents(seuADT))
+clustgrp &lt;- factor(clustgrp, levels = paste0(&quot;c&quot;, 0:maxclust))
+donor &lt;- seuADT$sample.id
+
+design &lt;- model.matrix(~ 0 + clustgrp + donor)
+colnames(design)[1:(length(levels(clustgrp)))] &lt;- levels(clustgrp)
+
+# Create contrast matrix
+mycont &lt;- matrix(NA, ncol = length(levels(clustgrp)),
+                 nrow = length(levels(clustgrp)))
+rownames(mycont) &lt;- colnames(mycont) &lt;- levels(clustgrp)
+diag(mycont) &lt;- 1
+mycont[upper.tri(mycont)] &lt;- -1/(length(levels(factor(clustgrp))) - 1)
+mycont[lower.tri(mycont)] &lt;- -1/(length(levels(factor(clustgrp))) - 1)
+
+# Fill out remaining rows with 0s
+zero.rows &lt;- matrix(0, ncol = length(levels(clustgrp)),
+                    nrow = (ncol(design) - length(levels(clustgrp))))
+fullcont &lt;- rbind(mycont, zero.rows)
+rownames(fullcont) &lt;- colnames(design)
+
+fit &lt;- lmFit(logcounts, design)
+fit.cont &lt;- contrasts.fit(fit, contrasts = fullcont)
+fit.cont &lt;- eBayes(fit.cont, trend = TRUE, robust = TRUE)
+
+summary(decideTests(fit.cont))</code></pre>
+<pre><code>        c0  c1  c2  c3  c4  c5  c6  c7  c8  c9 c10 c11 c12 c13 c14 c15 c16 c17
+Down    39  25  33  39  14  24  16  32  20  32  14  20  27   2   6   8  26  25
+NotSig  96  92 114 107  84 118 116 109 124 113 124 105 127 142 110 133 120 122
+Up      19  37   7   8  56  12  22  13  10   9  16  29   0  10  38  13   8   7
+       c18 c19
+Down    17   1
+NotSig 132 150
+Up       5   3</code></pre>
+<p>Test relative to a threshold (TREAT).</p>
+<pre class="r"><code>tr &lt;- treat(fit.cont, lfc = 0.1)
+dt &lt;- decideTests(tr)
+summary(dt)</code></pre>
+<pre><code>        c0  c1  c2  c3  c4  c5  c6  c7  c8  c9 c10 c11 c12 c13 c14 c15 c16 c17
+Down     3   5   1   7   2   3   0   5   5  10   0   6   2   0   0   0   6  14
+NotSig 142 136 153 144 130 145 149 144 146 139 149 133 152 152 145 148 142 138
+Up       9  13   0   3  22   6   5   5   3   5   5  15   0   2   9   6   6   2
+       c18 c19
+Down     6   0
+NotSig 145 154
+Up       3   0</code></pre>
+</div>
+<div id="adt-marker-dot-plot" class="section level2">
+<h2>ADT marker dot plot</h2>
+<p>Dot plot of the top 5 ADT markers per cluster without
+duplication.</p>
+<pre class="r"><code>contnames &lt;- colnames(mycont)
+top_markers &lt;- NULL
+n_markers &lt;- 5
+
+for (i in 1:length(contnames)){
+  top &lt;- topTreat(tr, coef = i, n = Inf)
+  top &lt;- top[top$logFC &gt; 0,]
+  top_markers &lt;- c(top_markers, 
+                   setNames(rownames(top)[1:n_markers], 
+                            rep(contnames[i], n_markers)))
+}
+
+top_markers &lt;- top_markers[!is.na(top_markers)]
+top_markers &lt;- top_markers[!duplicated(top_markers)]
+cols &lt;- paletteer::paletteer_d(&quot;pals::glasbey&quot;)[factor(names(top_markers))][!duplicated(top_markers)]
+
+# add DSB normalised data to Seurat assay for plotting
+seuADT[[&quot;ADT.dsb&quot;]] &lt;- CreateAssayObject(data = logcounts)
+DotPlot(seuADT, 
+        group.by = grp,
+        features = unname(top_markers), 
+        cols = c(&quot;azure1&quot;, &quot;blueviolet&quot;),
+        assay = &quot;ADT.dsb&quot;)  +
+  RotatedAxis() + 
+  FontSize(y.text = 8, x.text = 9) +
+  labs(y = element_blank(), x = element_blank()) +
+  theme(axis.text.y = element_text(color = cols),
+        legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10)) +
+    coord_flip() +
+  ggtitle(&quot;Top 5 cluster markers ADTs (no duplicates)&quot;)</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-39-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="adt-marker-heatmap" class="section level2">
+<h2>ADT marker heatmap</h2>
+<p>Make data frame of proteins, clusters, expression levels.</p>
+<pre class="r"><code>cbind(seuADT@meta.data %&gt;%
+        dplyr::select(!!sym(grp)),
+      as.data.frame(t(seuADT@assays$ADT.dsb@data))) %&gt;%
+  rownames_to_column(var = &quot;cell&quot;) %&gt;%
+  pivot_longer(c(-!!sym(grp), -cell), 
+               names_to = &quot;ADT&quot;,
+               values_to = &quot;expression&quot;) %&gt;%
+  dplyr::group_by(!!sym(grp), ADT) %&gt;%
+  dplyr::summarize(Expression = mean(expression)) %&gt;%
+  ungroup() -&gt; dat
+
+# plot expression density to select heatmap colour scale range
+plot(density(dat$Expression))</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dat %&gt;%
+  dplyr::filter(ADT %in% top_markers) |&gt;
+  heatmap(
+    .column = !!sym(grp),
+    .row = ADT,
+    .value = Expression,
+    row_order = top_markers, 
+    scale = &quot;none&quot;,
+    rect_gp = grid::gpar(col = &quot;white&quot;, lwd = 1),
+    show_row_names = TRUE,
+    cluster_columns = FALSE,
+    cluster_rows = FALSE,
+    column_names_gp = grid::gpar(fontsize = 10),
+    column_title_gp = grid::gpar(fontsize = 12),
+    row_names_gp = grid::gpar(fontsize = 8, col = cols[order(top_markers)]),
+    row_title_gp = grid::gpar(fontsize = 12),
+    column_title_side = &quot;top&quot;,
+    palette_value = circlize::colorRamp2(seq(-0.25, 2, length.out = 256),
+                                         viridis::magma(256)),
+    heatmap_legend_param = list(direction = &quot;vertical&quot;))</code></pre>
+<p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-41-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="save-adt-markers" class="section level2">
+<h2>Save ADT markers</h2>
+<pre class="r"><code>options(scipen=-1, digits = 6)
+contnames &lt;- colnames(mycont)
+dirName &lt;- here(&quot;output&quot;,
+                &quot;cluster_markers&quot;,
+                glue(&quot;ADT{ambient}&quot;),
+                &quot;t_cells&quot;)
+if(!dir.exists(dirName)) dir.create(dirName, recursive = TRUE)
+
+for(c in contnames){
+  top &lt;- topTreat(tr, coef = c, n = Inf)
+  top &lt;- top[top$logFC &gt; 0, ]
+  write.csv(top,
+            file = glue(&quot;{dirName}/up-cluster-limma-{c}.csv&quot;),
+            sep = &quot;,&quot;,
+            quote = FALSE,
+            col.names = NA,
+            row.names = TRUE)
+}</code></pre>
+</div>
+</div>
+<div id="session-info" class="section level1">
+<h1>Session info</h1>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.3.2 (2023-10-31)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.3.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Melbourne
+tzcode source: internal
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices datasets  utils     methods  
+[8] base     
+
+other attached packages:
+ [1] dsb_1.0.3                   tidyHeatmap_1.8.1          
+ [3] speckle_1.2.0               glue_1.7.0                 
+ [5] org.Hs.eg.db_3.18.0         AnnotationDbi_1.64.1       
+ [7] patchwork_1.2.0             clustree_0.5.1             
+ [9] ggraph_2.2.0                here_1.0.1                 
+[11] dittoSeq_1.14.2             glmGamPoi_1.14.3           
+[13] SeuratObject_4.1.4          Seurat_4.4.0               
+[15] lubridate_1.9.3             forcats_1.0.0              
+[17] stringr_1.5.1               dplyr_1.1.4                
+[19] purrr_1.0.2                 readr_2.1.5                
+[21] tidyr_1.3.1                 tibble_3.2.1               
+[23] ggplot2_3.5.0               tidyverse_2.0.0            
+[25] edgeR_4.0.15                limma_3.58.1               
+[27] SingleCellExperiment_1.24.0 SummarizedExperiment_1.32.0
+[29] Biobase_2.62.0              GenomicRanges_1.54.1       
+[31] GenomeInfoDb_1.38.6         IRanges_2.36.0             
+[33] S4Vectors_0.40.2            BiocGenerics_0.48.1        
+[35] MatrixGenerics_1.14.0       matrixStats_1.2.0          
+[37] workflowr_1.7.1            
+
+loaded via a namespace (and not attached):
+  [1] fs_1.6.3                spatstat.sparse_3.0-3   bitops_1.0-7           
+  [4] httr_1.4.7              RColorBrewer_1.1-3      doParallel_1.0.17      
+  [7] backports_1.4.1         tools_4.3.2             sctransform_0.4.1      
+ [10] utf8_1.2.4              R6_2.5.1                lazyeval_0.2.2         
+ [13] uwot_0.1.16             GetoptLong_1.0.5        withr_3.0.0            
+ [16] sp_2.1-3                gridExtra_2.3           progressr_0.14.0       
+ [19] cli_3.6.2               Cairo_1.6-2             spatstat.explore_3.2-6 
+ [22] prismatic_1.1.1         labeling_0.4.3          sass_0.4.8             
+ [25] spatstat.data_3.0-4     ggridges_0.5.6          pbapply_1.7-2          
+ [28] parallelly_1.37.0       rstudioapi_0.15.0       RSQLite_2.3.5          
+ [31] generics_0.1.3          shape_1.4.6             vroom_1.6.5            
+ [34] ica_1.0-3               spatstat.random_3.2-2   dendextend_1.17.1      
+ [37] Matrix_1.6-5            ggbeeswarm_0.7.2        fansi_1.0.6            
+ [40] abind_1.4-5             lifecycle_1.0.4         whisker_0.4.1          
+ [43] yaml_2.3.8              SparseArray_1.2.4       Rtsne_0.17             
+ [46] paletteer_1.6.0         grid_4.3.2              blob_1.2.4             
+ [49] promises_1.2.1          crayon_1.5.2            miniUI_0.1.1.1         
+ [52] lattice_0.22-5          cowplot_1.1.3           KEGGREST_1.42.0        
+ [55] pillar_1.9.0            knitr_1.45              ComplexHeatmap_2.18.0  
+ [58] rjson_0.2.21            future.apply_1.11.1     codetools_0.2-19       
+ [61] leiden_0.4.3.1          getPass_0.2-4           data.table_1.15.0      
+ [64] vctrs_0.6.5             png_0.1-8               gtable_0.3.4           
+ [67] rematch2_2.1.2          cachem_1.0.8            xfun_0.42              
+ [70] S4Arrays_1.2.0          mime_0.12               tidygraph_1.3.1        
+ [73] survival_3.5-8          pheatmap_1.0.12         iterators_1.0.14       
+ [76] statmod_1.5.0           ellipsis_0.3.2          fitdistrplus_1.1-11    
+ [79] ROCR_1.0-11             nlme_3.1-164            bit64_4.0.5            
+ [82] RcppAnnoy_0.0.22        rprojroot_2.0.4         bslib_0.6.1            
+ [85] irlba_2.3.5.1           vipor_0.4.7             KernSmooth_2.23-22     
+ [88] colorspace_2.1-0        DBI_1.2.1               ggrastr_1.0.2          
+ [91] tidyselect_1.2.0        processx_3.8.3          bit_4.0.5              
+ [94] compiler_4.3.2          git2r_0.33.0            DelayedArray_0.28.0    
+ [97] plotly_4.10.4           checkmate_2.3.1         scales_1.3.0           
+[100] lmtest_0.9-40           callr_3.7.3             digest_0.6.34          
+[103] goftest_1.2-3           spatstat.utils_3.0-4    rmarkdown_2.25         
+[106] XVector_0.42.0          htmltools_0.5.7         pkgconfig_2.0.3        
+[109] highr_0.10              fastmap_1.1.1           rlang_1.1.3            
+[112] GlobalOptions_0.1.2     htmlwidgets_1.6.4       shiny_1.8.0            
+[115] farver_2.1.1            jquerylib_0.1.4         zoo_1.8-12             
+[118] jsonlite_1.8.8          mclust_6.1              RCurl_1.98-1.14        
+[121] magrittr_2.0.3          GenomeInfoDbData_1.2.11 munsell_0.5.0          
+[124] Rcpp_1.0.12             viridis_0.6.5           reticulate_1.35.0      
+[127] stringi_1.8.3           zlibbioc_1.48.0         MASS_7.3-60.0.1        
+[130] plyr_1.8.9              parallel_4.3.2          listenv_0.9.1          
+[133] ggrepel_0.9.5           deldir_2.0-2            Biostrings_2.70.2      
+[136] graphlayouts_1.1.0      splines_4.3.2           tensor_1.5             
+[139] hms_1.1.3               circlize_0.4.15         locfit_1.5-9.8         
+[142] ps_1.7.6                igraph_2.0.1.1          spatstat.geom_3.2-8    
+[145] reshape2_1.4.4          evaluate_0.23           renv_1.0.3             
+[148] tzdb_0.4.0              foreach_1.5.2           tweenr_2.0.3           
+[151] httpuv_1.6.14           RANN_2.6.1              polyclip_1.10-6        
+[154] future_1.33.1           clue_0.3-65             scattermore_1.2        
+[157] ggforce_0.4.2           xtable_1.8-4            later_1.3.2            
+[160] viridisLite_0.4.2       memoise_2.0.1           beeswarm_0.4.0         
+[163] cluster_2.1.6           timechange_0.3.0        globals_0.16.2         </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
