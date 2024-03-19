@@ -39,54 +39,30 @@ Follow the links below to view the different parts of the analysis.
 
 
 
-2. [Doublet calling](doubletCalling.html)
+2. [Quality control](02.0_quality_control.html)
 
 
-3. [Preprocessing](preprocessing.html)
+3. [Identify doublets](03.0_identify_doublets.html)
 
 
-4. [Azimuth annotation](azimuthAnnotation.html)
+4. [Filter doublets](04.0_filter_doublets.html)
 
 
-5. [Preparation for downstream analysis](prepare.html)
-
-
-
-10. Create cell type data subsets
-    a)    - [Control](control_only.html)
-    b)    - [CF](CF_only.html)
+5. [Remove ambient contamination](05.0_remove_ambient.html)
 
 
 
-11. Integrate and cluster all samples
-    a)    - [Macs](marker_genes_macrophages_seu_int.html)
-    b)    - [TNK](marker_genes_Tcells_seu_int.html)
-    c)    - [Other cells](marker_genes_others_seu_int.html) 
+6. Annotate using Human Lung Cell Atlas v2.0
+    a)    - [Without ambient removal](06.0_azimuth_annotation.html)
+    b)    - [With ambient removal](06.1_azimuth_annotation_decontx.html)
+
+
+
+7. Integrate and cluster T-cells
+    a)    - [Without ambient removal](07.0_integrate_cluster_t_cells.html)
+    b)    - [With ambient removal](07.1_integrate_cluster_t_cells_decontx.html)
     
 
-
-12. Add manual annotations
-    a)    - [Macs](macrophages.cluster_labels.html)
-    b)    - [TNK](TNK.cluster_labels.html)
-    c)    - [Other cells](other.cluster_labels.html)
-     
-
-
-12. Proportions analysis
-    a)    - [Broad](C133_Neeland.broad_proportions.html)
-    b)    - [Fine](C133_Neeland.fine_proportions.html)
-    c)    - [Macrophages](C133_Neeland.macrophage_proportions.html)
-
-
-
-12. DGE within cell types
-    a)    - [Create pseudobulks](pseudobulk.manual_annotations.html)
-    b)    - [Macrophages](pseudobulk.macrophages_CF_DGE.html)
-    c)    - [Alveolar macrophages](pseudobulk.alveolar.macrophages_CF_DGE.html)
-    d)    - [Interstitial macrophages](pseudobulk.interstitial-macrophages_CF_DGE.html)
-    e)    - [Macro-lipid](pseudobulk.macro-lipid_CF_DGE.html)
-    f)    - [Monocyte-derived macrophages](pseudobulk.monocyte-derived-macs_CF_DGE.html)
-    g)    - [T-cells](pseudobulk.T-cells_CF_DGE.html)
     
 
     

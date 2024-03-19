@@ -45,7 +45,7 @@ suppressPackageStartupMessages({
 Load T-cell subset Seurat object.
 
 ```{r}
-ambient <- ""
+ambient <- "_decontx"
 seu <- readRDS(here("data",
                     "C133_Neeland_merged",
                     glue("C133_Neeland_full_clean{ambient}_t_cells.SEU.rds")))
@@ -835,7 +835,7 @@ dat %>%
     row_names_gp = grid::gpar(fontsize = 8, col = cols[order(top_markers)]),
     row_title_gp = grid::gpar(fontsize = 12),
     column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(-0.5, 2.5, length.out = 256),
+    palette_value = circlize::colorRamp2(seq(-0.25, 2, length.out = 256),
                                          viridis::magma(256)),
     heatmap_legend_param = list(direction = "vertical"))
 ```
