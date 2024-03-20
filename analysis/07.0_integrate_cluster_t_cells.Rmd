@@ -608,6 +608,7 @@ n_markers <- 10
 
 for(i in 1:ncol(mycont)){
   top <- topTreat(tr, coef = i, n = Inf)
+  top <- top[top$logFC > 0, ]
   top_markers <- c(top_markers, 
                    setNames(rownames(top)[1:n_markers], 
                             rep(contnames[i], n_markers)))
@@ -717,7 +718,6 @@ Running the `limma` analysis on the normalised counts.
 # limma-trend for DE
 Idents(seuADT) <- grp
 
-#logcounts <- seuADT[["integrated.adt"]]@data
 logcounts <- adt_dsb
 # remove isotype controls from marker analysis
 logcounts <- logcounts[!rownames(logcounts) %in% isotype_controls,]

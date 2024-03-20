@@ -1,5 +1,5 @@
 ---
-title: "Integrate and cluster T cells"
+title: "Integrate and cluster other cells"
 author: "Jovana Maksimovic and George Howitt"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 site: workflowr::wflow_site
@@ -45,10 +45,10 @@ suppressPackageStartupMessages({
 Load T-cell subset Seurat object.
 
 ```{r}
-ambient <- "_decontx"
+ambient <- ""
 seu <- readRDS(here("data",
                     "C133_Neeland_merged",
-                    glue("C133_Neeland_full_clean{ambient}_t_cells.SEU.rds")))
+                    glue("C133_Neeland_full_clean{ambient}_other_cells.SEU.rds")))
 seu
 ```
 
@@ -115,7 +115,7 @@ First, integrate the RNA data.
 ```{r}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_t_cells.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_integrated_other_cells.SEU.rds"))
 
 if(!file.exists(out)){
   DefaultAssay(seu) <- "RNA"
@@ -167,7 +167,7 @@ if(!file.exists(out)){
 ```{r, message=FALSE, warning=FALSE}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_t_cells.ADT.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_integrated_other_cells.ADT.SEU.rds"))
 
 # get ADT meta data
 read.csv(file = here("data",
@@ -303,7 +303,7 @@ Perform clustering at a range of resolutions and visualise to see which is appro
 ```{r, warning=FALSE, message=FALSE, fig.asp=1.25}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_t_cells.ADT.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_other_cells.ADT.SEU.rds"))
 
 if(!file.exists(out)){
   DefaultAssay(seuADT) <- "integrated"
@@ -458,7 +458,7 @@ Save results.
 ```{r}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_mapped_t_cells.ADT.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_mapped_other_cells.ADT.SEU.rds"))
 if(!file.exists(out)){
   saveRDS(refquery, file = out)
   fs::file_chmod(out, "664")
@@ -600,7 +600,7 @@ for(i in 1:ncol(mycont)){
 
 ## `limma` marker gene dotplot
 
-```{r, fig.asp=2.25}
+```{r, fig.asp=3}
 DefaultAssay(refquery) <- "RNA"
 contnames <- colnames(mycont)
 top_markers <- NULL
@@ -659,7 +659,7 @@ contnames <- colnames(mycont)
 dirName <- here("output",
                 "cluster_markers",
                 glue("RNA{ambient}"),
-                "t_cells")
+                "other_cells")
 
 if(!dir.exists(dirName)) dir.create(dirName, recursive = TRUE)
 
@@ -763,7 +763,7 @@ summary(dt)
 
 Dot plot of the top 5 ADT markers per cluster without duplication.
 
-```{r, fig.asp=1.2, fig.width=8}
+```{r, fig.asp=1.75, fig.width=8}
 contnames <- colnames(mycont)
 top_markers <- NULL
 n_markers <- 5
@@ -817,7 +817,7 @@ cbind(seuADT@meta.data %>%
 plot(density(dat$Expression))
 ```
 
-```{r, fig.asp=1.2, fig.width=8}
+```{r, fig.asp=1.5, fig.width=8}
 dat %>%
   dplyr::filter(ADT %in% top_markers) |>
   heatmap(
@@ -835,7 +835,7 @@ dat %>%
     row_names_gp = grid::gpar(fontsize = 8, col = cols[order(top_markers)]),
     row_title_gp = grid::gpar(fontsize = 12),
     column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(-0.25, 2, length.out = 256),
+    palette_value = circlize::colorRamp2(seq(-0.5, 2.5, length.out = 256),
                                          viridis::magma(256)),
     heatmap_legend_param = list(direction = "vertical"))
 ```
@@ -848,7 +848,7 @@ contnames <- colnames(mycont)
 dirName <- here("output",
                 "cluster_markers",
                 glue("ADT{ambient}"),
-                "t_cells")
+                "other_cells")
 if(!dir.exists(dirName)) dir.create(dirName, recursive = TRUE)
 
 for(c in contnames){

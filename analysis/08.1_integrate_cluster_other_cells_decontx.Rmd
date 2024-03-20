@@ -1,5 +1,5 @@
 ---
-title: "Integrate and cluster T cells"
+title: "Integrate and cluster other cells"
 author: "Jovana Maksimovic and George Howitt"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 site: workflowr::wflow_site
@@ -48,14 +48,14 @@ Load T-cell subset Seurat object.
 ambient <- "_decontx"
 seu <- readRDS(here("data",
                     "C133_Neeland_merged",
-                    glue("C133_Neeland_full_clean{ambient}_t_cells.SEU.rds")))
+                    glue("C133_Neeland_full_clean{ambient}_other_cells.SEU.rds")))
 seu
 ```
 
 
 # Data integration
 
-Visualise batch effects.
+Visualise batch effects. UMAP looks strange.
 
 ```{r, message=FALSE, warning=FALSE}
 seu <- ScaleData(seu) %>%
@@ -65,6 +65,39 @@ seu <- ScaleData(seu) %>%
 
 DimPlot(seu, group.by = "Batch", reduction = "umap")
 ```
+Strange cells primarily belong to the AT1 and Secretory lineages based on `Azimuth` annotation.
+
+```{r}
+DimPlot(seu, group.by = "predicted.ann_level_3", reduction = "umap")
+```
+
+Examine cell library sizes after ambient removal per sample and per cell type. Some cells have very low library sizes after ambient removal.
+
+```{r, fig.width=8}
+VlnPlot(seu, features = "nCount_RNA", group.by = "sample.id", log = TRUE) + 
+  NoLegend() + 
+  geom_hline(yintercept = 250) +
+  theme(axis.text = element_text(size = 10))
+
+VlnPlot(seu, features = "nCount_RNA", group.by = "predicted.ann_level_3", log = TRUE) + 
+  NoLegend() + 
+  geom_hline(yintercept = 250) +
+  theme(axis.text = element_text(size = 10))
+```
+Filter our low library size cells and redo UMAP.
+
+```{r, message=FALSE, warning=FALSE}
+# remove low library size cells
+seu <- subset(seu, cells = which(seu$nCount_RNA > 250))
+
+seu <- ScaleData(seu) %>%
+  FindVariableFeatures() %>%
+  RunPCA(dims = 1:30, verbose = FALSE) %>%
+  RunUMAP(dims = 1:30, verbose = FALSE)
+
+DimPlot(seu, group.by = "Batch", reduction = "umap")
+```
+
 
 ## Cell cycle effect
 
@@ -115,7 +148,7 @@ First, integrate the RNA data.
 ```{r}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_t_cells.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_integrated_other_cells.SEU.rds"))
 
 if(!file.exists(out)){
   DefaultAssay(seu) <- "RNA"
@@ -167,7 +200,7 @@ if(!file.exists(out)){
 ```{r, message=FALSE, warning=FALSE}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_t_cells.ADT.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_integrated_other_cells.ADT.SEU.rds"))
 
 # get ADT meta data
 read.csv(file = here("data",
@@ -303,7 +336,7 @@ Perform clustering at a range of resolutions and visualise to see which is appro
 ```{r, warning=FALSE, message=FALSE, fig.asp=1.25}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_t_cells.ADT.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_other_cells.ADT.SEU.rds"))
 
 if(!file.exists(out)){
   DefaultAssay(seuADT) <- "integrated"
@@ -458,7 +491,7 @@ Save results.
 ```{r}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_mapped_t_cells.ADT.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_mapped_other_cells.ADT.SEU.rds"))
 if(!file.exists(out)){
   saveRDS(refquery, file = out)
   fs::file_chmod(out, "664")
@@ -600,7 +633,7 @@ for(i in 1:ncol(mycont)){
 
 ## `limma` marker gene dotplot
 
-```{r, fig.asp=2.25}
+```{r, fig.asp=3}
 DefaultAssay(refquery) <- "RNA"
 contnames <- colnames(mycont)
 top_markers <- NULL
@@ -659,7 +692,7 @@ contnames <- colnames(mycont)
 dirName <- here("output",
                 "cluster_markers",
                 glue("RNA{ambient}"),
-                "t_cells")
+                "other_cells")
 
 if(!dir.exists(dirName)) dir.create(dirName, recursive = TRUE)
 
@@ -817,7 +850,7 @@ cbind(seuADT@meta.data %>%
 plot(density(dat$Expression))
 ```
 
-```{r, fig.asp=1.2, fig.width=8}
+```{r, fig.asp=1.5, fig.width=8}
 dat %>%
   dplyr::filter(ADT %in% top_markers) |>
   heatmap(
@@ -835,7 +868,7 @@ dat %>%
     row_names_gp = grid::gpar(fontsize = 8, col = cols[order(top_markers)]),
     row_title_gp = grid::gpar(fontsize = 12),
     column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(-0.25, 2, length.out = 256),
+    palette_value = circlize::colorRamp2(seq(-0.5, 2.5, length.out = 256),
                                          viridis::magma(256)),
     heatmap_legend_param = list(direction = "vertical"))
 ```
@@ -848,7 +881,7 @@ contnames <- colnames(mycont)
 dirName <- here("output",
                 "cluster_markers",
                 glue("ADT{ambient}"),
-                "t_cells")
+                "other_cells")
 if(!dir.exists(dirName)) dir.create(dirName, recursive = TRUE)
 
 for(c in contnames){

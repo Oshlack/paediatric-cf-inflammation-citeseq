@@ -39,6 +39,7 @@ Follow the links below to view the different parts of the analysis.
 
 
 
+
 2. [Quality control](02.0_quality_control.html)
 
 
@@ -58,9 +59,18 @@ Follow the links below to view the different parts of the analysis.
 
 
 
+
 7. Integrate and cluster T-cells
     a)    - [Without ambient removal](07.0_integrate_cluster_t_cells.html)
     b)    - [With ambient removal](07.1_integrate_cluster_t_cells_decontx.html)
+
+
+
+
+8. Integrate and cluster other cells
+    a)    - [Without ambient removal](08.0_integrate_cluster_other_cells.html)
+    b)    - [With ambient removal](08.1_integrate_cluster_other_cells_decontx.html)
+
     
 
     
