@@ -1,0 +1,1235 @@
+---
+title: "Inflammation of Paediatric Pulmonary Diseases"
+subtitle: "Differential expression analysis of T cells"
+author: "Jovana Maksimovic"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+site: workflowr::wflow_site
+output:
+  bookdown::html_document2:
+    base_format: workflowr::wflow_html
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+    number_sections: true
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# Load libraries
+
+```{r, message=FALSE, warning=FALSE}
+suppressPackageStartupMessages({
+  library(BiocStyle)
+  library(tidyverse)
+  library(here)
+  library(glue)
+  library(Seurat)
+  library(patchwork)
+  library(paletteer)
+  library(limma)
+  library(edgeR)
+  library(RUVSeq)
+  library(scMerge)
+  library(SingleCellExperiment)
+  library(scater)
+  library(tidyHeatmap)
+  library(EGSEAdata)
+  library(org.Hs.eg.db)
+  library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+  library(missMethyl)
+})
+```
+
+
+# Load Data
+
+```{r}
+ambient <- "_decontx"
+file <- here(glue("data",
+            "C133_Neeland_merged",
+            "C133_Neeland_full_clean{ambient}_annotated_diet.SEU.rds"))
+
+seu <- readRDS(file)
+seu
+```
+
+# Create pseudobulk samples by cell type (Broad - modified)
+
+Use *cell type* and *sample* as our two factors; each column of the output
+corresponds to one unique combination of these two factors. Exclude the *macro-T* "cells" from the macrophages pseudobulks because we know they are doublets. In this modified pseudobulk CD8 and CD4 T-cells will be aggegated to form an overall T-cell pseudobulk.
+
+```{r}
+out <- here("data/C133_Neeland_all_annotated.PBCB-mod.SCE.rds")
+
+seu@meta.data %>%
+  data.frame %>%
+  mutate(Status = ifelse(str_detect(Treatment, "^treated"), 
+                         "treated", 
+                         Treatment),
+         Group = ifelse(Status %in% c("treated", "untreated"), 
+                        paste(Disease, 
+                              toupper(substr(Status, 1, 1)),
+                              toupper(substr(Severity, 1, 1)),
+                              sep = "."), 
+                        Disease),
+         Severity = tolower(Severity),
+         Participant = strsplit2(sample.id, ".", fixed = TRUE)[,1]) -> seu@meta.data
+
+sce <- SingleCellExperiment(list(counts = seu[["RNA"]]@counts),
+                            colData = seu@meta.data)
+sce$Broad_mod <- ifelse(sce$Broad %in% c("CD4 T cells", "CD8 T cells"),
+                        "T-cell", as.character(sce$Broad))
+
+if(!file.exists(out)){
+  broadSummed <- aggregateAcrossCells(sce, 
+                                 id = colData(sce)[, c("Broad_mod", "sample.id")])
+  saveRDS(broadSummed, file = out)
+  
+} else {
+  broadSummed <- readRDS(file = out)
+  
+}
+
+# pbCells <- counts(broadSummed)
+broadSummed
+```
+
+## No. cells per cell type
+
+```{r}
+#yPB$samples %>% 
+colData(broadSummed) %>%
+  data.frame %>%
+  group_by(Broad_mod) %>%
+  summarise(total = sum(ncells)) %>%
+  ggplot(aes(x = fct_reorder(Broad_mod, total), 
+             y = total, fill = Broad_mod)) +
+  geom_col() + 
+  geom_text(aes(label = total), vjust = -0.5, colour = "black", size = 2.5) +
+  scale_y_log10() +
+  labs(x = "Cell label",
+       y = "Log 10 No. cells") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+        legend.position = "bottom") +
+  geom_hline(yintercept = 1000, linetype = "dashed") +
+    NoLegend()
+```
+
+## No. cells per cell type per sample
+
+Apart from macrophages, most cell types do no have >50 cells for many samples, making DGE between groups difficult. CD4 and CD8 T-cells have been aggregated into a single category to boost numbers for analysis.    
+
+```{r, fig.asp = 1.5, fig.width=9}
+#yPB$samples %>% 
+ colData(broadSummed) %>%
+  data.frame %>%
+  arrange(Group) %>%
+  ggplot(aes(x = fct_inorder(sample.id), 
+             y = ncells, fill = Group)) +
+  geom_col() + 
+  scale_fill_brewer(palette = "Set2") +
+  scale_y_log10() +
+  facet_wrap(~Broad_mod, ncol = 2) + 
+  labs(x = "Cell label",
+       y = "Log10 No. cells") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5,
+                                   size = 8),
+        legend.position = "bottom") +
+  geom_hline(yintercept = 50, linetype = "dashed") +
+  geom_hline(yintercept = 25, linetype = "dotted")
+```
+
+
+# Data preparation {.tabset}
+## Extract cell type
+
+Make a `DGElist` object.
+
+```{r}
+yPB <- DGEList(counts = counts(broadSummed),
+               samples = colData(broadSummed) %>% data.frame)
+dim(yPB)
+```
+
+Remove genes with zero counts in all samples.
+
+```{r}
+keep <- rowSums(yPB$counts) > 0 
+yFlt <- yPB[keep, ]
+dim(yFlt)
+```
+
+Extract only the *T-cell* cells. 
+
+```{r}
+cell <- "T-cell"
+ySub <- yFlt[, yFlt$samples$Broad_mod == cell]
+ySub$samples$Broad <- ySub$samples$Broad_mod
+dim(ySub)
+```
+
+## Filter samples & genes
+
+Examine MDS plot for outlier samples.
+
+```{r, fig.asp=1}
+dims <- list(c(1,2), c(2:3), c(3,4), c(4,5))
+p <- vector("list", length(dims))
+
+for(i in 1:length(dims)){
+  
+  mds <- limma::plotMDS(edgeR::cpm(ySub, 
+                                   log = TRUE), 
+                        gene.selection = "common",
+                        plot = FALSE, dim.plot = dims[[i]])
+  
+  data.frame(x = mds$x, 
+             y = mds$y,
+             sample = rownames(mds$distance.matrix.squared)) %>%
+    left_join(rownames_to_column(ySub$samples, var = "sample")) %>%
+    mutate(Batch = as.factor(Batch)) -> dat
+  
+  p[[i]] <- ggplot(dat, aes(x = x, y = y, 
+                            colour = Batch,
+                            shape = Group))+
+    geom_point(size = 3) +
+    ggrepel::geom_text_repel(aes(label = sample.id),
+                             size = 2) +
+    labs(x = glue("Principal Component {dims[[i]][1]}"),
+         y = glue("Principal Component {dims[[i]][2]}"),
+         shape = "Group",
+         colour = "Batch") +
+    theme(legend.direction = "horizontal",
+          legend.text = element_text(size = 8),
+          legend.title = element_text(size = 9),
+          axis.text = element_text(size = 8),
+          axis.title = element_text(size = 9))  +
+    scale_colour_brewer(palette = "Set1") -> p[[i]]
+}
+
+wrap_plots(p, ncol = 2) + 
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+```
+
+Examine number of cells per sample. Identify outliers and cross-reference with MDS plot. Determine a threshold for minimum number of cells per sample.
+
+```{r}
+minCells <- 50
+
+ySub$samples %>%
+  ggplot(aes(x = sample.id, y = ncells, fill = ncells > minCells)) +
+  geom_col() +
+  labs(fill = "Keep") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  geom_hline(yintercept = minCells, linetype = "dashed")
+```
+
+Filter out samples with less than previously determined minimum number of cells.
+
+```{r}
+ySub <- ySub[, ySub$samples$ncells > minCells]
+dim(ySub)
+```
+
+Re-examine MDS plot.
+
+```{r, fig.asp=1}
+dims <- list(c(1,2), c(2:3), c(3,4), c(4,5))
+p <- vector("list", length(dims))
+
+for(i in 1:length(dims)){
+  
+  mds <- limma::plotMDS(edgeR::cpm(ySub, 
+                                   log = TRUE), 
+                        gene.selection = "common",
+                        plot = FALSE, dim.plot = dims[[i]])
+  
+  data.frame(x = mds$x, 
+             y = mds$y,
+             sample = rownames(mds$distance.matrix.squared)) %>%
+    left_join(rownames_to_column(ySub$samples, var = "sample")) %>%
+    mutate(Batch = as.factor(Batch)) -> dat
+  
+  p[[i]] <- ggplot(dat, aes(x = x, y = y, 
+                            colour = Batch,
+                            shape = Group))+
+    geom_point(size = 3) +
+    ggrepel::geom_text_repel(aes(label = sample.id),
+                             size = 2) +
+    labs(x = glue("Principal Component {dims[[i]][1]}"),
+         y = glue("Principal Component {dims[[i]][2]}"),
+         shape = "Group",
+         colour = "Batch") +
+    theme(legend.direction = "horizontal",
+          legend.text = element_text(size = 8),
+          legend.title = element_text(size = 9),
+          axis.text = element_text(size = 8),
+          axis.title = element_text(size = 9))  +
+    scale_colour_brewer(palette = "Set1") -> p[[i]]
+}
+
+wrap_plots(p, ncol = 2) + 
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+```
+
+Filter out genes with no ENTREZ IDs and very low expression.
+
+Filter out genes with no ENTREZ IDs and very low expression.
+
+```{r}
+gns <- AnnotationDbi::mapIds(org.Hs.eg.db,
+                             keys = rownames(ySub),
+                             column = c("ENTREZID"),
+                             keytype = "SYMBOL",
+                             multiVals = "first")
+keep <- !is.na(gns)
+ySub <- ySub[keep,]
+
+thresh <- 2.5
+m <- rowMedians(edgeR::cpm(ySub$counts, log = TRUE))
+plot(density(m))
+abline(v = thresh, lty = 2)
+```
+
+```{r}
+# filter out genes with low median expression
+keep <- m > thresh
+table(keep)
+ySub <- ySub[keep, ]
+dim(ySub)
+```
+
+## Examine covariates
+
+Principal components analysis (PCA) allows us to mathematically determine the sources of variation in the data. We can then investigate whether these correlate with any of the specifed covariates.
+
+Prepare the data.
+
+```{r}
+PCs <- prcomp(t(edgeR::cpm(ySub$counts, log = TRUE)), 
+              center = TRUE, retx = TRUE)
+loadings = PCs$x # pc loadings
+
+
+nGenes = nrow(ySub)
+nSamples = ncol(ySub)
+
+datTraits <- ySub$samples %>% dplyr::select(Batch, Disease, Treatment, 
+                                            Severity, Age, Sex, ncells) %>%
+  mutate(Batch = factor(Batch),
+         Disease = factor(Disease, 
+                          labels = 1:length(unique(Disease))),
+         Treatment = factor(Treatment, 
+                            labels = 1:length(unique(Treatment))),
+         Sex = factor(Sex, labels = length(unique(Sex))),
+         Severity = factor(Severity, labels = length(unique(Severity)))) %>%
+  mutate(across(everything(), as.numeric))
+
+moduleTraitCor <- suppressWarnings(cor(loadings[, 1:min(10, nSamples)], 
+                                       datTraits, use = "p"))
+moduleTraitPvalue <- WGCNA::corPvalueStudent(moduleTraitCor, (nSamples-2))
+
+textMatrix <- paste(signif(moduleTraitCor, 2), "\n(", 
+                    signif(moduleTraitPvalue, 1), ")", sep = "")
+dim(textMatrix) <- dim(moduleTraitCor)
+```
+
+Output results.
+
+```{r, fig.asp=1.5}
+par(mfrow = c(2, 1))
+plot(PCs, type="lines", main = cell) # scree plot
+
+## Display the correlation values within a heatmap plot
+par(cex=0.75, mar = c(3, 5, 2, 1))
+WGCNA::labeledHeatmap(Matrix = t(moduleTraitCor),
+                            xLabels = colnames(loadings)[1:min(10, nSamples)],
+                            yLabels = names(datTraits),
+                            colorLabels = FALSE,
+                            colors = WGCNA::blueWhiteRed(6),
+                            textMatrix = t(textMatrix),
+                            setStdMargins = FALSE,
+                            cex.text = 1,
+                            zlim = c(-1,1),
+                            main = paste0("PCA-trait relationships: Top ", 
+                                          min(10, nSamples), 
+                                          " PCs"))
+```
+
+## Examine data properties
+
+Use `limma` with `voomByGroup` to assess the mean-variance relationships within the different sample groups.
+
+```{r}
+source(here("code/voomByGroup/voomByGroup.R"))
+
+group <- factor(ySub$samples$Group)
+batch <- factor(ySub$samples$Batch)
+age <- log2(ySub$samples$Age)
+sex <- factor(ySub$samples$Sex)
+
+# model sample groups, taking into account batch, age and sex
+design <- model.matrix(~ 0 + group + batch + age + sex)
+colnames(design)[1:length(levels(group))] <- levels(group)
+
+contr <- makeContrasts(HvCF.U = Healthy - 0.5*(CF.U.M + CF.U.S),
+                       HvCF = Healthy - 0.25*(CF.U.M + CF.U.S + CF.T.M + CF.T.S),
+                       CF.TvCF.U = 0.5*(CF.T.M + CF.T.S) - 0.5*(CF.U.M + CF.U.S),
+                       CF.U.MvCF.U.S = CF.U.M - CF.U.S,
+                       CF.MvCF.S = 0.5*(CF.T.M + CF.U.M) - 0.5*(CF.T.M + CF.U.S),
+                       levels = design)
+
+y <- DGEList(counts = ySub$counts)
+y <- calcNormFactors(y)
+
+vbg <- voomByGroup(y, design = design, group = group, plot = "all")
+```
+
+Use `voomWithQualityWeights` to account for differences in sample quality. Use the `duplicateCorrelation` function to calculate the consensus correlation between replicate samples from the same individuals. 
+
+```{r}
+participant <- factor(ySub$samples$Participant)
+
+vqw <- voomWithQualityWeights(y, design = design, plot = TRUE)
+corfit <- duplicateCorrelation(vqw, design, block = participant)
+corfit$consensus.correlation
+```
+
+## View *limma* results
+
+As the consensus correlation is high, include `participant` as a random effect in the model to account for the correlation between replicate samples from the same individual.
+
+```{r}
+vqw <- voomWithQualityWeights(y, design, block = participant, 
+                              correlation = corfit$consensus, plot = TRUE)
+fit <- lmFit(vqw, design, block = participant, correlation = corfit$consensus)
+fit2 <- contrasts.fit(fit, contr)
+fit2 <- eBayes(fit2, robust = TRUE, trend = FALSE)
+
+cutoff <- 0.05
+dt <- decideTests(fit2, p.value = cutoff)
+s <- summary(dt)
+
+pal <- c(paletteer::paletteer_d("RColorBrewer::Set1")[1:2], "grey") 
+s[-2,] %>% 
+  data.frame %>%
+  dplyr::rename(Direction = Var1, name = Var2, value = Freq) %>% 
+  ggplot(aes(x = name, y = value, fill = Direction)) +
+  geom_col(position = "dodge") +
+  geom_text(aes(label = value), 
+            position = position_dodge(width = 0.9),
+            vjust = -0.5,
+            size = 3) +
+  labs(y = glue("No. DGE (FDR < {cutoff})"),
+       x = "Contrast") +
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust = 1,
+                                   vjust = 1)) +
+      scale_fill_manual(values = pal)
+```
+
+```{r}
+if(!file.exists(here("data/Hs.c5.all.v7.1.entrez.rds")))
+  download.file("https://bioinf.wehi.edu.au/MSigDB/v7.1/Hs.c5.all.v7.1.entrez.rds",
+                here("data/Hs.c5.all.v7.1.entrez.rds"))
+Hs.c5.all <- readRDS(here("data/Hs.c5.all.v7.1.entrez.rds"))
+
+if(!file.exists(here("data/Hs.c2.cp.reactome.v7.1.entrez.rds")))
+  download.file("https://bioinf.wehi.edu.au/MSigDB/v7.1/Hs.c2.cp.reactome.v7.1.entrez.rds",
+                here("data/Hs.c2.cp.reactome.v7.1.entrez.rds"))
+Hs.c2.reactome <- readRDS(here("data/Hs.c2.cp.reactome.v7.1.entrez.rds"))
+
+if(!file.exists(here("data/Hs.h.all.v7.1.entrez.rds")))
+  download.file("https://bioinf.wehi.edu.au/MSigDB/v7.1/Hs.h.all.v7.1.entrez.rds",
+                here("data/Hs.h.all.v7.1.entrez.rds"))
+Hs.h.all <- readRDS(here("data/Hs.h.all.v7.1.entrez.rds"))
+
+# get gene indices for all gene set genes
+h.id <- ids2indices(Hs.h.all, unname(gns[rownames(fit2)]))
+c2.id <- ids2indices(Hs.c2.reactome, unname(gns[rownames(fit2)]))
+c5.id <- ids2indices(Hs.c5.all, unname(gns[rownames(fit2)]))
+```
+
+```{r}
+# translate gene SYMBOLS to entrez gene IDs 
+gns <- AnnotationDbi::mapIds(org.Hs.eg.db, 
+                             keys = rownames(fit2), 
+                             column = c("ENTREZID"),
+                             keytype = "SYMBOL",
+                             multiVals = "first")
+
+# get transcript lengths
+txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+txlen <- transcriptLengths(txdb)
+txlen %>%
+  dplyr::select(gene_id, tx_len) %>%
+  group_by(gene_id) %>%
+  summarise(max_len = max(tx_len)) %>%
+  dplyr::filter(gene_id %in% gns) -> supertxlen
+
+m <- match(supertxlen$gene_id, gns)
+all(supertxlen$gene_id == gns[m])
+```
+
+```{r, fig.asp=1.5, fig.width=9}
+#library(missMethyl)
+
+# outDir <- here("output","dge_analysis")
+# if(!dir.exists(outDir)) dir.create(outDir)
+# cellDir <- file.path(outDir, cell)
+# if(!dir.exists(cellDir)) dir.create(cellDir)
+
+p <- vector("list", ncol(contr))
+
+for(i in 1:(ncol(contr))){
+  # lrt <- glmLRT(fit, contrast = contr[,i])
+  # topTags(lrt, n = Inf) %>%
+  #   data.frame -> top
+  top <- topTable(fit2, coef = i, number = Inf)
+  
+  if(sum(top$adj.P.Val < cutoff) > 0){
+    # top 500 DGE results
+    # write.table(top[1:500, ], 
+    #             file = file.path(cellDir, glue("{colnames(contr)[i]}.csv")),
+    #             sep = ",", quote = F, col.names = NA)
+    
+    # test DGEs for over-representation of fibrosis gene sets
+    # read in fibrosis gene sets
+    read.csv2(file = here("data/fibrosis_gene_sets.csv"),
+              header = TRUE, sep = ",") %>% 
+      pivot_longer(cols = everything()) %>%
+      mutate(value = str_trim(value),
+             entrez = unname(unlist(AnnotationDbi::mapIds(org.Hs.eg.db, 
+                                                          keys = value, 
+                                                          column = c("ENTREZID"),
+                                                          keytype = "SYMBOL",
+                                                          multiVals = "first"))[value])) %>%
+      dplyr::rename("symbol" = "value",
+                    "source" = "name") -> fibrosis_table
+      
+      fibrosis_list <- split(fibrosis_table$entrez, fibrosis_table$source)
+    
+    deg <- rownames(top)[top$adj.P.Val < cutoff]
+    gsa <- topGSA(gsaseq(unname(gns[deg]),
+                         universe = unname(gns),
+                         collection = fibrosis_list,
+                         plot.bias = FALSE,
+                         gene.length = supertxlen$max_len[match(unname(gns), 
+                                                                supertxlen$gene_id)]))
+    
+    # get gene indices for all fibrosis gene set genes
+    f.id <- ids2indices(fibrosis_list, unname(gns[rownames(fit2)]))
+    
+    # run camera competitive gene set test  
+    # use signed likelihood ratio test statistic as recommended by GS here: https://support.bioconductor.org/p/112937/
+    statistic <- fit2$t[,i]
+    f.cam <- cameraPR(statistic, f.id)
+    
+    # write fibrosis over-representation results to file
+    # write.table(gsa %>%
+    #               data.frame %>%
+    #               rownames_to_column(var = "Set"), 
+    #             file = file.path(cellDir, glue("fibrosis.ORA.{colnames(contr)[i]}.csv")),
+    #             sep = ",", quote = F, col.names = NA)
+    # 
+    # # write fibrosis GSEA results to file
+    # write.table(f.cam, 
+    #             file = file.path(cellDir, glue("fibrosis.GSEA.{colnames(contr)[i]}.csv")),
+    #             sep = ",", quote = F, col.names = NA)
+    
+    # run camera competitive gene set test  
+    # use signed likelihood ratio test statistic as recommended by GS here: https://support.bioconductor.org/p/112937/
+    h.cam <- cameraPR(statistic, h.id)
+    c2.cam <- cameraPR(statistic, c2.id)
+    c5.cam <- cameraPR(statistic, c5.id)
+    
+    # write top 50 GSEA results to file
+    # write.table(h.cam[1:50,], 
+    #             file = file.path(cellDir, glue("h.{colnames(contr)[i]}.csv")),
+    #             sep = ",", quote = F, col.names = NA)
+    # write.table(c2.cam[1:50,], 
+    #             file = file.path(cellDir, glue("c2.{colnames(contr)[i]}.csv")),
+    #             sep = ",", quote = F, col.names = NA)
+    # write.table(c5.cam[1:50,], 
+    #             file = file.path(cellDir, glue("c5.{colnames(contr)[i]}.csv")),
+    #             sep = ",", quote = F, col.names = NA)
+    
+    top %>% 
+      mutate(sig = ifelse(adj.P.Val <= cutoff, glue("<= {cutoff}"), 
+                          glue("> {cutoff}"))) %>%
+      rownames_to_column(var = "SYMBOL") %>%
+      left_join(dt[,i] %>% 
+                  data.frame %>%
+                  rownames_to_column(var = "SYMBOL") %>%
+                  dplyr::rename(status = 2)) %>%
+      mutate(status = ifelse(status == 1, "Up",
+                             ifelse(status == -1, "Down",
+                                    "NotSig"))) %>%
+      mutate(status = as.factor(status)) %>%
+      mutate(status = fct_relevel(status, "NotSig", after = Inf)) %>%
+      ggplot(aes(x = logFC, y = -log10(P.Value), color = status)) +
+      geom_point(alpha = 0.75) +
+      ggrepel::geom_text_repel(data = function(x) subset(x, adj.P.Val < cutoff), 
+                               aes(x = logFC, y = -log10(P.Value), 
+                                   label = SYMBOL), 
+                               size = 2, colour = "black", max.overlaps = 15) +
+      labs(x = expression(~log[2]~"(Fold Change)"), 
+           y = expression(~-log[10]~"(P-value)"),
+           colour = glue("FDR < {cutoff}")) +
+      scale_colour_manual(values = pal) +
+      theme_classic() +
+      theme(legend.position = "bottom") -> p1
+    
+    # plot up to top 9 DGE
+    grps <- strsplit2(colnames(contr)[i], "v")[1,]
+    
+    edgeR::cpm(ySub$counts, log = TRUE) %>% 
+      data.frame %>%
+      rownames_to_column(var = "gene") %>%
+      pivot_longer(-gene, 
+                   names_to = "sample", 
+                   values_to = "raw") %>%
+      left_join(rownames_to_column(ySub$samples, 
+                                   var = "sample")) %>%
+      mutate(Batch = as.factor(Batch)) %>%
+      dplyr::filter(Group %in% names(contr[,i])[abs(contr[,i]) > 0],
+                    gene %in% rownames(top)[1:min(9, max(which(top$adj.P.Val < cutoff)))]) %>%
+      mutate(Group = ifelse(str_detect(Group, str_remove(grps[1], "CF.")),
+                            grps[1], 
+                            grps[2])) %>%
+      ggplot(aes(x = Group,
+                 y = raw,
+                 colour = Group)) +
+      geom_boxplot(outlier.shape = NA, colour = "grey") +
+      geom_jitter(stat = "identity",
+                  width = 0.15,
+                  size = 1.25) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90,
+                                       hjust = 1,
+                                       vjust = 0.5),
+            legend.position = "bottom",
+            legend.direction = "horizontal",
+            strip.text = element_text(size = 7),
+            axis.text.y = element_text(size = 6)) +
+      labs(x = "Group", y = "log2 CPM") +
+      facet_wrap(~gene, scales = "free_y") + 
+      scale_color_brewer(palette = "Set2") +
+      ggtitle(colnames(contr)[i]) -> p2
+    
+    # plot fibrosis gene set over-representation results
+    gsa %>% 
+      data.frame %>%
+      rownames_to_column(var = "Set") %>%
+      mutate(Rank = 1:n()) %>%
+      ggplot(aes(x = -log10(FDR), y = fct_reorder(Set, -Rank), colour = DE/N*100)) +
+      geom_point(aes(size = N)) +
+      geom_vline(xintercept = -log10(0.05),
+                 linetype = "dashed")  +
+      scale_colour_viridis_c(option = "plasma") +
+      labs(y = "Gene set",
+           colour = "% DEGs",
+           size = "Set size") +
+      ggtitle("Fibrosis over-represenation") +
+      theme_classic(base_size = 8) +
+      theme(legend.key.height = unit(0.3, "cm"),
+            legend.key.width = unit(0.3, "cm"),
+            legend.text = element_text(size = 7),
+            title = element_text(size = 8),
+            legend.position = "bottom",
+            legend.direction = "vertical") -> p3
+    
+    # plot fibrosis GSEA results
+    f.cam %>% 
+      data.frame %>%
+      rownames_to_column(var = "Set") %>%
+      mutate(Rank = 1:n()) %>%
+      ggplot(aes(x = -log10(FDR), y = fct_reorder(Set, -Rank),
+                 colour = Direction)) +
+      geom_point(aes(size = NGenes)) +
+      geom_vline(xintercept = -log10(0.05),
+                 linetype = "dashed")  +
+      scale_colour_manual(values = pal) +
+      labs(y = "Gene set") +
+      ggtitle("Fibrosis GSEA") +
+      theme_classic(base_size = 8) +
+      theme(legend.key.height = unit(0.3, "cm"),
+            legend.key.width = unit(0.3, "cm"),
+            legend.text = element_text(size = 7),
+            title = element_text(size = 8),
+            legend.position = "bottom",
+            legend.direction = "vertical") -> p4
+    
+    # GSEA top 10 plots
+    h.cam %>%
+      dplyr::slice(1:10) %>%
+      rownames_to_column(var = "Set") %>%
+      mutate(Type = "HALLMARK",
+             Rank = 1:10) %>%
+      bind_rows(c2.cam %>%
+                  dplyr::slice(1:10) %>%
+                  rownames_to_column(var = "Set") %>%
+                  mutate(Type = "REACTOME",
+                         Rank = 1:10)) %>%
+      bind_rows(c5.cam %>%
+                  dplyr::slice(1:10) %>%
+                  rownames_to_column(var = "Set") %>%
+                  mutate(Type = "GO",
+                         Rank = 1:10)) %>%
+      mutate(Set = str_wrap(str_replace_all(Set, "_", " "), width = 75),
+             Set = str_remove_all(Set, "GO |REACTOME |HALLMARK ")) %>%
+      ggplot(aes(x = -log10(FDR), y = fct_reorder(Set, -Rank),
+                 colour = Direction)) +
+      geom_point(aes(size = NGenes)) +
+      facet_wrap(~Type, ncol = 1, scales = "free_y") +
+      geom_vline(xintercept = -log10(0.05),
+                 linetype = "dashed")  +
+      scale_colour_manual(values = pal) +
+      labs(y = "Gene set") +
+      theme_classic(base_size = 10) -> p5
+
+    layout <- "
+      AAAA
+      AAAA
+      AAAA
+      BBBB
+      BBBB
+      EEEE
+      EEEE
+      EEEE
+      EEEE"
+    
+    p[[i]] <- wrap_elements(p1 + p2) + 
+      wrap_elements(p3 + p4) + 
+      wrap_elements(p5) +
+      plot_layout(design = layout)
+  }
+}
+
+p
+```
+
+
+# {-}
+
+# Statistical analysis {.tabset}
+
+Use `RUVseq` and `edgeR` for differential expression analysis between sample groups.
+
+## Define negative control genes
+
+Use house-keeping genes (HKG) identified from human single-cell RNAseq experiments.
+
+```{r}
+data("segList", package = "scMerge")
+
+ctl <- rownames(ySub) %in% segList$human$human_scSEG
+table(ctl)
+```
+
+Plot HKG expression profiles across all the samples.
+
+```{r, fig.asp=1.5, fig.width=10}
+edgeR::cpm(ySub$counts, log = TRUE) %>% 
+  data.frame %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(-gene, names_to = "sample") %>%
+  left_join(rownames_to_column(ySub$samples, 
+                               var = "sample")) %>%
+  dplyr::filter(gene %in% segList$human$human_scSEG) %>%
+  dplyr::filter(Broad == cell) %>%
+  mutate(Batch = as.factor(Batch),
+         Treatment = as.factor(Treatment),
+         Severity = as.factor(Severity)) -> dat
+
+dat %>%
+  heatmap(gene, sample, value,
+          scale = "row",
+          show_row_names = FALSE,
+          show_column_names = FALSE) %>%
+  add_tile(Disease) %>%
+  add_tile(Treatment) %>%
+  add_tile(Severity) %>%
+  add_tile(Batch) %>%
+  add_tile(Participant) %>%
+  add_tile(Age) %>%
+  add_tile(Sex)
+```
+
+
+## Select `k`
+
+Select the value for the `k` parameter i.e. the number of columns of the `W` matrix that will be included in the modelling.
+
+```{r, fig.width=9, fig.asp=0.35}
+x1 <- as.factor(ySub$samples$Batch)
+cols1 <- RColorBrewer::brewer.pal(7, "Set2")
+
+par(mfrow = c(1,3))
+EDASeq::plotRLE(edgeR::cpm(ySub$counts), 
+                col = cols1[x1], ylim = c(-0.5, 0.5),
+                main = "Raw")
+legend("topleft", fill = cols1, legend = paste0("Batch ", 0:6))
+EDASeq::plotPCA(edgeR::cpm(ySub$counts), 
+                col = cols1[x1], labels = FALSE,
+                pch = 19)
+
+x2 <- as.factor(ySub$samples$Disease)
+cols2 <- RColorBrewer::brewer.pal(4, "Set1")
+EDASeq::plotPCA(edgeR::cpm(ySub$counts), 
+                col = cols2[x2], labels = FALSE,
+                pch = 19)
+
+for(k in 1:10){
+  adj <- RUVg(ySub$counts, ctl, k = k)
+  W <- adj$W
+  
+  # create the design matrix
+  design <- model.matrix(~ 0 + group + W + age + sex)
+  colnames(design)[1:length(levels(group))] <- levels(group)
+  
+  # add the factors for the replicate samples
+  dups <- unique(ySub$samples$Participant[duplicated(ySub$samples$Participant)])
+  dups <- sapply(dups, function(d){
+    ifelse(ySub$samples$Participant == d, 1, 0)  
+  }, USE.NAMES = TRUE)
+  
+  contr <- makeContrasts(HvCF.U = Healthy - 0.5*(CF.U.M + CF.U.S),
+                         CF.TvCF.U = 0.5*(CF.T.M + CF.T.S) - 0.5*(CF.U.M + CF.U.S),
+                         CF.U.MvCF.U.S = CF.U.M - CF.U.S,
+                         levels = design)
+  
+  y <- DGEList(counts = ySub$counts)
+  y <- calcNormFactors(y)
+  y <- estimateGLMCommonDisp(y, design)
+  y <- estimateGLMTagwiseDisp(y, design)
+  fit <- glmFit(y, design)
+  
+  x1 <- as.factor(ySub$samples$Batch)
+  cols1 <- RColorBrewer::brewer.pal(7, "Set2")
+  
+  par(mfrow = c(1,3))
+  EDASeq::plotRLE(edgeR::cpm(adj$normalizedCounts), 
+                  col = cols1[x1], ylim = c(-0.5, 0.5),
+                  main = paste0("K = ", k))
+  legend("topleft", fill = cols1, legend = paste0("Batch ", 0:6))
+  EDASeq::plotPCA(edgeR::cpm(adj$normalizedCounts), 
+                  col = cols1[x1], labels = FALSE,
+                  pch = 19)
+  
+  x2 <- as.factor(ySub$samples$Group)
+  cols2 <- RColorBrewer::brewer.pal(5, "Set1")
+  EDASeq::plotPCA(edgeR::cpm(adj$normalizedCounts), 
+                  col = cols2[x2], labels = FALSE,
+                  pch = 19)
+  legend("topleft", fill = cols2, legend = levels(factor(ySub$samples$Group)))
+  
+  lrt <- glmLRT(fit, contrast = contr[, 1])
+  hist(lrt$table$PValue, main = paste0("K = ", k, " ", colnames(contr)[1]))
+  lrt <- glmLRT(fit, contrast = contr[, 2])
+  hist(lrt$table$PValue, main = paste0("K = ", k, " ", colnames(contr)[2]))
+  lrt <- glmLRT(fit, contrast = contr[, 3])
+  hist(lrt$table$PValue, main = paste0("K = ", k, " ", colnames(contr)[3]))
+}
+```
+
+## Test for DGE
+
+Test for DGE using `RUVSeq` and `edgeR`. First, create design matrix to model the sample groups and take into account the unwanted variation, age, sex and replicate samples from the same individual.
+
+```{r}
+# use RUVSeq to identify the factors of unwanted variation
+adj <- RUVg(ySub$counts, ctl, k = 3)
+W <- adj$W
+
+# define the sample groups
+group <- factor(ySub$samples$Group)
+
+# create the design matrix
+design <- model.matrix(~ 0 + group + W + age + sex)
+colnames(design)[1:length(levels(group))] <- levels(group)
+
+# add the factors for the replicate samples
+dups <- unique(ySub$samples$Participant[duplicated(ySub$samples$Participant)])
+dups <- sapply(dups, function(d){
+  ifelse(ySub$samples$Participant == d, 1, 0)  
+}, USE.NAMES = TRUE)
+
+design <- cbind(design, dups)
+design %>% knitr::kable()
+```
+
+Create the contrast matrix for the sample group comparisons.
+
+```{r}
+contr <- makeContrasts(HvCF.U = Healthy - 0.5*(CF.U.M + CF.U.S),
+                       HvCF = Healthy - 0.25*(CF.U.M + CF.U.S + CF.T.M + CF.T.S),
+                       CF.TvCF.U = 0.5*(CF.T.M + CF.T.S) - 0.5*(CF.U.M + CF.U.S),
+                       CF.U.MvCF.U.S = CF.U.M - CF.U.S,
+                       CF.MvCF.S = 0.5*(CF.T.M + CF.U.M) - 0.5*(CF.T.M + CF.U.S),
+                       levels = design)
+contr %>% knitr::kable()
+```
+
+Fit the model.
+
+```{r}
+y <- DGEList(counts = ySub$counts)
+y <- calcNormFactors(y)
+y <- estimateGLMCommonDisp(y, design)
+y <- estimateGLMTagwiseDisp(y, design)
+fit <- glmFit(y, design)
+```
+
+## Results summary
+
+Summarise the results.
+
+```{r}
+cutoff <- 0.05
+  
+dt <- lapply(1:ncol(contr), function(i){
+  decideTests(glmLRT(fit, contrast = contr[,i]),
+                            p.value = cutoff)
+})
+
+s <- sapply(dt, function(d){
+  summary(d)
+})
+colnames(s) <- colnames(contr)
+rownames(s) <- c("Down", "NotSig", "Up")
+
+pal <- c(paletteer::paletteer_d("RColorBrewer::Set1")[1:2], "grey") 
+
+s[-2,] %>% 
+  data.frame %>%
+  rownames_to_column(var = "Direction") %>%
+  pivot_longer(-Direction) %>%
+  ggplot(aes(x = name, y = value, fill = Direction)) +
+  geom_col(position = "dodge") +
+  geom_text(aes(label = value), 
+            position = position_dodge(width = 0.9),
+            vjust = -0.5,
+            size = 3) +
+  labs(y = glue("No. DGE (FDR < {cutoff})"),
+       x = "Contrast") +
+      scale_fill_manual(values = pal)
+```
+
+Test for over-representation of fibrosis signature genes our sets of DGEs, adjusting for gene length bias.
+First, setup the transcript length.
+
+```{r}
+# translate gene SYMBOLS to entrez gene IDs 
+gns <- AnnotationDbi::mapIds(org.Hs.eg.db, 
+                             keys = rownames(fit), 
+                             column = c("ENTREZID"),
+                             keytype = "SYMBOL",
+                             multiVals = "first")
+
+# get transcript lengths
+txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+txlen <- transcriptLengths(txdb)
+txlen %>%
+  dplyr::select(gene_id, tx_len) %>%
+  group_by(gene_id) %>%
+  summarise(max_len = max(tx_len)) %>%
+  dplyr::filter(gene_id %in% gns) -> supertxlen
+
+m <- match(supertxlen$gene_id, gns)
+all(supertxlen$gene_id == gns[m])
+```
+
+Perform gene set enrichment analysis (GSEA) using the `cameraPR` method. `cameraPR` tests whether a set of genes is highly ranked relative to other genes in terms of differential expression, accounting for inter-gene correlation. Prepare the Broad MSigDB Hallmark gene sets, Reactome pathways and GO terms.  
+
+```{r}
+if(!file.exists(here("data/Hs.c5.all.v7.1.entrez.rds")))
+  download.file("https://bioinf.wehi.edu.au/MSigDB/v7.1/Hs.c5.all.v7.1.entrez.rds",
+                here("data/Hs.c5.all.v7.1.entrez.rds"))
+Hs.c5.all <- readRDS(here("data/Hs.c5.all.v7.1.entrez.rds"))
+
+if(!file.exists(here("data/Hs.c2.cp.reactome.v7.1.entrez.rds")))
+  download.file("https://bioinf.wehi.edu.au/MSigDB/v7.1/Hs.c2.cp.reactome.v7.1.entrez.rds",
+                here("data/Hs.c2.cp.reactome.v7.1.entrez.rds"))
+Hs.c2.reactome <- readRDS(here("data/Hs.c2.cp.reactome.v7.1.entrez.rds"))
+
+if(!file.exists(here("data/Hs.h.all.v7.1.entrez.rds")))
+  download.file("https://bioinf.wehi.edu.au/MSigDB/v7.1/Hs.h.all.v7.1.entrez.rds",
+                here("data/Hs.h.all.v7.1.entrez.rds"))
+Hs.h.all <- readRDS(here("data/Hs.h.all.v7.1.entrez.rds"))
+```
+
+For each contrast, display the significant DGE and GSEA results, along with volcano plots and strip charts for top 9 DGE.
+
+```{r, fig.asp=1.5, fig.width=9}
+#library(missMethyl)
+
+outDir <- here("output","dge_analysis")
+if(!dir.exists(outDir)) dir.create(outDir)
+cellDir <- file.path(outDir, cell)
+if(!dir.exists(cellDir)) dir.create(cellDir)
+
+p <- vector("list", ncol(contr))
+
+for(i in 1:(ncol(contr))){
+  lrt <- glmLRT(fit, contrast = contr[,i])
+  topTags(lrt, n = Inf) %>%
+    data.frame -> top
+  
+  if(sum(top$FDR < cutoff) > 0){
+    # top 500 DGE results
+    write.table(top[1:500, ], 
+                file = file.path(cellDir, glue("{colnames(contr)[i]}.csv")),
+                sep = ",", quote = F, col.names = NA)
+    
+    # test DGEs for over-representation of fibrosis gene sets
+    # read in fibrosis gene sets
+    read.csv2(file = here("data/fibrosis_gene_sets.csv"),
+              header = TRUE, sep = ",") %>% 
+      pivot_longer(cols = everything()) %>%
+      mutate(value = str_trim(value),
+             entrez = unname(unlist(AnnotationDbi::mapIds(org.Hs.eg.db, 
+                                                          keys = value, 
+                                                          column = c("ENTREZID"),
+                                                          keytype = "SYMBOL",
+                                                          multiVals = "first"))[value])) %>%
+      dplyr::rename("symbol" = "value",
+                    "source" = "name") -> fibrosis_table
+      
+      fibrosis_list <- split(fibrosis_table$entrez, fibrosis_table$source)
+    
+    deg <- rownames(top)[top$FDR < cutoff]
+    gsa <- topGSA(gsaseq(unname(gns[deg]),
+                         universe = unname(gns),
+                         collection = fibrosis_list,
+                         plot.bias = FALSE,
+                         gene.length = supertxlen$max_len[match(unname(gns), 
+                                                                supertxlen$gene_id)]))
+    
+    # get gene indices for all fibrosis gene set genes
+    f.id <- ids2indices(fibrosis_list, unname(gns[rownames(lrt)]))
+    
+    # run camera competitive gene set test  
+    # use signed likelihood ratio test statistic as recommended by GS here: https://support.bioconductor.org/p/112937/
+    statistic <- sign(lrt$table$logFC) * sqrt(lrt$table$LR)
+    f.cam <- cameraPR(statistic, f.id)
+    
+    # write fibrosis over-representation results to file
+    write.table(gsa %>%
+                  data.frame %>%
+                  rownames_to_column(var = "Set"), 
+                file = file.path(cellDir, glue("fibrosis.ORA.{colnames(contr)[i]}.csv")),
+                sep = ",", quote = F, col.names = NA)
+    
+    # write fibrosis GSEA results to file
+    write.table(f.cam, 
+                file = file.path(cellDir, glue("fibrosis.GSEA.{colnames(contr)[i]}.csv")),
+                sep = ",", quote = F, col.names = NA)
+    
+    # get gene indices for all gene set genes
+    h.id <- ids2indices(Hs.h.all, unname(gns[rownames(lrt)]))
+    c2.id <- ids2indices(Hs.c2.reactome, unname(gns[rownames(lrt)]))
+    c5.id <- ids2indices(Hs.c5.all, unname(gns[rownames(lrt)]))
+    
+    # run camera competitive gene set test  
+    # use signed likelihood ratio test statistic as recommended by GS here: https://support.bioconductor.org/p/112937/
+    h.cam <- cameraPR(statistic, h.id)
+    c2.cam <- cameraPR(statistic, c2.id)
+    c5.cam <- cameraPR(statistic, c5.id)
+    
+    # write top 50 GSEA results to file
+    write.table(h.cam[1:50,], 
+                file = file.path(cellDir, glue("h.{colnames(contr)[i]}.csv")),
+                sep = ",", quote = F, col.names = NA)
+    write.table(c2.cam[1:50,], 
+                file = file.path(cellDir, glue("c2.{colnames(contr)[i]}.csv")),
+                sep = ",", quote = F, col.names = NA)
+    write.table(c5.cam[1:50,], 
+                file = file.path(cellDir, glue("c5.{colnames(contr)[i]}.csv")),
+                sep = ",", quote = F, col.names = NA)
+    
+    top %>% 
+      mutate(sig = ifelse(FDR <= cutoff, glue("<= {cutoff}"), 
+                          glue("> {cutoff}"))) %>%
+      rownames_to_column(var = "SYMBOL") %>%
+      left_join(dt[[i]][,1] %>% 
+                  data.frame %>%
+                  rownames_to_column(var = "SYMBOL") %>%
+                  dplyr::rename(status = 2)) %>%
+      mutate(status = ifelse(status == 1, "Up",
+                             ifelse(status == -1, "Down",
+                                    "NotSig"))) %>%
+      mutate(status = as.factor(status)) %>%
+      mutate(status = fct_relevel(status, "NotSig", after = Inf)) %>%
+      ggplot(aes(x = logFC, y = -log10(PValue), color = status)) +
+      geom_point(alpha = 0.75) +
+      ggrepel::geom_text_repel(data = function(x) subset(x, FDR < cutoff), 
+                               aes(x = logFC, y = -log10(PValue), 
+                                   label = SYMBOL), 
+                               size = 2, colour = "black", max.overlaps = 15) +
+      labs(x = expression(~log[2]~"(Fold Change)"), 
+           y = expression(~-log[10]~"(P-value)"),
+           colour = glue("FDR < {cutoff}")) +
+      scale_colour_manual(values = pal) +
+      theme_classic() +
+      theme(legend.position = "bottom") -> p1
+    
+    # plot up to top 9 DGE
+    grps <- strsplit2(colnames(contr)[i], "v")[1,]
+    
+    edgeR::cpm(ySub$counts, log = TRUE) %>% 
+      data.frame %>%
+      rownames_to_column(var = "gene") %>%
+      pivot_longer(-gene, 
+                   names_to = "sample", 
+                   values_to = "raw") %>%
+      inner_join(edgeR::cpm(adj$normalizedCounts, log = TRUE) %>% 
+                   data.frame %>%
+                   rownames_to_column(var = "gene") %>%
+                   pivot_longer(-gene, 
+                                names_to = "sample", 
+                                values_to = "norm")) %>%
+      left_join(rownames_to_column(ySub$samples, 
+                                   var = "sample")) %>%
+      mutate(Batch = as.factor(Batch)) %>%
+      dplyr::filter(Group %in% names(contr[,i])[abs(contr[,i]) > 0],
+                    gene %in% rownames(top)[1:min(9, max(which(top$FDR < cutoff)))]) %>%
+      mutate(Group = ifelse(str_detect(Group, str_remove(grps[1], "CF.")),
+                            grps[1], 
+                            grps[2])) %>%
+      ggplot(aes(x = Group,
+                 y = norm,
+                 colour = Group)) +
+      geom_boxplot(outlier.shape = NA, colour = "grey") +
+      geom_jitter(stat = "identity",
+                  width = 0.15,
+                  size = 1.25) +
+      geom_jitter(aes(x = Group,
+                      y = raw), stat = "identity",
+                  width = 0.15,
+                  size = 1.25, 
+                  alpha = 0.2) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90,
+                                       hjust = 1,
+                                       vjust = 0.5),
+            legend.position = "bottom",
+            legend.direction = "horizontal",
+            strip.text = element_text(size = 7),
+            axis.text.y = element_text(size = 6)) +
+      labs(x = "Group", y = "log2 CPM") +
+      facet_wrap(~gene, scales = "free_y") + 
+      scale_color_brewer(palette = "Set2") +
+      ggtitle(colnames(contr)[i]) -> p2
+    
+    # plot fibrosis gene set over-representation results
+    gsa %>% 
+      data.frame %>%
+      rownames_to_column(var = "Set") %>%
+      mutate(Rank = 1:n()) %>%
+      ggplot(aes(x = -log10(FDR), y = fct_reorder(Set, -Rank), colour = DE/N*100)) +
+      geom_point(aes(size = N)) +
+      geom_vline(xintercept = -log10(0.05),
+                 linetype = "dashed")  +
+      scale_colour_viridis_c(option = "plasma") +
+      labs(y = "Gene set",
+           colour = "% DEGs",
+           size = "Set size") +
+      ggtitle("Fibrosis over-represenation") +
+      theme_classic(base_size = 8) +
+      theme(legend.key.height = unit(0.3, "cm"),
+            legend.key.width = unit(0.3, "cm"),
+            legend.text = element_text(size = 7),
+            title = element_text(size = 8),
+            legend.position = "bottom",
+            legend.direction = "vertical") -> p3
+    
+    # plot fibrosis GSEA results
+    f.cam %>% 
+      data.frame %>%
+      rownames_to_column(var = "Set") %>%
+      mutate(Rank = 1:n()) %>%
+      ggplot(aes(x = -log10(FDR), y = fct_reorder(Set, -Rank),
+                 colour = Direction)) +
+      geom_point(aes(size = NGenes)) +
+      geom_vline(xintercept = -log10(0.05),
+                 linetype = "dashed")  +
+      scale_colour_manual(values = pal) +
+      labs(y = "Gene set") +
+      ggtitle("Fibrosis GSEA") +
+      theme_classic(base_size = 8) +
+      theme(legend.key.height = unit(0.3, "cm"),
+            legend.key.width = unit(0.3, "cm"),
+            legend.text = element_text(size = 7),
+            title = element_text(size = 8),
+            legend.position = "bottom",
+            legend.direction = "vertical") -> p4
+    
+    # GSEA top 10 plots
+    h.cam %>%
+      dplyr::slice(1:10) %>%
+      rownames_to_column(var = "Set") %>%
+      mutate(Type = "HALLMARK",
+             Rank = 1:10) %>%
+      bind_rows(c2.cam %>%
+                  dplyr::slice(1:10) %>%
+                  rownames_to_column(var = "Set") %>%
+                  mutate(Type = "REACTOME",
+                         Rank = 1:10)) %>%
+      bind_rows(c5.cam %>%
+                  dplyr::slice(1:10) %>%
+                  rownames_to_column(var = "Set") %>%
+                  mutate(Type = "GO",
+                         Rank = 1:10)) %>%
+      mutate(Set = str_wrap(str_replace_all(Set, "_", " "), width = 75),
+             Set = str_remove_all(Set, "GO |REACTOME |HALLMARK ")) %>%
+      ggplot(aes(x = -log10(FDR), y = fct_reorder(Set, -Rank),
+                 colour = Direction)) +
+      geom_point(aes(size = NGenes)) +
+      facet_wrap(~Type, ncol = 1, scales = "free_y") +
+      geom_vline(xintercept = -log10(0.05),
+                 linetype = "dashed")  +
+      scale_colour_manual(values = pal) +
+      labs(y = "Gene set") +
+      theme_classic(base_size = 10) -> p5
+
+    layout <- "
+      AAAA
+      AAAA
+      AAAA
+      BBBB
+      BBBB
+      EEEE
+      EEEE
+      EEEE
+      EEEE"
+    
+    p[[i]] <- wrap_elements(p1 + p2) + 
+      wrap_elements(p3 + p4) + 
+      wrap_elements(p5) +
+      plot_layout(design = layout)
+  }
+}
+
+p
+```
+
+## {-}
+
+# Session info {.appendix}
+
+
+
+
+
+
+
+
+
+
+
