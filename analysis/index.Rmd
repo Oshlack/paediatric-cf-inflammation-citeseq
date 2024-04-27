@@ -71,11 +71,25 @@ Follow the links below to view the different parts of the analysis.
     a)    - [Without ambient removal](08.0_integrate_cluster_other_cells.html)
     b)    - [With ambient removal](08.1_integrate_cluster_other_cells_decontx.html)
 
-    
+
+8. Integrate and cluster macrophage cells
+    <!-- a)    - [Without ambient removal](09.0_integrate_cluster_macro_cells.html) -->
+    b)    - [With ambient removal](09.1_integrate_cluster_macro_cells_decontx.html)  
+
 
     
+To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6.
 
-    
+As per this issue, https://github.com/satijalab/seurat-object/issues/165, if there is an error running sctransform, remove all relevant packages (and purge if using renv) and then install using the following method exactly, to build from source.
+
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+options(repos = c("https://satijalab.r-universe.dev", getOption("repos")))
+remotes::install_version("SeuratObject", "4.1.4")
+remotes::install_version("Seurat", "4.4.0", upgrade = FALSE) # remotes will try to upgrade SeuratObject to v5, we need to tell it no
+
+
 # Licenses {-}
 
 The code in this analysis is covered by the [MIT license][mit] and the written
