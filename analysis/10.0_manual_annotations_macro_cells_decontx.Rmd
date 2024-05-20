@@ -1,0 +1,502 @@
+---
+title: "Annotate Macrophage clusters"
+author: "Jovana Maksimovic"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+site: workflowr::wflow_site
+output:
+  bookdown::html_document2:
+    base_format: workflowr::wflow_html
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+    number_sections: true
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# Load libraries
+
+```{r, message=FALSE, echo=FALSE}
+suppressPackageStartupMessages({
+  library(SingleCellExperiment)
+  library(edgeR)
+  library(tidyverse)
+  library(ggplot2)
+  library(Seurat)
+  library(dittoSeq)
+  library(here)
+  library(glue)
+  library(patchwork)
+  library(paletteer)
+  library(tidyHeatmap)
+  library(readxl)
+  library(AnnotationDbi)
+  library(org.Hs.eg.db)
+  library(speckle)
+})
+
+set.seed(42)
+options(scipen=999)
+options(future.globals.maxSize = 6500 * 1024^2)
+```
+
+# Load Data
+
+```{r, warning=FALSE, message=FALSE}
+ambient <- "_decontx"
+out <- here("data",
+            "C133_Neeland_merged",
+            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_macrophages.SEU.rds"))
+seuInt <- readRDS(file = out)
+
+seuInt
+```
+
+## Update group labels
+
+```{r}
+seuInt@meta.data %>%
+  data.frame %>%
+  mutate(Status = ifelse(str_detect(Treatment, "ivacaftor"),
+                         "CF ivacaftor",
+                         ifelse(str_detect(Treatment, "orkambi"),
+                                "CF lumacaftor-ivacaftor",
+                                ifelse(Treatment == "untreated",
+                                       "CF no-modulator",
+                                       "non-CF control"))),
+         Status_sub = ifelse(str_detect(Treatment, "ivacaftor"),
+                         "CF.IVA",
+                         ifelse(str_detect(Treatment, "orkambi"),
+                                "CF.LUMA_IVA",
+                                ifelse(Treatment == "untreated",
+                                       "CF.NO_MOD",
+                                       "NON_CF.CTRL"))),
+         Group = ifelse(!Status_sub %in% "NON_CF.CTRL", 
+                        paste(Status_sub, 
+                              toupper(substr(Severity, 1, 1)),
+                              sep = "."), 
+                        Status_sub),
+         Severity = tolower(Severity),
+         Participant = strsplit2(sample.id, ".", fixed = TRUE)[,1]) -> seuInt@meta.data
+```
+
+
+# Sub-cluster labelling
+## Load manual annotations
+
+```{r}
+labels <- read_excel(here("data",
+                          "cluster_annotations",
+                          "macrophages_ambientRNAremoval_01.05.24.xlsx"))
+
+# set selected cluster resolution
+grp <- "integrated_snn_res.0.6"
+seuInt@meta.data %>%
+  rownames_to_column(var = "cell") %>%
+  left_join(labels %>%
+              mutate(Cluster = as.factor(Cluster),
+                     Annotation = as.factor(Annotation),
+                     Broad = as.factor(Broad)),
+            by = c("integrated_snn_res.0.6" = "Cluster")) %>%
+  column_to_rownames(var = "cell") -> seuInt@meta.data
+
+seuInt$Annotation <- fct_drop(seuInt$Annotation)
+seuInt$Broad <- fct_drop(seuInt$Broad)
+seuInt
+```
+
+## Visualise annotations
+
+```{r, fig.asp=1}
+options(ggrepel.max.overlaps = Inf)
+DimPlot(seuInt, reduction = 'umap', label = TRUE, repel = TRUE, 
+        label.size = 3, group.by = "integrated_snn_res.0.6") + 
+  NoLegend() -> p1
+
+DimPlot(seuInt, reduction = 'umap', label = FALSE, group.by = "Annotation") + 
+  scale_color_paletteer_d("miscpalettes::pastel") + 
+  theme(text = element_text(size = 9),
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  NoLegend() -> p2
+
+DimPlot(seuInt, reduction = 'umap', label = FALSE, group.by = "Broad") + 
+  NoLegend() +
+  scale_color_paletteer_d("miscpalettes::pastel") + 
+  theme(text = element_text(size = 9),
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) -> p3
+
+p1
+LabelClusters(p2, id = "Annotation",  fontface = "bold", repel = TRUE, size = 3.5)
+LabelClusters(p3, id = "Broad",  fontface = "bold", repel = TRUE, size = 3.5)
+```
+
+### No. cells per cluster
+
+```{r, fig.asp=1}
+seuInt@meta.data %>%
+  ggplot(aes(x = Annotation, fill = Annotation)) +
+  geom_bar() +
+  geom_text(aes(label = after_stat(count)), stat = "count",
+            vjust = -0.5, colour = "black", size = 2) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  NoLegend() +
+  scale_fill_paletteer_d("miscpalettes::pastel")
+```
+
+### No. cells per cluster by disease
+
+```{r, fig.asp=0.8, fig.width=8}
+seuInt@meta.data %>%
+  ggplot(aes(x = Annotation, fill = Status_sub)) +
+  geom_bar(position = "dodge") +
+  geom_text(aes(label = ..count..), stat = "count",
+            vjust = -0.5, colour = "black", size = 2, 
+            position=position_dodge(width=0.9)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+        legend.position = "bottom")
+```
+
+
+```{r}
+seuInt@meta.data %>% 
+  count(Annotation) %>% 
+  mutate(perc = round(n/sum(n)*100, 1)) %>%
+  dplyr::rename(`Cell Label` = "Annotation", 
+                `No. Cells` = n,
+                `% Cells` = perc) %>%
+  knitr::kable()
+```
+
+# RNA marker gene analysis
+
+Adapted from Dr. Belinda Phipson's [work](https://bphipson.github.io/Human_Development_snRNAseq/14-MarkerAnalysisBCT.html) for [@Sim2021-cg].
+
+## Test for marker genes using `limma`
+
+```{r}
+# limma-trend for DE
+Idents(seuInt) <- "Annotation"
+
+logcounts <- normCounts(DGEList(as.matrix(seuInt[["RNA"]]@counts)),
+                        log = TRUE, prior.count = 0.5)
+entrez <- AnnotationDbi::mapIds(org.Hs.eg.db,
+                                keys = rownames(logcounts),
+                                column = c("ENTREZID"),
+                                keytype = "SYMBOL",
+                                multiVals = "first")
+# remove genes without entrez IDs as these are difficult to interpret biologically
+logcounts <- logcounts[!is.na(entrez),]
+# remove confounding genes from counts table e.g. mitochondrial, ribosomal etc.
+# remove HLA, immunoglobulin, RNA, MT, and RP genes from marker gene analysis
+var_regex = '^HLA-|^IG[HJKL]|^RNA|^MT-|^RP' 
+logcounts <- logcounts[!str_detect(rownames(logcounts), var_regex),]
+
+maxclust <- length(levels(Idents(seuInt))) - 1
+
+clustgrp <- seuInt$Annotation
+clustgrp <- factor(clustgrp)
+donor <- factor(seuInt$sample.id)
+batch <- factor(seuInt$Batch)
+
+design <- model.matrix(~ 0 + clustgrp + donor)
+colnames(design)[1:(length(levels(clustgrp)))] <- levels(clustgrp)
+
+# Create contrast matrix
+mycont <- matrix(NA, ncol = length(levels(clustgrp)),
+                 nrow = length(levels(clustgrp)))
+rownames(mycont) <- colnames(mycont) <- levels(clustgrp)
+diag(mycont) <- 1
+mycont[upper.tri(mycont)] <- -1/(length(levels(factor(clustgrp))) - 1)
+mycont[lower.tri(mycont)] <- -1/(length(levels(factor(clustgrp))) - 1)
+
+# Fill out remaining rows with 0s
+zero.rows <- matrix(0, ncol = length(levels(clustgrp)),
+                    nrow = (ncol(design) - length(levels(clustgrp))))
+fullcont <- rbind(mycont, zero.rows)
+rownames(fullcont) <- colnames(design)
+
+fit <- lmFit(logcounts, design)
+
+fit.cont <- contrasts.fit(fit, contrasts = fullcont)
+fit.cont <- eBayes(fit.cont, trend = TRUE, robust = TRUE)
+
+summary(decideTests(fit.cont))
+```
+
+Test relative to a threshold (TREAT).
+
+```{r}
+tr <- treat(fit.cont, lfc = 0.25)
+dt <- decideTests(tr)
+summary(dt)
+```
+
+Mean-difference (MD) plots per cluster. 
+
+```{r, fig.asp=1}
+par(mfrow=c(4,3))
+par(mar=c(2,3,1,2))
+
+for(i in 1:ncol(mycont)){
+  plotMD(tr, coef = i, status = dt[,i], hl.cex = 0.5)
+  abline(h = 0, col = "lightgrey")
+  lines(lowess(tr$Amean, tr$coefficients[,i]), lwd = 1.5, col = 4)
+}
+```
+
+## `limma` marker gene dotplot
+
+```{r, fig.width=9, fig.asp=0.4}
+DefaultAssay(seuInt) <- "RNA"
+contnames <- colnames(mycont)
+top_markers <- NULL
+n_markers <- 5
+
+for(i in 1:ncol(mycont)){
+  top <- topTreat(tr, coef = i, n = Inf)
+  top <- top[top$logFC > 0, ]
+  top_markers <- c(top_markers, 
+                   setNames(rownames(top)[1:n_markers], 
+                            rep(contnames[i], n_markers)))
+}
+
+top_markers <- top_markers[!is.na(top_markers)]
+top_markers <- top_markers[!duplicated(top_markers)]
+cols <- paletteer_d("miscpalettes::pastel")[factor(names(top_markers))]
+
+DotPlot(seuInt,    
+        features = unname(top_markers),
+        group.by = "Annotation",
+        cols = c("azure1", "blueviolet"),
+        dot.scale = 3, assay = "SCT") +
+    RotatedAxis() +
+    FontSize(x.text = 8, y.text = 8) +
+    labs(y = element_blank(), x = element_blank()) +
+    theme(axis.text.x = element_text(color = cols,
+                                   angle = 90,
+                                   hjust = 1,
+                                   vjust = 0.5,
+                                   face = "bold"),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10))
+```
+
+<!-- ## ADT Expression -->
+<!-- Setup ADT annotations -->
+
+<!-- ```{r} -->
+<!-- prots_all <- read.csv(file = here("data", -->
+<!--                      "C133_Neeland_batch1", -->
+<!--                      "data", -->
+<!--                      "sample_sheets", -->
+<!--                      "ADT_features.csv"))  -->
+
+<!-- head(prots_all) %>% knitr::kable() -->
+<!-- ``` -->
+
+<!-- Load the DSB normalised ADT data. -->
+
+<!-- ```{r} -->
+<!-- norm.adt <- readRDS(file = here("data/RDS/C133_Neeland_T_cells.DSB.SEU.rds")) -->
+<!-- ``` -->
+
+<!-- Put marker names in to the counts. Otherwise we just get the BioLegend codes which aren't very informative. -->
+
+<!-- ```{r} -->
+<!-- # Regular expression pattern to remove the substrings -->
+<!-- pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human " -->
+
+<!-- # Remove the substrings using gsub() -->
+<!-- prots_all$name <- gsub(pattern, "", prots_all$name) -->
+<!-- rownames(norm.adt) <- prots_all$name -->
+<!-- ``` -->
+
+<!-- Subset to only samples with ADT data. -->
+
+<!-- ```{r} -->
+<!-- seuSub <- seuInt[, seuInt$Batch != 0] -->
+<!-- norm.adt <- norm.adt[, colnames(norm.adt) %in% colnames(seuSub)] -->
+<!-- seuSub[["ADT.dsb"]] <- CreateAssayObject(counts = norm.adt) -->
+<!-- ``` -->
+
+<!-- ### CD45 expression by cluster -->
+
+<!-- ```{r} -->
+<!-- cbind(seuSub@meta.data %>% -->
+<!--         dplyr::select(wsnn_res.0.7, Annotation), -->
+<!--       as.data.frame(t(seuSub@assays$ADT.dsb@data))) %>% -->
+<!--   rownames_to_column(var = "cell") %>% -->
+<!--   pivot_longer(c(-cell, -Annotation, -wsnn_res.0.7),  -->
+<!--                names_to = "ADT", -->
+<!--                values_to = "expression") %>% -->
+<!--   dplyr::filter(ADT == "CD45") %>% -->
+<!--   ggplot(aes(x = wsnn_res.0.7, y = expression,  -->
+<!--              fill = Annotation)) + -->
+<!--   geom_boxplot() +  -->
+<!--   ggtitle("CD45 ADT") + -->
+<!--   scale_fill_paletteer_d("miscpalettes::pastel") -->
+<!-- ``` -->
+
+<!-- ### CD45 expression by manual label -->
+
+<!-- ```{r, fig.asp=1} -->
+<!-- cbind(seuSub@meta.data %>% -->
+<!--         dplyr::select(wsnn_res.0.7, Annotation), -->
+<!--       as.data.frame(t(seuSub@assays$ADT.dsb@data))) %>% -->
+<!--   rownames_to_column(var = "cell") %>% -->
+<!--   pivot_longer(c(-cell, -Annotation, -wsnn_res.0.7),  -->
+<!--                names_to = "ADT", -->
+<!--                values_to = "expression") %>% -->
+<!--   dplyr::filter(ADT == "CD45") %>% -->
+<!--   ggplot(aes(x = Annotation, y = expression,  -->
+<!--              fill = Annotation)) + -->
+<!--   geom_boxplot() +  -->
+<!--   NoLegend() + -->
+<!--   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) + -->
+<!--   ggtitle("CD45 ADT") + -->
+<!--   scale_fill_paletteer_d("miscpalettes::pastel") -->
+<!-- ``` -->
+
+<!-- ### PTPRC expression by manual labels (all samples) -->
+
+<!-- ```{r, fig.asp=1} -->
+<!-- cbind(seuInt@meta.data %>% -->
+<!--         dplyr::select(wsnn_res.0.7, Annotation), -->
+<!--       as.data.frame(t(seuInt@assays$RNA@data[rownames(seuInt@assays$RNA@data) == "PTPRC", , drop = FALSE]))) %>% -->
+<!--   rownames_to_column(var = "cell") %>% -->
+<!--   pivot_longer(c(-cell, -Annotation, -wsnn_res.0.7),  -->
+<!--                names_to = "RNA", -->
+<!--                values_to = "expression") %>% -->
+<!--   ggplot(aes(x = Annotation, y = expression,  -->
+<!--              fill = Annotation)) + -->
+<!--   geom_boxplot() +  -->
+<!--   NoLegend() + -->
+<!--   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) + -->
+<!--   ggtitle("PTPRC RNA") + -->
+<!--   scale_fill_paletteer_d("miscpalettes::pastel") -->
+<!-- ``` -->
+
+<!-- ## Visualise ADTs -->
+
+<!-- ```{r} -->
+<!-- cbind(seuSub@meta.data %>% -->
+<!--         dplyr::select(wsnn_res.0.7, Annotation), -->
+<!--       as.data.frame(t(seuSub@assays$ADT.dsb@data))) %>% -->
+<!--   pivot_longer(c(-Annotation, -wsnn_res.0.7),  -->
+<!--                names_to = "ADT", -->
+<!--                values_to = "expression") %>% -->
+<!--   dplyr::group_by(Annotation, ADT) %>% -->
+<!--   dplyr::summarize(Expression = mean(expression)) %>% -->
+<!--   ungroup() -> dat -->
+
+<!-- head(dat) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- plot(density(dat$Expression)) -->
+<!-- topMax <- 1.8 -->
+<!-- abline(v = topMax, lty = 2, col = "grey") -->
+<!-- ``` -->
+
+<!-- ### Expression of all ADTs -->
+
+<!-- ```{r, fig.asp=2.5} -->
+<!--   dat |> heatmap( -->
+<!--     .column = Annotation, -->
+<!--     .row = ADT, -->
+<!--     .value = Expression, -->
+<!--     scale = "none", -->
+<!--     rect_gp = grid::gpar(col = "white", lwd = 1), -->
+<!--     show_row_names = TRUE, -->
+<!--     column_names_gp = grid::gpar(fontsize = 10), -->
+<!--     column_title_gp = grid::gpar(fontsize = 12), -->
+<!--     row_names_gp = grid::gpar(fontsize = 8), -->
+<!--     row_title_gp = grid::gpar(fontsize = 12), -->
+<!--     column_title_side = "top", -->
+<!--   palette_value = circlize::colorRamp2(seq(-0.5, 2, length.out = 256), -->
+<!--                                         viridis::magma(256)), -->
+<!--     heatmap_legend_param = list(direction = "vertical")) -->
+<!-- ``` -->
+
+<!-- ### Expression of most relevant ADTs -->
+
+<!-- ```{r, fig.asp=1} -->
+<!-- ADTs <- str_replace_all(labels$`Relevant marker ADTs`, "HLA", "HLA-") -->
+<!-- ADTs <- ADTs[!is.na(ADTs)] -->
+<!-- ADTs <- as.vector(t(strsplit2(str_remove_all(ADTs, " "), ","))) -->
+<!-- ADTs <- unique(ADTs[ADTs != ""]) -->
+
+<!-- dat |>  -->
+<!--   dplyr::filter(rowSums(sapply(glue("\\b{ADTs}\\b\\s*(\\(.*\\))?\\b"),  -->
+<!--                                function(x) str_detect(ADT, x))) > 0) |> -->
+<!--   heatmap( -->
+<!--     .column = Annotation, -->
+<!--     .row = ADT, -->
+<!--     .value = Expression, -->
+<!--     scale = "none", -->
+<!--     rect_gp = grid::gpar(col = "white", lwd = 1), -->
+<!--     show_row_names = TRUE, -->
+<!--     column_names_gp = grid::gpar(fontsize = 10), -->
+<!--     column_title_gp = grid::gpar(fontsize = 12), -->
+<!--     row_names_gp = grid::gpar(fontsize = 8), -->
+<!--     row_title_gp = grid::gpar(fontsize = 12), -->
+<!--     column_title_side = "top", -->
+<!--     palette_value = circlize::colorRamp2(seq(-0.5, topMax, length.out = 256), -->
+<!--                                          viridis::magma(256)), -->
+<!--     heatmap_legend_param = list(direction = "vertical")) |>  -->
+<!--   add_tile(Annotation, show_legend = FALSE, -->
+<!--            show_annotation_name = FALSE,  -->
+<!--            palette = paletteer_d("miscpalettes::pastel",  -->
+<!--                                  length(levels(top5$cluster))))  -->
+<!-- ``` -->
+
+<!-- <!-- wrap_heatmap(f2d) --> -->
+<!-- <!-- ``` --> -->
+
+# Save data
+
+```{r}
+out <- here("data",
+            "C133_Neeland_merged",
+            glue("C133_Neeland_full_clean{ambient}_t_cells_annotated_diet.SEU.rds"))
+if(!file.exists(out)){
+  DefaultAssay(seuInt) <- "RNA"
+  saveRDS(DietSeurat(seuInt, assays = "RNA"), out)
+}
+
+out <- here("data",
+            "C133_Neeland_merged",
+            glue("C133_Neeland_full_clean{ambient}_t_cells_annotated_full.SEU.rds"))
+if(!file.exists(out)){
+  DefaultAssay(seuInt) <- "RNA"
+  saveRDS(seuInt, out)
+}
+```
+
+<!-- # Panel figures -->
+
+<!-- ```{r, fig.width=10, fig.asp=1.3} -->
+<!-- layout = "AAAABB -->
+<!--           AAAABB -->
+<!--           AAAABB -->
+<!--           CCCCCC -->
+<!--           CCCCCC -->
+<!--           DDDDDD -->
+<!--           DDDDDD -->
+<!--           DDDDDD" -->
+<!-- ((f2a + ggtitle("")) +  -->
+<!--    f2b +  -->
+<!--    f2c +  -->
+<!--    wrap_heatmap(f2d)) +  -->
+<!--   plot_layout(design = layout) + -->
+<!--   plot_annotation(tag_levels = "A") & -->
+<!--   theme(plot.tag = element_text(size = 14, face = "bold")) -->
+<!-- ``` -->
+
+# Session info {.appendix}
+
