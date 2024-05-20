@@ -231,7 +231,7 @@ summary(decideTests(fit.cont))
 Test relative to a threshold (TREAT).
 
 ```{r}
-tr <- treat(fit.cont, lfc = 0.25)
+tr <- treat(fit.cont, lfc = 0.5)
 dt <- decideTests(tr)
 summary(dt)
 ```
@@ -251,7 +251,7 @@ for(i in 1:ncol(mycont)){
 
 ## `limma` marker gene dotplot
 
-```{r, fig.width=9, fig.asp=0.4}
+```{r, fig.width=10, fig.asp=0.4}
 DefaultAssay(seuInt) <- "RNA"
 contnames <- colnames(mycont)
 top_markers <- NULL
@@ -273,8 +273,62 @@ DotPlot(seuInt,
         features = unname(top_markers),
         group.by = "Annotation",
         cols = c("azure1", "blueviolet"),
-        dot.scale = 3, assay = "SCT") +
+        dot.scale = 2.5, 
+        assay = "SCT") +
     RotatedAxis() +
+    FontSize(x.text = 8, y.text = 8) +
+    labs(y = element_blank(), x = element_blank()) +
+    theme(axis.text.x = element_text(color = cols,
+                                   angle = 90,
+                                   hjust = 1,
+                                   vjust = 0.5,
+                                   face = "bold"),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10))
+```
+
+## Test for marker genes using `Seurat`
+
+```{r}
+DefaultAssay(seuInt) <- "RNA"
+Idents(seuInt) <- "Annotation"
+
+out <- here("data/cluster_annotations/seurat_markers_macrophages.rds")
+
+if(!file.exists(out)){
+  # restrict genes to same set as for limma analysis
+  markers <- FindAllMarkers(seuInt, only.pos = TRUE, 
+                            features = rownames(logcounts))
+  saveRDS(markers, file = out)
+
+} else {
+  markers <- readRDS(out)
+  
+}
+
+head(markers) %>% knitr::kable()
+```
+
+## `Seurat` marker gene dotplot
+
+```{r, fig.width=10, fig.asp=0.4}
+DefaultAssay(seuInt) <- "RNA"
+
+maxGenes <- 5
+markers %>%
+    group_by(cluster) %>%
+    top_n(n = maxGenes, wt = avg_log2FC) -> top5
+
+sig <- top5$gene
+geneCols <- paletteer_d("miscpalettes::pastel")[top5$cluster][!duplicated(sig)]
+
+pal <- paletteer::paletteer_d("vapoRwave::cool")
+DotPlot(seuInt,
+        features = sig[!duplicated(sig)],
+        group.by = "Annotation",
+        cols = c("azure1", "blueviolet"),
+        dot.scale = 2.5,
+        assay = "SCT") +
     FontSize(x.text = 8, y.text = 8) +
     labs(y = element_blank(), x = element_blank()) +
     theme(axis.text.x = element_text(color = cols,
@@ -463,7 +517,7 @@ DotPlot(seuInt,
 ```{r}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_t_cells_annotated_diet.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_macrophages_annotated_diet.SEU.rds"))
 if(!file.exists(out)){
   DefaultAssay(seuInt) <- "RNA"
   saveRDS(DietSeurat(seuInt, assays = "RNA"), out)
@@ -471,7 +525,7 @@ if(!file.exists(out)){
 
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_t_cells_annotated_full.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_macrophages_annotated_full.SEU.rds"))
 if(!file.exists(out)){
   DefaultAssay(seuInt) <- "RNA"
   saveRDS(seuInt, out)
