@@ -48,9 +48,9 @@ suppressPackageStartupMessages({
 
 ```{r}
 ambient <- "_decontx"
-file <- here(glue("data",
+file <- here("data",
             "C133_Neeland_merged",
-            "C133_Neeland_full_clean{ambient}_annotated_diet.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_t_cells_annotated_diet.SEU.rds"))
 
 seu <- readRDS(file)
 seu
