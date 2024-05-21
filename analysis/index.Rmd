@@ -72,11 +72,20 @@ Follow the links below to view the different parts of the analysis.
     b)    - [With ambient removal](08.1_integrate_cluster_other_cells_decontx.html)
 
 
-8. Integrate and cluster macrophage cells
+
+
+9. Integrate and cluster macrophage cells
     <!-- a)    - [Without ambient removal](09.0_integrate_cluster_macro_cells.html) -->
     b)    - [With ambient removal](09.1_integrate_cluster_macro_cells_decontx.html)  
 
 
+
+
+10. Macrophage annotations
+    a)    - [Annotated macrophages](10.0_manual_annotations_macro_cells_decontx.html)  
+    
+    
+    
     
 To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6.
 

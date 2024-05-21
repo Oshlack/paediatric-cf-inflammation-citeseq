@@ -138,10 +138,10 @@ if(!file.exists(out)){
   anchors <- FindIntegrationAnchors(object.list = seuLst,
                                     normalization.method = "SCT",
                                     anchor.features = features,
-                                    k.anchor = 20,
+                                    #k.anchor = 20,
                                     dims = 1:30, reduction = "rpca")
   seu <- IntegrateData(anchorset = anchors, 
-                       k.weight = min(100, min(sapply(seuLst, ncol)) - 5),
+                       #k.weight = min(100, min(sapply(seuLst, ncol)) - 5),
                        normalization.method = "SCT",
                        dims = 1:30)
   
