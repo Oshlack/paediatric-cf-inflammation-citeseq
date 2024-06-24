@@ -1,5 +1,5 @@
 ---
-title: "Integrate and cluster Macrophage cells"
+title: "Integrate and cluster macrophage cells"
 author: "Jovana Maksimovic and George Howitt"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 site: workflowr::wflow_site
@@ -42,7 +42,7 @@ suppressPackageStartupMessages({
 
 # Load data
 
-Load T-cell subset Seurat object.
+Load *macrophage* subset Seurat object.
 
 ```{r}
 ambient <- ""
@@ -57,7 +57,7 @@ seu
 
 Visualise batch effects.
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, fig.asp=0.9}
 seu <- ScaleData(seu) %>%
   FindVariableFeatures() %>%
   RunPCA(dims = 1:30, verbose = FALSE) %>%
@@ -65,6 +65,23 @@ seu <- ScaleData(seu) %>%
 
 DimPlot(seu, group.by = "Batch", reduction = "umap")
 ```
+
+```{r, fig.asp=1}
+DimPlot(seu, group.by = "predicted.ann_level_4", reduction = "umap") +
+  theme(legend.position = "bottom",
+        legend.direction = "vertical",
+        legend.text = element_text(size = 10))
+```
+
+Examine cell library sizes after ambient removal per sample and per cell type. Some cells have very low library sizes after ambient removal.
+
+```{r, fig.width=8}
+VlnPlot(seu, features = "nCount_RNA", group.by = "sample.id", log = TRUE, pt.size = 0) + 
+  NoLegend() + 
+  geom_hline(yintercept = 250) +
+  theme(axis.text = element_text(size = 10))
+```
+
 
 ## Cell cycle effect
 
@@ -162,102 +179,6 @@ if(!file.exists(out)){
 ```
 
 
-## Integrate ADT data
-
-```{r, message=FALSE, warning=FALSE}
-out <- here("data",
-            "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_macrophages.ADT.SEU.rds"))
-
-# get ADT meta data
-read.csv(file = here("data",
-                     "C133_Neeland_batch1",
-                     "data",
-                     "sample_sheets",
-                     "ADT_features.csv")) -> adt_data 
-# cleanup ADT meta data
-pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human "
-adt_data$name <- gsub(pattern, "", adt_data$name)
-# change ADT rownames to antibody names
-DefaultAssay(seu) <- "ADT"
-if(all(rownames(seu[["ADT"]]@counts) == adt_data$id)){
-  adt_counts <- seu[["ADT"]]@counts
-  rownames(adt_counts) <- adt_data$name
-  seu[["ADT"]] <- CreateAssayObject(counts = adt_counts)
-}
-
-if(!file.exists(out)){
-  tmp <- DietSeurat(subset(seu, cells = which(seu$Batch != 0)), 
-                    assays = "ADT")
-  DefaultAssay(tmp) <- "ADT"
-  
-  seuLst <- SplitObject(tmp, split.by = "Batch")
-  seuLst <- lapply(X = seuLst, FUN = function(x) {
-    # set all ADT as variable features
-    VariableFeatures(x) <- rownames(x)
-    x <- NormalizeData(x, normalization.method = "CLR", margin = 2)
-    x
-  })
-  features <- SelectIntegrationFeatures(object.list = seuLst)
-  seuLst <- lapply(X = seuLst, FUN = function(x) {
-    x <- ScaleData(x, features = features, verbose = FALSE) %>%
-      RunPCA(features = features, verbose = FALSE)
-    x
-  })
-  anchors <- FindIntegrationAnchors(object.list = seuLst, reduction = "rpca",
-                                    dims = 1:30)
-  tmp <- IntegrateData(anchorset = anchors, dims = 1:30)
-  
-  DefaultAssay(tmp) <- "integrated"
-  tmp <- ScaleData(tmp) %>%
-    RunPCA(dims = 1:30, verbose = FALSE) %>%
-    RunUMAP(dims = 1:30, verbose = FALSE)
-
-  # create combined object that only contains cells with RNA+ADT data
-  seuADT <- subset(seu, cells = which(seu$Batch !=0))
-  seuADT[["integrated.adt"]] <- tmp[["integrated"]]
-  seuADT[["pca.adt"]] <- tmp[["pca"]]
-  seuADT[["umap.adt"]] <- tmp[["umap"]]
-
-  saveRDS(seuADT, file = out)
-  fs::file_chmod(out, "664")
-  if(any(str_detect(fs::group_ids()$group_name, 
-                    "oshlack_lab"))) fs::file_chown(out, 
-                                                    group_id = "oshlack_lab")
-  
-} else {
-  seuADT <- readRDS(file = out)
-  
-}
-```
-
-## View integrated data
-
-```{r, fig.asp=1}
-DefaultAssay(seuADT) <- "integrated"
-
-DimPlot(seu, group.by = "Batch", reduction = "umap") -> p1
-DimPlot(seuADT, group.by = "Batch", reduction = "umap") -> p2
-DimPlot(seuADT, group.by = "Batch", reduction = "umap.adt") -> p3
-
-(p1 / ((p2 | p3) +
-  plot_layout(guides = "collect"))) &
-  theme(axis.title = element_text(size = 8),
-        axis.text = element_text(size = 8)) 
-```
-
-```{r, fig.asp=1}
-DimPlot(seu, group.by = "Phase", reduction = "umap") -> p1
-DimPlot(seuADT, group.by = "Phase", reduction = "umap") -> p2
-DimPlot(seuADT, group.by = "Phase", reduction = "umap.adt") -> p3
-
-(p1 / ((p2 | p3) +
-  plot_layout(guides = "collect"))) &
-  theme(axis.title = element_text(size = 8),
-        axis.text = element_text(size = 8)) 
-```
-
-
 # Cluster data 
 
 Perform clustering only on data that has ADT i.e. exclude batch 0.
@@ -267,33 +188,30 @@ Perform clustering only on data that has ADT i.e. exclude batch 0.
 Exclude any mitochondrial, ribosomal, immunoglobulin and HLA genes from variable genes list, to encourage clustering by cell type.
 
 ```{r, fig.width=9, fig.height=27}
-# remove HLA, immunoglobulin, RNA, MT, and RP genes from variable genes list
-var_regex = '^HLA-|^IG[HJKL]|^RNA|^MT-|^RP' 
-hvg <- grep(var_regex, VariableFeatures(seuADT), invert = TRUE, value = TRUE)
+gns <- AnnotationDbi::mapIds(org.Hs.eg.db,
+                             keys = rownames(seu),
+                             column = c("CHR"),
+                             keytype = "SYMBOL",
+                             multiVals = "first")
+sex_genes <- names(gns[gns %in% c("X","Y")])
+  
+# remove HLA, immunoglobulin, MT, RP, MRP and sex genes from variable genes list
+var_regex = '^HLA-|^IG[HJKL]|^MT-|^RPL|^MRPL' 
+hvg <- VariableFeatures(seu)[!(grepl(var_regex, VariableFeatures(seu)) | 
+                               (VariableFeatures(seu) %in% sex_genes))]
 # assign edited variable gene list back to object 
-VariableFeatures(seuADT) <- hvg
+VariableFeatures(seu) <- hvg
 
 # redo PCA and UMAP 
-seuADT <- RunPCA(seuADT, dims = 1:30, verbose = FALSE) %>%
+seu <- RunPCA(seu, dims = 1:30, verbose = FALSE) %>%
     RunUMAP(dims = 1:30, verbose = FALSE)
 
-DimHeatmap(seuADT, dims = 1:30, cells = 500, balanced = TRUE,
+DimHeatmap(seu, dims = 1:30, cells = 500, balanced = TRUE,
            reduction = "pca", assays = "integrated")
 ```
 
 ```{r}
-ElbowPlot(seuADT, ndims = 30, reduction = "pca")
-```
-
-## Dimensionality reduction (ADT)
-
-```{r, fig.width=9, fig.height=27}
-DimHeatmap(seuADT, dims = 1:30, cells = 500, balanced = TRUE,
-           reduction = "pca.adt", assays = "integrated.adt")
-```
-
-```{r}
-ElbowPlot(seuADT, ndims = 30, reduction = "pca.adt")
+ElbowPlot(seu, ndims = 30, reduction = "pca")
 ```
 
 ## Run WNN clustering
@@ -303,31 +221,25 @@ Perform clustering at a range of resolutions and visualise to see which is appro
 ```{r, warning=FALSE, message=FALSE, fig.asp=1.25}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_macrophages.ADT.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_macrophages.SEU.rds"))
 
 if(!file.exists(out)){
-  DefaultAssay(seuADT) <- "integrated"
-  seuADT <- FindMultiModalNeighbors(seuADT, reduction.list = list("pca", "pca.adt"), 
-                                 dims.list = list(1:30, 1:10), 
-                                 modality.weight.name = "RNA.weight")
-  seuADT <- FindClusters(seuADT, algorithm = 3, 
-                      resolution = seq(0.1, 1, by = 0.1),
-                      graph.name = "wsnn")
-  seuADT <- RunUMAP(seuADT, dims = 1:30, nn.name = "weighted.nn", 
-                 reduction.name = "wnn.umap", reduction.key = "wnnUMAP_",
-                 return.model = TRUE)
-  saveRDS(seuADT, file = out)
+  DefaultAssay(seu) <- "integrated"
+  seu <- FindNeighbors(seu, reduction = "pca", dims = 1:30)
+  seu <- FindClusters(seu, algorithm = 3, 
+                           resolution = seq(0.1, 1, by = 0.1))
+  saveRDS(seu, file = out)
   fs::file_chmod(out, "664")
   if(any(str_detect(fs::group_ids()$group_name, 
                     "oshlack_lab"))) fs::file_chown(out, 
                                                     group_id = "oshlack_lab")
   
 } else {
-  seuADT <- readRDS(file = out)
+  seu <- readRDS(file = out)
   
 }
 
-clustree::clustree(seuADT, prefix = "wsnn_res.")
+clustree::clustree(seu, prefix = "integrated_snn_res.")
 ```
 
 ## View clusters
@@ -335,137 +247,19 @@ clustree::clustree(seuADT, prefix = "wsnn_res.")
 Choose most appropriate resolution based on `clustree` plot above.
 
 ```{r, fig.asp=1}
-grp <- "wsnn_res.0.6"
+grp <- "integrated_snn_res.0.6"
 # change factor ordering
-seuADT@meta.data[,grp] <- fct_inseq(seuADT@meta.data[,grp])
+seu@meta.data[,grp] <- fct_inseq(seu@meta.data[,grp])
 
-DimPlot(seuADT, group.by = grp, label = T) + 
+DimPlot(seu, group.by = grp, label = T) + 
   theme(legend.position = "bottom")
 ```
-
-Weighting of RNA and ADT data per cluster.
-
-```{r}
- VlnPlot(seuADT, features = "integrated.weight", group.by = grp, sort = TRUE, 
-         pt.size = 0.1) +
-  NoLegend()
-```
-
-
-# Reference mapping
-
-Batch 0 only has RNA data and was not included in the WNN clustering of batched 1-6. To add this data we will map it to the WNN clustered reference.
-
-## Map data
-
-Find transfer anchors.
-
-```{r}
-# use WNN clustered batches 1-6 as reference
-reference <- seuADT
-DefaultAssay(seu) <- "RNA"
-# batch 0 RNA data is the query
-query <- DietSeurat(subset(seu, cells = which(seu$Batch == 0)),
-                    assays = "RNA")
-
-DefaultAssay(reference) <- "integrated"
-
-anchors <- FindTransferAnchors(
-  reference = reference,
-  query = query,
-  normalization.method = "SCT",
-  reference.reduction = "pca",
-  dims = 1:50
-)
-```
-
-Map batch 0 samples onto reference.
-
-```{r}
-query <- MapQuery(
-  anchorset = anchors,
-  query = query,
-  reference = reference,
-  refdata = list(
-    wsnn = grp,
-    ADT = "ADT"
-  ),
-  reference.reduction = "pca", 
-  reduction.model = "wnn.umap"
-)
-
-query
-```
-
-Visualise batch 0 samples on reference UMAP.
-
-```{r, fig.asp=1}
-query$predicted.wsnn <- fct_inseq(query$predicted.wsnn)
-
-DimPlot(query, reduction = "ref.umap", group.by = "predicted.wsnn", 
-        label = TRUE, label.size = 3 ,repel = TRUE) + 
-  theme(legend.position = "bottom")
-```
-
-Distribution of `Azimuth` prediction scores per WNN cluster.
-
-```{r}
-ggplot(query@meta.data, aes(x = predicted.wsnn, 
-                            y = predicted.wsnn.score,
-                            fill = predicted.wsnn)) +
-  geom_boxplot() + NoLegend()
-```
-
-## Compute combined UMAP
-
-Computing a new UMAP can help to identify any cell states present in the query but not reference.
-
-```{r}
-# merge reference (integrated + WNN clustered) and query (RNA only samples)
-reference$id <- 'reference'
-query$id <- 'query'
-DefaultAssay(reference) <- "integrated"
-refquery <- merge(DietSeurat(reference,
-                             assays = c("RNA","ADT","integrated","SCT"),
-                             dimreducs = c("pca")),
-                  DietSeurat(query,
-                             assays = c("RNA"),
-                             dimreducs = "ref.pca"))
-refquery[["pca"]] <- merge(reference[["pca"]], query[["ref.pca"]])
-refquery <- RunUMAP(refquery, reduction = 'pca', dims = 1:50, assay = "integrated")
-```
-
-View combined UMAP.
 
 ```{r, fig.asp=0.8}
-# combine cluster annotations from reference and query
-refquery@meta.data[, grp] <- ifelse(is.na(refquery@meta.data[,grp]),
-                          refquery$predicted.wsnn,
-                          refquery@meta.data[,grp])
-# change factor ordering
-refquery@meta.data[,grp] <- fct_inseq(refquery@meta.data[,grp])
-
-DimPlot(refquery, reduction = "umap", group.by = grp, 
-             label = TRUE, label.size = 3) + NoLegend() 
-DimPlot(refquery, reduction = "umap", group.by = "Phase", 
+DimPlot(seu, reduction = "umap", group.by = "Phase", 
              label = FALSE, label.size = 3)
-DimPlot(refquery, reduction = "umap", group.by = "Disease", 
+DimPlot(seu, reduction = "umap", group.by = "Disease", 
              label = FALSE, label.size = 3)
-```
-
-Save results.
-
-```{r}
-out <- here("data",
-            "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_integrated_clustered_mapped_macrophages.ADT.SEU.rds"))
-if(!file.exists(out)){
-  saveRDS(refquery, file = out)
-  fs::file_chmod(out, "664")
-  if(any(str_detect(fs::group_ids()$group_name, 
-                    "oshlack_lab"))) fs::file_chown(out, 
-                                                    group_id = "oshlack_lab")
-}
 ```
 
 
@@ -474,7 +268,7 @@ if(!file.exists(out)){
 Number of cells per cluster.
 
 ```{r}
-refquery@meta.data %>%
+seu@meta.data %>%
   ggplot(aes(x = !!sym(grp), fill = !!sym(grp))) +
   geom_bar() +
   geom_text(aes(label = ..count..), stat = "count",
@@ -483,10 +277,10 @@ refquery@meta.data %>%
   NoLegend()
 ```
 
-Visualise quality metrics by cluster. Cluster 17 potentially contains low quality cells.
+Visualise quality metrics by cluster. 
 
 ```{r, fig.asp=0.8}
-refquery@meta.data %>%
+seu@meta.data %>%
   ggplot(aes(x = !!sym(grp),
              y = nCount_RNA,
              fill = !!sym(grp))) +
@@ -494,7 +288,7 @@ refquery@meta.data %>%
   scale_y_log10() +
   NoLegend() -> p2
 
-refquery@meta.data %>%
+seu@meta.data %>%
   ggplot(aes(x = !!sym(grp),
              y = nFeature_RNA,
              fill = !!sym(grp))) +
@@ -505,18 +299,18 @@ refquery@meta.data %>%
 (p2 / p3) & theme(text = element_text(size = 8))
 ```
 
-Check the batch composition of each of the clusters. Cluster 17 does not contain any cells from batch 0; could be a quality issue or the cell type was not captured in batch 0?
+Check the batch composition of each of the clusters. 
 
 ```{r}
-dittoBarPlot(refquery,
+dittoBarPlot(seu,
              var = "Batch", 
              group.by = grp)
 ```
 
-Check the sample compositions of combined clusters.
+Check the sample compositions of clusters.
 
 ```{r, fig.asp=1}
-dittoBarPlot(refquery,
+dittoBarPlot(seu,
              var = "sample.id", 
              group.by = grp) + ggtitle("Samples") +
   theme(legend.position = "bottom")
@@ -531,9 +325,9 @@ Adapted from Dr. Belinda Phipson's [work](https://bphipson.github.io/Human_Devel
 
 ```{r}
 # limma-trend for DE
-Idents(refquery) <- grp
+Idents(seu) <- grp
 
-logcounts <- normCounts(DGEList(as.matrix(refquery[["RNA"]]@counts)),
+logcounts <- normCounts(DGEList(as.matrix(seu[["RNA"]]@counts)),
                         log = TRUE, prior.count = 0.5)
 entrez <- AnnotationDbi::mapIds(org.Hs.eg.db,
                                 keys = rownames(logcounts),
@@ -545,12 +339,11 @@ logcounts <- logcounts[!is.na(entrez),]
 # remove confounding genes from counts table e.g. mitochondrial, ribosomal etc.
 logcounts <- logcounts[!str_detect(rownames(logcounts), var_regex),]
 
-maxclust <- length(levels(Idents(refquery))) - 1
+maxclust <- length(levels(Idents(seu))) - 1
 
-clustgrp <- paste0("c", Idents(refquery))
+clustgrp <- paste0("c", Idents(seu))
 clustgrp <- factor(clustgrp, levels = paste0("c", 0:maxclust))
 donor <- factor(seu$sample.id)
-batch <- factor(seu$Batch)
 
 design <- model.matrix(~ 0 + clustgrp + donor)
 colnames(design)[1:(length(levels(clustgrp)))] <- levels(clustgrp)
@@ -580,7 +373,7 @@ summary(decideTests(fit.cont))
 Test relative to a threshold (TREAT).
 
 ```{r}
-tr <- treat(fit.cont, lfc = 0.25)
+tr <- treat(fit.cont, lfc = 0.5)
 dt <- decideTests(tr)
 summary(dt)
 ```
@@ -601,7 +394,7 @@ for(i in 1:ncol(mycont)){
 ## `limma` marker gene dotplot
 
 ```{r, fig.asp=2.25}
-DefaultAssay(refquery) <- "RNA"
+DefaultAssay(seu) <- "RNA"
 contnames <- colnames(mycont)
 top_markers <- NULL
 n_markers <- 10
@@ -618,7 +411,7 @@ top_markers <- top_markers[!is.na(top_markers)]
 top_markers <- top_markers[!duplicated(top_markers)]
 cols <- paletteer::paletteer_d("pals::glasbey")[factor(names(top_markers))]
 
-DotPlot(refquery,    
+DotPlot(seu,    
         features = unname(top_markers),
         group.by = grp,
         cols = c("azure1", "blueviolet"),
@@ -700,12 +493,22 @@ read_csv(file = here("data",
                      "C133_Neeland_batch1",
                      "data",
                      "sample_sheets",
-                     "ADT_features.csv")) %>%
+                     "ADT_features.csv")) -> adt_data
+
+pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human "
+adt_data$name <- gsub(pattern, "", adt_data$name)
+# change ADT rownames to antibody names
+DefaultAssay(seu) <- "ADT"
+if(all(rownames(seu[["ADT"]]@counts) == adt_data$id)){
+  adt <- seu[["ADT"]]@counts
+  rownames(adt) <- adt_data$name
+}
+
+adt_data %>%
   dplyr::filter(grepl("[Ii]sotype", name)) %>%
   pull(name) -> isotype_controls
-
+  
 # normalise ADT using DSB normalisation
-adt <- seuADT[["ADT"]]@counts
 adt_dsb <- ModelNegativeADTnorm(cell_protein_matrix = adt,
                                 denoise.counts = TRUE,
                                 use.isotype.control = TRUE,
@@ -716,16 +519,16 @@ Running the `limma` analysis on the normalised counts.
 
 ```{r}
 # limma-trend for DE
-Idents(seuADT) <- grp
+Idents(seu) <- grp
 
 logcounts <- adt_dsb
 # remove isotype controls from marker analysis
 logcounts <- logcounts[!rownames(logcounts) %in% isotype_controls,]
-maxclust <- length(levels(Idents(seuADT))) - 1
+maxclust <- length(levels(Idents(seu))) - 1
 
-clustgrp <- paste0("c", Idents(seuADT))
+clustgrp <- paste0("c", Idents(seu))
 clustgrp <- factor(clustgrp, levels = paste0("c", 0:maxclust))
-donor <- seuADT$sample.id
+donor <- seu$sample.id
 
 design <- model.matrix(~ 0 + clustgrp + donor)
 colnames(design)[1:(length(levels(clustgrp)))] <- levels(clustgrp)
@@ -769,11 +572,13 @@ top_markers <- NULL
 n_markers <- 5
 
 for (i in 1:length(contnames)){
-  top <- topTreat(tr, coef = i, n = Inf)
-  top <- top[top$logFC > 0,]
-  top_markers <- c(top_markers, 
-                   setNames(rownames(top)[1:n_markers], 
-                            rep(contnames[i], n_markers)))
+  top <- topTreat(tr, coef = i, n = Inf, p.value = 0.05)
+  if(nrow(top) > 0){
+    top <- top[top$logFC > 0,]
+    top_markers <- c(top_markers, 
+                     setNames(rownames(top)[1:min(n_markers, nrow(top))], 
+                              rep(contnames[i], min(n_markers, nrow(top)))))
+  }
 }
 
 top_markers <- top_markers[!is.na(top_markers)]
@@ -781,8 +586,8 @@ top_markers <- top_markers[!duplicated(top_markers)]
 cols <- paletteer::paletteer_d("pals::glasbey")[factor(names(top_markers))][!duplicated(top_markers)]
 
 # add DSB normalised data to Seurat assay for plotting
-seuADT[["ADT.dsb"]] <- CreateAssayObject(data = logcounts)
-DotPlot(seuADT, 
+seu[["ADT.dsb"]] <- CreateAssayObject(data = logcounts)
+DotPlot(seu, 
         group.by = grp,
         features = unname(top_markers), 
         cols = c("azure1", "blueviolet"),
@@ -802,9 +607,9 @@ DotPlot(seuADT,
 Make data frame of proteins, clusters, expression levels.
 
 ```{r}
-cbind(seuADT@meta.data %>%
+cbind(seu@meta.data %>%
         dplyr::select(!!sym(grp)),
-      as.data.frame(t(seuADT@assays$ADT.dsb@data))) %>%
+      as.data.frame(t(seu@assays$ADT.dsb@data))) %>%
   rownames_to_column(var = "cell") %>%
   pivot_longer(c(-!!sym(grp), -cell), 
                names_to = "ADT",
@@ -835,7 +640,7 @@ dat %>%
     row_names_gp = grid::gpar(fontsize = 8, col = cols[order(top_markers)]),
     row_title_gp = grid::gpar(fontsize = 12),
     column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(-0.5, 2.5, length.out = 256),
+    palette_value = circlize::colorRamp2(seq(0, 3, length.out = 256),
                                          viridis::magma(256)),
     heatmap_legend_param = list(direction = "vertical"))
 ```
