@@ -75,7 +75,7 @@ Follow the links below to view the different parts of the analysis.
 
 
 9. Integrate and cluster macrophage cells
-    <!-- a)    - [Without ambient removal](09.0_integrate_cluster_macro_cells.html) -->
+    a)    - [Without ambient removal](09.0_integrate_cluster_macro_cells.html)
     b)    - [With ambient removal](09.1_integrate_cluster_macro_cells_decontx.html)  
 
 
