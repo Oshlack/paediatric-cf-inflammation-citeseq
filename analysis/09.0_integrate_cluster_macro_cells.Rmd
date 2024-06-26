@@ -214,7 +214,7 @@ DimHeatmap(seu, dims = 1:30, cells = 500, balanced = TRUE,
 ElbowPlot(seu, ndims = 30, reduction = "pca")
 ```
 
-## Run WNN clustering
+## Run clustering
 
 Perform clustering at a range of resolutions and visualise to see which is appropriate to proceed with.
 
@@ -316,6 +316,23 @@ dittoBarPlot(seu,
   theme(legend.position = "bottom")
 ```
 
+Check the Azimuth labels compositions of clusters.
+
+```{r, fig.width=9}
+dittoBarPlot(seu,
+             var = "predicted.ann_finest_level", 
+             group.by = grp) + ggtitle("Samples") +
+  theme(legend.position = "bottom")
+```
+
+Cluster composition by disease group.
+
+```{r, fig.width=9}
+dittoBarPlot(seu,
+             var = "Disease", 
+             group.by = grp) + ggtitle("Samples") +
+  theme(legend.position = "bottom")
+```
 
 # RNA marker gene analysis
 

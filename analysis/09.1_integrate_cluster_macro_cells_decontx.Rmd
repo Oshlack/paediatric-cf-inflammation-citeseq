@@ -42,7 +42,7 @@ suppressPackageStartupMessages({
 
 # Load data
 
-Load T-cell subset Seurat object.
+Load *macrophage* subset Seurat object.
 
 ```{r}
 ambient <- "_decontx"
