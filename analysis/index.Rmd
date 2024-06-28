@@ -82,7 +82,8 @@ Follow the links below to view the different parts of the analysis.
 
 
 10. Macrophage annotations
-    a)    - [Annotated macrophages](10.0_manual_annotations_macro_cells_decontx.html)  
+    a)    - [Without ambient removal](10.0_manual_annotations_macro_cells.html) 
+    b)    - [With ambient removal](10.1_manual_annotations_macro_cells_decontx.html)  
     
     
     
