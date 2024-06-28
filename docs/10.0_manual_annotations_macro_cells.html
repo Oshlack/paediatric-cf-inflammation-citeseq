@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jovana Maksimovic" />
+
+<meta name="date" content="2024-06-28" />
+
+<title>Annotate Macrophage clusters</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">paed-inflammation-CITEseq</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Annotate Macrophage clusters</h1>
+<h4 class="author">Jovana Maksimovic</h4>
+<h4 class="date">June 28, 2024</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-06-28
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>paed-inflammation-CITEseq/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240216code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240216)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240216code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240216)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreeff9858053f0740e8152b80b178070ce11791c008targetblankff98580a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/ff9858053f0740e8152b80b178070ce11791c008" target="_blank">ff98580</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreeff9858053f0740e8152b80b178070ce11791c008targetblankff98580a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/ff9858053f0740e8152b80b178070ce11791c008" target="_blank">ff98580</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
+    Ignored:    data/C133_Neeland_batch1/
+    Ignored:    data/C133_Neeland_merged/
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
+
+Unstaged changes:
+    Modified:   analysis/09.0_integrate_cluster_macro_cells.Rmd
+    Modified:   data/cluster_annotations/seurat_markers_macrophages.rds
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/10.0_manual_annotations_macro_cells.Rmd</code>) and HTML
+(<code>docs/10.0_manual_annotations_macro_cells.html</code>) files. If
+you’ve configured a remote Git repository (see
+<code>?wflow_git_remote</code>), click on the hyperlinks in the table
+below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/ff9858053f0740e8152b80b178070ce11791c008/analysis/10.0_manual_annotations_macro_cells.Rmd" target="_blank">ff98580</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-06-28
+</td>
+<td>
+wflow_publish("analysis/10.0_manual_annotations_macro_cells.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/a4db7cfb6e85d1e9347c4e7eac3a2de954f5311e/analysis/10.0_manual_annotations_macro_cells.Rmd" target="_blank">a4db7cf</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-06-26
+</td>
+<td>
+Update code for adding manual annotations to macrophages without ambient
+correction
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-libraries" class="section level1">
+<h1>Load libraries</h1>
+</div>
+<div id="load-data" class="section level1">
+<h1>Load Data</h1>
+<pre class="r"><code>ambient &lt;- &quot;&quot;
+out &lt;- here(&quot;data&quot;,
+            &quot;C133_Neeland_merged&quot;,
+            glue(&quot;C133_Neeland_full_clean{ambient}_integrated_clustered_macrophages.SEU.rds&quot;))
+seuInt &lt;- readRDS(file = out)
+
+seuInt</code></pre>
+<pre><code>An object of class Seurat 
+46108 features across 165553 samples within 5 assays 
+Active assay: integrated (3000 features, 2870 variable features)
+ 4 other assays present: RNA, ADT, ADT.dsb, SCT
+ 2 dimensional reductions calculated: pca, umap</code></pre>
+<div id="update-group-labels" class="section level2">
+<h2>Update group labels</h2>
+<pre class="r"><code>seuInt@meta.data %&gt;%
+  data.frame %&gt;%
+  mutate(Status = ifelse(str_detect(Treatment, &quot;ivacaftor&quot;),
+                         &quot;CF ivacaftor&quot;,
+                         ifelse(str_detect(Treatment, &quot;orkambi&quot;),
+                                &quot;CF lumacaftor-ivacaftor&quot;,
+                                ifelse(Treatment == &quot;untreated&quot;,
+                                       &quot;CF no-modulator&quot;,
+                                       &quot;non-CF control&quot;))),
+         Status_sub = ifelse(str_detect(Treatment, &quot;ivacaftor&quot;),
+                             &quot;CF.IVA&quot;,
+                             ifelse(str_detect(Treatment, &quot;orkambi&quot;),
+                                    &quot;CF.LUMA_IVA&quot;,
+                                    ifelse(Treatment == &quot;untreated&quot;,
+                                           &quot;CF.NO_MOD&quot;,
+                                           &quot;NON_CF.CTRL&quot;))),
+         Group = ifelse(!Status_sub %in% &quot;NON_CF.CTRL&quot;, 
+                        paste(Status_sub, 
+                              toupper(substr(Severity, 1, 1)),
+                              sep = &quot;.&quot;), 
+                        Status_sub),
+         Severity = tolower(Severity),
+         Participant = strsplit2(sample.id, &quot;.&quot;, fixed = TRUE)[,1]) -&gt; seuInt@meta.data</code></pre>
+</div>
+</div>
+<div id="sub-cluster-labelling" class="section level1">
+<h1>Sub-cluster labelling</h1>
+<div id="load-manual-annotations" class="section level2">
+<h2>Load manual annotations</h2>
+<pre class="r"><code>labels &lt;- read_excel(here(&quot;data&quot;,
+                          &quot;cluster_annotations&quot;,
+                          &quot;macrophages_26.06.24.xlsx&quot;))
+
+# set selected cluster resolution
+grp &lt;- &quot;integrated_snn_res.0.6&quot;
+seuInt@meta.data %&gt;%
+  rownames_to_column(var = &quot;cell&quot;) %&gt;%
+  left_join(labels %&gt;%
+              mutate(Cluster = as.factor(Cluster),
+                     Annotation = as.factor(Annotation),
+                     Broad = as.factor(Broad)),
+            by = c(&quot;integrated_snn_res.0.6&quot; = &quot;Cluster&quot;)) %&gt;%
+  column_to_rownames(var = &quot;cell&quot;) -&gt; seuInt@meta.data
+
+seuInt &lt;- subset(seuInt, cells = which(seuInt$Annotation != &quot;unknown&quot;))
+seuInt$Annotation &lt;- fct_drop(seuInt$Annotation)
+seuInt$Broad &lt;- fct_drop(seuInt$Broad)
+seuInt</code></pre>
+<pre><code>An object of class Seurat 
+46108 features across 165209 samples within 5 assays 
+Active assay: integrated (3000 features, 2870 variable features)
+ 4 other assays present: RNA, ADT, ADT.dsb, SCT
+ 2 dimensional reductions calculated: pca, umap</code></pre>
+<p>Update PCA and UMAP after removing “unknown” cell clusters.</p>
+<pre class="r"><code># redo PCA and UMAP 
+seuInt &lt;- RunPCA(seuInt, dims = 1:30, verbose = FALSE) %&gt;%
+  RunUMAP(dims = 1:30, verbose = FALSE)</code></pre>
+</div>
+<div id="visualise-annotations" class="section level2">
+<h2>Visualise annotations</h2>
+<pre class="r"><code>options(ggrepel.max.overlaps = Inf)
+DimPlot(seuInt, reduction = &#39;umap&#39;, label = TRUE, repel = TRUE, 
+        label.size = 3, group.by = &quot;integrated_snn_res.0.6&quot;) + 
+  NoLegend() -&gt; p1
+
+cluster_pal &lt;- &quot;ggsci::category20_d3&quot;
+DimPlot(seuInt, reduction = &#39;umap&#39;, label = FALSE, group.by = &quot;Annotation&quot;) + 
+  scale_color_paletteer_d(cluster_pal) +
+  theme(text = element_text(size = 9),
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  NoLegend() -&gt; p2
+
+p1</code></pre>
+<p><img src="figure/10.0_manual_annotations_macro_cells.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>LabelClusters(p2, id = &quot;Annotation&quot;, repel = TRUE, 
+              size = 2.5, box = TRUE, fontfamily = &quot;arial&quot;)</code></pre>
+<p><img src="figure/10.0_manual_annotations_macro_cells.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="no.-cells-per-cluster" class="section level3">
+<h3>No. cells per cluster</h3>
+<pre class="r"><code>seuInt@meta.data %&gt;%
+  ggplot(aes(x = Annotation, fill = Annotation)) +
+  geom_bar() +
+  geom_text(aes(label = after_stat(count)), stat = &quot;count&quot;,
+            vjust = -0.5, colour = &quot;black&quot;, size = 2) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  NoLegend() +
+  scale_fill_paletteer_d(cluster_pal)</code></pre>
+<p><img src="figure/10.0_manual_annotations_macro_cells.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="no.-cells-per-cluster-by-disease" class="section level3">
+<h3>No. cells per cluster by disease</h3>
+<pre class="r"><code>seuInt@meta.data %&gt;%
+  ggplot(aes(x = Annotation, fill = Status_sub)) +
+  geom_bar(position = &quot;dodge&quot;) +
+  geom_text(aes(label = ..count..), stat = &quot;count&quot;,
+            vjust = -0.5, colour = &quot;black&quot;, size = 2, 
+            position=position_dodge(width=0.9)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+        legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="figure/10.0_manual_annotations_macro_cells.Rmd/unnamed-chunk-9-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>seuInt@meta.data %&gt;% 
+  count(Annotation) %&gt;% 
+  mutate(perc = round(n/sum(n)*100, 1)) %&gt;%
+  dplyr::rename(`Cell Label` = &quot;Annotation&quot;, 
+                `No. Cells` = n,
+                `% Cells` = perc) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Cell Label</th>
+<th align="right">No. Cells</th>
+<th align="right">% Cells</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">macro-alveolar</td>
+<td align="right">52563</td>
+<td align="right">31.8</td>
+</tr>
+<tr class="even">
+<td align="left">macro-APOC2+</td>
+<td align="right">13354</td>
+<td align="right">8.1</td>
+</tr>
+<tr class="odd">
+<td align="left">macro-CCL</td>
+<td align="right">10504</td>
+<td align="right">6.4</td>
+</tr>
+<tr class="even">
+<td align="left">macro-CCL18</td>
+<td align="right">10742</td>
+<td align="right">6.5</td>
+</tr>
+<tr class="odd">
+<td align="left">macro-IFI27</td>
+<td align="right">18231</td>
+<td align="right">11.0</td>
+</tr>
+<tr class="even">
+<td align="left">macro-IFI27+APOC2+</td>
+<td align="right">4390</td>
+<td align="right">2.7</td>
+</tr>
+<tr class="odd">
+<td align="left">macro-IFI27+CCL18+</td>
+<td align="right">2243</td>
+<td align="right">1.4</td>
+</tr>
+<tr class="even">
+<td align="left">macro-IFN</td>
+<td align="right">2048</td>
+<td align="right">1.2</td>
+</tr>
+<tr class="odd">
+<td align="left">macro-IGF1</td>
+<td align="right">8229</td>
+<td align="right">5.0</td>
+</tr>
+<tr class="even">
+<td align="left">macro-interstitial</td>
+<td align="right">3412</td>
+<td align="right">2.1</td>
+</tr>
+<tr class="odd">
+<td align="left">macro-lipid</td>
+<td align="right">10053</td>
+<td align="right">6.1</td>
+</tr>
+<tr class="even">
+<td align="left">macro-lipid-APOC2+</td>
+<td align="right">2399</td>
+<td align="right">1.5</td>
+</tr>
+<tr class="odd">
+<td align="left">macro-monocyte-derived</td>
+<td align="right">13461</td>
+<td align="right">8.1</td>
+</tr>
+<tr class="even">
+<td align="left">macro-MT</td>
+<td align="right">4037</td>
+<td align="right">2.4</td>
+</tr>
+<tr class="odd">
+<td align="left">macro-proliferating-G2M</td>
+<td align="right">2522</td>
+<td align="right">1.5</td>
+</tr>
+<tr class="even">
+<td align="left">macro-proliferating-S</td>
+<td align="right">4299</td>
+<td align="right">2.6</td>
+</tr>
+<tr class="odd">
+<td align="left">macro-T</td>
+<td align="right">2722</td>
+<td align="right">1.6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="rna-marker-gene-analysis" class="section level1">
+<h1>RNA marker gene analysis</h1>
+<p>Adapted from Dr. Belinda Phipson’s <a
+href="https://bphipson.github.io/Human_Development_snRNAseq/14-MarkerAnalysisBCT.html">work</a>
+for <span class="citation">[@Sim2021-cg]</span>.</p>
+<div id="test-for-marker-genes-using-limma" class="section level2">
+<h2>Test for marker genes using <code>limma</code></h2>
+<pre class="r"><code># limma-trend for DE
+Idents(seuInt) &lt;- &quot;Annotation&quot;
+
+out &lt;- here(&quot;data&quot;,
+            &quot;C133_Neeland_merged&quot;,
+            glue(&quot;C133_Neeland_full_clean{ambient}_macrophages_logcounts.SEU.rds&quot;))
+
+if(!file.exists(out)){
+  logcounts &lt;- normCounts(DGEList(as.matrix(seuInt[[&quot;RNA&quot;]]@counts)),
+                          log = TRUE, prior.count = 0.5)
+  entrez &lt;- AnnotationDbi::mapIds(org.Hs.eg.db,
+                                  keys = rownames(logcounts),
+                                  column = c(&quot;ENTREZID&quot;),
+                                  keytype = &quot;SYMBOL&quot;,
+                                  multiVals = &quot;first&quot;)
+  # remove genes without entrez IDs as these are difficult to interpret biologically
+  logcounts &lt;- logcounts[!is.na(entrez),]
+  saveRDS(logcounts, file = out)
+  
+} else {
+  logcounts &lt;- readRDS(out)  
+}
+
+maxclust &lt;- length(levels(Idents(seuInt))) - 1
+
+clustgrp &lt;- seuInt$Annotation
+clustgrp &lt;- factor(clustgrp)
+donor &lt;- factor(seuInt$sample.id)
+batch &lt;- factor(seuInt$Batch)
+
+design &lt;- model.matrix(~ 0 + clustgrp + donor)
+colnames(design)[1:(length(levels(clustgrp)))] &lt;- levels(clustgrp)
+
+# Create contrast matrix
+mycont &lt;- matrix(NA, ncol = length(levels(clustgrp)),
+                 nrow = length(levels(clustgrp)))
+rownames(mycont) &lt;- colnames(mycont) &lt;- levels(clustgrp)
+diag(mycont) &lt;- 1
+mycont[upper.tri(mycont)] &lt;- -1/(length(levels(factor(clustgrp))) - 1)
+mycont[lower.tri(mycont)] &lt;- -1/(length(levels(factor(clustgrp))) - 1)
+
+# Fill out remaining rows with 0s
+zero.rows &lt;- matrix(0, ncol = length(levels(clustgrp)),
+                    nrow = (ncol(design) - length(levels(clustgrp))))
+fullcont &lt;- rbind(mycont, zero.rows)
+rownames(fullcont) &lt;- colnames(design)
+
+fit &lt;- lmFit(logcounts, design)
+
+fit.cont &lt;- contrasts.fit(fit, contrasts = fullcont)
+fit.cont &lt;- eBayes(fit.cont, trend = TRUE, robust = TRUE)
+
+summary(decideTests(fit.cont))</code></pre>
+<pre><code>       macro-alveolar macro-APOC2+ macro-CCL macro-CCL18 macro-IFI27
+Down             4703         3679      4468        3261        3557
+NotSig           7506         9466     10314       11349        8891
+Up               4246         3310      1673        1845        4007
+       macro-IFI27+APOC2+ macro-IFI27+CCL18+ macro-IFN macro-IGF1
+Down                 2556               1614      1598       3086
+NotSig              11569              13488     13024       9773
+Up                   2330               1353      1833       3596
+       macro-interstitial macro-lipid macro-lipid-APOC2+ macro-monocyte-derived
+Down                 8013        7126               3911                   7999
+NotSig               5657        7365              11347                   5833
+Up                   2785        1964               1197                   2623
+       macro-MT macro-proliferating-G2M macro-proliferating-S macro-T
+Down       2505                    3464                  2193    1055
+NotSig    12091                    9138                  7260   11024
+Up         1859                    3853                  7002    4376</code></pre>
+<p>Test relative to a threshold (TREAT).</p>
+<pre class="r"><code>tr &lt;- treat(fit.cont, lfc = 0.5)
+dt &lt;- decideTests(tr)
+summary(dt)</code></pre>
+<pre><code>       macro-alveolar macro-APOC2+ macro-CCL macro-CCL18 macro-IFI27
+Down                6            3         1           2           4
+NotSig          16443        16442     16420       16444       16443
+Up                  6           10        34           9           8
+       macro-IFI27+APOC2+ macro-IFI27+CCL18+ macro-IFN macro-IGF1
+Down                    1                  1         2          9
+NotSig              16443              16442     16383      16430
+Up                     11                 12        70         16
+       macro-interstitial macro-lipid macro-lipid-APOC2+ macro-monocyte-derived
+Down                  344          35                 19                     99
+NotSig              15962       16403              16416                  16325
+Up                    149          17                 20                     31
+       macro-MT macro-proliferating-G2M macro-proliferating-S macro-T
+Down          0                      63                    12       0
+NotSig    16444                   16314                 16163   16435
+Up           11                      78                   280      20</code></pre>
+<p>Mean-difference (MD) plots per cluster.</p>
+<pre class="r"><code>par(mfrow=c(4,3))
+par(mar=c(2,3,1,2))
+
+for(i in 1:ncol(mycont)){
+  plotMD(tr, coef = i, status = dt[,i], hl.cex = 0.5)
+  abline(h = 0, col = &quot;lightgrey&quot;)
+  lines(lowess(tr$Amean, tr$coefficients[,i]), lwd = 1.5, col = 4)
+}</code></pre>
+<p><img src="figure/10.0_manual_annotations_macro_cells.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/10.0_manual_annotations_macro_cells.Rmd/unnamed-chunk-13-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="limma-marker-gene-dotplot" class="section level2">
+<h2><code>limma</code> marker gene dotplot</h2>
+<pre class="r"><code>DefaultAssay(seuInt) &lt;- &quot;RNA&quot;
+contnames &lt;- colnames(mycont)
+top_markers &lt;- NULL
+n_markers &lt;- 5
+
+for(i in 1:ncol(mycont)){
+  top &lt;- topTreat(tr, coef = i, n = Inf)
+  top &lt;- top[top$logFC &gt; 0, ]
+  top_markers &lt;- c(top_markers, 
+                   setNames(rownames(top)[1:n_markers], 
+                            rep(contnames[i], n_markers)))
+}
+
+top_markers &lt;- top_markers[!is.na(top_markers)]
+d &lt;- duplicated(top_markers)
+top_markers &lt;- top_markers[!d]
+geneCols &lt;- paletteer_d(cluster_pal)[factor(names(top_markers))]
+
+strip &lt;- strip_themed(background_x = elem_list_rect(fill = unique(geneCols)))
+DotPlot(seuInt,
+        features = unname(top_markers),
+        group.by = &quot;Annotation&quot;,
+        cols = c(&quot;azure1&quot;, &quot;blueviolet&quot;),
+        dot.scale = 2.5,
+        assay = &quot;SCT&quot;) +
+  FontSize(x.text = 9, y.text = 9) +
+  labs(y = element_blank(), x = element_blank()) +
+  facet_grid2(~names(top_markers), 
+              scales = &quot;free_x&quot;, 
+              space = &quot;free_x&quot;, 
+              strip = strip) +
+  theme(axis.text.x = element_text(angle = 90,
+                                   hjust = 1,
+                                   vjust = 0.5),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 9),
+        strip.text = element_text(size = 0),
+        text = element_text(family = &quot;arial&quot;),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.spacing = unit(2, &quot;mm&quot;)) </code></pre>
+<p><img src="figure/10.0_manual_annotations_macro_cells.Rmd/unnamed-chunk-14-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="test-for-marker-genes-using-seurat" class="section level2">
+<h2>Test for marker genes using <code>Seurat</code></h2>
+<pre class="r"><code>DefaultAssay(seuInt) &lt;- &quot;RNA&quot;
+Idents(seuInt) &lt;- &quot;Annotation&quot;
+
+out &lt;- here(&quot;data/cluster_annotations/seurat_markers_macrophages.rds&quot;)
+
+if(!file.exists(out)){
+  # restrict genes to same set as for limma analysis
+  markers &lt;- FindAllMarkers(seuInt, only.pos = TRUE, 
+                            features = rownames(logcounts))
+  saveRDS(markers, file = out)
+  
+} else {
+  markers &lt;- readRDS(out)
+  
+}
+
+head(markers) %&gt;% knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="10%" />
+<col width="8%" />
+<col width="16%" />
+<col width="8%" />
+<col width="8%" />
+<col width="14%" />
+<col width="22%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">p_val</th>
+<th align="right">avg_log2FC</th>
+<th align="right">pct.1</th>
+<th align="right">pct.2</th>
+<th align="right">p_val_adj</th>
+<th align="left">cluster</th>
+<th align="left">gene</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">MRC1</td>
+<td align="right">0</td>
+<td align="right">0.3125516</td>
+<td align="right">0.978</td>
+<td align="right">0.912</td>
+<td align="right">0</td>
+<td align="left">macro-alveolar</td>
+<td align="left">MRC1</td>
+</tr>
+<tr class="even">
+<td align="left">MCEMP1</td>
+<td align="right">0</td>
+<td align="right">0.3110134</td>
+<td align="right">0.979</td>
+<td align="right">0.893</td>
+<td align="right">0</td>
+<td align="left">macro-alveolar</td>
+<td align="left">MCEMP1</td>
+</tr>
+<tr class="odd">
+<td align="left">INHBA</td>
+<td align="right">0</td>
+<td align="right">0.3052532</td>
+<td align="right">0.860</td>
+<td align="right">0.656</td>
+<td align="right">0</td>
+<td align="left">macro-alveolar</td>
+<td align="left">INHBA</td>
+</tr>
+<tr class="even">
+<td align="left">STXBP2</td>
+<td align="right">0</td>
+<td align="right">0.2735462</td>
+<td align="right">0.895</td>
+<td align="right">0.831</td>
+<td align="right">0</td>
+<td align="left">macro-alveolar</td>
+<td align="left">STXBP2</td>
+</tr>
+<tr class="odd">
+<td align="left">FBP1</td>
+<td align="right">0</td>
+<td align="right">0.2725335</td>
+<td align="right">0.978</td>
+<td align="right">0.943</td>
+<td align="right">0</td>
+<td align="left">macro-alveolar</td>
+<td align="left">FBP1</td>
+</tr>
+<tr class="even">
+<td align="left">GPD1</td>
+<td align="right">0</td>
+<td align="right">0.2562846</td>
+<td align="right">0.572</td>
+<td align="right">0.425</td>
+<td align="right">0</td>
+<td align="left">macro-alveolar</td>
+<td align="left">GPD1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="seurat-marker-gene-dotplot" class="section level2">
+<h2><code>Seurat</code> marker gene dotplot</h2>
+<pre class="r"><code>DefaultAssay(seuInt) &lt;- &quot;RNA&quot;
+
+maxGenes &lt;- 5
+markers %&gt;%
+  group_by(cluster) %&gt;%
+  top_n(n = maxGenes, wt = avg_log2FC) -&gt; top5
+
+sig &lt;- top5$gene
+d &lt;- duplicated(sig)
+geneCols &lt;- paletteer_d(cluster_pal)[top5$cluster][!d]
+
+strip &lt;- strip_themed(background_x = elem_list_rect(fill = unique(geneCols)))
+DotPlot(seuInt,
+        features = sig[!d],
+        group.by = &quot;Annotation&quot;,
+        cols = c(&quot;azure1&quot;, &quot;blueviolet&quot;),
+        dot.scale = 2.5,
+        assay = &quot;SCT&quot;) +
+  FontSize(x.text = 9, y.text = 9) +
+  labs(y = element_blank(), x = element_blank()) +
+  facet_grid2(~top5$cluster[!d], 
+              scales = &quot;free_x&quot;, 
+              space = &quot;free_x&quot;, 
+              strip = strip) +
+  theme(axis.text.x = element_text(angle = 90,
+                                   hjust = 1,
+                                   vjust = 0.5),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 9),
+        strip.text = element_text(size = 0),
+        text = element_text(family = &quot;arial&quot;),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.spacing = unit(2, &quot;mm&quot;)) </code></pre>
+<p><img src="figure/10.0_manual_annotations_macro_cells.Rmd/unnamed-chunk-16-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>FeaturePlot(seuInt, reduction = &#39;umap&#39;, label = TRUE, 
+            feature = &quot;APOC2&quot;,
+            label.size = 2.5,
+            repel = TRUE,
+            max.cutoff = 150) -&gt; p1
+
+FeaturePlot(seuInt, reduction = &#39;umap&#39;, label = TRUE, 
+            feature = &quot;IFI27&quot;,
+            label.size = 2.5,
+            repel = TRUE,
+            max.cutoff = 150) -&gt; p2
+
+(p1 / p2) + 
+  theme(legend.text = element_text(size = 9),
+        axis.text = element_blank(),
+        axis.ticks = element_blank())</code></pre>
+<p><img src="figure/10.0_manual_annotations_macro_cells.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="visualise-adts" class="section level2">
+<h2>Visualise ADTs</h2>
+<p>Make data frame of proteins, clusters, expression levels.</p>
+<pre class="r"><code>out &lt;- here(&quot;data&quot;,
+            &quot;C133_Neeland_merged&quot;,
+            glue(&quot;C133_Neeland_full_clean{ambient}_macrophages_adt_dsb.SEU.rds&quot;))
+
+if(!file.exists(out)){
+  read_csv(file = here(&quot;data&quot;,
+                       &quot;C133_Neeland_batch1&quot;,
+                       &quot;data&quot;,
+                       &quot;sample_sheets&quot;,
+                       &quot;ADT_features.csv&quot;)) -&gt; adt_data
+  
+  pattern &lt;- &quot;anti-human/mouse |anti-human/mouse/rat |anti-mouse/human &quot;
+  adt_data$name &lt;- gsub(pattern, &quot;&quot;, adt_data$name)
+  adt &lt;- seuInt[[&quot;ADT&quot;]]@counts
+  if(all(rownames(seuInt[[&quot;ADT&quot;]]@counts) == adt_data$id)) rownames(adt) &lt;- adt_data$name
+  adt_data %&gt;%
+  dplyr::filter(grepl(&quot;[Ii]sotype&quot;, name)) %&gt;%
+  pull(name) -&gt; isotype_controls
+  
+  # normalise ADT using DSB normalisation
+  adt_dsb &lt;- ModelNegativeADTnorm(cell_protein_matrix = adt,
+                                  denoise.counts = TRUE,
+                                  use.isotype.control = TRUE,
+                                  isotype.control.name.vec = isotype_controls)
+  saveRDS(adt_dsb, file = out)
+  
+} else {
+  adt_dsb &lt;- readRDS(out)
+  
+}
+
+seuInt[[&quot;ADT.dsb&quot;]] &lt;- NULL
+m &lt;- match(colnames(seuInt), colnames(adt_dsb)) # remove cells not present in Seurat obj
+seuInt[[&quot;ADT.dsb&quot;]] &lt;- CreateAssayObject(data = adt_dsb[,m])
+
+# cbind(seuInt@meta.data %&gt;%
+#         dplyr::select(Annotation),
+#       as.data.frame(t(seuInt@assays$ADT.dsb@data))) %&gt;%
+#   rownames_to_column(var = &quot;cell&quot;) %&gt;%
+#   pivot_longer(c(-Annotation, -cell), 
+#                names_to = &quot;ADT&quot;,
+#                values_to = &quot;expression&quot;) %&gt;%
+#   dplyr::group_by(Annotation, ADT) %&gt;%
+#   dplyr::summarize(Expression = mean(expression)) %&gt;%
+#   ungroup() -&gt; dat
+# 
+# # plot expression density to select heatmap colour scale range
+# plot(density(dat$Expression))</code></pre>
+<!-- ```{r, fig.asp=2, fig.width=8} -->
+<!-- dat %>% -->
+<!--   heatmap( -->
+<!--     .column = Annotation, -->
+<!--     .row = ADT, -->
+<!--     .value = Expression, -->
+<!--     scale = "none", -->
+<!--     rect_gp = grid::gpar(col = "white", lwd = 1), -->
+<!--     show_row_names = TRUE, -->
+<!--     cluster_columns = FALSE, -->
+<!--     cluster_rows = FALSE, -->
+<!--     column_names_gp = grid::gpar(fontsize = 10), -->
+<!--     column_title_gp = grid::gpar(fontsize = 12), -->
+<!--     row_names_gp = grid::gpar(fontsize = 8), -->
+<!--     row_title_gp = grid::gpar(fontsize = 12), -->
+<!--     column_title_side = "top", -->
+<!--     palette_value = circlize::colorRamp2(seq(-0.5, 2.5, length.out = 256), -->
+<!--                                          viridis::magma(256)), -->
+<!--     heatmap_legend_param = list(direction = "vertical")) -->
+<!-- ``` -->
+<pre class="r"><code>ADTs &lt;- str_replace_all(labels$`Relevant marker ADTs`, &quot;HLA&quot;, &quot;HLA-&quot;)
+ADTs &lt;- ADTs[!is.na(ADTs)]
+ADTs &lt;- as.vector(t(strsplit2(str_remove_all(ADTs, &quot; &quot;), &quot;,&quot;)))
+ADTs &lt;- unique(ADTs[ADTs != &quot;&quot;])
+
+# dat |&gt;
+#   dplyr::filter(rowSums(sapply(glue(&quot;\\b{ADTs}\\b\\s*(\\(.*\\))?\\b&quot;),
+#                                function(x) str_detect(ADT, x))) &gt; 0) |&gt;
+  
+DotPlot(seuInt,
+        features = ADTs,
+        group.by = &quot;Annotation&quot;,
+        cols = c(&quot;azure1&quot;, &quot;blueviolet&quot;),
+        dot.scale = 2.5,
+        assay = &quot;ADT.dsb&quot;) +
+  FontSize(x.text = 9, y.text = 9) +
+  labs(y = element_blank(), x = element_blank()) +
+  theme(axis.text.x = element_text(angle = 90,
+                                   hjust = 1,
+                                   vjust = 0.5),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 9),
+        strip.text = element_text(size = 0),
+        text = element_text(family = &quot;arial&quot;),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.spacing = unit(2, &quot;mm&quot;)) </code></pre>
+<p><img src="figure/10.0_manual_annotations_macro_cells.Rmd/unnamed-chunk-19-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="save-data" class="section level1">
+<h1>Save data</h1>
+<pre class="r"><code>out &lt;- here(&quot;data&quot;,
+            &quot;C133_Neeland_merged&quot;,
+            glue(&quot;C133_Neeland_full_clean{ambient}_macrophages_annotated_diet.SEU.rds&quot;))
+if(!file.exists(out)){
+  DefaultAssay(seuInt) &lt;- &quot;RNA&quot;
+  saveRDS(DietSeurat(seuInt, assays = &quot;RNA&quot;), out)
+}
+
+out &lt;- here(&quot;data&quot;,
+            &quot;C133_Neeland_merged&quot;,
+            glue(&quot;C133_Neeland_full_clean{ambient}_macrophages_annotated_full.SEU.rds&quot;))
+if(!file.exists(out)){
+  DefaultAssay(seuInt) &lt;- &quot;RNA&quot;
+  saveRDS(seuInt, out)
+}</code></pre>
+<!-- # Panel figures -->
+<!-- ```{r, fig.width=10, fig.asp=1.3} -->
+<!-- layout = "AAAABB -->
+<!--           AAAABB -->
+<!--           AAAABB -->
+<!--           CCCCCC -->
+<!--           CCCCCC -->
+<!--           DDDDDD -->
+<!--           DDDDDD -->
+<!--           DDDDDD" -->
+<!-- ((f2a + ggtitle("")) +  -->
+<!--    f2b +  -->
+<!--    f2c +  -->
+<!--    wrap_heatmap(f2d)) +  -->
+<!--   plot_layout(design = layout) + -->
+<!--   plot_annotation(tag_levels = "A") & -->
+<!--   theme(plot.tag = element_text(size = 14, face = "bold")) -->
+<!-- ``` -->
+</div>
+<div id="session-info" class="section level1 appendix">
+<h1 class="appendix">Session info</h1>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 22.04.1 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
+LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0
+
+locale:
+ [1] LC_CTYPE=en_AU.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_AU.UTF-8        LC_COLLATE=en_AU.UTF-8    
+ [5] LC_MONETARY=en_AU.UTF-8    LC_MESSAGES=en_AU.UTF-8   
+ [7] LC_PAPER=en_AU.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_AU.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: Etc/UTC
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices datasets  utils     methods  
+[8] base     
+
+other attached packages:
+ [1] ggh4x_0.2.8                 speckle_1.2.0              
+ [3] org.Hs.eg.db_3.18.0         AnnotationDbi_1.64.1       
+ [5] readxl_1.4.3                tidyHeatmap_1.8.1          
+ [7] paletteer_1.6.0             patchwork_1.2.0            
+ [9] glue_1.7.0                  here_1.0.1                 
+[11] dittoSeq_1.14.2             SeuratObject_4.1.4         
+[13] Seurat_4.4.0                lubridate_1.9.3            
+[15] forcats_1.0.0               stringr_1.5.1              
+[17] dplyr_1.1.4                 purrr_1.0.2                
+[19] readr_2.1.5                 tidyr_1.3.1                
+[21] tibble_3.2.1                ggplot2_3.5.0              
+[23] tidyverse_2.0.0             edgeR_4.0.15               
+[25] limma_3.58.1                SingleCellExperiment_1.24.0
+[27] SummarizedExperiment_1.32.0 Biobase_2.62.0             
+[29] GenomicRanges_1.54.1        GenomeInfoDb_1.38.6        
+[31] IRanges_2.36.0              S4Vectors_0.40.2           
+[33] BiocGenerics_0.48.1         MatrixGenerics_1.14.0      
+[35] matrixStats_1.2.0           workflowr_1.7.1            
+
+loaded via a namespace (and not attached):
+  [1] RcppAnnoy_0.0.22        splines_4.3.3           later_1.3.2            
+  [4] prismatic_1.1.1         bitops_1.0-7            cellranger_1.1.0       
+  [7] polyclip_1.10-6         lifecycle_1.0.4         doParallel_1.0.17      
+ [10] rprojroot_2.0.4         globals_0.16.2          processx_3.8.3         
+ [13] lattice_0.22-5          MASS_7.3-60.0.1         dendextend_1.17.1      
+ [16] magrittr_2.0.3          plotly_4.10.4           sass_0.4.8             
+ [19] rmarkdown_2.25          jquerylib_0.1.4         yaml_2.3.8             
+ [22] httpuv_1.6.14           sctransform_0.4.1       sp_2.1-3               
+ [25] spatstat.sparse_3.0-3   reticulate_1.35.0       DBI_1.2.1              
+ [28] cowplot_1.1.3           pbapply_1.7-2           RColorBrewer_1.1-3     
+ [31] abind_1.4-5             zlibbioc_1.48.0         Rtsne_0.17             
+ [34] RCurl_1.98-1.14         git2r_0.33.0            circlize_0.4.15        
+ [37] GenomeInfoDbData_1.2.11 ggrepel_0.9.5           irlba_2.3.5.1          
+ [40] listenv_0.9.1           spatstat.utils_3.0-4    pheatmap_1.0.12        
+ [43] goftest_1.2-3           spatstat.random_3.2-2   fitdistrplus_1.1-11    
+ [46] parallelly_1.37.0       leiden_0.4.3.1          codetools_0.2-19       
+ [49] DelayedArray_0.28.0     shape_1.4.6             tidyselect_1.2.0       
+ [52] farver_2.1.1            viridis_0.6.5           spatstat.explore_3.2-6 
+ [55] jsonlite_1.8.8          GetoptLong_1.0.5        ellipsis_0.3.2         
+ [58] progressr_0.14.0        iterators_1.0.14        ggridges_0.5.6         
+ [61] survival_3.5-8          foreach_1.5.2           tools_4.3.3            
+ [64] ica_1.0-3               Rcpp_1.0.12             gridExtra_2.3          
+ [67] SparseArray_1.2.4       xfun_0.42               withr_3.0.0            
+ [70] BiocManager_1.30.22     fastmap_1.1.1           fansi_1.0.6            
+ [73] callr_3.7.3             digest_0.6.34           timechange_0.3.0       
+ [76] R6_2.5.1                mime_0.12               colorspace_2.1-0       
+ [79] scattermore_1.2         tensor_1.5              RSQLite_2.3.5          
+ [82] spatstat.data_3.0-4     utf8_1.2.4              generics_0.1.3         
+ [85] renv_1.0.3              data.table_1.15.0       httr_1.4.7             
+ [88] htmlwidgets_1.6.4       S4Arrays_1.2.0          whisker_0.4.1          
+ [91] uwot_0.1.16             pkgconfig_2.0.3         gtable_0.3.4           
+ [94] blob_1.2.4              ComplexHeatmap_2.18.0   lmtest_0.9-40          
+ [97] XVector_0.42.0          htmltools_0.5.7         clue_0.3-65            
+[100] scales_1.3.0            png_0.1-8               knitr_1.45             
+[103] rstudioapi_0.15.0       rjson_0.2.21            tzdb_0.4.0             
+[106] reshape2_1.4.4          nlme_3.1-164            GlobalOptions_0.1.2    
+[109] cachem_1.0.8            zoo_1.8-12              KernSmooth_2.23-22     
+[112] parallel_4.3.3          miniUI_0.1.1.1          pillar_1.9.0           
+[115] grid_4.3.3              vctrs_0.6.5             RANN_2.6.1             
+[118] promises_1.2.1          xtable_1.8-4            cluster_2.1.6          
+[121] evaluate_0.23           cli_3.6.2               locfit_1.5-9.8         
+[124] compiler_4.3.3          rlang_1.1.3             crayon_1.5.2           
+[127] future.apply_1.11.1     labeling_0.4.3          rematch2_2.1.2         
+[130] ps_1.7.6                getPass_0.2-4           plyr_1.8.9             
+[133] fs_1.6.3                stringi_1.8.3           viridisLite_0.4.2      
+[136] deldir_2.0-2            Biostrings_2.70.2       munsell_0.5.0          
+[139] lazyeval_0.2.2          spatstat.geom_3.2-8     Matrix_1.6-5           
+[142] hms_1.1.3               bit64_4.0.5             future_1.33.1          
+[145] KEGGREST_1.42.0         statmod_1.5.0           shiny_1.8.0            
+[148] highr_0.10              ROCR_1.0-11             memoise_2.0.1          
+[151] igraph_2.0.1.1          bslib_0.6.1             bit_4.0.5              </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
