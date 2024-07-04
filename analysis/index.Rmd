@@ -85,6 +85,13 @@ Follow the links below to view the different parts of the analysis.
     a)    - [Without ambient removal](10.0_manual_annotations_macro_cells.html) 
     b)    - [With ambient removal](10.1_manual_annotations_macro_cells_decontx.html)  
     
+
+
+
+13. Differential expression analysis
+    a)    - [CF modifier and severity analysis](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html) 
+    b)    - [CF versus Non-CF control](13.1_DGE_analysis_macro-alveolar_cells_CF-vs-control-samples.html)  
+    
     
     
     
