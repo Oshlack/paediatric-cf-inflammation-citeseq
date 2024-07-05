@@ -89,7 +89,7 @@ Follow the links below to view the different parts of the analysis.
 
 
 11. T/NK cell annotations
-    a)    [With ambient removal](11.0_manual_annotations_macro_cells_decontx.html)  
+    a)    [With ambient removal](11.0_manual_annotations_t_cells_decontx.html)  
     
 
 

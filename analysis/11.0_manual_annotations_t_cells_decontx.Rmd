@@ -36,6 +36,8 @@ suppressPackageStartupMessages({
   library(AnnotationDbi)
   library(org.Hs.eg.db)
   library(speckle)
+  library(ggh4x)
+  library(dsb)
 })
 
 set.seed(42)
@@ -113,26 +115,20 @@ seuInt
 ```{r, fig.asp=0.8}
 options(ggrepel.max.overlaps = Inf)
 DimPlot(seuInt, reduction = 'umap', label = TRUE, repel = TRUE, 
-        label.size = 3, group.by = "wsnn_res.0.6") + 
+        label.size = 3, group.by = grp) + 
   NoLegend() -> p1
 
+cluster_pal <- "ggsci::category20_d3"
 DimPlot(seuInt, reduction = 'umap', label = FALSE, group.by = "Annotation") + 
-  scale_color_paletteer_d("miscpalettes::pastel") + 
+  scale_color_paletteer_d(cluster_pal) +
   theme(text = element_text(size = 9),
         axis.text = element_blank(),
         axis.ticks = element_blank()) +
   NoLegend() -> p2
 
-DimPlot(seuInt, reduction = 'umap', label = FALSE, group.by = "Broad") + 
-  NoLegend() +
-  scale_color_paletteer_d("miscpalettes::pastel") + 
-  theme(text = element_text(size = 9),
-        axis.text = element_blank(),
-        axis.ticks = element_blank()) -> p3
-
 p1
-LabelClusters(p2, id = "Annotation",  fontface = "bold", repel = TRUE, size = 3.5)
-LabelClusters(p3, id = "Broad",  fontface = "bold", repel = TRUE, size = 3.5)
+LabelClusters(p2, id = "Annotation", repel = TRUE, 
+              size = 2.5, box = TRUE, fontfamily = "arial")
 ```
 
 ### No. cells per cluster
@@ -143,28 +139,17 @@ seuInt@meta.data %>%
   geom_bar() +
   geom_text(aes(label = after_stat(count)), stat = "count",
             vjust = -0.5, colour = "black", size = 2) +
+  theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
   NoLegend() +
-  scale_fill_paletteer_d("miscpalettes::pastel")
+  scale_fill_paletteer_d(cluster_pal)
 ```
 
-### No. cells per cluster by disease
-
-```{r, fig.asp=0.8, fig.width=8}
-seuInt@meta.data %>%
-  ggplot(aes(x = Annotation, fill = Status_sub)) +
-  geom_bar(position = "dodge") +
-  geom_text(aes(label = ..count..), stat = "count",
-            vjust = -0.5, colour = "black", size = 2, 
-            position=position_dodge(width=0.9)) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
-        legend.position = "bottom")
-```
 
 
 ```{r}
 seuInt@meta.data %>% 
-  count(Annotation) %>% 
+  dplyr::count(Annotation) %>% 
   mutate(perc = round(n/sum(n)*100, 1)) %>%
   dplyr::rename(`Cell Label` = "Annotation", 
                 `No. Cells` = n,
@@ -182,19 +167,25 @@ Adapted from Dr. Belinda Phipson's [work](https://bphipson.github.io/Human_Devel
 # limma-trend for DE
 Idents(seuInt) <- "Annotation"
 
-logcounts <- normCounts(DGEList(as.matrix(seuInt[["RNA"]]@counts)),
-                        log = TRUE, prior.count = 0.5)
-entrez <- AnnotationDbi::mapIds(org.Hs.eg.db,
-                                keys = rownames(logcounts),
-                                column = c("ENTREZID"),
-                                keytype = "SYMBOL",
-                                multiVals = "first")
-# remove genes without entrez IDs as these are difficult to interpret biologically
-logcounts <- logcounts[!is.na(entrez),]
-# remove confounding genes from counts table e.g. mitochondrial, ribosomal etc.
-# remove HLA, immunoglobulin, RNA, MT, and RP genes from marker gene analysis
-var_regex = '^HLA-|^IG[HJKL]|^RNA|^MT-|^RP' 
-logcounts <- logcounts[!str_detect(rownames(logcounts), var_regex),]
+out <- here("data",
+            "C133_Neeland_merged",
+            glue("C133_Neeland_full_clean{ambient}_TNK_cells_logcounts.SEU.rds"))
+
+if(!file.exists(out)){
+  logcounts <- normCounts(DGEList(as.matrix(seuInt[["RNA"]]@counts)),
+                          log = TRUE, prior.count = 0.5)
+  entrez <- AnnotationDbi::mapIds(org.Hs.eg.db,
+                                  keys = rownames(logcounts),
+                                  column = c("ENTREZID"),
+                                  keytype = "SYMBOL",
+                                  multiVals = "first")
+  # remove genes without entrez IDs as these are difficult to interpret biologically
+  logcounts <- logcounts[!is.na(entrez),]
+  saveRDS(logcounts, file = out)
+  
+} else {
+  logcounts <- readRDS(out)  
+}
 
 maxclust <- length(levels(Idents(seuInt))) - 1
 
@@ -251,7 +242,7 @@ for(i in 1:ncol(mycont)){
 
 ## `limma` marker gene dotplot
 
-```{r, fig.width=9, fig.asp=0.4}
+```{r, fig.width=12, fig.asp=0.4}
 DefaultAssay(seuInt) <- "RNA"
 contnames <- colnames(mycont)
 top_markers <- NULL
@@ -266,197 +257,163 @@ for(i in 1:ncol(mycont)){
 }
 
 top_markers <- top_markers[!is.na(top_markers)]
-top_markers <- top_markers[!duplicated(top_markers)]
-cols <- paletteer_d("miscpalettes::pastel")[factor(names(top_markers))]
+d <- duplicated(top_markers)
+top_markers <- top_markers[!d]
+geneCols <- paletteer_d(cluster_pal)[factor(names(top_markers))]
 
-DotPlot(seuInt,    
+strip <- strip_themed(background_x = elem_list_rect(fill = unique(geneCols)))
+DotPlot(seuInt,
         features = unname(top_markers),
         group.by = "Annotation",
         cols = c("azure1", "blueviolet"),
-        dot.scale = 3, assay = "SCT") +
-    RotatedAxis() +
-    FontSize(x.text = 8, y.text = 8) +
-    labs(y = element_blank(), x = element_blank()) +
-    theme(axis.text.x = element_text(color = cols,
-                                   angle = 90,
+        dot.scale = 3,
+        assay = "SCT") +
+  FontSize(x.text = 9, y.text = 9) +
+  labs(y = element_blank(), x = element_blank()) +
+  facet_grid2(~names(top_markers), 
+              scales = "free_x", 
+              space = "free_x", 
+              strip = strip) +
+  theme(axis.text.x = element_text(angle = 90,
                                    hjust = 1,
-                                   vjust = 0.5,
-                                   face = "bold"),
+                                   vjust = 0.5),
         legend.text = element_text(size = 8),
-        legend.title = element_text(size = 10))
+        legend.title = element_text(size = 9),
+        strip.text = element_text(size = 0),
+        text = element_text(family = "arial"),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.spacing = unit(2, "mm")) 
 ```
 
-<!-- ## ADT Expression -->
-<!-- Setup ADT annotations -->
+## Test for marker genes using `Seurat`
 
-<!-- ```{r} -->
-<!-- prots_all <- read.csv(file = here("data", -->
-<!--                      "C133_Neeland_batch1", -->
-<!--                      "data", -->
-<!--                      "sample_sheets", -->
-<!--                      "ADT_features.csv"))  -->
+```{r}
+DefaultAssay(seuInt) <- "RNA"
+Idents(seuInt) <- "Annotation"
 
-<!-- head(prots_all) %>% knitr::kable() -->
-<!-- ``` -->
+out <- here("data/cluster_annotations/seurat_markers_TNK_cells.rds")
 
-<!-- Load the DSB normalised ADT data. -->
+if(!file.exists(out)){
+  # restrict genes to same set as for limma analysis
+  markers <- FindAllMarkers(seuInt, only.pos = TRUE, 
+                            features = rownames(logcounts))
+  saveRDS(markers, file = out)
+  
+} else {
+  markers <- readRDS(out)
+  
+}
 
-<!-- ```{r} -->
-<!-- norm.adt <- readRDS(file = here("data/RDS/C133_Neeland_T_cells.DSB.SEU.rds")) -->
-<!-- ``` -->
+head(markers) %>% knitr::kable()
+```
 
-<!-- Put marker names in to the counts. Otherwise we just get the BioLegend codes which aren't very informative. -->
+## `Seurat` marker gene dotplot
 
-<!-- ```{r} -->
-<!-- # Regular expression pattern to remove the substrings -->
-<!-- pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human " -->
+```{r, fig.width=13, fig.asp=0.4}
+DefaultAssay(seuInt) <- "RNA"
 
-<!-- # Remove the substrings using gsub() -->
-<!-- prots_all$name <- gsub(pattern, "", prots_all$name) -->
-<!-- rownames(norm.adt) <- prots_all$name -->
-<!-- ``` -->
+maxGenes <- 5
+markers %>%
+  group_by(cluster) %>%
+  top_n(n = maxGenes, wt = avg_log2FC) -> top5
 
-<!-- Subset to only samples with ADT data. -->
+sig <- top5$gene
+d <- duplicated(sig)
+geneCols <- paletteer_d(cluster_pal)[top5$cluster][!d]
 
-<!-- ```{r} -->
-<!-- seuSub <- seuInt[, seuInt$Batch != 0] -->
-<!-- norm.adt <- norm.adt[, colnames(norm.adt) %in% colnames(seuSub)] -->
-<!-- seuSub[["ADT.dsb"]] <- CreateAssayObject(counts = norm.adt) -->
-<!-- ``` -->
+strip <- strip_themed(background_x = elem_list_rect(fill = unique(geneCols)))
+DotPlot(seuInt,
+        features = sig[!d],
+        group.by = "Annotation",
+        cols = c("azure1", "blueviolet"),
+        dot.scale = 3,
+        assay = "SCT") +
+  FontSize(x.text = 9, y.text = 9) +
+  labs(y = element_blank(), x = element_blank()) +
+  facet_grid2(~top5$cluster[!d], 
+              scales = "free_x", 
+              space = "free_x", 
+              strip = strip) +
+  theme(axis.text.x = element_text(angle = 90,
+                                   hjust = 1,
+                                   vjust = 0.5),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 9),
+        strip.text = element_text(size = 0),
+        text = element_text(family = "arial"),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.spacing = unit(2, "mm")) 
+```
 
-<!-- ### CD45 expression by cluster -->
+## Visualise ADTs
 
-<!-- ```{r} -->
-<!-- cbind(seuSub@meta.data %>% -->
-<!--         dplyr::select(wsnn_res.0.7, Annotation), -->
-<!--       as.data.frame(t(seuSub@assays$ADT.dsb@data))) %>% -->
-<!--   rownames_to_column(var = "cell") %>% -->
-<!--   pivot_longer(c(-cell, -Annotation, -wsnn_res.0.7),  -->
-<!--                names_to = "ADT", -->
-<!--                values_to = "expression") %>% -->
-<!--   dplyr::filter(ADT == "CD45") %>% -->
-<!--   ggplot(aes(x = wsnn_res.0.7, y = expression,  -->
-<!--              fill = Annotation)) + -->
-<!--   geom_boxplot() +  -->
-<!--   ggtitle("CD45 ADT") + -->
-<!--   scale_fill_paletteer_d("miscpalettes::pastel") -->
-<!-- ``` -->
+Make data frame of proteins, clusters, expression levels.
 
-<!-- ### CD45 expression by manual label -->
+```{r}
+out <- here("data",
+            "C133_Neeland_merged",
+            glue("C133_Neeland_full_clean{ambient}_TNK_cells_adt_dsb.SEU.rds"))
 
-<!-- ```{r, fig.asp=1} -->
-<!-- cbind(seuSub@meta.data %>% -->
-<!--         dplyr::select(wsnn_res.0.7, Annotation), -->
-<!--       as.data.frame(t(seuSub@assays$ADT.dsb@data))) %>% -->
-<!--   rownames_to_column(var = "cell") %>% -->
-<!--   pivot_longer(c(-cell, -Annotation, -wsnn_res.0.7),  -->
-<!--                names_to = "ADT", -->
-<!--                values_to = "expression") %>% -->
-<!--   dplyr::filter(ADT == "CD45") %>% -->
-<!--   ggplot(aes(x = Annotation, y = expression,  -->
-<!--              fill = Annotation)) + -->
-<!--   geom_boxplot() +  -->
-<!--   NoLegend() + -->
-<!--   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) + -->
-<!--   ggtitle("CD45 ADT") + -->
-<!--   scale_fill_paletteer_d("miscpalettes::pastel") -->
-<!-- ``` -->
+if(!file.exists(out)){
+  read_csv(file = here("data",
+                       "C133_Neeland_batch1",
+                       "data",
+                       "sample_sheets",
+                       "ADT_features.csv")) -> adt_data
+  
+  pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human "
+  adt_data$name <- gsub(pattern, "", adt_data$name)
+  adt <- seuInt[["ADT"]]@counts
+  if(all(rownames(seuInt[["ADT"]]@counts) == adt_data$id)) rownames(adt) <- adt_data$name
+  adt_data %>%
+  dplyr::filter(grepl("[Ii]sotype", name)) %>%
+  pull(name) -> isotype_controls
+  
+  # normalise ADT using DSB normalisation
+  adt_dsb <- ModelNegativeADTnorm(cell_protein_matrix = adt,
+                                  denoise.counts = TRUE,
+                                  use.isotype.control = TRUE,
+                                  isotype.control.name.vec = isotype_controls)
+  saveRDS(adt_dsb, file = out)
+  
+} else {
+  adt_dsb <- readRDS(out)
+  
+}
 
-<!-- ### PTPRC expression by manual labels (all samples) -->
+m <- match(colnames(seuInt), colnames(adt_dsb)) # remove cells not present in Seurat obj
+seuInt[["ADT.dsb"]] <- CreateAssayObject(data = adt_dsb[,m])
+```
 
-<!-- ```{r, fig.asp=1} -->
-<!-- cbind(seuInt@meta.data %>% -->
-<!--         dplyr::select(wsnn_res.0.7, Annotation), -->
-<!--       as.data.frame(t(seuInt@assays$RNA@data[rownames(seuInt@assays$RNA@data) == "PTPRC", , drop = FALSE]))) %>% -->
-<!--   rownames_to_column(var = "cell") %>% -->
-<!--   pivot_longer(c(-cell, -Annotation, -wsnn_res.0.7),  -->
-<!--                names_to = "RNA", -->
-<!--                values_to = "expression") %>% -->
-<!--   ggplot(aes(x = Annotation, y = expression,  -->
-<!--              fill = Annotation)) + -->
-<!--   geom_boxplot() +  -->
-<!--   NoLegend() + -->
-<!--   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) + -->
-<!--   ggtitle("PTPRC RNA") + -->
-<!--   scale_fill_paletteer_d("miscpalettes::pastel") -->
-<!-- ``` -->
 
-<!-- ## Visualise ADTs -->
+```{r, fig.asp=0.6, fig.width=6}
+ADTs <- read_csv(file = here("data",
+                       "Proteins_T-NK_22.04.22.csv"))
+pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human "
+ADTs$Description <- gsub(pattern, "", ADTs$Description)
 
-<!-- ```{r} -->
-<!-- cbind(seuSub@meta.data %>% -->
-<!--         dplyr::select(wsnn_res.0.7, Annotation), -->
-<!--       as.data.frame(t(seuSub@assays$ADT.dsb@data))) %>% -->
-<!--   pivot_longer(c(-Annotation, -wsnn_res.0.7),  -->
-<!--                names_to = "ADT", -->
-<!--                values_to = "expression") %>% -->
-<!--   dplyr::group_by(Annotation, ADT) %>% -->
-<!--   dplyr::summarize(Expression = mean(expression)) %>% -->
-<!--   ungroup() -> dat -->
+DotPlot(seuInt,
+        features = ADTs$Description,
+        group.by = "Annotation",
+        cols = c("azure1", "blueviolet"),
+        dot.scale = 2.5,
+        assay = "ADT.dsb") +
+  FontSize(x.text = 9, y.text = 9) +
+  labs(y = element_blank(), x = element_blank()) +
+  theme(axis.text.x = element_text(angle = 90,
+                                   hjust = 1,
+                                   vjust = 0.5),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 9),
+        strip.text = element_text(size = 0),
+        text = element_text(family = "arial"),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.spacing = unit(2, "mm")) 
+```
 
-<!-- head(dat) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- plot(density(dat$Expression)) -->
-<!-- topMax <- 1.8 -->
-<!-- abline(v = topMax, lty = 2, col = "grey") -->
-<!-- ``` -->
-
-<!-- ### Expression of all ADTs -->
-
-<!-- ```{r, fig.asp=2.5} -->
-<!--   dat |> heatmap( -->
-<!--     .column = Annotation, -->
-<!--     .row = ADT, -->
-<!--     .value = Expression, -->
-<!--     scale = "none", -->
-<!--     rect_gp = grid::gpar(col = "white", lwd = 1), -->
-<!--     show_row_names = TRUE, -->
-<!--     column_names_gp = grid::gpar(fontsize = 10), -->
-<!--     column_title_gp = grid::gpar(fontsize = 12), -->
-<!--     row_names_gp = grid::gpar(fontsize = 8), -->
-<!--     row_title_gp = grid::gpar(fontsize = 12), -->
-<!--     column_title_side = "top", -->
-<!--   palette_value = circlize::colorRamp2(seq(-0.5, 2, length.out = 256), -->
-<!--                                         viridis::magma(256)), -->
-<!--     heatmap_legend_param = list(direction = "vertical")) -->
-<!-- ``` -->
-
-<!-- ### Expression of most relevant ADTs -->
-
-<!-- ```{r, fig.asp=1} -->
-<!-- ADTs <- str_replace_all(labels$`Relevant marker ADTs`, "HLA", "HLA-") -->
-<!-- ADTs <- ADTs[!is.na(ADTs)] -->
-<!-- ADTs <- as.vector(t(strsplit2(str_remove_all(ADTs, " "), ","))) -->
-<!-- ADTs <- unique(ADTs[ADTs != ""]) -->
-
-<!-- dat |>  -->
-<!--   dplyr::filter(rowSums(sapply(glue("\\b{ADTs}\\b\\s*(\\(.*\\))?\\b"),  -->
-<!--                                function(x) str_detect(ADT, x))) > 0) |> -->
-<!--   heatmap( -->
-<!--     .column = Annotation, -->
-<!--     .row = ADT, -->
-<!--     .value = Expression, -->
-<!--     scale = "none", -->
-<!--     rect_gp = grid::gpar(col = "white", lwd = 1), -->
-<!--     show_row_names = TRUE, -->
-<!--     column_names_gp = grid::gpar(fontsize = 10), -->
-<!--     column_title_gp = grid::gpar(fontsize = 12), -->
-<!--     row_names_gp = grid::gpar(fontsize = 8), -->
-<!--     row_title_gp = grid::gpar(fontsize = 12), -->
-<!--     column_title_side = "top", -->
-<!--     palette_value = circlize::colorRamp2(seq(-0.5, topMax, length.out = 256), -->
-<!--                                          viridis::magma(256)), -->
-<!--     heatmap_legend_param = list(direction = "vertical")) |>  -->
-<!--   add_tile(Annotation, show_legend = FALSE, -->
-<!--            show_annotation_name = FALSE,  -->
-<!--            palette = paletteer_d("miscpalettes::pastel",  -->
-<!--                                  length(levels(top5$cluster))))  -->
-<!-- ``` -->
-
-<!-- <!-- wrap_heatmap(f2d) --> -->
-<!-- <!-- ``` --> -->
 
 # Save data
 
