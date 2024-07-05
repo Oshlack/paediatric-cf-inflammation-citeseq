@@ -54,43 +54,56 @@ Follow the links below to view the different parts of the analysis.
 
 
 6. Annotate using Human Lung Cell Atlas v2.0
-    a)    - [Without ambient removal](06.0_azimuth_annotation.html)
-    b)    - [With ambient removal](06.1_azimuth_annotation_decontx.html)
+    a)    [Without ambient removal](06.0_azimuth_annotation.html)
+    b)    [With ambient removal](06.1_azimuth_annotation_decontx.html)
 
 
 
 
 7. Integrate and cluster T-cells
-    a)    - [Without ambient removal](07.0_integrate_cluster_t_cells.html)
-    b)    - [With ambient removal](07.1_integrate_cluster_t_cells_decontx.html)
+    a)    [Without ambient removal](07.0_integrate_cluster_t_cells.html)
+    b)    [With ambient removal](07.1_integrate_cluster_t_cells_decontx.html)
 
 
 
 
 8. Integrate and cluster other cells
-    a)    - [Without ambient removal](08.0_integrate_cluster_other_cells.html)
-    b)    - [With ambient removal](08.1_integrate_cluster_other_cells_decontx.html)
+    a)    [Without ambient removal](08.0_integrate_cluster_other_cells.html)
+    b)    [With ambient removal](08.1_integrate_cluster_other_cells_decontx.html)
 
 
 
 
 9. Integrate and cluster macrophage cells
-    a)    - [Without ambient removal](09.0_integrate_cluster_macro_cells.html)
-    b)    - [With ambient removal](09.1_integrate_cluster_macro_cells_decontx.html)  
+    a)    [Without ambient removal](09.0_integrate_cluster_macro_cells.html)
+    b)    [With ambient removal](09.1_integrate_cluster_macro_cells_decontx.html)  
 
 
 
 
 10. Macrophage annotations
-    a)    - [Without ambient removal](10.0_manual_annotations_macro_cells.html) 
-    b)    - [With ambient removal](10.1_manual_annotations_macro_cells_decontx.html)  
+    a)    [Without ambient removal](10.0_manual_annotations_macro_cells.html) 
+    b)    [With ambient removal](10.1_manual_annotations_macro_cells_decontx.html)  
     
 
 
 
-13. Differential expression analysis
-    a)    - [CF modifier and severity analysis](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html) 
-    b)    - [CF versus Non-CF control](13.1_DGE_analysis_macro-alveolar_cells_CF-vs-control-samples.html)  
+11. T/NK cell annotations
+    a)    [With ambient removal](11.0_manual_annotations_macro_cells_decontx.html)  
+    
+
+
+
+12. Other annotations
+    a)    [With ambient removal](12.0_manual_annotations_other_cells_decontx.html)  
+
+
+
+
+13. Differential expression analysis within alveolar-macrophages
+    a)    [CF modifier and severity analysis](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html) 
+    b)    [CF versus Non-CF control](13.1_DGE_analysis_macro-alveolar_cells_CF-vs-control-samples.html)  
+    
     
     
     
