@@ -143,7 +143,7 @@ How many pseudobulk samples are comprised of >50 cells?
   geom_hline(yintercept = 25, linetype = "dotted")
 ```
 
-# Data preparation {.tabset}
+# Data preparation 
 ## Extract cell type
 
 Make a `DGElist` object.
@@ -348,7 +348,7 @@ WGCNA::labeledHeatmap(Matrix = t(moduleTraitCor),
                                           " PCs"))
 ```
 
-# {-}
+
 
 # Statistical analysis with `RUVseq` 
 
