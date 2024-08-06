@@ -100,9 +100,11 @@ Follow the links below to view the different parts of the analysis.
 
 
 
-13. Differential expression analysis within alveolar-macrophages
-    a)    [CF modifier and severity analysis](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html) 
-    b)    [CF versus Non-CF control](13.1_DGE_analysis_macro-alveolar_cells_CF-vs-control-samples.html)  
+13. Differential expression analysis within macrophage sub-types
+    a)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html) 
+    b)    [Alveolar macro. CF$\pm$modifiers vs non-CF control](13.1_DGE_analysis_macro-alveolar_cells_CF-vs-control-samples.html)
+    c)    [Monocyte-derived macro. CF modifiers & severity](13.3_DGE_analysis_monocyte-derived-macro_CF-only-samples.html) 
+    d)    [Monocyte-derived macro. CF$\pm$modifiers vs non-CF control](13.4_DGE_analysis_monocyte-derived-macro_CF-vs-control-samples.html)  
     
     
     
