@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreea42706747f73d7f36ec5daa07655c10af17c774atargetblanka427067a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtree7f80be370cf88585323c298589b4606039f9ee80targetblank7f80be3a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/a42706747f73d7f36ec5daa07655c10af17c774a" target="_blank">a427067</a>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/7f80be370cf88585323c298589b4606039f9ee80" target="_blank">7f80be3</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreea42706747f73d7f36ec5daa07655c10af17c774atargetblanka427067a"
+id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtree7f80be370cf88585323c298589b4606039f9ee80targetblank7f80be3a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/a42706747f73d7f36ec5daa07655c10af17c774a" target="_blank">a427067</a>.
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/7f80be370cf88585323c298589b4606039f9ee80" target="_blank">7f80be3</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -632,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7f80be370cf88585323c298589b4606039f9ee80/analysis/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd" target="_blank">7f80be3</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+<td>
+wflow_publish("analysis/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -3789,6 +3823,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-35-1.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4d7d217c0cd31d25ea22dde0ef262aac3f1f7eb5/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-35-1.png" target="_blank">4d7d217</a>
 </td>
 <td>
@@ -3807,8 +3852,11 @@ Jovana Maksimovic
 NULL</code></pre>
 </div>
 </div>
-<div id="compare-cf-severity" class="section level2">
-<h2>Compare CF severity</h2>
+<div id="section" class="section level2 unnumbered">
+<h2 class="unnumbered"></h2>
+</div>
+<div id="compare-cf-severity" class="section level2 tabset">
+<h2 class="tabset">Compare CF severity</h2>
 <div id="select-k-value-1" class="section level3">
 <h3>Select <code>k</code> value</h3>
 <p>First, we need to select <code>k</code> for use with
@@ -3830,6 +3878,43 @@ EDASeq::plotPCA(edgeR::cpm(ySub$counts),
                 col = cols2[x2], labels = FALSE,
                 pch = 19, main = &quot;Raw PCA by disease&quot;)</code></pre>
 <p><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-36-1">
+Past versions of unnamed-chunk-36-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-36-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-36-1.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Select the value for the <code>k</code> parameter i.e. the number of
 columns of the <code>W</code> matrix that will be included in the
 modelling.</p>
@@ -3886,7 +3971,234 @@ for(k in 1:6){
        cex.main = 0.8)
   
 }</code></pre>
-<p><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-37-1">
+Past versions of unnamed-chunk-37-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-37-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-1.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-37-2">
+Past versions of unnamed-chunk-37-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-37-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-2.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-37-3">
+Past versions of unnamed-chunk-37-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-37-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-3.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-37-4">
+Past versions of unnamed-chunk-37-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-37-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-4.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-37-5">
+Past versions of unnamed-chunk-37-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-37-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-5.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-37-6">
+Past versions of unnamed-chunk-37-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-37-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-37-6.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="test-for-differences-1" class="section level3">
 <h3>Test for differences</h3>
@@ -4763,6 +5075,43 @@ design %&gt;% knitr::kable()</code></pre>
 
 p2</code></pre>
 <p><img src="figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-39-1">
+Past versions of unnamed-chunk-39-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-39-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-39-1.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Create the contrast matrix for the sample group comparisons.</p>
 <pre class="r"><code>contr &lt;- makeContrasts(CF.NO_MOD.MvCF.NO_MOD.S = CF.NO_MOD.M - CF.NO_MOD.S,
                          levels = design)
@@ -4918,6 +5267,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-42-1.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4d7d217c0cd31d25ea22dde0ef262aac3f1f7eb5/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-42-1.png" target="_blank">4d7d217</a>
@@ -5202,6 +5562,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6a369fe7fd05cab2a23ac04fad05fd0b65bcd830/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-43-1.png" target="_blank">6a369fe</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4d7d217c0cd31d25ea22dde0ef262aac3f1f7eb5/docs/figure/13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.Rmd/unnamed-chunk-43-1.png" target="_blank">4d7d217</a>
 </td>
 <td>
@@ -5217,11 +5588,11 @@ Jovana Maksimovic
 </div>
 </div>
 </div>
-<div id="section" class="section level2 unnumbered">
+<div id="section-1" class="section level2 unnumbered">
 <h2 class="unnumbered"></h2>
 </div>
 </div>
-<div id="section-1" class="section level1 unnumbered">
+<div id="section-2" class="section level1 unnumbered">
 <h1 class="unnumbered"></h1>
 </div>
 <div id="session-info" class="section level1 appendix">
