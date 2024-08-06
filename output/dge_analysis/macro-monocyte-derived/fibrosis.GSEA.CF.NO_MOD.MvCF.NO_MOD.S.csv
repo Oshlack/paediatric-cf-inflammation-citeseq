@@ -1,0 +1,3 @@
+,NGenes,Direction,PValue,FDR
+pulmonary_fibrosis_ctd,56,Up,0.387374698998185,0.774749397996371
+fibrosis_transcriptional_signature,19,Down,0.993366218430404,0.993366218430404
