@@ -113,7 +113,7 @@ Follow the links below to view the different parts of the analysis.
 14. Cell type proportions
     a)    [Broad labels](14.0_proportions_analysis_broad.html) 
     b)    [Fine labels](14.1_proportions_analysis_fine.html)
-    c)    [Macrophage labels](14.2_proportions_analysis_macrophages.Rmd) 
+    c)    [Macrophage labels](14.2_proportions_analysis_macrophages.html) 
     
     
     
