@@ -106,6 +106,14 @@ Follow the links below to view the different parts of the analysis.
     c)    [Monocyte-derived macro. CF modifiers & severity](13.3_DGE_analysis_macro-monocyte-derived_CF-only-samples.html) 
     d)    [Monocyte-derived macro. CF$\pm$modifiers vs non-CF control](13.4_DGE_analysis_macro-monocyte-derived_CF-vs-control-samples.html)  
     
+
+
+
+
+14. Cell type proportions
+    a)    [Broad labels](14.0_proportions_analysis_broad.html) 
+    b)    [Fine labels](14.1_proportions_analysis_fine.html)
+    c)    [Macrophage labels](14.2_proportions_analysis_macrophages.Rmd) 
     
     
     
