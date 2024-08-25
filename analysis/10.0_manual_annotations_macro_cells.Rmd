@@ -33,10 +33,11 @@ suppressPackageStartupMessages({
   library(paletteer)
   library(tidyHeatmap)
   library(readxl)
-  library(ann_level_2Dbi)
+  library(AnnotationDbi)
   library(org.Hs.eg.db)
   library(speckle)
   library(ggh4x)
+  library(dsb)
 })
 
 set.seed(42)
@@ -127,8 +128,17 @@ DimPlot(seuInt, reduction = 'umap', label = FALSE, group.by = "ann_level_2") +
         axis.ticks = element_blank()) +
   NoLegend() -> p2
 
+DimPlot(seuInt, reduction = 'umap', label = FALSE, group.by = "ann_level_3") + 
+  scale_color_paletteer_d(cluster_pal) +
+  theme(text = element_text(size = 9),
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  NoLegend() -> p3
+
 p1
 LabelClusters(p2, id = "ann_level_2", repel = TRUE, 
+              size = 2.5, box = TRUE, fontfamily = "arial")
+LabelClusters(p3, id = "ann_level_3", repel = TRUE, 
               size = 2.5, box = TRUE, fontfamily = "arial")
 ```
 
@@ -144,27 +154,33 @@ seuInt@meta.data %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
   NoLegend() +
   scale_fill_paletteer_d(cluster_pal)
-```
 
-### No. cells per cluster by disease
-
-```{r, fig.asp=0.5, fig.width=12}
 seuInt@meta.data %>%
-  ggplot(aes(x = ann_level_2, fill = Status_sub)) +
-  geom_bar(position = "dodge") +
-  geom_text(aes(label = ..count..), stat = "count",
-            vjust = -0.5, colour = "black", size = 2, 
-            position=position_dodge(width=0.9)) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
-        legend.position = "bottom")
+  ggplot(aes(x = ann_level_3, fill = ann_level_3)) +
+  geom_bar() +
+  geom_text(aes(label = after_stat(count)), stat = "count",
+            vjust = -0.5, colour = "black", size = 2) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  NoLegend() +
+  scale_fill_paletteer_d(cluster_pal)
 ```
 
+### % cells per cluster
 
 ```{r}
 seuInt@meta.data %>% 
   count(ann_level_2) %>% 
   mutate(perc = round(n/sum(n)*100, 1)) %>%
   dplyr::rename(`Cell Label` = "ann_level_2", 
+                `No. Cells` = n,
+                `% Cells` = perc) %>%
+  knitr::kable()
+
+seuInt@meta.data %>% 
+  count(ann_level_3) %>% 
+  mutate(perc = round(n/sum(n)*100, 1)) %>%
+  dplyr::rename(`Cell Label` = "ann_level_3", 
                 `No. Cells` = n,
                 `% Cells` = perc) %>%
   knitr::kable()
@@ -178,7 +194,7 @@ Adapted from Dr. Belinda Phipson's [work](https://bphipson.github.io/Human_Devel
 
 ```{r}
 # limma-trend for DE
-Idents(seuInt) <- "ann_level_2"
+Idents(seuInt) <- "ann_level_3"
 
 out <- here("data",
             "C133_Neeland_merged",
@@ -187,7 +203,7 @@ out <- here("data",
 if(!file.exists(out)){
   logcounts <- normCounts(DGEList(as.matrix(seuInt[["RNA"]]@counts)),
                           log = TRUE, prior.count = 0.5)
-  entrez <- ann_level_2Dbi::mapIds(org.Hs.eg.db,
+  entrez <- AnnotationDbi::mapIds(org.Hs.eg.db,
                                   keys = rownames(logcounts),
                                   column = c("ENTREZID"),
                                   keytype = "SYMBOL",
@@ -202,7 +218,7 @@ if(!file.exists(out)){
 
 maxclust <- length(levels(Idents(seuInt))) - 1
 
-clustgrp <- seuInt$ann_level_2
+clustgrp <- seuInt$ann_level_3
 clustgrp <- factor(clustgrp)
 donor <- factor(seuInt$sample.id)
 batch <- factor(seuInt$Batch)
@@ -277,7 +293,7 @@ geneCols <- paletteer_d(cluster_pal)[factor(names(top_markers))]
 strip <- strip_themed(background_x = elem_list_rect(fill = unique(geneCols)))
 DotPlot(seuInt,
         features = unname(top_markers),
-        group.by = "ann_level_2",
+        group.by = "ann_level_3",
         cols = c("azure1", "blueviolet"),
         dot.scale = 2.5,
         assay = "SCT") +
@@ -303,7 +319,7 @@ DotPlot(seuInt,
 
 ```{r}
 DefaultAssay(seuInt) <- "RNA"
-Idents(seuInt) <- "ann_level_2"
+Idents(seuInt) <- "ann_level_3"
 
 out <- here("data/cluster_annotations/seurat_markers_macrophages.rds")
 
@@ -338,7 +354,7 @@ geneCols <- paletteer_d(cluster_pal)[top5$cluster][!d]
 strip <- strip_themed(background_x = elem_list_rect(fill = unique(geneCols)))
 DotPlot(seuInt,
         features = sig[!d],
-        group.by = "ann_level_2",
+        group.by = "ann_level_3",
         cols = c("azure1", "blueviolet"),
         dot.scale = 2.5,
         assay = "SCT") +
@@ -386,7 +402,7 @@ Make data frame of proteins, clusters, expression levels.
 ```{r}
 out <- here("data",
             "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean{ambient}_macrophages_adt_dsb.SEU.rds"))
+            glue("C133_Neeland_full_clean{ambient}_macrophages_adt_dsb.rds"))
 
 if(!file.exists(out)){
   read_csv(file = here("data",
@@ -418,43 +434,7 @@ if(!file.exists(out)){
 seuInt[["ADT.dsb"]] <- NULL
 m <- match(colnames(seuInt), colnames(adt_dsb)) # remove cells not present in Seurat obj
 seuInt[["ADT.dsb"]] <- CreateAssayObject(data = adt_dsb[,m])
-
-# cbind(seuInt@meta.data %>%
-#         dplyr::select(ann_level_2),
-#       as.data.frame(t(seuInt@assays$ADT.dsb@data))) %>%
-#   rownames_to_column(var = "cell") %>%
-#   pivot_longer(c(-ann_level_2, -cell), 
-#                names_to = "ADT",
-#                values_to = "expression") %>%
-#   dplyr::group_by(ann_level_2, ADT) %>%
-#   dplyr::summarize(Expression = mean(expression)) %>%
-#   ungroup() -> dat
-# 
-# # plot expression density to select heatmap colour scale range
-# plot(density(dat$Expression))
 ```
-
-<!-- ```{r, fig.asp=2, fig.width=8} -->
-<!-- dat %>% -->
-<!--   heatmap( -->
-<!--     .column = ann_level_2, -->
-<!--     .row = ADT, -->
-<!--     .value = Expression, -->
-<!--     scale = "none", -->
-<!--     rect_gp = grid::gpar(col = "white", lwd = 1), -->
-<!--     show_row_names = TRUE, -->
-<!--     cluster_columns = FALSE, -->
-<!--     cluster_rows = FALSE, -->
-<!--     column_names_gp = grid::gpar(fontsize = 10), -->
-<!--     column_title_gp = grid::gpar(fontsize = 12), -->
-<!--     row_names_gp = grid::gpar(fontsize = 8), -->
-<!--     row_title_gp = grid::gpar(fontsize = 12), -->
-<!--     column_title_side = "top", -->
-<!--     palette_value = circlize::colorRamp2(seq(-0.5, 2.5, length.out = 256), -->
-<!--                                          viridis::magma(256)), -->
-<!--     heatmap_legend_param = list(direction = "vertical")) -->
-<!-- ``` -->
-
 
 
 ```{r, fig.asp=0.6, fig.width=6}
@@ -462,14 +442,10 @@ ADTs <- str_replace_all(labels$`Relevant marker ADTs`, "HLA", "HLA-")
 ADTs <- ADTs[!is.na(ADTs)]
 ADTs <- as.vector(t(strsplit2(str_remove_all(ADTs, " "), ",")))
 ADTs <- unique(ADTs[ADTs != ""])
-
-# dat |>
-#   dplyr::filter(rowSums(sapply(glue("\\b{ADTs}\\b\\s*(\\(.*\\))?\\b"),
-#                                function(x) str_detect(ADT, x))) > 0) |>
   
 DotPlot(seuInt,
         features = ADTs,
-        group.by = "ann_level_2",
+        group.by = "ann_level_3",
         cols = c("azure1", "blueviolet"),
         dot.scale = 2.5,
         assay = "ADT.dsb") +
