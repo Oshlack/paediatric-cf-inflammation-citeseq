@@ -961,7 +961,7 @@ plot_ruv_results_summary(contr, cutoff, cellDir, gene_sets_list, gns,
                                                  sample = rownames(ySub$samples)),
                          layout,
                          pal) -> p
-#p
+p
 ```
 
 ## {-}
