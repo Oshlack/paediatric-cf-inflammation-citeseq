@@ -69,3 +69,283 @@ add_gene_information <- function(sce){
   
   sce
 }
+
+convert_gmt_to_list <- function(file_path){
+  # Read the file content
+  lines <- readLines(file_path)
+  
+  # Pre-allocate the list with the number of lines in the file
+  gene_sets <- vector("list", length(lines))
+  
+  # Loop over each line to process it
+  for (i in seq_along(lines)) {
+    # Split the line by tabs
+    elements <- strsplit(lines[i], "\t")[[1]]
+    
+    # The first element is the name of the gene set
+    gene_set_name <- elements[1]
+    
+    # The rest are the Entrez IDs (after the URL)
+    entrez_ids <- elements[-(1:2)]
+    
+    # Store the gene set name and the vector of Entrez IDs
+    names(gene_sets)[i] <- gene_set_name
+    gene_sets[[i]] <- entrez_ids
+  }
+  
+  gene_sets
+}
+
+mds_by_factor <- function(data, factor, lab){
+  dims <- list(c(1,2), c(2:3), c(3,4), c(4,5))
+  p <- vector("list", length(dims))
+  
+  for(i in 1:length(dims)){
+    
+    mds <- limma::plotMDS(edgeR::cpm(data, 
+                                     log = TRUE), 
+                          gene.selection = "common",
+                          plot = FALSE, dim.plot = dims[[i]])
+    
+    data.frame(x = mds$x, 
+               y = mds$y,
+               sample = rownames(mds$distance.matrix.squared)) %>%
+      left_join(rownames_to_column(data$samples, var = "sample")) -> dat
+    
+    p[[i]] <- ggplot(dat, aes(x = x, y = y, 
+                              colour = eval(parse(text=(factor))))) +
+      geom_point(size = 3) +
+      ggrepel::geom_text_repel(aes(label = sample.id),
+                               size = 2) +
+      labs(x = glue("Principal Component {dims[[i]][1]}"),
+           y = glue("Principal Component {dims[[i]][2]}"),
+           colour = lab) +
+      theme(legend.direction = "horizontal",
+            legend.text = element_text(size = 8),
+            legend.title = element_text(size = 9),
+            axis.text = element_text(size = 8),
+            axis.title = element_text(size = 9)) -> p[[i]]
+  }
+  
+  wrap_plots(p, ncol = 2) + 
+    plot_layout(guides = "collect") &
+    theme(legend.position = "bottom")
+}
+
+top_deg_volcano <- function(top, cutoff, dt, pval_col, fdr_col, pal){
+  
+  top %>% 
+    mutate(sig = ifelse(!!sym(fdr_col) <= cutoff, glue("<= {cutoff}"), 
+                        glue("> {cutoff}")))  %>%
+    rownames_to_column(var = "SYMBOL") %>%
+    left_join(dt[,1] %>% 
+                data.frame %>%
+                rownames_to_column(var = "SYMBOL") %>%
+                dplyr::rename(status = 2)) %>%
+    mutate(status = ifelse(status == 1, "Up",
+                           ifelse(status == -1, "Down",
+                                  "NotSig"))) %>%
+    mutate(status = as.factor(status)) %>%
+    mutate(status = fct_relevel(status, "NotSig", after = Inf)) %>%
+    ggplot(aes(x = logFC, y = -log10(!!sym(pval_col)), color = status)) +
+    geom_point(alpha = 0.75) +
+    ggrepel::geom_text_repel(data = function(x) subset(x, eval(parse(text = fdr_col)) < cutoff), 
+                             aes(x = logFC, y = -log10(eval(parse(text = pval_col))), 
+                                 label = SYMBOL), 
+                             size = 2, colour = "black", max.overlaps = 15) +
+    labs(x = expression(~log[2]~"(Fold Change)"), 
+         y = expression(~-log[10]~"(P-value)"),
+         colour = glue("FDR < {cutoff}")) +
+    scale_colour_manual(values = pal) +
+    theme_classic() +
+    theme(legend.position = "bottom")
+}
+
+top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, num = 9){
+  # plot up to top X DGE
+  grps <- names(contr[,1])[abs(contr[,1]) > 0]
+  
+  edgeR::cpm(raw_counts, log = TRUE) %>% 
+    data.frame %>%
+    rownames_to_column(var = "gene") %>%
+    pivot_longer(-gene, 
+                 names_to = "sample", 
+                 values_to = "raw") %>%
+    inner_join(edgeR::cpm(norm_counts, log = TRUE) %>% 
+                 data.frame %>%
+                 rownames_to_column(var = "gene") %>%
+                 pivot_longer(-gene, 
+                              names_to = "sample", 
+                              values_to = "norm")) %>%
+    left_join(group_info) %>%
+    dplyr::filter(Group %in% grps,
+                  gene %in% rownames(top)[1:min(num, max(which(top$FDR < cutoff)))]) %>%
+    mutate(Group = ifelse(str_detect(Group, str_remove(grps[1], "CF.")),
+                          grps[1], 
+                          grps[2])) %>%
+    ggplot(aes(x = Group,
+               y = norm,
+               colour = Group)) +
+    geom_boxplot(outlier.shape = NA, colour = "grey") +
+    geom_jitter(stat = "identity",
+                width = 0.15,
+                size = 1.25) +
+    geom_jitter(aes(x = Group,
+                    y = raw), stat = "identity",
+                width = 0.15,
+                size = 1.25, 
+                alpha = 0.2) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 90,
+                                     hjust = 1,
+                                     vjust = 0.5),
+          legend.position = "bottom",
+          legend.direction = "horizontal",
+          strip.text = element_text(size = 7),
+          axis.text.y = element_text(size = 6)) +
+    labs(x = "Group", y = "log2 CPM") +
+    facet_wrap(~gene, scales = "free_y") + 
+    scale_color_brewer(palette = "Set2") +
+    ggtitle(colnames(contr))
+}
+
+top_camera_sets <- function(results_list, num = 10){
+  
+  lapply(seq_along(results_list), function(i){
+    results_list[[i]] %>%
+      data.frame %>%
+      dplyr::slice(1:10) %>%
+      rownames_to_column(var = "Set") %>%
+      mutate(Type = names(results_list)[i],
+             Rank = 1:10)
+  }) %>%
+    bind_rows  %>%
+    mutate(Set = str_wrap(str_replace_all(Set, "_", " "), width = 75),
+           Set = str_remove_all(Set, "GO |REACTOME |HALLMARK |WP ")) %>%
+    ggplot(aes(x = -log10(FDR), y = fct_reorder(Set, -Rank),
+               colour = Direction)) +
+    geom_point(aes(size = NGenes)) +
+    facet_wrap(~Type, ncol = 1, scales = "free_y") +
+    geom_vline(xintercept = -log10(0.05),
+               linetype = "dashed")  +
+    scale_colour_manual(values = pal) +
+    labs(y = "Gene set") +
+    theme_classic(base_size = 10) +
+    ggtitle("Camera gene set analysis")
+}
+
+top_ora_sets <- function(results_list, num = 10){
+  
+  lapply(seq_along(results_list), function(i){
+    results_list[[i]] %>%
+      data.frame %>%
+      dplyr::slice(1:10) %>%
+      rownames_to_column(var = "Set") %>%
+      mutate(Type = names(results_list)[i],
+             Rank = 1:10)
+  }) %>%
+    bind_rows  %>%
+    mutate(Set = str_wrap(str_replace_all(Set, "_", " "), width = 75),
+           Set = str_remove_all(Set, "GO |REACTOME |HALLMARK |WP ")) %>%
+    ggplot(aes(x = -log10(FDR), y = fct_reorder(Set, -Rank),
+               colour = DE/N*100)) +
+    geom_point(aes(size = N)) +
+    facet_wrap(~Type, ncol = 1, scales = "free_y") +
+    geom_vline(xintercept = -log10(0.05),
+               linetype = "dashed")  +
+    scale_colour_viridis_c(option = "plasma") +
+    labs(y = "Gene set",
+         colour = "% DEGs in set",
+         size = "Set size") +
+    theme_classic(base_size = 10) +
+    ggtitle("Over-representation gene set analysis")
+}
+
+gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
+  
+  ora_list <- lapply(seq_along(gene_sets_list), function(i){
+    topGSA(gsaseq(unname(gns[deg]),
+                  universe = unname(gns),
+                  collection = gene_sets_list[[i]],
+                  plot.bias = FALSE)) -> tmp
+    
+    write.table(tmp %>%
+                  data.frame %>%
+                  rownames_to_column(var = "Set"),
+                file = file.path(cellDir, glue("ORA.{names(gene_sets_list[i])}.{colnames(contr)[i]}.csv")),
+                sep = ",", quote = F, col.names = NA)
+    
+    tmp
+  })
+  names(ora_list) <- names(gene_sets_list)
+  
+  ora_list
+}
+
+gene_set_test_camera <- function(gene_sets_list, gns, lrt, statistic, cellDir){
+  
+  cam_list <- lapply(seq_along(gene_sets_list), function(i){
+    id <- ids2indices(gene_sets_list[[i]], unname(gns[rownames(lrt)]))
+    tmp <- cameraPR(statistic, id)
+    
+    write.table(tmp %>%
+                  data.frame %>%
+                  rownames_to_column(var = "Set"),
+                file = file.path(cellDir, glue("CAM.{names(gene_sets_list[i])}.{colnames(contr)[i]}.csv")),
+                sep = ",", quote = F, col.names = NA)
+    
+    tmp
+  })
+  names(cam_list) <- names(gene_sets_list)
+  
+  cam_list
+}
+
+plot_ruv_results_summary <- function(contr, cutoff, cellDir, gene_sets_list, gns,
+                                     raw_counts, norm_counts, group_info, layout, 
+                                     pal,
+                                     pval_col = "PValue",
+                                     fdr_col = "FDR"){
+  p <- vector("list", ncol(contr))
+  
+  for(i in 1:(ncol(contr))){
+    lrt <- glmLRT(fit, contrast = contr[,i])
+    topTags(lrt, n = Inf) %>%
+      data.frame -> top
+    
+    if(sum(top$FDR < cutoff) > 0){
+      # top DGE results
+      write.table(top, 
+                  file = file.path(cellDir, glue("{colnames(contr)[i]}.csv")),
+                  sep = ",", quote = F, col.names = NA)
+      
+      deg <- rownames(top)[top$FDR < cutoff]
+      ora_list <- gene_set_test_ora(gene_sets_list, deg, gns, contr, cellDir)
+      
+      # run camera competitive gene set test  
+      # use signed likelihood ratio test statistic as recommended by GS here: https://support.bioconductor.org/p/112937/
+      statistic <- sign(lrt$table$logFC) * sqrt(lrt$table$LR)
+      cam_list <- gene_set_test_camera(gene_sets_list, gns, lrt, statistic, cellDir)
+      
+      top_deg_volcano(top, cutoff, dt[[i]], pval_col, fdr_col, pal) -> p1
+      top_deg_stripchart(raw_counts, 
+                         norm_counts, 
+                         group_info, 
+                         contr = contr[, i, drop = FALSE], 
+                         top = top, 
+                         num = 9) -> p2
+      
+      # over-representation analysis top 10 plots
+      top_ora_sets(ora_list, num = 10) -> p3
+      # camera top 10 plots
+      top_camera_sets(cam_list, num = 10) -> p4
+      
+      p[[i]] <- wrap_elements(p1 + p2) + 
+        wrap_elements(p3) + 
+        wrap_elements(p4) +
+        plot_layout(design = layout)
+    }
+  }
+  
+  p
+}
