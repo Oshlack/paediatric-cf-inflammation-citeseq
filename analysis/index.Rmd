@@ -103,10 +103,14 @@ Follow the links below to view the different parts of the analysis.
 13. Differential expression analysis within macrophage sub-types
     a)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html) 
     b)    [Alveolar macro. CF$\pm$modifiers vs non-CF control](13.1_DGE_analysis_macro-alveolar_cells_CF-vs-control-samples.html)
-    c)    [Monocyte-derived macro. CF modifiers & severity](13.3_DGE_analysis_macro-monocyte-derived_CF-only-samples.html) 
-    d)    [Monocyte-derived macro. CF$\pm$modifiers vs non-CF control](13.4_DGE_analysis_macro-monocyte-derived_CF-vs-control-samples.html)  
-    
-
+    c)    [Monocyte-derived macro. CF modifiers & severity](13.2_DGE_analysis_macro-monocyte-derived_CF-only-samples.html) 
+    d)    [Monocyte-derived macro. CF$\pm$modifiers vs non-CF control](13.3_DGE_analysis_macro-monocyte-derived_CF-vs-control-samples.html)
+    e)    [Macro CCL. CF modifiers & severity](13.4_DGE_analysis_macro-CCL_CF-only-samples.html) 
+    f)    [Macro CCL. CF$\pm$modifiers vs non-CF control](13.5_DGE_analysis_macro-CCL_CF-vs-control-samples.html) 
+    g)    [Macro IFI27. CF modifiers & severity](13.6_DGE_analysis_macro-IFI27_CF-only-samples.html) 
+    h)    [Macro IFI27. CF$\pm$modifiers vs non-CF control](13.7_DGE_analysis_macro-IFI27_CF-vs-control-samples.html) 
+    i)    [Macro Lipid. CF modifiers & severity](13.8_DGE_analysis_macro-lipid_CF-only-samples.html) 
+    j)    [Macro Lipid. CF$\pm$modifiers vs non-CF control](13.9_DGE_analysis_macro-lipid_CF-vs-control-samples.html) 
 
 
 
