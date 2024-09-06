@@ -729,8 +729,6 @@ plot_ruv_results_summary(contr, cutoff, cellDir, gene_sets_list, gns,
 p
 ```
 
-## {-}
-
 ## Compare CF severity {.tabset}
 
 ### Select `k` value
