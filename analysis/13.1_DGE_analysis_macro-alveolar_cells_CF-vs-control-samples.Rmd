@@ -683,15 +683,21 @@ Hs.c2.all <- convert_gmt_to_list(here("data/c2.all.v2024.1.Hs.entrez.gmt"))
 Hs.h.all <- convert_gmt_to_list(here("data/h.all.v2024.1.Hs.entrez.gmt")) 
 Hs.c5.all <- convert_gmt_to_list(here("data/c5.all.v2024.1.Hs.entrez.gmt"))
 
+fibrosis <- create_custom_gene_lists_from_file(here("data/fibrosis_gene_sets.csv"))
+# add fibrosis sets from REACTOME and WIKIPATHWAYS
+fibrosis <- c(lapply(fibrosis, function(l) l[!is.na(l)]),
+              Hs.c2.all[str_detect(names(Hs.c2.all), "FIBROSIS")])
+
 gene_sets_list <- list(HALLMARK = Hs.h.all,
                        GO = Hs.c5.all,
                        REACTOME = Hs.c2.all[str_detect(names(Hs.c2.all), "REACTOME")],
-                       WP = Hs.c2.all[str_detect(names(Hs.c2.all), "^WP")]) 
+                       WP = Hs.c2.all[str_detect(names(Hs.c2.all), "^WP")],
+                       FIBROSIS = fibrosis) 
 ```
 
 Plot a detailed summary of the results.
 
-```{r, fig.asp=2.5, fig.width=9}
+```{r, fig.asp=2.6, fig.width=10}
 layout <- "
       AAAA
       AAAA
