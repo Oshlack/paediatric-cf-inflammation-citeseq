@@ -568,7 +568,7 @@ WGCNA::labeledHeatmap(Matrix = t(moduleTraitCor),
                       main = paste("PCA-trait relationships: Top 10 PCs"))
 ```
 
-# Statistical analysis using the `propeller` and `limma` approach
+# Statistical analysis using `propeller` and `limma`
 
 Create the design matrix.
 
@@ -616,15 +616,7 @@ pvalue <- 0.05
 summary(decideTests(fit2, p.value = pvalue))
 ```
 
-## Results {.tabset}
-
-### ANOVA overall results
-
-```{r}
-topTable(fit2)
-```
-
-### Individual comparisons
+## Results
 
 ```{r, fig.asp=1.25, fig.width=8, results='asis'}
 p <- vector("list", ncol(contr))
