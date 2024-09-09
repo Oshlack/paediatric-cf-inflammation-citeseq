@@ -134,6 +134,10 @@ mds_by_factor <- function(data, factor, lab){
 
 top_deg_volcano <- function(top, cutoff, dt, pval_col, fdr_col, pal){
   
+  # pal <- ifelse(sum(summary(dt)[c(1,3),]) < 2,
+  #               ifelse(summary(dt)[1,] == 1, pal[-2], pal[-1]),
+  #               pal)
+  
   top %>% 
     mutate(sig = ifelse(!!sym(fdr_col) <= cutoff, glue("<= {cutoff}"), 
                         glue("> {cutoff}")))  %>%
@@ -214,10 +218,10 @@ top_camera_sets <- function(results_list, num = 10){
   lapply(seq_along(results_list), function(i){
     results_list[[i]] %>%
       data.frame %>%
-      dplyr::slice(1:10) %>%
+      dplyr::slice(1:min(num, n())) %>%
       rownames_to_column(var = "Set") %>%
       mutate(Type = names(results_list)[i],
-             Rank = 1:10)
+             Rank = 1:min(num, n()))
   }) %>%
     bind_rows  %>%
     mutate(Set = str_wrap(str_replace_all(Set, "_", " "), width = 75),
@@ -239,10 +243,10 @@ top_ora_sets <- function(results_list, num = 10){
   lapply(seq_along(results_list), function(i){
     results_list[[i]] %>%
       data.frame %>%
-      dplyr::slice(1:10) %>%
+      dplyr::slice(1:min(num, n())) %>%
       rownames_to_column(var = "Set") %>%
       mutate(Type = names(results_list)[i],
-             Rank = 1:10)
+             Rank = 1:min(num, n()))
   }) %>%
     bind_rows  %>%
     mutate(Set = str_wrap(str_replace_all(Set, "_", " "), width = 75),
@@ -262,7 +266,7 @@ top_ora_sets <- function(results_list, num = 10){
 }
 
 gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
-  
+
   ora_list <- lapply(seq_along(gene_sets_list), function(i){
     topGSA(gsaseq(unname(gns[deg]),
                   universe = unname(gns),
@@ -272,7 +276,7 @@ gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
     write.table(tmp %>%
                   data.frame %>%
                   rownames_to_column(var = "Set"),
-                file = file.path(cellDir, glue("ORA.{names(gene_sets_list[i])}.{colnames(contr)[i]}.csv")),
+                file = file.path(cellDir, glue("ORA.{names(gene_sets_list[i])}.{colnames(contr)}.csv")),
                 sep = ",", quote = F, col.names = NA)
     
     tmp
@@ -282,7 +286,7 @@ gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
   ora_list
 }
 
-gene_set_test_camera <- function(gene_sets_list, gns, lrt, statistic, cellDir){
+gene_set_test_camera <- function(gene_sets_list, gns, lrt, statistic, contr, cellDir){
   
   cam_list <- lapply(seq_along(gene_sets_list), function(i){
     id <- ids2indices(gene_sets_list[[i]], unname(gns[rownames(lrt)]))
@@ -291,7 +295,7 @@ gene_set_test_camera <- function(gene_sets_list, gns, lrt, statistic, cellDir){
     write.table(tmp %>%
                   data.frame %>%
                   rownames_to_column(var = "Set"),
-                file = file.path(cellDir, glue("CAM.{names(gene_sets_list[i])}.{colnames(contr)[i]}.csv")),
+                file = file.path(cellDir, glue("CAM.{names(gene_sets_list[i])}.{colnames(contr)}.csv")),
                 sep = ",", quote = F, col.names = NA)
     
     tmp
@@ -320,12 +324,14 @@ plot_ruv_results_summary <- function(contr, cutoff, cellDir, gene_sets_list, gns
                   sep = ",", quote = F, col.names = NA)
       
       deg <- rownames(top)[top$FDR < cutoff]
-      ora_list <- gene_set_test_ora(gene_sets_list, deg, gns, contr, cellDir)
+      ora_list <- gene_set_test_ora(gene_sets_list, deg, gns, 
+                                    contr[, i, drop = FALSE], cellDir)
       
       # run camera competitive gene set test  
       # use signed likelihood ratio test statistic as recommended by GS here: https://support.bioconductor.org/p/112937/
       statistic <- sign(lrt$table$logFC) * sqrt(lrt$table$LR)
-      cam_list <- gene_set_test_camera(gene_sets_list, gns, lrt, statistic, cellDir)
+      cam_list <- gene_set_test_camera(gene_sets_list, gns, lrt, statistic, 
+                                       contr[, i, drop = FALSE], cellDir)
       
       top_deg_volcano(top, cutoff, dt[[i]], pval_col, fdr_col, pal) -> p1
       top_deg_stripchart(raw_counts, 
@@ -348,4 +354,21 @@ plot_ruv_results_summary <- function(contr, cutoff, cellDir, gene_sets_list, gns
   }
   
   p
+}
+
+create_custom_gene_lists_from_file <- function(file = file){
+
+  read.csv2(file = file,
+            header = TRUE, sep = ",") %>% 
+    pivot_longer(cols = everything()) %>%
+    mutate(value = str_trim(value),
+           entrez = unname(unlist(AnnotationDbi::mapIds(org.Hs.eg.db, 
+                                                        keys = value, 
+                                                        column = c("ENTREZID"),
+                                                        keytype = "SYMBOL",
+                                                        multiVals = "first"))[value])) %>%
+    dplyr::rename("symbol" = "value",
+                  "source" = "name") -> tmp
+  
+  split(tmp$entrez, tmp$source)
 }
