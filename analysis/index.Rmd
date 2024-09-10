@@ -121,9 +121,9 @@ Follow the links below to view the different parts of the analysis.
 
 
 14. Cell type proportions
-    a)    [Broad labels](14.0_proportions_analysis_broad.html) 
-    b)    [Fine labels](14.1_proportions_analysis_fine.html)
-    c)    [Macrophage labels](14.2_proportions_analysis_macrophages.html) 
+    a)    [Annotation level 1](14.0_proportions_analysis_ann_level_1.html) 
+    b)    [Annotation level 3, non macro. cells](14.1_proportions_analysis_ann_level_3_non-macrophages.html)
+    c)    [Annotation level 3, macro. cells](14.2_proportions_analysis_ann_level_3_macrophages.html) 
     
     
     
