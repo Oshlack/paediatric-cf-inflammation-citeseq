@@ -56,30 +56,24 @@ seuInt <- readRDS(file = out)
 
 seuInt
 ```
+
 ## Update group labels
 
 ```{r}
 seuInt@meta.data %>%
   data.frame %>%
-  mutate(Status = ifelse(str_detect(Treatment, "ivacaftor"),
-                         "CF ivacaftor",
-                         ifelse(str_detect(Treatment, "orkambi"),
-                                "CF lumacaftor-ivacaftor",
-                                ifelse(Treatment == "untreated",
-                                       "CF no-modulator",
-                                       "non-CF control"))),
-         Status_sub = ifelse(str_detect(Treatment, "ivacaftor"),
-                         "CF.IVA",
-                         ifelse(str_detect(Treatment, "orkambi"),
-                                "CF.LUMA_IVA",
-                                ifelse(Treatment == "untreated",
-                                       "CF.NO_MOD",
-                                       "NON_CF.CTRL"))),
-         Group = ifelse(!Status_sub %in% "NON_CF.CTRL", 
-                        paste(Status_sub, 
-                              toupper(substr(Severity, 1, 1)),
-                              sep = "."), 
-                        Status_sub),
+  mutate(Group = ifelse(str_detect(Treatment, "ivacaftor"),
+                        "CF.IVA",
+                        ifelse(str_detect(Treatment, "orkambi"),
+                               "CF.LUMA_IVA",
+                               ifelse(Treatment == "untreated",
+                                      "CF.NO_MOD",
+                                      "NON_CF.CTRL"))),
+         Group_severity = ifelse(!Group %in% "NON_CF.CTRL", 
+                                 paste(Group, 
+                                       toupper(substr(Severity, 1, 1)),
+                                       sep = "."), 
+                                 Group),
          Severity = tolower(Severity),
          Participant = strsplit2(sample.id, ".", fixed = TRUE)[,1]) -> seuInt@meta.data
 ```
@@ -100,34 +94,46 @@ seuInt@meta.data %>%
   rownames_to_column(var = "cell") %>%
   left_join(labels %>%
               mutate(Cluster = as.factor(Cluster),
-                     Annotation = as.factor(Annotation),
-                     Broad = as.factor(Broad)),
+                     ann_level_3 = as.factor(ann_level_3),
+                     ann_level_2 = as.factor(ann_level_2),
+                     ann_level_1 = as.factor(ann_level_1)),
             by = c("wsnn_res.0.6" = "Cluster")) %>%
   column_to_rownames(var = "cell") -> seuInt@meta.data
 
-seuInt$Annotation <- fct_drop(seuInt$Annotation)
-seuInt$Broad <- fct_drop(seuInt$Broad)
+seuInt <- subset(seuInt, cells = which(seuInt$ann_level_3 != "unknown"))
+seuInt$ann_level_3 <- fct_drop(seuInt$ann_level_3)
+seuInt$ann_level_2 <- fct_drop(seuInt$ann_level_2)
+seuInt$ann_level_1 <- fct_drop(seuInt$ann_level_1)
 seuInt
 ```
 
 ## Visualise annotations
 
-```{r, fig.asp=0.8}
+```{r, fig.asp=1}
 options(ggrepel.max.overlaps = Inf)
 DimPlot(seuInt, reduction = 'umap', label = TRUE, repel = TRUE, 
         label.size = 3, group.by = grp) + 
   NoLegend() -> p1
 
 cluster_pal <- "ggsci::category20_d3"
-DimPlot(seuInt, reduction = 'umap', label = FALSE, group.by = "Annotation") + 
+DimPlot(seuInt, reduction = 'umap', label = FALSE, group.by = "ann_level_1") + 
   scale_color_paletteer_d(cluster_pal) +
   theme(text = element_text(size = 9),
         axis.text = element_blank(),
         axis.ticks = element_blank()) +
   NoLegend() -> p2
 
+DimPlot(seuInt, reduction = 'umap', label = FALSE, group.by = "ann_level_3") + 
+  scale_color_paletteer_d(cluster_pal) +
+  theme(text = element_text(size = 9),
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  NoLegend() -> p3
+
 p1
-LabelClusters(p2, id = "Annotation", repel = TRUE, 
+LabelClusters(p2, id = "ann_level_1", repel = TRUE, 
+              size = 2.5, box = TRUE, fontfamily = "arial")
+LabelClusters(p3, id = "ann_level_3", repel = TRUE, 
               size = 2.5, box = TRUE, fontfamily = "arial")
 ```
 
@@ -135,7 +141,17 @@ LabelClusters(p2, id = "Annotation", repel = TRUE,
 
 ```{r, fig.asp=1}
 seuInt@meta.data %>%
-  ggplot(aes(x = Annotation, fill = Annotation)) +
+  ggplot(aes(x = ann_level_1, fill = ann_level_1)) +
+  geom_bar() +
+  geom_text(aes(label = after_stat(count)), stat = "count",
+            vjust = -0.5, colour = "black", size = 2) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  NoLegend() +
+  scale_fill_paletteer_d(cluster_pal)
+
+seuInt@meta.data %>%
+  ggplot(aes(x = ann_level_3, fill = ann_level_3)) +
   geom_bar() +
   geom_text(aes(label = after_stat(count)), stat = "count",
             vjust = -0.5, colour = "black", size = 2) +
@@ -145,13 +161,21 @@ seuInt@meta.data %>%
   scale_fill_paletteer_d(cluster_pal)
 ```
 
-
+### % cells per cluster
 
 ```{r}
 seuInt@meta.data %>% 
-  dplyr::count(Annotation) %>% 
+  count(ann_level_1) %>% 
   mutate(perc = round(n/sum(n)*100, 1)) %>%
-  dplyr::rename(`Cell Label` = "Annotation", 
+  dplyr::rename(`Cell Label` = "ann_level_1", 
+                `No. Cells` = n,
+                `% Cells` = perc) %>%
+  knitr::kable()
+
+seuInt@meta.data %>% 
+  count(ann_level_3) %>% 
+  mutate(perc = round(n/sum(n)*100, 1)) %>%
+  dplyr::rename(`Cell Label` = "ann_level_3", 
                 `No. Cells` = n,
                 `% Cells` = perc) %>%
   knitr::kable()
@@ -165,7 +189,7 @@ Adapted from Dr. Belinda Phipson's [work](https://bphipson.github.io/Human_Devel
 
 ```{r}
 # limma-trend for DE
-Idents(seuInt) <- "Annotation"
+Idents(seuInt) <- "ann_level_3"
 
 out <- here("data",
             "C133_Neeland_merged",
@@ -189,7 +213,7 @@ if(!file.exists(out)){
 
 maxclust <- length(levels(Idents(seuInt))) - 1
 
-clustgrp <- seuInt$Annotation
+clustgrp <- seuInt$ann_level_3
 clustgrp <- factor(clustgrp)
 donor <- factor(seuInt$sample.id)
 batch <- factor(seuInt$Batch)
@@ -222,7 +246,7 @@ summary(decideTests(fit.cont))
 Test relative to a threshold (TREAT).
 
 ```{r}
-tr <- treat(fit.cont, lfc = 0.25)
+tr <- treat(fit.cont, lfc = 0.5)
 dt <- decideTests(tr)
 summary(dt)
 ```
@@ -264,7 +288,7 @@ geneCols <- paletteer_d(cluster_pal)[factor(names(top_markers))]
 strip <- strip_themed(background_x = elem_list_rect(fill = unique(geneCols)))
 DotPlot(seuInt,
         features = unname(top_markers),
-        group.by = "Annotation",
+        group.by = "ann_level_3",
         cols = c("azure1", "blueviolet"),
         dot.scale = 3,
         assay = "SCT") +
@@ -290,7 +314,7 @@ DotPlot(seuInt,
 
 ```{r}
 DefaultAssay(seuInt) <- "RNA"
-Idents(seuInt) <- "Annotation"
+Idents(seuInt) <- "ann_level_3"
 
 out <- here("data/cluster_annotations/seurat_markers_TNK_cells.rds")
 
@@ -325,7 +349,7 @@ geneCols <- paletteer_d(cluster_pal)[top5$cluster][!d]
 strip <- strip_themed(background_x = elem_list_rect(fill = unique(geneCols)))
 DotPlot(seuInt,
         features = sig[!d],
-        group.by = "Annotation",
+        group.by = "ann_level_3",
         cols = c("azure1", "blueviolet"),
         dot.scale = 3,
         assay = "SCT") +
@@ -396,7 +420,7 @@ ADTs$Description <- gsub(pattern, "", ADTs$Description)
 
 DotPlot(seuInt,
         features = ADTs$Description,
-        group.by = "Annotation",
+        group.by = "ann_level_3",
         cols = c("azure1", "blueviolet"),
         dot.scale = 2.5,
         assay = "ADT.dsb") +
