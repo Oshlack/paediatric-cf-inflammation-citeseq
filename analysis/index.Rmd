@@ -10,11 +10,11 @@ output:
     theme: cosmo
 ---
 
-<style>
-ol ul {
-    margin-bottom: 10px;
+```{css, echo=FALSE}
+li > ul {
+margin-bottom: 10px;
 }
-</style>
+```
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, number_sections = FALSE)
