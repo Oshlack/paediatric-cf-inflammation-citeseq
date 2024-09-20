@@ -10,12 +10,6 @@ output:
     theme: cosmo
 ---
 
-```{css, echo=FALSE}
-ol ul {
-    margin-bottom: 50px;
-}
-```
-
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, number_sections = FALSE)
 ```
@@ -25,13 +19,10 @@ Follow the links below to view the different parts of the analysis.
 
 # Abstract {-}
 
-
-
 # Authors {-}
-
-
  
 # Analysis Overview {-}
+
 ## Quality control {-}
 
 1. Remove empty droplets and demultiplex
