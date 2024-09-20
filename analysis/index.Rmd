@@ -11,8 +11,8 @@ output:
 ---
 
 ```{css, echo=FALSE}
-li > ul {
-margin-bottom: 10px;
+ol ul {
+    margin-bottom: 50px;
 }
 ```
 
