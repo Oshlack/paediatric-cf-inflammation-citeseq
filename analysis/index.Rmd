@@ -43,45 +43,29 @@ Follow the links below to view the different parts of the analysis.
     f) [Batch 5](01.5_preprocess_batch5.html)
     f) [Batch 6](01.6_preprocess_batch6.html)
 
-
-
-
 2. [Quality control](02.0_quality_control.html)
-
 
 3. [Identify doublets](03.0_identify_doublets.html)
 
-
 4. [Filter doublets](04.0_filter_doublets.html)
 
-
 5. [Remove ambient contamination](05.0_remove_ambient.html)
-
 
 6. Annotate using Human Lung Cell Atlas v2.0
     a)    [Without ambient removal](06.0_azimuth_annotation.html)
     b)    [With ambient removal](06.1_azimuth_annotation_decontx.html)
 
-
-
-
 7. [Cluster T/NK cells](07.1_integrate_cluster_t_cells_decontx.html)
-
 
 8. [Cluster rare cells](08.1_integrate_cluster_other_cells_decontx.html)
 
-
 9. [Cluster macrophage cells](09.0_integrate_cluster_macro_cells.html)
-
 
 10. [Annotate macrophage cells](10.0_manual_annotations_macro_cells.html) 
 
-
 11. [Annotate T/NK cells](11.0_manual_annotations_t_cells_decontx.html)  
 
-
 12. [Annotate rare cells](12.0_manual_annotations_other_cells.html) 
-
 
 13. Differential expression analysis within macrophage sub-types
     a)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html) 
@@ -99,19 +83,12 @@ Follow the links below to view the different parts of the analysis.
     m)    [Macro. proliferating CF modifiers & severity](13.12_DGE_analysis_macro-proliferating_CF-only-samples.html) 
     n)    [Macro. proliferating CF$\pm$modifiers vs non-CF control](13.13_DGE_analysis_macro-proliferating_CF-vs-control-samples.html)
 
-
-
-
-
 14. Analyse cell types proportions
     a)    [Annotation level 1](14.0_proportions_analysis_ann_level_1.html) 
     b)    [Annotation level 3, non macro. cells](14.1_proportions_analysis_ann_level_3_non-macrophages.html)
     c)    [Annotation level 3, macro. cells](14.2_proportions_analysis_ann_level_3_macrophages.html) 
     
-    
-    
 15. [Figure 1](15.0_Figure_1.html)
-
 
 16. [Figure 2](16.0_Figure_2.html)
 
