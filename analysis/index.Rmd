@@ -33,6 +33,9 @@ Follow the links below to view the different parts of the analysis.
     f) [Batch 6](01.6_preprocess_batch6.html)
 <!-- -->
 
+
+
+
 2. [Quality control](02.0_quality_control.html)
 
 3. [Identify doublets](03.0_identify_doublets.html)
@@ -45,6 +48,9 @@ Follow the links below to view the different parts of the analysis.
     a)    [Without ambient removal](06.0_azimuth_annotation.html)
     b)    [With ambient removal](06.1_azimuth_annotation_decontx.html)
 <!-- -->
+
+
+
 
 7. [Cluster T/NK cells](07.1_integrate_cluster_t_cells_decontx.html)
 
@@ -75,11 +81,17 @@ Follow the links below to view the different parts of the analysis.
     n)    [Macro. proliferating CF$\pm$modifiers vs non-CF control](13.13_DGE_analysis_macro-proliferating_CF-vs-control-samples.html)
 <!-- -->
 
+
+
+
 14. Analyse cell types proportions
     a)    [Annotation level 1](14.0_proportions_analysis_ann_level_1.html) 
     b)    [Annotation level 3, non macro. cells](14.1_proportions_analysis_ann_level_3_non-macrophages.html)
     c)    [Annotation level 3, macro. cells](14.2_proportions_analysis_ann_level_3_macrophages.html) 
 <!-- -->
+
+
+
 
 15. [Figure 1](15.0_Figure_1.html)
 
