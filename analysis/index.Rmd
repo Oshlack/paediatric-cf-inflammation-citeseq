@@ -28,7 +28,7 @@ Follow the links below to view the different parts of the analysis.
 # Analysis Overview {-}
 ## Quality control {-}
 
-1. Empty droplet removal and demultiplexing
+1. Remove empty droplets and demultiplex
     a) [Batch 0](01.0_preprocess_batch0.html)
     b) [Batch 1](01.1_preprocess_batch1.html)
     c) [Batch 2](01.2_preprocess_batch2.html)
@@ -52,7 +52,6 @@ Follow the links below to view the different parts of the analysis.
 5. [Remove ambient contamination](05.0_remove_ambient.html)
 
 
-
 6. Annotate using Human Lung Cell Atlas v2.0
     a)    [Without ambient removal](06.0_azimuth_annotation.html)
     b)    [With ambient removal](06.1_azimuth_annotation_decontx.html)
@@ -60,44 +59,22 @@ Follow the links below to view the different parts of the analysis.
 
 
 
-7. Integrate and cluster T-cells
-    a)    [Without ambient removal](07.0_integrate_cluster_t_cells.html)
-    b)    [With ambient removal](07.1_integrate_cluster_t_cells_decontx.html)
+7. [Cluster T/NK cells](07.1_integrate_cluster_t_cells_decontx.html)
 
 
+8. [Cluster rare cells](08.1_integrate_cluster_other_cells_decontx.html)
 
 
-8. Integrate and cluster other cells
-    a)    [Without ambient removal](08.0_integrate_cluster_other_cells.html)
-    b)    [With ambient removal](08.1_integrate_cluster_other_cells_decontx.html)
+9. [Cluster macrophage cells](09.0_integrate_cluster_macro_cells.html)
 
 
+10. [Annotate macrophage cells](10.0_manual_annotations_macro_cells.html) 
 
 
-9. Integrate and cluster macrophage cells
-    a)    [Without ambient removal](09.0_integrate_cluster_macro_cells.html)
-    b)    [With ambient removal](09.1_integrate_cluster_macro_cells_decontx.html)  
+11. [Annotate T/NK cells](11.0_manual_annotations_t_cells_decontx.html)  
 
 
-
-
-10. Macrophage annotations
-    a)    [Without ambient removal](10.0_manual_annotations_macro_cells.html) 
-    b)    [With ambient removal](10.1_manual_annotations_macro_cells_decontx.html)  
-    
-
-
-
-11. T/NK cell annotations
-    a)    [With ambient removal](11.0_manual_annotations_t_cells_decontx.html)  
-    
-
-
-
-12. Other annotations
-    a)    [With ambient removal](12.0_manual_annotations_other_cells_decontx.html)  
-
-
+12. [Annotate rare cells](12.0_manual_annotations_other_cells.html) 
 
 
 13. Differential expression analysis within macrophage sub-types
@@ -120,13 +97,19 @@ Follow the links below to view the different parts of the analysis.
 
 
 
-14. Cell type proportions
+14. Analyse cell types proportions
     a)    [Annotation level 1](14.0_proportions_analysis_ann_level_1.html) 
     b)    [Annotation level 3, non macro. cells](14.1_proportions_analysis_ann_level_3_non-macrophages.html)
     c)    [Annotation level 3, macro. cells](14.2_proportions_analysis_ann_level_3_macrophages.html) 
     
     
     
+15. [Figure 1](15.0_Figure_1.html)
+
+
+16. [Figure 2](16.0_Figure_2.html)
+
+
     
     
 To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6.
