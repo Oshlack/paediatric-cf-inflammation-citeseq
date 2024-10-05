@@ -469,8 +469,8 @@ for(k in 1:6){
     ifelse(ySub$samples$Participant == d, 1, 0)  
   }, USE.NAMES = TRUE)
   
-  contr <- makeContrasts(CF.NO_MODvCF.IVA = CF.NO_MOD - CF.IVA,
-                         CF.NO_MODvCF.LUMA_IVA = CF.NO_MOD - CF.LUMA_IVA,
+  contr <- makeContrasts(CF.IVAvCF.NO_MOD =  CF.IVA - CF.NO_MOD,
+                         CF.LUMA_IVAvCF.NO_MOD = CF.LUMA_IVA - CF.NO_MOD,
                          levels = design)
   
   y <- DGEList(counts = ySub$counts)
@@ -583,8 +583,8 @@ p2
 Create the contrast matrix for the sample group comparisons.
 
 ```{r}
-contr <- makeContrasts(CF.NO_MODvCF.IVA = CF.NO_MOD - CF.IVA,
-                CF.NO_MODvCF.LUMA_IVA = CF.NO_MOD - CF.LUMA_IVA,
+contr <- makeContrasts(CF.IVAvCF.NO_MOD =  CF.IVA - CF.NO_MOD,
+                CF.LUMA_IVAvCF.NO_MOD = CF.LUMA_IVA - CF.NO_MOD,
                 levels = design)
 
 contr %>% knitr::kable()
@@ -744,7 +744,7 @@ for(k in 1:6){
     ifelse(ySub$samples$Participant == d, 1, 0)  
   }, USE.NAMES = TRUE)
   
-  contr <- makeContrasts(CF.NO_MOD.MvCF.NO_MOD.S = CF.NO_MOD.M - CF.NO_MOD.S,
+  contr <- makeContrasts(CF.NO_MOD.SvCF.NO_MOD.M = CF.NO_MOD.S - CF.NO_MOD.M,
                          levels = design)
   
   y <- DGEList(counts = ySub$counts)
@@ -854,7 +854,7 @@ p2
 Create the contrast matrix for the sample group comparisons.
 
 ```{r}
-contr <- makeContrasts(CF.NO_MOD.MvCF.NO_MOD.S = CF.NO_MOD.M - CF.NO_MOD.S,
+contr <- makeContrasts(CF.NO_MOD.SvCF.NO_MOD.M = CF.NO_MOD.S - CF.NO_MOD.M,
                          levels = design)
 
 contr %>% knitr::kable()
