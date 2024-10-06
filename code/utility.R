@@ -372,3 +372,100 @@ create_custom_gene_lists_from_file <- function(file = file){
   
   split(tmp$entrez, tmp$source)
 }
+
+draw_umap_with_labels <- function(seu, ann_level, cluster_pal, direction = 1){
+  DimPlot(seu, 
+          group.by = ann_level, label = F, repel = T,
+          label.size = 3) +
+    scale_color_paletteer_d(cluster_pal, direction = direction) +
+    NoLegend() -> p1
+  
+  LabelClusters(p1, id = ann_level, repel = TRUE,
+                size = 3, box = TRUE, fontfamily = "arial") +
+    theme(axis.title = element_blank(),
+          axis.text = element_blank(),
+          axis.ticks = element_blank(),
+          axis.line = element_blank(),
+          plot.title = element_blank())
+  
+}
+
+draw_marker_gene_dotplot <- function(seu, rds_path, ann_level, cluster_pal, direction = 1){
+  markers <- readRDS(rds_path)
+  
+  markers %>%
+    group_by(cluster) %>%
+    slice_head(n = 10) %>%
+    mutate(cluster = as.character(cluster)) %>%
+    ungroup() %>%
+    dplyr::arrange(cluster, .by_group = FALSE) -> markers
+  
+  d <- duplicated(markers$gene)
+  markers[!d,] %>%
+    group_by(cluster) %>%
+    slice_head(n = 5) -> top
+  
+  pal <- setNames(paletteer::paletteer_d(cluster_pal, direction = direction),
+                  unique(markers$cluster))
+  cell_type_cols <- pal[top$cluster]
+  
+  DefaultAssay(seu) <- "RNA"
+  strip <- strip_themed(background_x = elem_list_rect(fill = unique(cell_type_cols)))
+  DotPlot(seu,
+          features = top$gene,
+          group.by = ann_level,
+          cols = c("azure1", "blueviolet"),
+          dot.scale = 3,
+          assay = "SCT") +
+    FontSize(x.text = 9, y.text = 9) +
+    labs(y = element_blank(), x = element_blank()) +
+    facet_grid2(~top$cluster,
+                scales = "free_x",
+                space = "free_x",
+                 strip = strip) +
+    theme(axis.text.x = element_text(angle = 90,
+                                     hjust = 1,
+                                     vjust = 0.5,
+                                     size = 8),
+          axis.text.y = element_text(size = 8),
+          legend.text = element_text(size = 8),
+          legend.title = element_text(size = 9),
+          legend.position = "bottom",
+          strip.text = element_text(size = 0),
+          text = element_text(family = "arial"),
+          axis.ticks = element_blank(),
+          axis.line = element_blank(),
+          panel.spacing = unit(2, "points"))
+}
+
+draw_cell_type_proportions_barplot <- function(seu, ann_level, cluster_pal,
+                                               direction = 1){
+  props <- getTransformedProps(clusters = seu@meta.data[,ann_level],
+                               sample = seu$sample.id, transform="asin")
+  
+  props$Proportions %>%
+    data.frame %>%
+    inner_join(seu@meta.data %>%
+                 dplyr::select(sample.id,
+                               Group),
+               by = c("sample" = "sample.id")) %>%
+    distinct() %>%
+    ggplot(aes(x = sample, y = Freq, fill = clusters)) +
+    geom_bar(stat = "identity", color = "black", size = 0.1) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45,
+                                     vjust = 1,
+                                     hjust = 1,
+                                     size = 8),
+          axis.title = element_text(size = 9),
+          strip.text = element_text(size = 8),
+          #strip.background = element_blank(),
+          panel.spacing = unit(2, "points", data = NULL),
+          plot.margin = unit(c(0, 0, 0, 0), "lines"),
+          legend.text = element_text(size = 8),
+          legend.key.size = unit(1, "lines"),
+          legend.title = element_text(size = 9)) +
+    labs(y = "Cell type proportion", fill = "Cell type", x = "Sample") +
+    scale_fill_paletteer_d(cluster_pal, direction = direction) +
+    facet_grid(~Group, scales = "free_x", space = "free_x")
+}
