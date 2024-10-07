@@ -39,7 +39,10 @@ suppressPackageStartupMessages({
  library(paletteer)
  library(dsb)
  library(ggh4x)
+  library(readxl)
 })
+
+source(here("code/utility.R"))
 ```
 
 # Load data
@@ -58,278 +61,180 @@ seuLst
 options(ggrepel.max.overlaps = Inf)
 cluster_pal <- "ggsci::category20_d3"
 
-DimPlot(seuLst[[3]], 
-        group.by = "ann_level_3", label = F, repel = T,
-        label.size = 3) +
-  scale_color_paletteer_d(cluster_pal, direction = 1) +
-  NoLegend() -> p1
-
-LabelClusters(p1, id = "ann_level_3", repel = TRUE, 
-              size = 2, box = TRUE, fontfamily = "arial") +
-  theme(axis.title = element_blank(),
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        axis.line = element_blank(),
-        plot.title = element_blank()) -> f2a
-
+draw_umap_with_labels(seuLst[[3]], 
+                      "ann_level_3", 
+                      cluster_pal) -> f2a
 f2a
 ```
 ```{r, fig.width=13, fig.asp=0.4}
 markers <- readRDS(here("data/cluster_annotations/seurat_markers_macrophages.rds"))
 
-markers %>%
-  group_by(cluster) %>%
-  slice_head(n = 10) %>%
-  mutate(cluster = as.character(cluster)) %>%
-  ungroup() %>%
-  dplyr::arrange(cluster, .by_group = FALSE) -> markers
+draw_marker_gene_dotplot(seuLst[[3]],
+                         markers,
+                         "ann_level_3",
+                         cluster_pal)
 
-d <- duplicated(markers$gene)
-markers[!d,] %>%
-  group_by(cluster) %>%
-  slice_head(n = 5) -> top
+labels <- read_excel(here("data",
+                          "cluster_annotations",
+                          "macrophages_26.06.24.xlsx"))
+  
+unnest(enframe(setNames(str_split(labels$`Relevant marker genes`, ", "),
+                        labels$ann_level_3),
+               value = "gene",
+               name = "cluster"),
+       cols = gene) %>%
+  arrange(cluster) %>%
+  distinct() -> markers
 
-pal <- setNames(paletteer::paletteer_d(cluster_pal),
-                unique(markers$cluster))
-cell_type_cols <- pal[top$cluster]
+markers <- markers[markers$gene %in% rownames(seuLst[[3]]),]
 
-DefaultAssay(seuLst[[3]]) <- "RNA"
-strip <- strip_themed(background_x = elem_list_rect(fill = unique(cell_type_cols)))
-DotPlot(seuLst[[3]],
-        features = top$gene,
-        group.by = "ann_level_3",
-        cols = c("azure1", "blueviolet"),
-        dot.scale = 3,
-        assay = "SCT") +
-  FontSize(x.text = 9, y.text = 9) +
-  labs(y = element_blank(), x = element_blank()) +
-  # facet_grid2(~top$cluster, 
-  #             scales = "free_x", 
-  #             space = "free_x", 
-  #             strip = strip) +
-  theme(axis.text.x = element_text(angle = 90,
-                                   hjust = 1,
-                                   vjust = 0.5,
-                                   size = 8),
-        axis.text.y = element_text(size = 8),
-        legend.text = element_text(size = 8),
-        legend.title = element_text(size = 9),
-        legend.position = "bottom",
-        strip.text = element_text(size = 0),
-        text = element_text(family = "arial"),
-        axis.ticks = element_blank(),
-        axis.line = element_blank(),
-        panel.spacing = unit(2, "mm")) -> f2b
+draw_marker_gene_dotplot(seuLst[[3]], 
+                         markers, 
+                         "ann_level_3", 
+                         cluster_pal,
+                         direction = -1,
+                         num = 5) -> f2b
 
 f2b
+```
+
+```{r}
+draw_cell_type_proportions_barplot(seuLst[[3]],
+                                   "ann_level_3",
+                                   cluster_pal) -> f2c
+
+f2c
 ```
 
 
 # T/NK cells figure panels
 
 ```{r}
-DimPlot(seuLst[[2]], 
-        group.by = "ann_level_3", label = F, repel = T,
-        label.size = 3) +
-  scale_color_paletteer_d(cluster_pal, direction = 1) +
-  NoLegend() -> p1
+cluster_pal <- "ggsci::category20b_d3"
 
-LabelClusters(p1, id = "ann_level_3", repel = TRUE, 
-              size = 2, box = TRUE, fontfamily = "arial") +
-  theme(axis.title = element_blank(),
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        axis.line = element_blank(),
-        plot.title = element_blank()) -> f2c
+draw_umap_with_labels(seuLst[[2]], 
+                      "ann_level_3", 
+                      cluster_pal,
+                      direction = -1) -> f2d
 
-f2c
+f2d
 ```
 
 ```{r, fig.width=12, fig.asp=0.4}
 markers <- readRDS(here("data/cluster_annotations/seurat_markers_TNK_cells.rds"))
 
-markers %>%
-  group_by(cluster) %>%
-  slice_head(n = 10) %>%
-  mutate(cluster = as.character(cluster)) %>%
-  ungroup() %>%
-  dplyr::arrange(cluster, .by_group = FALSE) -> markers
+draw_marker_gene_dotplot(seuLst[[2]],
+                         markers,
+                         "ann_level_3",
+                         cluster_pal,
+                         direction = -1) 
 
-d <- duplicated(markers$gene)
-markers[!d,] %>%
-  group_by(cluster) %>%
-  slice_head(n = 5) -> top
+labels <- read_excel(here("data",
+                          "cluster_annotations",
+                          "T-NK_ambientRNAremoval_21.03.24.xlsx"),
+                     skip = 1)
+  
+unnest(enframe(setNames(str_split(labels$`Relevant marker genes`, ", "),
+                        labels$ann_level_3),
+               value = "gene",
+               name = "cluster"),
+       cols = gene) %>%
+  arrange(cluster) %>%
+  distinct() -> markers
 
-pal <- setNames(paletteer::paletteer_d(cluster_pal),
-                unique(markers$cluster))
-cell_type_cols <- pal[top$cluster]
+markers <- markers[markers$gene %in% rownames(seuLst[[2]]),]
 
-DefaultAssay(seuLst[[2]]) <- "RNA"
-strip <- strip_themed(background_x = elem_list_rect(fill = unique(cell_type_cols)))
-DotPlot(seuLst[[2]],
-        features = top$gene,
-        group.by = "ann_level_3",
-        cols = c("azure1", "blueviolet"),
-        dot.scale = 3,
-        assay = "SCT") +
-  FontSize(x.text = 9, y.text = 9) +
-  labs(y = element_blank(), x = element_blank()) +
-  # facet_grid2(~top$cluster, 
-  #             scales = "free_x", 
-  #             space = "free_x", 
-  #             strip = strip) +
-  theme(axis.text.x = element_text(angle = 90,
-                                   hjust = 1,
-                                   vjust = 0.5,
-                                   size = 8),
-        axis.text.y = element_text(size = 8),
-        legend.text = element_text(size = 8),
-        legend.title = element_text(size = 9),
-        legend.position = "bottom",
-        strip.text = element_text(size = 0),
-        text = element_text(family = "arial"),
-        axis.ticks = element_blank(),
-        axis.line = element_blank(),
-        panel.spacing = unit(2, "mm")) -> f2d
+draw_marker_gene_dotplot(seuLst[[2]], 
+                         markers, 
+                         "ann_level_3", 
+                         cluster_pal,
+                         direction = -1,
+                         num = 5) -> f2e
 
-f2d
+f2e
 ```
 
-<!-- ```{r} -->
-<!-- ADTs <- read_csv(file = here("data", -->
-<!--                        "Proteins_broad_22.04.22.csv")) -->
-<!-- pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human " -->
-<!-- ADTs$Description <- gsub(pattern, "", ADTs$Description) -->
+```{r}
+draw_cell_type_proportions_barplot(seuLst[[2]],
+                                   "ann_level_3",
+                                   cluster_pal,
+                                   direction = -1) -> f2f
 
-<!-- seuADT@meta.data %>% -->
-<!--   dplyr::select(ann_level_1) %>% -->
-<!--   rownames_to_column(var = "cell") %>% -->
-<!--   inner_join(as.data.frame(t(seuADT[["ADT"]]@data)) %>% -->
-<!--                rownames_to_column(var = "cell")) %>% -->
-<!--   pivot_longer(c(-cell, -ann_level_1), -->
-<!--                names_to = "ADT", -->
-<!--                values_to = "Expression") %>% -->
-<!--   dplyr::group_by(ann_level_1, ADT) %>% -->
-<!--   dplyr::summarize(Expression = mean(Expression)) %>% -->
-<!--   ungroup() %>% -->
-<!--   dplyr::filter(ADT %in% ADTs$Description) -> dat -->
-
-<!-- plot(density(dat$Expression)) -->
-<!-- ``` -->
-
-<!-- ```{r, fig.width=} -->
-<!-- dat %>% -->
-<!--   dplyr::rename("Protein" = "ADT", -->
-<!--                 "DSB Exp." = "Expression", -->
-<!--                 "Cell type" = "ann_level_1") %>% -->
-<!--   tidyHeatmap::heatmap( -->
-<!--     .column = Protein, -->
-<!--     .row = `Cell type`, -->
-<!--     .value = `DSB Exp.`, -->
-<!--     scale = "none", -->
-<!--     rect_gp = grid::gpar(col = "white", lwd = 1), -->
-<!--     show_row_names = TRUE,  -->
-<!--     cluster_rows = FALSE, -->
-<!--     cluster_columns = FALSE, -->
-<!--     column_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"), -->
-<!--     column_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"), -->
-<!--     row_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"), -->
-<!--     row_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"), -->
-<!--     column_title_side = "top", -->
-<!--     palette_value = circlize::colorRamp2(seq(0, 2, length.out = 256), -->
-<!--                                          viridis::magma(256)), -->
-<!--     heatmap_legend_param = list(direction = "vertical")) %>% -->
-<!--   add_tile(`Cell type`, show_legend = FALSE, -->
-<!--            show_annotation_name = FALSE, -->
-<!--            palette = paletteer_d("miscpalettes::pastel",  -->
-<!--                                  length(unique(seuADT$ann_level_1)))) %>% -->
-<!--     as_ComplexHeatmap() -> f1e -->
-<!-- f1e -->
-<!-- ``` -->
+f2f
+```
 
 # Rare cells figure panels
 
 ```{r}
-DimPlot(seuLst[[1]], 
-        group.by = "ann_level_3", label = F, repel = T,
-        label.size = 3) +
-  scale_color_paletteer_d(cluster_pal, direction = 1) +
-  NoLegend() -> p1
+cluster_pal <- "ggsci::category20c_d3"
 
-LabelClusters(p1, id = "ann_level_3", repel = TRUE, 
-              size = 2, box = TRUE, fontfamily = "arial") +
-  theme(axis.title = element_blank(),
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        axis.line = element_blank(),
-        plot.title = element_blank()) -> f2e
+draw_umap_with_labels(seuLst[[1]], 
+                      "ann_level_3", 
+                      cluster_pal) -> f2g
 
-f2e
+f2g
 ```
 
 ```{r, fig.width=13, fig.asp=0.4}
 markers <- readRDS(here("data/cluster_annotations/seurat_markers_other_cells.rds"))
 
-markers %>%
-  group_by(cluster) %>%
-  slice_head(n = 10) %>%
-  mutate(cluster = as.character(cluster)) %>%
-  ungroup() %>%
-  dplyr::arrange(cluster, .by_group = FALSE) -> markers
+draw_marker_gene_dotplot(seuLst[[1]],
+                         markers,
+                         "ann_level_3",
+                         cluster_pal) 
 
-d <- duplicated(markers$gene)
-markers[!d,] %>%
-  group_by(cluster) %>%
-  slice_head(n = 5) -> top
+labels <- read_excel(here("data",
+                          "cluster_annotations",
+                          "others_ambientRNAremoval_21.03.24.xlsx"),
+                     skip = 1)
+  
+unnest(enframe(setNames(str_split(labels$`Relevant marker genes`, ", "),
+                        labels$ann_level_3),
+               value = "gene",
+               name = "cluster"),
+       cols = gene) %>%
+  arrange(cluster) %>%
+  distinct() -> markers
 
-pal <- setNames(paletteer::paletteer_d(cluster_pal),
-                unique(markers$cluster))
-cell_type_cols <- pal[top$cluster]
+markers <- markers[markers$gene %in% rownames(seuLst[[1]]),]
 
-DefaultAssay(seuLst[[1]]) <- "RNA"
-strip <- strip_themed(background_x = elem_list_rect(fill = unique(cell_type_cols)))
-DotPlot(seuLst[[1]],
-        features = top$gene,
-        group.by = "ann_level_3",
-        cols = c("azure1", "blueviolet"),
-        dot.scale = 3,
-        assay = "SCT") +
-  FontSize(x.text = 9, y.text = 9) +
-  labs(y = element_blank(), x = element_blank()) +
-  # facet_grid2(~top$cluster, 
-  #             scales = "free_x", 
-  #             space = "free_x", 
-  #             strip = strip) +
-  theme(axis.text.x = element_text(angle = 90,
-                                   hjust = 1,
-                                   vjust = 0.5,
-                                   size = 8),
-        axis.text.y = element_text(size = 8),
-        legend.text = element_text(size = 8),
-        legend.title = element_text(size = 9),
-        legend.position = "bottom",
-        strip.text = element_text(size = 0),
-        text = element_text(family = "arial"),
-        axis.ticks = element_blank(),
-        axis.line = element_blank(),
-        panel.spacing = unit(2, "mm")) -> f2f
+draw_marker_gene_dotplot(seuLst[[1]], 
+                         markers, 
+                         "ann_level_3", 
+                         cluster_pal,
+                         direction = -1,
+                         num = 5) -> f2h
 
-f2f
+f2h
+```
+
+```{r}
+draw_cell_type_proportions_barplot(seuLst[[1]],
+                                   "ann_level_3",
+                                   cluster_pal) -> f2i
+
+f2i
 ```
 
 
-```{r, fig.width=16, fig.asp=0.9}
+```{r, fig.width=17, fig.asp=1.4}
 layout = "
-AABBBBB
-CCDDDDD
-EEFFFFF
+AAABBBBB
+AAACCCCC
+DDDEEEEE
+DDDFFFFF
+GGGHHHHH
+GGGIIIII
 "
 (wrap_elements(f2a) +
     wrap_elements(f2b) +
     wrap_elements(f2c) +
     wrap_elements(f2d) +
     wrap_elements(f2e) +
-    wrap_elements(f2f)) +
+    wrap_elements(f2f) +
+    wrap_elements(f2g) +
+    wrap_elements(f2h) +
+    wrap_elements(f2i)) +
   plot_layout(design = layout) +
   plot_annotation(tag_levels = "A") &
   theme(plot.tag = element_text(size = 16,
@@ -338,59 +243,6 @@ EEFFFFF
 ```
 
 
-<!-- ## Cell proportions by sample -->
-
-
-<!-- ```{r, fig.asp=0.75, fig.width=10} -->
-<!-- seu@meta.data %>% -->
-<!--   dplyr::select(sample.id, Group) %>% -->
-<!--   count(sample.id, Group) %>%  -->
-<!--   ungroup() %>% -->
-<!-- ggplot(aes(x = sample.id, y = n, fill = Group)) + -->
-<!--   geom_bar(stat = "identity", color = "black", size = 0.1) + -->
-<!--   theme_classic() + -->
-<!--   theme(axis.text.x = element_blank(), -->
-<!--         axis.title.x = element_blank(), -->
-<!--         axis.ticks.x = element_blank(), -->
-<!--         axis.line.x = element_blank(), -->
-<!--         strip.text = element_blank(), -->
-<!--         strip.background = element_blank(), -->
-<!--         plot.margin = unit(c(0, 0, 0, 0), "lines")) + -->
-<!--   labs(y = "Number of cells", fill = "Condition") + -->
-<!--   scale_fill_paletteer_d("RColorBrewer::Set2", direction = 1) + -->
-<!--   facet_grid(~Group, scales = "free_x", space = "free_x") -> p2 -->
-
-<!-- props <- getTransformedProps(clusters = seu$ann_level_1, -->
-<!--                              sample = seu$sample.id, transform="asin") -->
-
-<!-- props$Proportions %>% -->
-<!--   data.frame %>% -->
-<!--   inner_join(seu@meta.data %>% -->
-<!--                dplyr::select(sample.id, -->
-<!--                              Group), -->
-<!--              by = c("sample" = "sample.id")) %>% -->
-<!--   distinct() %>% -->
-<!-- ggplot(aes(x = sample, y = Freq, fill = clusters)) + -->
-<!--   geom_bar(stat = "identity", color = "black", size = 0.1) + -->
-<!--   theme_classic() + -->
-<!--   theme(axis.text.x = element_text(angle = 45, -->
-<!--                                    vjust = 1, -->
-<!--                                    hjust = 1, -->
-<!--                                    size = 8), -->
-<!--         strip.text = element_blank(), -->
-<!--         strip.background = element_blank(), -->
-<!--         plot.margin = unit(c(0, 0, 0, 0), "lines")) + -->
-<!--   labs(y = "Cell type proportion", fill = "Cell type", x = "Sample") + -->
-<!--   scale_fill_paletteer_d("miscpalettes::pastel", direction = 1) + -->
-<!--   facet_grid(~Group, scales = "free_x", space = "free_x") -> p3 -->
-
-<!-- (p2 / p3) + plot_layout(guides = "collect") & -->
-<!--   theme(legend.text = element_text(size = 8), -->
-<!--         legend.title = element_text(size = 10), -->
-<!--         legend.key.size = unit(1, "lines")) -> f1c -->
-
-<!-- f1c -->
-<!-- ``` -->
 
 # Session info
 
