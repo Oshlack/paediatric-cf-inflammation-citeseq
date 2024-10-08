@@ -81,8 +81,8 @@ Follow the links below to view the different parts of the analysis.
 
 16. [Figure 2](16.0_Figure_2.html)
 
+17.0 [S. Figure ADTs](17.0_Supplementary_Figure_ADTs.html)    
 
-    
     
 To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6.
 
