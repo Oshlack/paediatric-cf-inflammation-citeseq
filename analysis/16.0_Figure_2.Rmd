@@ -66,20 +66,22 @@ draw_umap_with_labels(seuLst[[3]],
                       cluster_pal) -> f2a
 f2a
 ```
-```{r, fig.width=13, fig.asp=0.4}
-markers <- readRDS(here("data/cluster_annotations/seurat_markers_macrophages.rds"))
 
-draw_marker_gene_dotplot(seuLst[[3]],
-                         markers,
-                         "ann_level_3",
-                         cluster_pal)
+```{r, fig.width=13, fig.asp=0.4}
+# markers <- readRDS(here("data/cluster_annotations/seurat_markers_macrophages.rds"))
+# 
+# draw_marker_gene_dotplot(seuLst[[3]],
+#                          markers,
+#                          "ann_level_3",
+#                          cluster_pal)
 
 labels <- read_excel(here("data",
                           "cluster_annotations",
-                          "macrophages_26.06.24.xlsx"))
-  
-unnest(enframe(setNames(str_split(labels$`Relevant marker genes`, ", "),
-                        labels$ann_level_3),
+                          "marker_genes_macrophages_figure_2.xlsx"))
+                          #"macrophages_26.06.24.xlsx"))
+                          
+unnest(enframe(setNames(str_split(labels$`non-overlapping marker genes`, ", "),
+                        labels$`cell label`),
                value = "gene",
                name = "cluster"),
        cols = gene) %>%
@@ -121,21 +123,21 @@ f2d
 ```
 
 ```{r, fig.width=12, fig.asp=0.4}
-markers <- readRDS(here("data/cluster_annotations/seurat_markers_TNK_cells.rds"))
-
-draw_marker_gene_dotplot(seuLst[[2]],
-                         markers,
-                         "ann_level_3",
-                         cluster_pal,
-                         direction = -1) 
-
+# markers <- readRDS(here("data/cluster_annotations/seurat_markers_TNK_cells.rds"))
+# 
+# draw_marker_gene_dotplot(seuLst[[2]],
+#                          markers,
+#                          "ann_level_3",
+#                          cluster_pal,
+#                          direction = -1) 
 labels <- read_excel(here("data",
                           "cluster_annotations",
-                          "T-NK_ambientRNAremoval_21.03.24.xlsx"),
-                     skip = 1)
+                          #"T-NK_ambientRNAremoval_21.03.24.xlsx"),
+                          "marker_genes_TNK_figure_2.xlsx"))
+                     #skip = 1)
   
-unnest(enframe(setNames(str_split(labels$`Relevant marker genes`, ", "),
-                        labels$ann_level_3),
+unnest(enframe(setNames(str_split(labels$`non-overlapping marker genes`, ", "),
+                        labels$`cell label`),
                value = "gene",
                name = "cluster"),
        cols = gene) %>%
@@ -176,20 +178,21 @@ f2g
 ```
 
 ```{r, fig.width=13, fig.asp=0.4}
-markers <- readRDS(here("data/cluster_annotations/seurat_markers_other_cells.rds"))
-
-draw_marker_gene_dotplot(seuLst[[1]],
-                         markers,
-                         "ann_level_3",
-                         cluster_pal) 
+# markers <- readRDS(here("data/cluster_annotations/seurat_markers_other_cells.rds"))
+# 
+# draw_marker_gene_dotplot(seuLst[[1]],
+#                          markers,
+#                          "ann_level_3",
+#                          cluster_pal) 
 
 labels <- read_excel(here("data",
                           "cluster_annotations",
-                          "others_ambientRNAremoval_21.03.24.xlsx"),
-                     skip = 1)
+                          #"others_ambientRNAremoval_21.03.24.xlsx"),
+                          "marker_genes_other_figure_2.xlsx"))
+                     #skip = 1)
   
-unnest(enframe(setNames(str_split(labels$`Relevant marker genes`, ", "),
-                        labels$ann_level_3),
+unnest(enframe(setNames(str_split(labels$`non-overlapping marker genes`, ", "),
+                        labels$`cell label`),
                value = "gene",
                name = "cluster"),
        cols = gene) %>%
