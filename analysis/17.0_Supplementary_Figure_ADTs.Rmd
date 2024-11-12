@@ -39,6 +39,7 @@ suppressPackageStartupMessages({
  library(paletteer)
  library(dsb)
  library(ggh4x)
+ library(readxl)
 })
 ```
 
@@ -114,10 +115,13 @@ seuADT
 ```
 
 ```{r}
-ADTs <- read_csv(file = here("data",
-                       "Proteins_macs_22.04.22.csv"))
-pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human "
-ADTs$Description <- gsub(pattern, "", ADTs$Description)
+# ADTs <- read_csv(file = here("data",
+#                        "Proteins_macs_22.04.22.csv"))
+# pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human "
+# ADTs$Description <- gsub(pattern, "", ADTs$Description)
+ADTs <- read_excel(here("data",
+                          "cluster_annotations",
+                          "marker_proteins_macrophages_supp.xlsx"))
 
 seuADT@meta.data %>%
   dplyr::filter(ann_level_1 == "macrophages") %>%
@@ -131,7 +135,7 @@ seuADT@meta.data %>%
   dplyr::group_by(ann_level_3, ADT) %>%
   dplyr::summarize(Expression = mean(Expression)) %>%
   ungroup() %>%
-  dplyr::filter(ADT %in% ADTs$Description) -> dat
+  dplyr::filter(ADT %in% ADTs$ADT) -> dat
 
 plot(density(dat$Expression))
 ```
@@ -167,10 +171,14 @@ dat %>%
 sf1a
 ```
 ```{r}
-ADTs <- read_csv(file = here("data",
-                       "Proteins_T-NK_22.04.22.csv"))
-pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human "
-ADTs$Description <- gsub(pattern, "", ADTs$Description)
+# ADTs <- read_csv(file = here("data",
+#                        "Proteins_T-NK_22.04.22.csv"))
+# pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human "
+# ADTs$Description <- gsub(pattern, "", ADTs$Description)
+
+ADTs <- read_excel(here("data",
+                          "cluster_annotations",
+                          "marker_proteins_TNK_supp.xlsx"))
 
 seuADT@meta.data %>%
   dplyr::filter(ann_level_1 %in% unique(seuLst[[2]]$ann_level_1)) %>%
@@ -184,7 +192,7 @@ seuADT@meta.data %>%
   dplyr::group_by(ann_level_3, ADT) %>%
   dplyr::summarize(Expression = mean(Expression)) %>%
   ungroup() %>%
-  dplyr::filter(ADT %in% ADTs$Description) -> dat
+  dplyr::filter(ADT %in% ADTs$ADT) -> dat
 
 plot(density(dat$Expression))
 ```
@@ -208,7 +216,7 @@ dat %>%
     row_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
     row_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
     column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(-0, 1.5, length.out = 256),
+    palette_value = circlize::colorRamp2(seq(-0.5, 2, length.out = 256),
                                          viridis::magma(256)),
     heatmap_legend_param = list(direction = "vertical")) %>%
   add_tile(`Cell type`, show_legend = FALSE,
@@ -221,10 +229,14 @@ sf1b
 ```
 
 ```{r}
-ADTs <- read_csv(file = here("data",
-                       "Proteins_other_22.04.22.csv"))
-pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human "
-ADTs$Description <- gsub(pattern, "", ADTs$Description)
+# ADTs <- read_csv(file = here("data",
+#                        "Proteins_other_22.04.22.csv"))
+# pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human "
+# ADTs$Description <- gsub(pattern, "", ADTs$Description)
+
+ADTs <- read_excel(here("data",
+                          "cluster_annotations",
+                          "marker_proteins_other_supp.xlsx"))
 
 seuADT@meta.data %>%
   dplyr::filter(ann_level_1 %in% unique(seuLst[[1]]$ann_level_1)) %>%
@@ -238,7 +250,7 @@ seuADT@meta.data %>%
   dplyr::group_by(ann_level_3, ADT) %>%
   dplyr::summarize(Expression = mean(Expression)) %>%
   ungroup() %>%
-  dplyr::filter(ADT %in% ADTs$Description) -> dat
+  dplyr::filter(ADT %in% ADTs$ADT) -> dat
 
 plot(density(dat$Expression))
 ```
@@ -262,7 +274,7 @@ dat %>%
     row_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
     row_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
     column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(-0.1, 2, length.out = 256),
+    palette_value = circlize::colorRamp2(seq(-1, 2, length.out = 256),
                                          viridis::magma(256)),
     heatmap_legend_param = list(direction = "vertical")) %>%
   add_tile(`Cell type`, show_legend = FALSE,
@@ -274,7 +286,7 @@ dat %>%
 sf1c
 ```
 
-```{r, fig.asp=1.75}
+```{r, fig.asp=1.75, fig.width=8}
 layout = "
 A
 B
