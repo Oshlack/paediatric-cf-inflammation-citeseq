@@ -633,7 +633,7 @@ fit <- glmFit(y, design)
 
 ```{r}
 cutoff <- 0.05
-  
+
 dt <- lapply(1:ncol(contr), function(i){
   decideTests(glmLRT(fit, contrast = contr[,i]),
                             p.value = cutoff)
@@ -664,6 +664,13 @@ s[-2,] %>%
                                    hjust = 1,
                                    vjust = 1)) +
       scale_fill_manual(values = pal)
+
+# save LRT results
+saveRDS(lapply(1:ncol(contr), function(i){
+   glmLRT(fit, contrast = contr[,i])
+}), file = here("data",
+                "intermediate_objects",
+                glue("{cell}.lrt.rds")))
 ```
 
 Explore results of statistical analysis for each contrast with significant DGEs.
