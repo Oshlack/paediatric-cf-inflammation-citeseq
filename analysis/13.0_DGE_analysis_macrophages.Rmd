@@ -211,7 +211,7 @@ mds_by_factor(yFlt, "as.factor(Micro_code)", "Infection") & scale_color_brewer(p
 ```
 
 
-# Analyse data subsets {.tabset}
+# Analyse data subsets
 
 ## CF and Non-CF control samples
 
@@ -331,8 +331,7 @@ dat %>%
   heatmap(gene, sample, value,
           scale = "row",
           show_row_names = FALSE,
-          show_column_names = FALSE,
-          palette_value = c("red", "white", "blue")) %>%
+          show_column_names = FALSE) %>%
   add_tile(Group) %>%
   add_tile(Severity) %>%
   add_tile(Batch) %>%
@@ -849,7 +848,6 @@ dat %>%
   heatmap(gene, sample, value,
           scale = "row",
           show_row_names = FALSE,
-          palette_value = c("red", "white", "blue"),
           show_column_names = FALSE) %>%
   add_tile(Group) %>%
   add_tile(Severity) %>%
@@ -1232,10 +1230,6 @@ p <- lapply(1:ncol(contr), function(i){
 
 p
 ```
-
-
-# {-}
-
 
 # Session info {.appendix}
 
