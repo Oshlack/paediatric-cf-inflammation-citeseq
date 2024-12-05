@@ -42,8 +42,8 @@ Follow the links below to view the different parts of the analysis.
 5. [Remove ambient contamination](05.0_remove_ambient.html)
 
 6. Annotate using Human Lung Cell Atlas v2.0
-    i)    [Without ambient removal](06.0_azimuth_annotation.html)
-    ii)    [With ambient removal](06.1_azimuth_annotation_decontx.html)
+    i) [Without ambient removal](06.0_azimuth_annotation.html)
+    ii) [With ambient removal](06.1_azimuth_annotation_decontx.html)
     
 <!-- line break -->
 7. [Cluster T/NK cells](07.1_integrate_cluster_t_cells_decontx.html)
@@ -59,7 +59,7 @@ Follow the links below to view the different parts of the analysis.
 12. [Annotate rare cells](12.0_manual_annotations_other_cells.html) 
 
 <!-- line break -->
-13. Differential expression analysis of macrophage
+13. Differential expression analysis of macrophages
     i) [Macrophages](13.0_DGE_analysis_macrophages.html)
     ii) [Alveolar macrophages](13.1_DGE_analysis_macro-alveolar.html)
     iii) [APOC2+ macrophages](13.2_DGE_analysis_macro-APOC2+.html)
