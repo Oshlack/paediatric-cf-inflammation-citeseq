@@ -32,8 +32,7 @@ Follow the links below to view the different parts of the analysis.
     vi) [Batch 5](01.5_preprocess_batch5.html)
     vii) [Batch 6](01.6_preprocess_batch6.html)
 
-<!-- 13. Differential expression analysis within macrophage sub-types -->
-<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
+<!-- line break -->
 2. [Quality control](02.0_quality_control.html)
 
 3. [Identify doublets](03.0_identify_doublets.html)
@@ -46,8 +45,7 @@ Follow the links below to view the different parts of the analysis.
     i)    [Without ambient removal](06.0_azimuth_annotation.html)
     ii)    [With ambient removal](06.1_azimuth_annotation_decontx.html)
     
-<!-- 13. Differential expression analysis within macrophage sub-types -->
-<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
+<!-- line break -->
 7. [Cluster T/NK cells](07.1_integrate_cluster_t_cells_decontx.html)
 
 8. [Cluster rare cells](08.1_integrate_cluster_other_cells_decontx.html)
@@ -60,21 +58,7 @@ Follow the links below to view the different parts of the analysis.
 
 12. [Annotate rare cells](12.0_manual_annotations_other_cells.html) 
 
-<!-- 13. Differential expression analysis within macrophage sub-types -->
-<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
-<!--     ii)    [Alveolar macro. CF$\pm$modifiers vs non-CF control](13.1_DGE_analysis_macro-alveolar_cells_CF-vs-control-samples.html) -->
-<!--     iii)    [Monocyte-derived macro. CF modifiers & severity](13.2_DGE_analysis_macro-monocyte-derived_CF-only-samples.html)  -->
-<!--     iv)    [Monocyte-derived macro. CF$\pm$modifiers vs non-CF control](13.3_DGE_analysis_macro-monocyte-derived_CF-vs-control-samples.html) -->
-<!--     v)    [Macro. CCL CF modifiers & severity](13.4_DGE_analysis_macro-CCL_CF-only-samples.html)  -->
-<!--     vi)    [Macro. CCL CF$\pm$modifiers vs non-CF control](13.5_DGE_analysis_macro-CCL_CF-vs-control-samples.html)  -->
-<!--     vii)    [Macro. IFI27 CF modifiers & severity](13.6_DGE_analysis_macro-IFI27_CF-only-samples.html)  -->
-<!--     vii)    [Macro. IFI27 CF$\pm$modifiers vs non-CF control](13.7_DGE_analysis_macro-IFI27_CF-vs-control-samples.html)  -->
-<!--     ix)    [Macro. lipid CF modifiers & severity](13.8_DGE_analysis_macro-lipid_CF-only-samples.html)  -->
-<!--     x)    [Macro. lipid CF$\pm$modifiers vs non-CF control](13.9_DGE_analysis_macro-lipid_CF-vs-control-samples.html) -->
-<!--     xi)    [Macro. APOC2+ CF modifiers & severity](13.10_DGE_analysis_macro-APOC2+_CF-only-samples.html)  -->
-<!--     xii)    [Macro. APOC2+ CF$\pm$modifiers vs non-CF control](13.11_DGE_analysis_macro-APOC2+_CF-vs-control-samples.html) -->
-<!--     xiii)    [Macro. proliferating CF modifiers & severity](13.12_DGE_analysis_macro-proliferating_CF-only-samples.html)  -->
-<!--     xiv)    [Macro. proliferating CF$\pm$modifiers vs non-CF control](13.13_DGE_analysis_macro-proliferating_CF-vs-control-samples.html) -->
+<!-- line break -->
 13. Differential expression analysis of macrophage
     i) [Macrophages](13.0_DGE_analysis_macrophages.html)
     ii) [Alveolar macrophages](13.1_DGE_analysis_macro-alveolar.html)
@@ -85,27 +69,22 @@ Follow the links below to view the different parts of the analysis.
     vii) [Monocyte-derived macrophages](13.6_DGE_analysis_macro-monocyte-derived.html)
     viii) [Proliferating macrophages](13.7_DGE_analysis_macro-proliferating.html)
 
-<!-- 13. Differential expression analysis within macrophage sub-types -->
-<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
+<!-- line break -->
 14. Analyse cell types proportions
     i) [Annotation level 1](14.0_proportions_analysis_ann_level_1.html) 
     ii) [Annotation level 3, non macro. cells](14.1_proportions_analysis_ann_level_3_non-macrophages.html)
     iii) [Annotation level 3, macro. cells](14.2_proportions_analysis_ann_level_3_macrophages.html)
 
-<!-- 13. Differential expression analysis within macrophage sub-types -->
-<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
+<!-- line break -->
 15. [Figure 1](15.0_Figure_1.html)
 
-<!-- 13. Differential expression analysis within macrophage sub-types -->
-<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
+<!-- line break -->
 16. [Figure 2](16.0_Figure_2.html)
 
-<!-- 13. Differential expression analysis within macrophage sub-types -->
-<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
+<!-- line break -->
 17.0 [S. Figure ADTs](17.0_Supplementary_Figure_ADTs.html)    
 
-<!-- 13. Differential expression analysis within macrophage sub-types -->
-<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
+<!-- line break -->
 To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6.
 
 As per this issue, https://github.com/satijalab/seurat-object/issues/165, if there is an error running sctransform, remove all relevant packages (and purge if using renv) and then install using the following method exactly, to build from source.
