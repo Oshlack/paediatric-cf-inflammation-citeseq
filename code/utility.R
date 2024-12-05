@@ -190,10 +190,15 @@ top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, 
     ggplot(aes(x = Group,
                y = norm,
                colour = Group)) +
-    geom_boxplot(outlier.shape = NA, colour = "grey") +
+    #geom_boxplot(outlier.shape = NA, colour = "grey") +
     geom_jitter(stat = "identity",
                 width = 0.15,
                 size = 1.25) +
+    stat_summary(geom = "point",
+      fun.y = "mean",
+      col = "black",
+      shape = "_",
+      size = 14) +
     geom_jitter(aes(x = Group,
                     y = raw), stat = "identity",
                 width = 0.15,
@@ -390,8 +395,8 @@ draw_umap_with_labels <- function(seu, ann_level, cluster_pal, direction = 1){
   
 }
 
-draw_marker_gene_dotplot <- function(seu, rds_path, ann_level, cluster_pal, direction = 1){
-  markers <- readRDS(rds_path)
+draw_marker_gene_dotplot <- function(seu, markers, ann_level, cluster_pal, direction = 1, num = 5){
+  #markers <- readRDS(rds_path)
   
   markers %>%
     group_by(cluster) %>%
@@ -403,7 +408,7 @@ draw_marker_gene_dotplot <- function(seu, rds_path, ann_level, cluster_pal, dire
   d <- duplicated(markers$gene)
   markers[!d,] %>%
     group_by(cluster) %>%
-    slice_head(n = 5) -> top
+    slice_head(n = num) -> top
   
   pal <- setNames(paletteer::paletteer_d(cluster_pal, direction = direction),
                   unique(markers$cluster))
@@ -468,4 +473,56 @@ draw_cell_type_proportions_barplot <- function(seu, ann_level, cluster_pal,
     labs(y = "Cell type proportion", fill = "Cell type", x = "Sample") +
     scale_fill_paletteer_d(cluster_pal, direction = direction) +
     facet_grid(~Group, scales = "free_x", space = "free_x")
+}
+
+top_deg_heatmap <- function(top, comparison, counts, sample_data){
+  
+  if(nrow(top) > 0) {
+    groups <- unlist(str_split(str_remove_all(comparison, "-?0.5\\*|-?1\\*"), " "))
+    if(any(str_detect(groups, "IVA"))) groups <- unique(str_remove_all(groups, "\\.M|\\.S"))
+    group_column <- ifelse(all(groups %in% ySub$samples$Group),
+                          "Group",
+                          "Group_severity")
+    
+    edgeR::cpm(counts, log = TRUE) %>% 
+      data.frame %>%
+      rownames_to_column(var = "Gene") %>%
+      pivot_longer(-Gene, 
+                   names_to = "Sample", 
+                   values_to = "adj. cpm scaled") %>%
+      left_join(sample_data %>% 
+                  data.frame %>%
+                  dplyr::select(sample.id, 
+                                Group,
+                                Group_severity,
+                                Severity,
+                                Age),
+                by = c("Sample" = "sample.id")) %>%
+      #dplyr::filter(Group_severity %in% groups) %>%
+      dplyr::filter(!!sym(group_column) %in% groups) %>%
+      #dplyr::filter(Gene %in% rownames(top)) %>%
+      #dplyr::filter(Gene %in% rownames(top)[abs(top$logFC) > 0.5]) %>%
+      dplyr::filter(Gene %in% rownames(top)[1:min(50, nrow(top))]) %>%
+      group_by(!!sym(group_column)) -> dat
+      #group_by(Group) -> dat
+    
+    tidyHeatmap::heatmap(
+      .data = dat,
+      .row = Gene,  
+      .column = Sample,
+      .value = `adj. cpm scaled`,
+      scale = "row",
+      cluster_columns = FALSE,
+      row_names_gp = gpar(fontsize = 8),
+      column_names_gp = gpar(fontsize = 8),
+      column_title_gp = gpar(fontsize = 10),
+      row_title_gp = gpar(fontsize = 10),
+      heatmap_legend_param = list(labels_gp = gpar(fontsize = 7),
+                                  title_gp = gpar(fontsize = 8, 
+                                                  fontface = 'bold')),
+      #palette_value = c("red", "white", "blue"))
+      palette_value = circlize::colorRamp2(
+        seq(-4, 4, length.out = 11),
+        RColorBrewer::brewer.pal(11, "RdBu")))
+  }
 }
