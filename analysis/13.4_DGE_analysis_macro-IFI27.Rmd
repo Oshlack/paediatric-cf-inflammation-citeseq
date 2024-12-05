@@ -216,7 +216,7 @@ mds_by_factor(yFlt, "as.factor(Micro_code)", "Infection") & scale_color_brewer(p
 
 # Analyse data subsets
 
-## CF and Non-CF control samples
+## CF vs. non-CF controls
 
 ### Prepare data
 
@@ -718,7 +718,7 @@ p
 ```
 
 
-## CF samples only
+## CF modifieres and severity
 
 ### Prepare data
 
