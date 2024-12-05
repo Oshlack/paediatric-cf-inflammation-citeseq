@@ -32,6 +32,8 @@ Follow the links below to view the different parts of the analysis.
     vi) [Batch 5](01.5_preprocess_batch5.html)
     vii) [Batch 6](01.6_preprocess_batch6.html)
 
+<!-- 13. Differential expression analysis within macrophage sub-types -->
+<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
 2. [Quality control](02.0_quality_control.html)
 
 3. [Identify doublets](03.0_identify_doublets.html)
@@ -43,7 +45,9 @@ Follow the links below to view the different parts of the analysis.
 6. Annotate using Human Lung Cell Atlas v2.0
     i)    [Without ambient removal](06.0_azimuth_annotation.html)
     ii)    [With ambient removal](06.1_azimuth_annotation_decontx.html)
-
+    
+<!-- 13. Differential expression analysis within macrophage sub-types -->
+<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
 7. [Cluster T/NK cells](07.1_integrate_cluster_t_cells_decontx.html)
 
 8. [Cluster rare cells](08.1_integrate_cluster_other_cells_decontx.html)
@@ -81,21 +85,27 @@ Follow the links below to view the different parts of the analysis.
     vii) [Monocyte-derived macrophages](13.6_DGE_analysis_macro-monocyte-derived.html)
     viii) [Proliferating macrophages](13.7_DGE_analysis_macro-proliferating.html)
 
+<!-- 13. Differential expression analysis within macrophage sub-types -->
+<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
 14. Analyse cell types proportions
     i) [Annotation level 1](14.0_proportions_analysis_ann_level_1.html) 
     ii) [Annotation level 3, non macro. cells](14.1_proportions_analysis_ann_level_3_non-macrophages.html)
     iii) [Annotation level 3, macro. cells](14.2_proportions_analysis_ann_level_3_macrophages.html)
 
-
+<!-- 13. Differential expression analysis within macrophage sub-types -->
+<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
 15. [Figure 1](15.0_Figure_1.html)
 
-
+<!-- 13. Differential expression analysis within macrophage sub-types -->
+<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
 16. [Figure 2](16.0_Figure_2.html)
 
-
+<!-- 13. Differential expression analysis within macrophage sub-types -->
+<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
 17.0 [S. Figure ADTs](17.0_Supplementary_Figure_ADTs.html)    
 
-    
+<!-- 13. Differential expression analysis within macrophage sub-types -->
+<!--     i)    [Alveolar macro. CF modifiers & severity](13.0_DGE_analysis_macro-alveolar_cells_CF-only-samples.html)  -->
 To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6.
 
 As per this issue, https://github.com/satijalab/seurat-object/issues/165, if there is an error running sctransform, remove all relevant packages (and purge if using renv) and then install using the following method exactly, to build from source.
