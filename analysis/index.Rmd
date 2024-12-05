@@ -74,12 +74,12 @@ Follow the links below to view the different parts of the analysis.
 13. Differential expression analysis of macrophage
     i) [Macrophages](13.0_DGE_analysis_macrophages.html)
     ii) [Alveolar macrophages](13.1_DGE_analysis_macro-alveolar.html)
-
+    iii) [APOC2+ macrophages](13.2_DGE_analysis_macro-APOC2+.html)
 
 14. Analyse cell types proportions
-    i)    [Annotation level 1](14.0_proportions_analysis_ann_level_1.html) 
-    ii)    [Annotation level 3, non macro. cells](14.1_proportions_analysis_ann_level_3_non-macrophages.html)
-    iii)    [Annotation level 3, macro. cells](14.2_proportions_analysis_ann_level_3_macrophages.html) 
+    i) [Annotation level 1](14.0_proportions_analysis_ann_level_1.html) 
+    ii) [Annotation level 3, non macro. cells](14.1_proportions_analysis_ann_level_3_non-macrophages.html)
+    iii) [Annotation level 3, macro. cells](14.2_proportions_analysis_ann_level_3_macrophages.html)
 
 
 15. [Figure 1](15.0_Figure_1.html)
