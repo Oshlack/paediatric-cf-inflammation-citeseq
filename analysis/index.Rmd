@@ -75,6 +75,11 @@ Follow the links below to view the different parts of the analysis.
     i) [Macrophages](13.0_DGE_analysis_macrophages.html)
     ii) [Alveolar macrophages](13.1_DGE_analysis_macro-alveolar.html)
     iii) [APOC2+ macrophages](13.2_DGE_analysis_macro-APOC2+.html)
+    iv) [CCL macrophages](13.3_DGE_analysis_macro-CCL.html)
+    v) [IFI21 macrophages](13.4_DGE_analysis_macro-IFI27.html)
+    vi) [Lipid macrophages](13.5_DGE_analysis_macro-lipid.html)
+    vii) [Monocyte-derived macrophages](13.6_DGE_analysis_macro-monocyte-derived.html)
+    viii) [Proliferating macrophages](13.7_DGE_analysis_macro-proliferating.html)
 
 14. Analyse cell types proportions
     i) [Annotation level 1](14.0_proportions_analysis_ann_level_1.html) 
