@@ -73,6 +73,7 @@ Follow the links below to view the different parts of the analysis.
 <!--     xiv)    [Macro. proliferating CF$\pm$modifiers vs non-CF control](13.13_DGE_analysis_macro-proliferating_CF-vs-control-samples.html) -->
 13. Differential expression analysis of macrophage
     i) [Macrophages](13.0_DGE_analysis_macrophages.html)
+    ii) [Alveolar macrophages](13.1_DGE_analysis_macro-alveolar.html)
 
 
 14. Analyse cell types proportions
