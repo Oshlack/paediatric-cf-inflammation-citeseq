@@ -66,6 +66,8 @@ Use *cell type* and *sample* as our two factors; each column of the output
 corresponds to one unique combination of these two factors. 
 
 ```{r}
+cell <- "macrophages"
+
 out <- here("data",
             "C133_Neeland_merged",
             glue("C133_Neeland_full_clean{ambient}_macrophages_all_pseudobulk.rds"))
@@ -280,8 +282,6 @@ dim(textMatrix) <- dim(moduleTraitCor)
 Output results.
 
 ```{r, fig.asp=1.3}
-cell <- "macrophages"
-
 par(mfrow = c(2, 1))
 plot(PCs, type="lines", main = cell) # scree plot
 
