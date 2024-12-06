@@ -276,7 +276,20 @@ gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
     topGSA(gsaseq(unname(gns[deg]),
                   universe = unname(gns),
                   collection = gene_sets_list[[i]],
-                  plot.bias = FALSE)) -> tmp
+                  plot.bias = FALSE),  
+           n = 50) %>%
+      data.frame -> tmp
+    
+    sig_genes <- unname(gns[deg])
+    unlist(lapply(1:nrow(tmp), function(j){
+      # Get gene symbols of significant genes
+      # code adapted from Belinda Phipson missMethyl::gsameth 06/12/2024
+      sig_genes_entrez <- sig_genes[sig_genes %in% gene_sets_list[[i]][[rownames(tmp)[j]]]]
+      sig_genes_symbol <- suppressMessages(AnnotationDbi::select(org.Hs.eg.db, 
+                                                               keys = sig_genes_entrez,
+                                                               columns = "SYMBOL"))
+      paste(sig_genes_symbol$SYMBOL,collapse=",")
+    })) -> tmp$DEG.GENES
     
     write.table(tmp %>%
                   data.frame %>%
@@ -291,11 +304,25 @@ gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
   ora_list
 }
 
-gene_set_test_camera <- function(gene_sets_list, gns, lrt, statistic, contr, cellDir){
+gene_set_test_camera <- function(gene_sets_list, gns, lrt, statistic, contr, cellDir, deg){
   
   cam_list <- lapply(seq_along(gene_sets_list), function(i){
     id <- ids2indices(gene_sets_list[[i]], unname(gns[rownames(lrt)]))
     tmp <- cameraPR(statistic, id)
+    tmp %>%
+      data.frame %>%
+      slice_head(n = 50) -> tmp
+    
+    sig_genes <- unname(gns[deg])
+    unlist(lapply(1:nrow(tmp), function(j){
+      # Get gene symbols of significant genes
+      # code adapted from Belinda Phipson missMethyl::gsameth 06/12/2024
+      sig_genes_entrez <- sig_genes[sig_genes %in% gene_sets_list[[i]][[rownames(tmp)[j]]]]
+      sig_genes_symbol <- suppressMessages(AnnotationDbi::select(org.Hs.eg.db, 
+                                                                 keys = sig_genes_entrez,
+                                                                 columns = "SYMBOL"))
+      paste(sig_genes_symbol$SYMBOL,collapse=",")
+    })) -> tmp$DEG.GENES
     
     write.table(tmp %>%
                   data.frame %>%
@@ -336,7 +363,7 @@ plot_ruv_results_summary <- function(contr, cutoff, cellDir, gene_sets_list, gns
       # use signed likelihood ratio test statistic as recommended by GS here: https://support.bioconductor.org/p/112937/
       statistic <- sign(lrt$table$logFC) * sqrt(lrt$table$LR)
       cam_list <- gene_set_test_camera(gene_sets_list, gns, lrt, statistic, 
-                                       contr[, i, drop = FALSE], cellDir)
+                                       contr[, i, drop = FALSE], cellDir, deg)
       
       top_deg_volcano(top, cutoff, dt[[i]], pval_col, fdr_col, pal) -> p1
       top_deg_stripchart(raw_counts, 
