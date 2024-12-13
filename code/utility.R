@@ -165,10 +165,13 @@ top_deg_volcano <- function(top, cutoff, dt, pval_col, fdr_col, pal){
     theme(legend.position = "bottom")
 }
 
-top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, num = 9){
+top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, num = 9,
+                               severity = FALSE){
   # plot up to top X DGE
   grps <- names(contr[,1])[abs(contr[,1]) > 0]
   
+  #if(!severity) grps <- unique(str_remove_all(grps, "\\.M$|\\.S$"))
+    
   edgeR::cpm(raw_counts, log = TRUE) %>% 
     data.frame %>%
     rownames_to_column(var = "gene") %>%
@@ -184,9 +187,8 @@ top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, 
     left_join(group_info) %>%
     dplyr::filter(Group %in% grps,
                   gene %in% rownames(top)[1:min(num, max(which(top$FDR < cutoff)))]) %>%
-    mutate(Group = ifelse(str_detect(Group, str_remove(grps[1], "CF.")),
-                          grps[1], 
-                          grps[2])) %>%
+    mutate(Group = case_when(severity ~ Group,
+                             !severity ~ str_remove_all(Group, "\\.M$|\\.S$"))) %>% 
     ggplot(aes(x = Group,
                y = norm,
                colour = Group)) +
@@ -291,11 +293,11 @@ gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
       paste(sig_genes_symbol$SYMBOL,collapse=",")
     })) -> tmp$DEG.GENES
     
-    write.table(tmp %>%
+    data.table::fwrite(tmp %>%
                   data.frame %>%
                   rownames_to_column(var = "Set"),
                 file = file.path(cellDir, glue("ORA.{names(gene_sets_list[i])}.{colnames(contr)}.csv")),
-                sep = ",", quote = F, col.names = NA)
+                sep = ",", quote = "auto")
     
     tmp
   })
@@ -324,11 +326,11 @@ gene_set_test_camera <- function(gene_sets_list, gns, lrt, statistic, contr, cel
       paste(sig_genes_symbol$SYMBOL,collapse=",")
     })) -> tmp$DEG.GENES
     
-    write.table(tmp %>%
-                  data.frame %>%
-                  rownames_to_column(var = "Set"),
-                file = file.path(cellDir, glue("CAM.{names(gene_sets_list[i])}.{colnames(contr)}.csv")),
-                sep = ",", quote = F, col.names = NA)
+    data.table::fwrite(tmp %>%
+                         data.frame %>%
+                         rownames_to_column(var = "Set"),
+                       file = file.path(cellDir, glue("CAM.{names(gene_sets_list[i])}.{colnames(contr)}.csv")),
+                       sep = ",", quote = "auto")
     
     tmp
   })
@@ -339,7 +341,7 @@ gene_set_test_camera <- function(gene_sets_list, gns, lrt, statistic, contr, cel
 
 plot_ruv_results_summary <- function(contr, cutoff, cellDir, gene_sets_list, gns,
                                      raw_counts, norm_counts, group_info, layout, 
-                                     pal,
+                                     pal, severity,
                                      pval_col = "PValue",
                                      fdr_col = "FDR"){
   p <- vector("list", ncol(contr))
@@ -351,9 +353,10 @@ plot_ruv_results_summary <- function(contr, cutoff, cellDir, gene_sets_list, gns
     
     if(sum(top$FDR < cutoff) > 0){
       # top DGE results
-      write.table(top, 
+      data.table::fwrite(top %>%
+                           rownames_to_column(var = "gene"), 
                   file = file.path(cellDir, glue("{colnames(contr)[i]}.csv")),
-                  sep = ",", quote = F, col.names = NA)
+                  sep = ",", quote = "auto")
       
       deg <- rownames(top)[top$FDR < cutoff]
       ora_list <- gene_set_test_ora(gene_sets_list, deg, gns, 
@@ -371,6 +374,7 @@ plot_ruv_results_summary <- function(contr, cutoff, cellDir, gene_sets_list, gns
                          group_info, 
                          contr = contr[, i, drop = FALSE], 
                          top = top, 
+                         severity = severity[i],
                          num = 9) -> p2
       
       # over-representation analysis top 10 plots
