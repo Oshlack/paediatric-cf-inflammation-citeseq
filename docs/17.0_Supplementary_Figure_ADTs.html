@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jovana Maksimovic" />
 
-<meta name="date" content="2024-11-12" />
+<meta name="date" content="2024-12-23" />
 
 <title>Integrate all cells</title>
 
@@ -353,7 +353,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Integrate all cells</h1>
 <h4 class="author">Jovana Maksimovic</h4>
-<h4 class="date">November 12, 2024</h4>
+<h4 class="date">December 23, 2024</h4>
 
 </div>
 
@@ -382,7 +382,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-12
+<strong>Last updated:</strong> 2024-12-23
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -513,15 +513,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreeba7c317e3580e7ce090e58523524176cc54bc74etargetblankba7c317a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtree50c796e371a9eb541c441547c805664f85ff0653targetblank50c796ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/ba7c317e3580e7ce090e58523524176cc54bc74e" target="_blank">ba7c317</a>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/50c796e371a9eb541c441547c805664f85ff0653" target="_blank">50c796e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreeba7c317e3580e7ce090e58523524176cc54bc74etargetblankba7c317a"
+id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtree50c796e371a9eb541c441547c805664f85ff0653targetblank50c796ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -531,7 +531,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/ba7c317e3580e7ce090e58523524176cc54bc74e" target="_blank">ba7c317</a>.
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/50c796e371a9eb541c441547c805664f85ff0653" target="_blank">50c796e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -551,31 +551,37 @@ Ignored files:
     Ignored:    analysis/obsolete/
     Ignored:    data/C133_Neeland_batch1/
     Ignored:    data/C133_Neeland_merged/
+    Ignored:    output/dge_analysis/obsolete/
     Ignored:    renv/library/
     Ignored:    renv/staging/
 
 Untracked files:
+    Untracked:  analysis/14.0_DGE_analysis_T-cells.Rmd
+    Untracked:  analysis/17.0_Figure_3.Rmd
+    Untracked:  broad_markers_seurat.csv
     Untracked:  code/background_job.R
     Untracked:  code/reverse_modifier_severity_comparisons.sh
-    Untracked:  data/Proteins_T-NK_07.10.24.csv
-    Untracked:  data/Proteins_macs_07.10.24.csv
-    Untracked:  data/cluster_annotations/marker_genes_TNK_figure_2.xlsx
-    Untracked:  data/cluster_annotations/marker_genes_macrophages_figure_2.xlsx
-    Untracked:  data/cluster_annotations/marker_genes_other_figure_2.xlsx
-    Untracked:  data/cluster_annotations/marker_proteins_TNK_supp.xlsx
-    Untracked:  data/cluster_annotations/marker_proteins_macrophages_supp.xlsx
-    Untracked:  data/cluster_annotations/marker_proteins_other_supp.xlsx
-    Untracked:  data/main_marker_genes.xlsx
-    Untracked:  data/main_proteins.xlsx
-    Untracked:  data/marker_genes_fig_2.xlsx
+    Untracked:  data/intermediate_objects/CD4 T cells.CF_samples.fit.rds
+    Untracked:  data/intermediate_objects/CD4 T cells.all_samples.fit.rds
+    Untracked:  data/intermediate_objects/CD8 T cells.CF_samples.fit.rds
+    Untracked:  data/intermediate_objects/CD8 T cells.all_samples.fit.rds
+    Untracked:  data/intermediate_objects/DC cells.CF_samples.fit.rds
+    Untracked:  data/intermediate_objects/DC cells.all_samples.fit.rds
+    Untracked:  data/intermediate_objects/T cells.CF_samples.fit.rds
+    Untracked:  data/intermediate_objects/T cells.all_samples.fit.rds
+    Untracked:  output/dge_analysis/T cells/
 
 Unstaged changes:
     Modified:   .gitignore
+    Modified:   analysis/06.0_azimuth_annotation.Rmd
     Modified:   analysis/09.0_integrate_cluster_macro_cells.Rmd
     Modified:   analysis/14.0_proportions_analysis_ann_level_1.Rmd
     Modified:   analysis/15.0_Figure_1.Rmd
     Modified:   analysis/16.0_Figure_2.Rmd
-    Modified:   code/utility.R
+    Modified:   data/cluster_annotations/marker_proteins_TNK_supp.xlsx
+    Modified:   data/cluster_annotations/marker_proteins_macrophages_supp.xlsx
+    Modified:   data/cluster_annotations/marker_proteins_other_supp.xlsx
+    Modified:   data/cluster_annotations/seurat_markers_all_cells.rds
 
 </code></pre>
 <p>
@@ -622,6 +628,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/50c796e371a9eb541c441547c805664f85ff0653/analysis/17.0_Supplementary_Figure_ADTs.Rmd" target="_blank">50c796e</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-23
+</td>
+<td>
+wflow_publish("analysis/17.0_Supplementary_Figure_ADTs.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/68880d8ab41f9d133b63840e15342b2f49a611f6/docs/17.0_Supplementary_Figure_ADTs.html" target="_blank">68880d8</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-11-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -779,9 +819,10 @@ Active assay: ADT (163 features, 0 variable features)</code></pre>
 ADTs &lt;- read_excel(here(&quot;data&quot;,
                           &quot;cluster_annotations&quot;,
                           &quot;marker_proteins_macrophages_supp.xlsx&quot;))
+ADTs$Description &lt;- sub(&quot;^.*?\\s&quot;, &quot;&quot;, ADTs$Description)
 
 seuADT@meta.data %&gt;%
-  dplyr::filter(ann_level_1 == &quot;macrophages&quot;) %&gt;%
+  dplyr::filter(str_detect(ann_level_3, &quot;^macro&quot;)) %&gt;%
   dplyr::select(ann_level_3) %&gt;%
   rownames_to_column(var = &quot;cell&quot;) %&gt;%
   inner_join(as.data.frame(t(seuADT[[&quot;ADT&quot;]]@data)) %&gt;%
@@ -792,7 +833,7 @@ seuADT@meta.data %&gt;%
   dplyr::group_by(ann_level_3, ADT) %&gt;%
   dplyr::summarize(Expression = mean(Expression)) %&gt;%
   ungroup() %&gt;%
-  dplyr::filter(ADT %in% ADTs$ADT) -&gt; dat
+  right_join(ADTs, by = c(&quot;ADT&quot; = &quot;Description&quot;)) -&gt; dat
 
 plot(density(dat$Expression))</code></pre>
 <p><img src="figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -820,6 +861,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/68880d8ab41f9d133b63840e15342b2f49a611f6/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-4-1.png" target="_blank">68880d8</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/78a342d4acf8d77f48c0b3196e3f5417c83c5e00/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-4-1.png" target="_blank">78a342d</a>
 </td>
 <td>
@@ -834,33 +886,34 @@ Jovana Maksimovic
 </div>
 </div>
 <pre class="r"><code>dat %&gt;%
-  dplyr::rename(&quot;Protein&quot; = &quot;ADT&quot;,
-                &quot;DSB Exp.&quot; = &quot;Expression&quot;,
-                &quot;Cell type&quot; = &quot;ann_level_3&quot;) %&gt;%
+  dplyr::rename(&quot;Protein&quot; = &quot;ADT.y&quot;,
+                &quot;Mean Exp.&quot; = &quot;Expression&quot;,
+                &quot;Cell Type&quot; = &quot;ann_level_3&quot;) %&gt;%
   tidyHeatmap::heatmap(
     .column = Protein,
-    .row = `Cell type`,
-    .value = `DSB Exp.`,
+    .row = `Cell Type`,
+    .value = `Mean Exp.`,
     scale = &quot;none&quot;,
     rect_gp = grid::gpar(col = &quot;white&quot;, lwd = 1),
     show_row_names = TRUE, 
     cluster_rows = FALSE,
-    cluster_columns = FALSE,
-    column_names_gp = grid::gpar(fontsize = 8, fontfamily = &quot;arial&quot;),
-    column_title_gp = grid::gpar(fontsize = 10, fontfamily = &quot;arial&quot;),
-    row_names_gp = grid::gpar(fontsize = 8, fontfamily = &quot;arial&quot;),
-    row_title_gp = grid::gpar(fontsize = 10, fontfamily = &quot;arial&quot;),
+    cluster_columns = TRUE,
+    column_names_gp = grid::gpar(fontsize = 8),
+    column_title_gp = grid::gpar(fontsize = 10),
+    row_names_gp = grid::gpar(fontsize = 8),
+    row_title_gp = grid::gpar(fontsize = 10),
     column_title_side = &quot;top&quot;,
-    palette_value = circlize::colorRamp2(seq(-0.5, 2.5, length.out = 256),
-                                         viridis::magma(256)),
+    palette_value = circlize::colorRamp2(seq(-0.5, 1.5, length.out = 11),
+                                         #viridis::magma(11)),
+                                         rev(RColorBrewer::brewer.pal(11, &quot;Spectral&quot;))),
     heatmap_legend_param = list(direction = &quot;vertical&quot;)) %&gt;%
-  add_tile(`Cell type`, show_legend = FALSE,
+  add_tile(`Cell Type`, show_legend = FALSE,
            show_annotation_name = FALSE,
            palette = paletteer_d(&quot;ggsci::category20_d3&quot;, 
                                  length(unique(dat$ann_level_3)))) %&gt;%
-    as_ComplexHeatmap() -&gt; sf1a
+    as_ComplexHeatmap() -&gt; sfig_1a
 
-sf1a</code></pre>
+sfig_1a</code></pre>
 <p><img src="figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
@@ -886,6 +939,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/68880d8ab41f9d133b63840e15342b2f49a611f6/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-5-1.png" target="_blank">68880d8</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/78a342d4acf8d77f48c0b3196e3f5417c83c5e00/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-5-1.png" target="_blank">78a342d</a>
 </td>
 <td>
@@ -907,6 +971,7 @@ Jovana Maksimovic
 ADTs &lt;- read_excel(here(&quot;data&quot;,
                           &quot;cluster_annotations&quot;,
                           &quot;marker_proteins_TNK_supp.xlsx&quot;))
+ADTs$Description &lt;- sub(&quot;^.*?\\s&quot;, &quot;&quot;, ADTs$Description)
 
 seuADT@meta.data %&gt;%
   dplyr::filter(ann_level_1 %in% unique(seuLst[[2]]$ann_level_1)) %&gt;%
@@ -920,7 +985,7 @@ seuADT@meta.data %&gt;%
   dplyr::group_by(ann_level_3, ADT) %&gt;%
   dplyr::summarize(Expression = mean(Expression)) %&gt;%
   ungroup() %&gt;%
-  dplyr::filter(ADT %in% ADTs$ADT) -&gt; dat
+  right_join(ADTs, by = c(&quot;ADT&quot; = &quot;Description&quot;)) -&gt; dat
 
 plot(density(dat$Expression))</code></pre>
 <p><img src="figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -948,6 +1013,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/68880d8ab41f9d133b63840e15342b2f49a611f6/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-6-1.png" target="_blank">68880d8</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/78a342d4acf8d77f48c0b3196e3f5417c83c5e00/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-6-1.png" target="_blank">78a342d</a>
 </td>
 <td>
@@ -962,33 +1038,34 @@ Jovana Maksimovic
 </div>
 </div>
 <pre class="r"><code>dat %&gt;%
-  dplyr::rename(&quot;Protein&quot; = &quot;ADT&quot;,
-                &quot;DSB Exp.&quot; = &quot;Expression&quot;,
-                &quot;Cell type&quot; = &quot;ann_level_3&quot;) %&gt;%
+  dplyr::rename(&quot;Protein&quot; = &quot;ADT.y&quot;,
+                &quot;Mean Exp.&quot; = &quot;Expression&quot;,
+                &quot;Cell Type&quot; = &quot;ann_level_3&quot;) %&gt;%
   tidyHeatmap::heatmap(
     .column = Protein,
-    .row = `Cell type`,
-    .value = `DSB Exp.`,
+    .row = `Cell Type`,
+    .value = `Mean Exp.`,
     scale = &quot;none&quot;,
     rect_gp = grid::gpar(col = &quot;white&quot;, lwd = 1),
     show_row_names = TRUE, 
     cluster_rows = FALSE,
-    cluster_columns = FALSE,
-    column_names_gp = grid::gpar(fontsize = 8, fontfamily = &quot;arial&quot;),
-    column_title_gp = grid::gpar(fontsize = 10, fontfamily = &quot;arial&quot;),
-    row_names_gp = grid::gpar(fontsize = 8, fontfamily = &quot;arial&quot;),
-    row_title_gp = grid::gpar(fontsize = 10, fontfamily = &quot;arial&quot;),
+    cluster_columns = TRUE,
+    column_names_gp = grid::gpar(fontsize = 8),
+    column_title_gp = grid::gpar(fontsize = 10),
+    row_names_gp = grid::gpar(fontsize = 8),
+    row_title_gp = grid::gpar(fontsize = 10),
     column_title_side = &quot;top&quot;,
-    palette_value = circlize::colorRamp2(seq(-0.5, 2, length.out = 256),
-                                         viridis::magma(256)),
+    palette_value = circlize::colorRamp2(seq(-0.5, 2, length.out = 11),
+                                         #viridis::magma(11)),
+                                         rev(RColorBrewer::brewer.pal(11, &quot;Spectral&quot;))),
     heatmap_legend_param = list(direction = &quot;vertical&quot;)) %&gt;%
-  add_tile(`Cell type`, show_legend = FALSE,
+  add_tile(`Cell Type`, show_legend = FALSE,
            show_annotation_name = FALSE,
-           palette = paletteer_d(&quot;ggsci::category20b_d3&quot;, 
-                                 length(unique(dat$ann_level_3)))) %&gt;%
-    as_ComplexHeatmap() -&gt; sf1b
+           palette = paletteer_d(&quot;ggsci::category20b_d3&quot;,
+                                 direction = -1)[1:length(unique(dat$ann_level_3))]) %&gt;%
+    as_ComplexHeatmap() -&gt; sfig_1b
 
-sf1b</code></pre>
+sfig_1b</code></pre>
 <p><img src="figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
@@ -1014,6 +1091,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/68880d8ab41f9d133b63840e15342b2f49a611f6/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-7-1.png" target="_blank">68880d8</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/78a342d4acf8d77f48c0b3196e3f5417c83c5e00/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-7-1.png" target="_blank">78a342d</a>
 </td>
 <td>
@@ -1035,6 +1123,7 @@ Jovana Maksimovic
 ADTs &lt;- read_excel(here(&quot;data&quot;,
                           &quot;cluster_annotations&quot;,
                           &quot;marker_proteins_other_supp.xlsx&quot;))
+ADTs$Description &lt;- sub(&quot;^.*?\\s&quot;, &quot;&quot;, ADTs$Description)
 
 seuADT@meta.data %&gt;%
   dplyr::filter(ann_level_1 %in% unique(seuLst[[1]]$ann_level_1)) %&gt;%
@@ -1048,7 +1137,7 @@ seuADT@meta.data %&gt;%
   dplyr::group_by(ann_level_3, ADT) %&gt;%
   dplyr::summarize(Expression = mean(Expression)) %&gt;%
   ungroup() %&gt;%
-  dplyr::filter(ADT %in% ADTs$ADT) -&gt; dat
+  right_join(ADTs, by = c(&quot;ADT&quot; = &quot;Description&quot;)) -&gt; dat
 
 plot(density(dat$Expression))</code></pre>
 <p><img src="figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -1076,6 +1165,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/68880d8ab41f9d133b63840e15342b2f49a611f6/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-8-1.png" target="_blank">68880d8</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/78a342d4acf8d77f48c0b3196e3f5417c83c5e00/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-8-1.png" target="_blank">78a342d</a>
 </td>
 <td>
@@ -1090,33 +1190,34 @@ Jovana Maksimovic
 </div>
 </div>
 <pre class="r"><code>dat %&gt;%
-  dplyr::rename(&quot;Protein&quot; = &quot;ADT&quot;,
+  dplyr::rename(&quot;Protein&quot; = &quot;ADT.y&quot;,
                 &quot;DSB Exp.&quot; = &quot;Expression&quot;,
-                &quot;Cell type&quot; = &quot;ann_level_3&quot;) %&gt;%
+                &quot;Cell Type&quot; = &quot;ann_level_3&quot;) %&gt;%
   tidyHeatmap::heatmap(
     .column = Protein,
-    .row = `Cell type`,
+    .row = `Cell Type`,
     .value = `DSB Exp.`,
     scale = &quot;none&quot;,
     rect_gp = grid::gpar(col = &quot;white&quot;, lwd = 1),
     show_row_names = TRUE, 
     cluster_rows = FALSE,
-    cluster_columns = FALSE,
-    column_names_gp = grid::gpar(fontsize = 8, fontfamily = &quot;arial&quot;),
-    column_title_gp = grid::gpar(fontsize = 10, fontfamily = &quot;arial&quot;),
-    row_names_gp = grid::gpar(fontsize = 8, fontfamily = &quot;arial&quot;),
-    row_title_gp = grid::gpar(fontsize = 10, fontfamily = &quot;arial&quot;),
+    cluster_columns = TRUE,
+    column_names_gp = grid::gpar(fontsize = 8),
+    column_title_gp = grid::gpar(fontsize = 10),
+    row_names_gp = grid::gpar(fontsize = 8),
+    row_title_gp = grid::gpar(fontsize = 10),
     column_title_side = &quot;top&quot;,
-    palette_value = circlize::colorRamp2(seq(-1, 2, length.out = 256),
-                                         viridis::magma(256)),
+    palette_value = circlize::colorRamp2(seq(-1, 2, length.out = 11),
+                                         #viridis::magma(11)),
+                                         rev(RColorBrewer::brewer.pal(11, &quot;Spectral&quot;))),
     heatmap_legend_param = list(direction = &quot;vertical&quot;)) %&gt;%
-  add_tile(`Cell type`, show_legend = FALSE,
+  add_tile(`Cell Type`, show_legend = FALSE,
            show_annotation_name = FALSE,
            palette = paletteer_d(&quot;ggsci::category20c_d3&quot;, 
                                  length(unique(dat$ann_level_3)))) %&gt;%
-    as_ComplexHeatmap() -&gt; sf1c
+    as_ComplexHeatmap() -&gt; sfig_1c
 
-sf1c</code></pre>
+sfig_1c</code></pre>
 <p><img src="figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
@@ -1142,6 +1243,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/68880d8ab41f9d133b63840e15342b2f49a611f6/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-9-1.png" target="_blank">68880d8</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/78a342d4acf8d77f48c0b3196e3f5417c83c5e00/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-9-1.png" target="_blank">78a342d</a>
 </td>
 <td>
@@ -1160,13 +1272,13 @@ A
 B
 C
 &quot;
-(wrap_plots(list(sf1a %&gt;% 
+(wrap_plots(list(sfig_1a %&gt;% 
                       ComplexHeatmap::draw(heatmap_legend_side = &quot;right&quot;) %&gt;% 
                       grid::grid.grabExpr())) +
-    wrap_plots(list(sf1b %&gt;% 
+    wrap_plots(list(sfig_1b %&gt;% 
                       ComplexHeatmap::draw(heatmap_legend_side = &quot;right&quot;) %&gt;% 
                       grid::grid.grabExpr())) +
-    wrap_plots(list(sf1c %&gt;% 
+    wrap_plots(list(sfig_1c %&gt;% 
                       ComplexHeatmap::draw(heatmap_legend_side = &quot;right&quot;) %&gt;% 
                       grid::grid.grabExpr()))) + 
   plot_layout(design = layout) +
@@ -1197,6 +1309,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/68880d8ab41f9d133b63840e15342b2f49a611f6/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-10-1.png" target="_blank">68880d8</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-11-12
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/78a342d4acf8d77f48c0b3196e3f5417c83c5e00/docs/figure/17.0_Supplementary_Figure_ADTs.Rmd/unnamed-chunk-10-1.png" target="_blank">78a342d</a>
