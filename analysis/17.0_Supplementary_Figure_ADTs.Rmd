@@ -122,9 +122,10 @@ seuADT
 ADTs <- read_excel(here("data",
                           "cluster_annotations",
                           "marker_proteins_macrophages_supp.xlsx"))
+ADTs$Description <- sub("^.*?\\s", "", ADTs$Description)
 
 seuADT@meta.data %>%
-  dplyr::filter(ann_level_1 == "macrophages") %>%
+  dplyr::filter(str_detect(ann_level_3, "^macro")) %>%
   dplyr::select(ann_level_3) %>%
   rownames_to_column(var = "cell") %>%
   inner_join(as.data.frame(t(seuADT[["ADT"]]@data)) %>%
@@ -135,41 +136,43 @@ seuADT@meta.data %>%
   dplyr::group_by(ann_level_3, ADT) %>%
   dplyr::summarize(Expression = mean(Expression)) %>%
   ungroup() %>%
-  dplyr::filter(ADT %in% ADTs$ADT) -> dat
+  right_join(ADTs, by = c("ADT" = "Description")) -> dat
 
 plot(density(dat$Expression))
 ```
 
 ```{r}
 dat %>%
-  dplyr::rename("Protein" = "ADT",
-                "DSB Exp." = "Expression",
-                "Cell type" = "ann_level_3") %>%
+  dplyr::rename("Protein" = "ADT.y",
+                "Mean Exp." = "Expression",
+                "Cell Type" = "ann_level_3") %>%
   tidyHeatmap::heatmap(
     .column = Protein,
-    .row = `Cell type`,
-    .value = `DSB Exp.`,
+    .row = `Cell Type`,
+    .value = `Mean Exp.`,
     scale = "none",
     rect_gp = grid::gpar(col = "white", lwd = 1),
     show_row_names = TRUE, 
     cluster_rows = FALSE,
-    cluster_columns = FALSE,
-    column_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
-    column_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
-    row_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
-    row_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
+    cluster_columns = TRUE,
+    column_names_gp = grid::gpar(fontsize = 8),
+    column_title_gp = grid::gpar(fontsize = 10),
+    row_names_gp = grid::gpar(fontsize = 8),
+    row_title_gp = grid::gpar(fontsize = 10),
     column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(-0.5, 2.5, length.out = 256),
-                                         viridis::magma(256)),
+    palette_value = circlize::colorRamp2(seq(-0.5, 1.5, length.out = 11),
+                                         #viridis::magma(11)),
+                                         rev(RColorBrewer::brewer.pal(11, "Spectral"))),
     heatmap_legend_param = list(direction = "vertical")) %>%
-  add_tile(`Cell type`, show_legend = FALSE,
+  add_tile(`Cell Type`, show_legend = FALSE,
            show_annotation_name = FALSE,
            palette = paletteer_d("ggsci::category20_d3", 
                                  length(unique(dat$ann_level_3)))) %>%
-    as_ComplexHeatmap() -> sf1a
+    as_ComplexHeatmap() -> sfig_1a
 
-sf1a
+sfig_1a
 ```
+
 ```{r}
 # ADTs <- read_csv(file = here("data",
 #                        "Proteins_T-NK_22.04.22.csv"))
@@ -179,6 +182,7 @@ sf1a
 ADTs <- read_excel(here("data",
                           "cluster_annotations",
                           "marker_proteins_TNK_supp.xlsx"))
+ADTs$Description <- sub("^.*?\\s", "", ADTs$Description)
 
 seuADT@meta.data %>%
   dplyr::filter(ann_level_1 %in% unique(seuLst[[2]]$ann_level_1)) %>%
@@ -192,40 +196,41 @@ seuADT@meta.data %>%
   dplyr::group_by(ann_level_3, ADT) %>%
   dplyr::summarize(Expression = mean(Expression)) %>%
   ungroup() %>%
-  dplyr::filter(ADT %in% ADTs$ADT) -> dat
+  right_join(ADTs, by = c("ADT" = "Description")) -> dat
 
 plot(density(dat$Expression))
 ```
 
 ```{r}
 dat %>%
-  dplyr::rename("Protein" = "ADT",
-                "DSB Exp." = "Expression",
-                "Cell type" = "ann_level_3") %>%
+  dplyr::rename("Protein" = "ADT.y",
+                "Mean Exp." = "Expression",
+                "Cell Type" = "ann_level_3") %>%
   tidyHeatmap::heatmap(
     .column = Protein,
-    .row = `Cell type`,
-    .value = `DSB Exp.`,
+    .row = `Cell Type`,
+    .value = `Mean Exp.`,
     scale = "none",
     rect_gp = grid::gpar(col = "white", lwd = 1),
     show_row_names = TRUE, 
     cluster_rows = FALSE,
-    cluster_columns = FALSE,
-    column_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
-    column_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
-    row_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
-    row_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
+    cluster_columns = TRUE,
+    column_names_gp = grid::gpar(fontsize = 8),
+    column_title_gp = grid::gpar(fontsize = 10),
+    row_names_gp = grid::gpar(fontsize = 8),
+    row_title_gp = grid::gpar(fontsize = 10),
     column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(-0.5, 2, length.out = 256),
-                                         viridis::magma(256)),
+    palette_value = circlize::colorRamp2(seq(-0.5, 2, length.out = 11),
+                                         #viridis::magma(11)),
+                                         rev(RColorBrewer::brewer.pal(11, "Spectral"))),
     heatmap_legend_param = list(direction = "vertical")) %>%
-  add_tile(`Cell type`, show_legend = FALSE,
+  add_tile(`Cell Type`, show_legend = FALSE,
            show_annotation_name = FALSE,
-           palette = paletteer_d("ggsci::category20b_d3", 
-                                 length(unique(dat$ann_level_3)))) %>%
-    as_ComplexHeatmap() -> sf1b
+           palette = paletteer_d("ggsci::category20b_d3",
+                                 direction = -1)[1:length(unique(dat$ann_level_3))]) %>%
+    as_ComplexHeatmap() -> sfig_1b
 
-sf1b
+sfig_1b
 ```
 
 ```{r}
@@ -237,6 +242,7 @@ sf1b
 ADTs <- read_excel(here("data",
                           "cluster_annotations",
                           "marker_proteins_other_supp.xlsx"))
+ADTs$Description <- sub("^.*?\\s", "", ADTs$Description)
 
 seuADT@meta.data %>%
   dplyr::filter(ann_level_1 %in% unique(seuLst[[1]]$ann_level_1)) %>%
@@ -250,40 +256,41 @@ seuADT@meta.data %>%
   dplyr::group_by(ann_level_3, ADT) %>%
   dplyr::summarize(Expression = mean(Expression)) %>%
   ungroup() %>%
-  dplyr::filter(ADT %in% ADTs$ADT) -> dat
+  right_join(ADTs, by = c("ADT" = "Description")) -> dat
 
 plot(density(dat$Expression))
 ```
 
 ```{r}
 dat %>%
-  dplyr::rename("Protein" = "ADT",
+  dplyr::rename("Protein" = "ADT.y",
                 "DSB Exp." = "Expression",
-                "Cell type" = "ann_level_3") %>%
+                "Cell Type" = "ann_level_3") %>%
   tidyHeatmap::heatmap(
     .column = Protein,
-    .row = `Cell type`,
+    .row = `Cell Type`,
     .value = `DSB Exp.`,
     scale = "none",
     rect_gp = grid::gpar(col = "white", lwd = 1),
     show_row_names = TRUE, 
     cluster_rows = FALSE,
-    cluster_columns = FALSE,
-    column_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
-    column_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
-    row_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
-    row_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
+    cluster_columns = TRUE,
+    column_names_gp = grid::gpar(fontsize = 8),
+    column_title_gp = grid::gpar(fontsize = 10),
+    row_names_gp = grid::gpar(fontsize = 8),
+    row_title_gp = grid::gpar(fontsize = 10),
     column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(-1, 2, length.out = 256),
-                                         viridis::magma(256)),
+    palette_value = circlize::colorRamp2(seq(-1, 2, length.out = 11),
+                                         #viridis::magma(11)),
+                                         rev(RColorBrewer::brewer.pal(11, "Spectral"))),
     heatmap_legend_param = list(direction = "vertical")) %>%
-  add_tile(`Cell type`, show_legend = FALSE,
+  add_tile(`Cell Type`, show_legend = FALSE,
            show_annotation_name = FALSE,
            palette = paletteer_d("ggsci::category20c_d3", 
                                  length(unique(dat$ann_level_3)))) %>%
-    as_ComplexHeatmap() -> sf1c
+    as_ComplexHeatmap() -> sfig_1c
 
-sf1c
+sfig_1c
 ```
 
 ```{r, fig.asp=1.75, fig.width=8}
@@ -292,13 +299,13 @@ A
 B
 C
 "
-(wrap_plots(list(sf1a %>% 
+(wrap_plots(list(sfig_1a %>% 
                       ComplexHeatmap::draw(heatmap_legend_side = "right") %>% 
                       grid::grid.grabExpr())) +
-    wrap_plots(list(sf1b %>% 
+    wrap_plots(list(sfig_1b %>% 
                       ComplexHeatmap::draw(heatmap_legend_side = "right") %>% 
                       grid::grid.grabExpr())) +
-    wrap_plots(list(sf1c %>% 
+    wrap_plots(list(sfig_1c %>% 
                       ComplexHeatmap::draw(heatmap_legend_side = "right") %>% 
                       grid::grid.grabExpr()))) + 
   plot_layout(design = layout) +
