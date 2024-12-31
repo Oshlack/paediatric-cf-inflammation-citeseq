@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jovana Maksimovic" />
 
-<meta name="date" content="2024-12-24" />
+<meta name="date" content="2024-12-31" />
 
 <title>Inflammation of Paediatric Pulmonary Diseases</title>
 
@@ -353,10 +353,10 @@ div.tocify {
 
 <h1 class="title toc-ignore">Inflammation of Paediatric Pulmonary
 Diseases</h1>
-<h3 class="subtitle">Cell type proportions analysis - annotation level
+<h3 class="subtitle">Cell type proportions analysis: annotation level
 1</h3>
 <h4 class="author">Jovana Maksimovic</h4>
-<h4 class="date">December 24, 2024</h4>
+<h4 class="date">December 31, 2024</h4>
 
 </div>
 
@@ -385,7 +385,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-12-24
+<strong>Last updated:</strong> 2024-12-31
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -516,15 +516,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreeff4fd99def1754ec0edacd08cadda2702603b278targetblankff4fd99a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtree72fe190a65ae5f042ce4fd021e762aef723489abtargetblank72fe190a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/ff4fd99def1754ec0edacd08cadda2702603b278" target="_blank">ff4fd99</a>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/72fe190a65ae5f042ce4fd021e762aef723489ab" target="_blank">72fe190</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreeff4fd99def1754ec0edacd08cadda2702603b278targetblankff4fd99a"
+id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtree72fe190a65ae5f042ce4fd021e762aef723489abtargetblank72fe190a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +534,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/ff4fd99def1754ec0edacd08cadda2702603b278" target="_blank">ff4fd99</a>.
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/72fe190a65ae5f042ce4fd021e762aef723489ab" target="_blank">72fe190</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -560,7 +560,6 @@ Ignored files:
 
 Untracked files:
     Untracked:  analysis/14.0_DGE_analysis_T-cells.Rmd
-    Untracked:  analysis/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd
     Untracked:  analysis/15.2_proportions_analysis_ann_level_3_macrophages.Rmd
     Untracked:  analysis/17.0_Figure_3.Rmd
     Untracked:  analysis/17.0_Figure_4.Rmd
@@ -582,15 +581,40 @@ Unstaged changes:
     Modified:   .gitignore
     Modified:   analysis/06.0_azimuth_annotation.Rmd
     Modified:   analysis/09.0_integrate_cluster_macro_cells.Rmd
+    Modified:   analysis/13.1_DGE_analysis_macro-alveolar.Rmd
     Deleted:    analysis/14.0_proportions_analysis_ann_level_1.Rmd
     Deleted:    analysis/14.1_proportions_analysis_ann_level_3_non-macrophages.Rmd
     Deleted:    analysis/14.2_proportions_analysis_ann_level_3_macrophages.Rmd
     Modified:   analysis/15.0_Figure_1.Rmd
     Modified:   analysis/16.0_Figure_2.Rmd
+    Modified:   analysis/17.0_Supplementary_Figure_ADTs.Rmd
+    Modified:   code/utility.R
     Modified:   data/cluster_annotations/marker_proteins_TNK_supp.xlsx
     Modified:   data/cluster_annotations/marker_proteins_macrophages_supp.xlsx
     Modified:   data/cluster_annotations/marker_proteins_other_supp.xlsx
     Modified:   data/cluster_annotations/seurat_markers_all_cells.rds
+    Modified:   data/intermediate_objects/macro-alveolar.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-alveolar.all_samples.fit.rds
+    Modified:   output/dge_analysis/macro-alveolar/ORA.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/ORA.WP.CF.NO_MODvNON_CF.CTRL.csv
 
 </code></pre>
 <p>
@@ -637,6 +661,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/72fe190a65ae5f042ce4fd021e762aef723489ab/analysis/15.0_proportions_analysis_ann_level_1.Rmd" target="_blank">72fe190</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+<td>
+wflow_publish("analysis/15.0_proportions_analysis_ann_level_1.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/15.0_proportions_analysis_ann_level_1.html" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -702,8 +760,8 @@ seu</code></pre>
 21568 features across 194407 samples within 1 assay 
 Active assay: RNA (21568 features, 0 variable features)</code></pre>
 <pre><code>             used    (Mb) gc trigger    (Mb)   max used    (Mb)
-Ncells   12078855   645.1   20174672  1077.5   14082721   752.1
-Vcells 1354150870 10331.4 3693733670 28181.0 3551484612 27095.7</code></pre>
+Ncells   12078819   645.1   19478872  1040.3   13738828   733.8
+Vcells 1354151361 10331.4 3693734349 28181.0 3551485103 27095.7</code></pre>
 </div>
 <div id="analyse-cell-type-proportions" class="section level1">
 <h1>Analyse Cell type proportions</h1>
@@ -1583,21 +1641,141 @@ props$Proportions %&gt;% knitr::kable()</code></pre>
 </table>
 <div id="cell-type-proportions-by-sample" class="section level2">
 <h2>Cell type proportions by sample</h2>
+<p>Create sample meta data table.</p>
+<pre class="r"><code>seu@meta.data %&gt;%
+  dplyr::select(sample.id,
+                Participant,
+                Disease,
+                Treatment,
+                Severity,
+                Group,
+                Group_severity,
+                Batch, 
+                Age, 
+                Sex) %&gt;%
+     left_join(props$Counts %&gt;% 
+                 data.frame %&gt;%
+                 group_by(sample) %&gt;%
+                 summarise(ncells = sum(Freq)),
+               by = c(&quot;sample.id&quot; = &quot;sample&quot;)) %&gt;%
+    distinct() -&gt; info
+
+head(info) %&gt;% knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="10%" />
+<col width="10%" />
+<col width="7%" />
+<col width="17%" />
+<col width="8%" />
+<col width="8%" />
+<col width="13%" />
+<col width="5%" />
+<col width="8%" />
+<col width="3%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">sample.id</th>
+<th align="left">Participant</th>
+<th align="left">Disease</th>
+<th align="left">Treatment</th>
+<th align="left">Severity</th>
+<th align="left">Group</th>
+<th align="left">Group_severity</th>
+<th align="right">Batch</th>
+<th align="right">Age</th>
+<th align="left">Sex</th>
+<th align="right">ncells</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">sample_33.1</td>
+<td align="left">sample_33</td>
+<td align="left">CF</td>
+<td align="left">treated (ivacaftor)</td>
+<td align="left">severe</td>
+<td align="left">CF.IVA</td>
+<td align="left">CF.IVA.S</td>
+<td align="right">1</td>
+<td align="right">5.950685</td>
+<td align="left">M</td>
+<td align="right">2139</td>
+</tr>
+<tr class="even">
+<td align="left">sample_25.1</td>
+<td align="left">sample_25</td>
+<td align="left">CF</td>
+<td align="left">untreated</td>
+<td align="left">severe</td>
+<td align="left">CF.NO_MOD</td>
+<td align="left">CF.NO_MOD.S</td>
+<td align="right">1</td>
+<td align="right">4.910000</td>
+<td align="left">F</td>
+<td align="right">3272</td>
+</tr>
+<tr class="odd">
+<td align="left">sample_29.1</td>
+<td align="left">sample_29</td>
+<td align="left">CF</td>
+<td align="left">untreated</td>
+<td align="left">severe</td>
+<td align="left">CF.NO_MOD</td>
+<td align="left">CF.NO_MOD.S</td>
+<td align="right">1</td>
+<td align="right">5.989041</td>
+<td align="left">F</td>
+<td align="right">1568</td>
+</tr>
+<tr class="even">
+<td align="left">sample_27.1</td>
+<td align="left">sample_27</td>
+<td align="left">CF</td>
+<td align="left">treated (ivacaftor)</td>
+<td align="left">mild</td>
+<td align="left">CF.IVA</td>
+<td align="left">CF.IVA.M</td>
+<td align="right">1</td>
+<td align="right">4.917808</td>
+<td align="left">M</td>
+<td align="right">2467</td>
+</tr>
+<tr class="odd">
+<td align="left">sample_32.1</td>
+<td align="left">sample_32</td>
+<td align="left">CF</td>
+<td align="left">untreated</td>
+<td align="left">mild</td>
+<td align="left">CF.NO_MOD</td>
+<td align="left">CF.NO_MOD.M</td>
+<td align="right">1</td>
+<td align="right">5.926027</td>
+<td align="left">F</td>
+<td align="right">2963</td>
+</tr>
+<tr class="even">
+<td align="left">sample_26.1</td>
+<td align="left">sample_26</td>
+<td align="left">CF</td>
+<td align="left">untreated</td>
+<td align="left">mild</td>
+<td align="left">CF.NO_MOD</td>
+<td align="left">CF.NO_MOD.M</td>
+<td align="right">1</td>
+<td align="right">5.049315</td>
+<td align="left">M</td>
+<td align="right">2040</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>props$Proportions %&gt;%
   data.frame %&gt;%
-  inner_join(seu@meta.data %&gt;%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity,
-                             Group,
-                             Batch, 
-                             Age, 
-                             Sex), 
+  left_join(info, 
              by = c(&quot;sample&quot; = &quot;sample.id&quot;)) %&gt;%
-  distinct()-&gt; dat
-
-ggplot(dat, aes(x = sample, y = Freq, fill = clusters)) +
+ggplot(aes(x = sample, y = Freq, fill = clusters)) +
   geom_bar(stat = &quot;identity&quot;, color = &quot;black&quot;, size = 0.1) +
   theme(axis.text.x = element_text(angle = 90,
                                    vjust = 0.5,
@@ -1607,27 +1785,49 @@ ggplot(dat, aes(x = sample, y = Freq, fill = clusters)) +
   labs(y = &quot;Proportion&quot;, fill = &quot;Cell Label&quot;) +
   scale_fill_paletteer_d(&quot;miscpalettes::pastel&quot;, direction = 1) +
   facet_grid(~Group, scales = &quot;free_x&quot;, space = &quot;free_x&quot;)</code></pre>
-<p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-6-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-7-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-7-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="no.-cells-per-sample" class="section level2">
 <h2>No. cells per sample</h2>
-<pre class="r"><code>props$Counts %&gt;%
-  data.frame %&gt;%
-  inner_join(seu@meta.data %&gt;%
-               dplyr::select(sample.id, 
-                             ann_level_1,
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Group,
-                             Group_severity,
-                             Batch, 
-                             Age, 
-                             Sex), 
-             by = c(&quot;sample&quot; = &quot;sample.id&quot;, &quot;clusters&quot; = &quot;ann_level_1&quot;)) %&gt;%
-  distinct() -&gt; dat
-
-ggplot(dat, aes(x = sample, y = Freq, fill = Disease)) +
+<pre class="r"><code>info %&gt;%
+ggplot(aes(x = sample.id, y = ncells, fill = Disease)) +
   geom_bar(stat = &quot;identity&quot;) +
   theme(axis.text.x = element_text(angle = 90,
                                    vjust = 0.5,
@@ -1637,66 +1837,52 @@ ggplot(dat, aes(x = sample, y = Freq, fill = Disease)) +
   labs(y = &quot;No. cells&quot;, fill = &quot;Disease&quot;) +
   facet_grid(~Group, scales = &quot;free_x&quot;, space = &quot;free_x&quot;) +
   geom_hline(yintercept = 1000, linetype = &quot;dashed&quot;)</code></pre>
-<p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-7-1.png" width="864" style="display: block; margin: auto;" /></p>
-<!-- Remove sample with too few cells. -->
-<!-- ```{r} -->
-<!-- seu <- subset(seu, cells = which(!seu$sample.id %in% c("sample_23.1"))) -->
-<!-- # Differences in cell type proportions -->
-<!-- props <- getTransformedProps(clusters = seu$ann_level_1, -->
-<!--                              sample = seu$sample.id, transform="asin") -->
-<!-- props$Proportions %>% knitr::kable() -->
-<!-- ``` -->
-</div>
-<div id="cell-proportions-by-sample" class="section level2">
-<h2>Cell proportions by sample</h2>
-<pre class="r"><code>props$Proportions %&gt;%
-  data.frame %&gt;%
-  inner_join(seu@meta.data %&gt;%
-               dplyr::select(sample.id, 
-                             ann_level_1,
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Group,
-                             Group_severity,
-                             Batch, 
-                             Age, 
-                             Sex), 
-             by = c(&quot;sample&quot; = &quot;sample.id&quot;, &quot;clusters&quot; = &quot;ann_level_1&quot;)) %&gt;%
-  distinct() -&gt; dat
-
-ggplot(dat, aes(x = sample, y = Freq, fill = clusters)) +
-  geom_bar(stat = &quot;identity&quot;, color = &quot;black&quot;, size = 0.1) +
-  theme(axis.text.x = element_text(angle = 90,
-                                   vjust = 0.5,
-                                   hjust = 1),
-        legend.text = element_text(size = 8),
-        legend.position = &quot;bottom&quot;) +
-  labs(y = &quot;Proportion&quot;, fill = &quot;Cell Label&quot;) +
-  scale_fill_paletteer_d(&quot;miscpalettes::pastel&quot;, direction = 1) +
-  facet_grid(~Group, scales = &quot;free_x&quot;, space = &quot;free_x&quot;)</code></pre>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-8-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-8-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cell-proportions-by-cell-type" class="section level2">
 <h2>Cell proportions by cell type</h2>
 <pre class="r"><code>props$Proportions %&gt;%
   data.frame %&gt;%
-  inner_join(seu@meta.data %&gt;%
-               dplyr::select(sample.id, 
-                             ann_level_1,
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Group,
-                             Group_severity,
-                             Batch, 
-                             Age, 
-                             Sex), 
-             by = c(&quot;sample&quot; = &quot;sample.id&quot;, &quot;clusters&quot; = &quot;ann_level_1&quot;)) %&gt;%
-  distinct() -&gt; dat
-
-ggplot(dat, 
-       aes(x = clusters, y = Freq, fill = clusters)) +
+  left_join(info, 
+             by = c(&quot;sample&quot; = &quot;sample.id&quot;)) %&gt;%
+ggplot(aes(x = clusters, y = Freq, fill = clusters)) +
   geom_boxplot(outlier.size = 0.1, size = 0.25) +
   theme(axis.text.x = element_text(angle = 45,
                                    vjust = 1,
@@ -1706,6 +1892,43 @@ ggplot(dat,
   scale_fill_paletteer_d(&quot;miscpalettes::pastel&quot;, direction = 1) +
   NoLegend()</code></pre>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-9-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="explore-sources-of-variation" class="section level1">
@@ -1725,14 +1948,7 @@ for(i in 1:length(dims)){
   data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %&gt;%
-    left_join(seu@meta.data %&gt;%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c(&quot;sample&quot; = &quot;sample.id&quot;)) %&gt;%
     distinct() -&gt; dat
   
@@ -1754,6 +1970,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-10-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>dims &lt;- list(c(1,2), c(2:3), c(3,4), c(4,5))
 p &lt;- vector(&quot;list&quot;, length(dims))
 
@@ -1762,22 +2015,11 @@ for(i in 1:length(dims)){
                  gene.selection = &quot;common&quot;,
                  plot = FALSE, dim.plot = dims[[i]])
   
-   data.frame(x = mds$x, 
+  data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %&gt;%
-    left_join(seu@meta.data %&gt;%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity,
-                             Participant,
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c(&quot;sample&quot; = &quot;sample.id&quot;)) %&gt;%
-    group_by(sample) %&gt;%
-    mutate(ncells = n()) %&gt;%
-    ungroup() %&gt;%
     distinct() -&gt; dat
   
   p[[i]] &lt;- ggplot(dat, aes(x = x, y = y, 
@@ -1797,6 +2039,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-11-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cell-proportion-data" class="section level2">
 <h2>Cell proportion data</h2>
@@ -1812,14 +2091,7 @@ for(i in 1:length(dims)){
   data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %&gt;%
-    left_join(seu@meta.data %&gt;%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c(&quot;sample&quot; = &quot;sample.id&quot;)) %&gt;%
     distinct() -&gt; dat
   
@@ -1841,6 +2113,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-12-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>dims &lt;- list(c(1,2), c(2:3), c(3,4), c(4,5))
 p &lt;- vector(&quot;list&quot;, length(dims))
 
@@ -1852,14 +2161,7 @@ for(i in 1:length(dims)){
   data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %&gt;%
-    left_join(seu@meta.data %&gt;%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c(&quot;sample&quot; = &quot;sample.id&quot;)) %&gt;%
     distinct() -&gt; dat
   
@@ -1881,6 +2183,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-13-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>dims &lt;- list(c(1,2), c(2:3), c(3,4), c(4,5))
 p &lt;- vector(&quot;list&quot;, length(dims))
 
@@ -1892,19 +2231,8 @@ for(i in 1:length(dims)){
    data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %&gt;%
-    left_join(seu@meta.data %&gt;%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity,
-                             Participant,
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c(&quot;sample&quot; = &quot;sample.id&quot;)) %&gt;%
-    group_by(sample) %&gt;%
-    mutate(ncells = n()) %&gt;%
-    ungroup() %&gt;%
     distinct() -&gt; dat
   
   p[[i]] &lt;- ggplot(dat, aes(x = x, y = y, 
@@ -1924,6 +2252,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-14-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>dims &lt;- list(c(1,2), c(2:3), c(3,4), c(4,5))
 p &lt;- vector(&quot;list&quot;, length(dims))
 
@@ -1932,22 +2297,11 @@ for(i in 1:length(dims)){
                  gene.selection = &quot;common&quot;,
                  plot = FALSE, dim.plot = dims[[i]])
   
-   data.frame(x = mds$x, 
+  data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %&gt;%
-    left_join(seu@meta.data %&gt;%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity,
-                             Participant,
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c(&quot;sample&quot; = &quot;sample.id&quot;)) %&gt;%
-    group_by(sample) %&gt;%
-    mutate(ncells = n()) %&gt;%
-    ungroup() %&gt;%
     distinct() -&gt; dat
   
   p[[i]] &lt;- ggplot(dat, aes(x = x, y = y, 
@@ -1967,6 +2321,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-15-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="principal-components-versus-traits" class="section level1">
@@ -1977,35 +2368,57 @@ whether these correlate with any of the specifed covariates. First, we
 calculate the principal components. The scree plot belows shows us that
 most of the variation in this data is captured by the top 7 principal
 components.</p>
-<pre class="r"><code># remove outlier sample
-transformed_props &lt;- props$TransformedProps[,colnames(props$TransformedProps) != &quot;sample_23.1&quot;]
+<pre class="r"><code># remove outlying sample
+info &lt;- info[info$sample.id != &quot;sample_23.1&quot;,]
+props$TransformedProps &lt;- props$TransformedProps[, colnames(props$TransformedProps) != &quot;sample_23.1&quot;]
 
-PCs &lt;- prcomp(t(transformed_props), center = TRUE, 
+PCs &lt;- prcomp(t(props$TransformedProps), center = TRUE, 
               scale = TRUE, retx = TRUE)
 loadings = PCs$x # pc loadings
 plot(PCs, type=&quot;lines&quot;) # scree plot</code></pre>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
+Past versions of unnamed-chunk-16-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-16-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-16-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Collect all of the known sample traits.</p>
-<pre class="r"><code>nGenes = nrow(transformed_props)
-nSamples = ncol(transformed_props)
+<pre class="r"><code>nGenes = nrow(props$TransformedProps)
+nSamples = ncol(props$TransformedProps)
 
-info &lt;- seu@meta.data %&gt;%
-  dplyr::select(sample.id, 
-                Disease,
-                Treatment,
-                Severity,
-                Participant,
-                Group_severity,
-                Group,
-                Batch, 
-                Age, 
-                Sex) %&gt;%
-  group_by(sample.id) %&gt;%
-  mutate(ncells = n()) %&gt;%
-  ungroup() %&gt;%
-  distinct()
-
-m &lt;- match(colnames(transformed_props), info$sample.id)
+m &lt;- match(colnames(props$TransformedProps), info$sample.id)
 info &lt;- info[m,]
 
 datTraits &lt;- info %&gt;% dplyr::select(Participant, Batch, Disease, Treatment,
@@ -2029,18 +2442,20 @@ datTraits %&gt;%
   knitr::kable()</code></pre>
 <table>
 <colgroup>
+<col width="4%" />
 <col width="8%" />
 <col width="11%" />
-<col width="14%" />
-<col width="8%" />
 <col width="13%" />
+<col width="8%" />
+<col width="12%" />
 <col width="15%" />
 <col width="5%" />
-<col width="13%" />
+<col width="12%" />
 <col width="8%" />
 </colgroup>
 <thead>
 <tr class="header">
+<th align="left"></th>
 <th align="right">Batch</th>
 <th align="right">Disease</th>
 <th align="right">Treatment</th>
@@ -2054,6 +2469,7 @@ datTraits %&gt;%
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">19</td>
 <td align="right">4</td>
 <td align="right">2</td>
 <td align="right">1</td>
@@ -2065,6 +2481,7 @@ datTraits %&gt;%
 <td align="right">1</td>
 </tr>
 <tr class="even">
+<td align="left">18</td>
 <td align="right">4</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2076,6 +2493,7 @@ datTraits %&gt;%
 <td align="right">2</td>
 </tr>
 <tr class="odd">
+<td align="left">16</td>
 <td align="right">4</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2087,6 +2505,7 @@ datTraits %&gt;%
 <td align="right">3</td>
 </tr>
 <tr class="even">
+<td align="left">24</td>
 <td align="right">5</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2098,6 +2517,7 @@ datTraits %&gt;%
 <td align="right">4</td>
 </tr>
 <tr class="odd">
+<td align="left">27</td>
 <td align="right">5</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2109,6 +2529,7 @@ datTraits %&gt;%
 <td align="right">5</td>
 </tr>
 <tr class="even">
+<td align="left">33</td>
 <td align="right">6</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2120,6 +2541,7 @@ datTraits %&gt;%
 <td align="right">6</td>
 </tr>
 <tr class="odd">
+<td align="left">17</td>
 <td align="right">4</td>
 <td align="right">2</td>
 <td align="right">1</td>
@@ -2131,6 +2553,7 @@ datTraits %&gt;%
 <td align="right">7</td>
 </tr>
 <tr class="even">
+<td align="left">32</td>
 <td align="right">6</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2142,6 +2565,7 @@ datTraits %&gt;%
 <td align="right">8</td>
 </tr>
 <tr class="odd">
+<td align="left">22</td>
 <td align="right">4</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2153,6 +2577,7 @@ datTraits %&gt;%
 <td align="right">9</td>
 </tr>
 <tr class="even">
+<td align="left">23</td>
 <td align="right">4</td>
 <td align="right">1</td>
 <td align="right">2</td>
@@ -2164,6 +2589,7 @@ datTraits %&gt;%
 <td align="right">10</td>
 </tr>
 <tr class="odd">
+<td align="left">28</td>
 <td align="right">6</td>
 <td align="right">1</td>
 <td align="right">2</td>
@@ -2175,6 +2601,7 @@ datTraits %&gt;%
 <td align="right">11</td>
 </tr>
 <tr class="even">
+<td align="left">2</td>
 <td align="right">2</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2186,6 +2613,7 @@ datTraits %&gt;%
 <td align="right">12</td>
 </tr>
 <tr class="odd">
+<td align="left">6</td>
 <td align="right">2</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2197,6 +2625,7 @@ datTraits %&gt;%
 <td align="right">13</td>
 </tr>
 <tr class="even">
+<td align="left">4</td>
 <td align="right">2</td>
 <td align="right">1</td>
 <td align="right">2</td>
@@ -2208,6 +2637,7 @@ datTraits %&gt;%
 <td align="right">14</td>
 </tr>
 <tr class="odd">
+<td align="left">29</td>
 <td align="right">6</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2219,6 +2649,7 @@ datTraits %&gt;%
 <td align="right">15</td>
 </tr>
 <tr class="even">
+<td align="left">3</td>
 <td align="right">2</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2230,6 +2661,7 @@ datTraits %&gt;%
 <td align="right">16</td>
 </tr>
 <tr class="odd">
+<td align="left">30</td>
 <td align="right">6</td>
 <td align="right">2</td>
 <td align="right">1</td>
@@ -2241,6 +2673,7 @@ datTraits %&gt;%
 <td align="right">17</td>
 </tr>
 <tr class="even">
+<td align="left">7</td>
 <td align="right">2</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2252,6 +2685,7 @@ datTraits %&gt;%
 <td align="right">18</td>
 </tr>
 <tr class="odd">
+<td align="left">8</td>
 <td align="right">2</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2263,6 +2697,7 @@ datTraits %&gt;%
 <td align="right">19</td>
 </tr>
 <tr class="even">
+<td align="left">5</td>
 <td align="right">2</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2274,6 +2709,7 @@ datTraits %&gt;%
 <td align="right">20</td>
 </tr>
 <tr class="odd">
+<td align="left">1</td>
 <td align="right">2</td>
 <td align="right">1</td>
 <td align="right">2</td>
@@ -2285,6 +2721,7 @@ datTraits %&gt;%
 <td align="right">21</td>
 </tr>
 <tr class="even">
+<td align="left">40</td>
 <td align="right">7</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2296,6 +2733,7 @@ datTraits %&gt;%
 <td align="right">22</td>
 </tr>
 <tr class="odd">
+<td align="left">41</td>
 <td align="right">7</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2307,6 +2745,7 @@ datTraits %&gt;%
 <td align="right">22</td>
 </tr>
 <tr class="even">
+<td align="left">34</td>
 <td align="right">7</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2318,6 +2757,7 @@ datTraits %&gt;%
 <td align="right">22</td>
 </tr>
 <tr class="odd">
+<td align="left">35</td>
 <td align="right">7</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2329,6 +2769,7 @@ datTraits %&gt;%
 <td align="right">23</td>
 </tr>
 <tr class="even">
+<td align="left">39</td>
 <td align="right">7</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2340,6 +2781,7 @@ datTraits %&gt;%
 <td align="right">23</td>
 </tr>
 <tr class="odd">
+<td align="left">38</td>
 <td align="right">7</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2351,6 +2793,7 @@ datTraits %&gt;%
 <td align="right">24</td>
 </tr>
 <tr class="even">
+<td align="left">37</td>
 <td align="right">7</td>
 <td align="right">1</td>
 <td align="right">3</td>
@@ -2362,6 +2805,7 @@ datTraits %&gt;%
 <td align="right">24</td>
 </tr>
 <tr class="odd">
+<td align="left">10</td>
 <td align="right">3</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2373,6 +2817,7 @@ datTraits %&gt;%
 <td align="right">25</td>
 </tr>
 <tr class="even">
+<td align="left">9</td>
 <td align="right">3</td>
 <td align="right">1</td>
 <td align="right">3</td>
@@ -2384,6 +2829,7 @@ datTraits %&gt;%
 <td align="right">25</td>
 </tr>
 <tr class="odd">
+<td align="left">11</td>
 <td align="right">3</td>
 <td align="right">1</td>
 <td align="right">3</td>
@@ -2395,6 +2841,7 @@ datTraits %&gt;%
 <td align="right">25</td>
 </tr>
 <tr class="even">
+<td align="left">14</td>
 <td align="right">3</td>
 <td align="right">1</td>
 <td align="right">2</td>
@@ -2406,6 +2853,7 @@ datTraits %&gt;%
 <td align="right">26</td>
 </tr>
 <tr class="odd">
+<td align="left">15</td>
 <td align="right">3</td>
 <td align="right">1</td>
 <td align="right">2</td>
@@ -2417,6 +2865,7 @@ datTraits %&gt;%
 <td align="right">26</td>
 </tr>
 <tr class="even">
+<td align="left">13</td>
 <td align="right">3</td>
 <td align="right">1</td>
 <td align="right">2</td>
@@ -2428,6 +2877,7 @@ datTraits %&gt;%
 <td align="right">26</td>
 </tr>
 <tr class="odd">
+<td align="left">26</td>
 <td align="right">5</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2439,6 +2889,7 @@ datTraits %&gt;%
 <td align="right">27</td>
 </tr>
 <tr class="even">
+<td align="left">25</td>
 <td align="right">5</td>
 <td align="right">1</td>
 <td align="right">3</td>
@@ -2450,6 +2901,7 @@ datTraits %&gt;%
 <td align="right">27</td>
 </tr>
 <tr class="odd">
+<td align="left">36</td>
 <td align="right">7</td>
 <td align="right">2</td>
 <td align="right">1</td>
@@ -2461,6 +2913,7 @@ datTraits %&gt;%
 <td align="right">28</td>
 </tr>
 <tr class="even">
+<td align="left">42</td>
 <td align="right">1</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2472,6 +2925,7 @@ datTraits %&gt;%
 <td align="right">29</td>
 </tr>
 <tr class="odd">
+<td align="left">43</td>
 <td align="right">1</td>
 <td align="right">1</td>
 <td align="right">4</td>
@@ -2483,6 +2937,7 @@ datTraits %&gt;%
 <td align="right">30</td>
 </tr>
 <tr class="even">
+<td align="left">45</td>
 <td align="right">1</td>
 <td align="right">1</td>
 <td align="right">2</td>
@@ -2494,6 +2949,7 @@ datTraits %&gt;%
 <td align="right">31</td>
 </tr>
 <tr class="odd">
+<td align="left">44</td>
 <td align="right">1</td>
 <td align="right">2</td>
 <td align="right">1</td>
@@ -2505,6 +2961,7 @@ datTraits %&gt;%
 <td align="right">32</td>
 </tr>
 <tr class="even">
+<td align="left">12</td>
 <td align="right">3</td>
 <td align="right">2</td>
 <td align="right">1</td>
@@ -2516,6 +2973,7 @@ datTraits %&gt;%
 <td align="right">33</td>
 </tr>
 <tr class="odd">
+<td align="left">20</td>
 <td align="right">4</td>
 <td align="right">2</td>
 <td align="right">1</td>
@@ -2527,6 +2985,7 @@ datTraits %&gt;%
 <td align="right">34</td>
 </tr>
 <tr class="even">
+<td align="left">21</td>
 <td align="right">4</td>
 <td align="right">2</td>
 <td align="right">1</td>
@@ -2563,6 +3022,43 @@ WGCNA::labeledHeatmap(Matrix = t(moduleTraitCor),
                       zlim = c(-1,1),
                       main = paste(&quot;PCA-trait relationships: Top 10 PCs&quot;))</code></pre>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-1">
+Past versions of unnamed-chunk-18-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-18-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-18-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="statistical-analysis-using-propeller-and-limma"
 class="section level1">
@@ -2721,7 +3217,7 @@ Levels          CF.NO_MOD.SvCF.NO_MOD.M
   age                                 0
   sexM                                0</code></pre>
 <p>Add random effect for samples from the same individual.</p>
-<pre class="r"><code>dupcor &lt;- duplicateCorrelation(transformed_props, design=design,
+<pre class="r"><code>dupcor &lt;- duplicateCorrelation(props$TransformedProps, design=design,
                                 block=participant)
 dupcor</code></pre>
 <pre><code>$consensus.correlation
@@ -2735,7 +3231,7 @@ $atanh.correlations
  [7]  0.20770523  1.17122725  0.94099741  0.54921399  1.71581017  1.63069725
 [13]  1.14397325  0.51267513 -0.53606034  0.97778570</code></pre>
 <p>Fit the model.</p>
-<pre class="r"><code>fit &lt;- lmFit(transformed_props, design=design, block=participant, 
+<pre class="r"><code>fit &lt;- lmFit(props$TransformedProps, design=design, block=participant, 
                 correlation=dupcor$consensus)
 fit2 &lt;- contrasts.fit(fit, contr)
 fit2 &lt;- eBayes(fit2, robust=TRUE, trend=FALSE)
@@ -2754,10 +3250,10 @@ Up                           0</code></pre>
 <pre class="r"><code>p &lt;- vector(&quot;list&quot;, ncol(contr))
 
 for(i in 1:ncol(contr)){
-  print(knitr::kable(topTable(fit2, coef = i),
+  print(knitr::kable(topTable(fit2, coef = i, number = Inf),
                      caption = colnames(contr)[i]))
   
-  transformed_props %&gt;% data.frame %&gt;%
+  props$Proportions %&gt;% data.frame %&gt;%
     left_join(info,
               by = c(&quot;sample&quot; = &quot;sample.id&quot;)) %&gt;%
     mutate(Group = Group_severity) %&gt;%
@@ -2784,7 +3280,7 @@ for(i in 1:ncol(contr)){
           legend.direction = &quot;horizontal&quot;) +
     labs(x = &quot;Group&quot;, y = &quot;Proportion&quot;,
          colour = &quot;Condition&quot;) +
-    facet_wrap(~clusters, scales = &quot;free_y&quot;) +
+    facet_wrap(~clusters, scales = &quot;free_y&quot;, ncol = 4) +
     ggtitle(colnames(contr)[i]) -&gt; p[[i]]
   
   print(p[[i]])
@@ -2792,10 +3288,10 @@ for(i in 1:ncol(contr)){
 <table>
 <caption>CF.NO_MODvNON_CF.CTRL</caption>
 <colgroup>
-<col width="26%" />
-<col width="13%" />
+<col width="29%" />
+<col width="12%" />
 <col width="11%" />
-<col width="13%" />
+<col width="12%" />
 <col width="11%" />
 <col width="11%" />
 <col width="11%" />
@@ -2902,19 +3398,110 @@ for(i in 1:ncol(contr)){
 <td align="right">0.8449842</td>
 <td align="right">-6.369579</td>
 </tr>
+<tr class="odd">
+<td align="left">mast cells</td>
+<td align="right">-0.0047191</td>
+<td align="right">0.0158193</td>
+<td align="right">-0.4753958</td>
+<td align="right">0.6378193</td>
+<td align="right">0.8449842</td>
+<td align="right">-6.371669</td>
+</tr>
+<tr class="even">
+<td align="left">NK cells</td>
+<td align="right">-0.0065650</td>
+<td align="right">0.0505933</td>
+<td align="right">-0.4046685</td>
+<td align="right">0.6884847</td>
+<td align="right">0.8449842</td>
+<td align="right">-6.402857</td>
+</tr>
+<tr class="odd">
+<td align="left">epithelial cells</td>
+<td align="right">-0.0139599</td>
+<td align="right">0.0868234</td>
+<td align="right">-0.3768585</td>
+<td align="right">0.7088574</td>
+<td align="right">0.8449842</td>
+<td align="right">-6.413742</td>
+</tr>
+<tr class="even">
+<td align="left">proliferating macrophages</td>
+<td align="right">0.0077459</td>
+<td align="right">0.1876178</td>
+<td align="right">0.3356832</td>
+<td align="right">0.7393612</td>
+<td align="right">0.8449842</td>
+<td align="right">-6.428493</td>
+</tr>
+<tr class="odd">
+<td align="left">proliferating T/NK</td>
+<td align="right">-0.0018288</td>
+<td align="right">0.0310578</td>
+<td align="right">-0.1712652</td>
+<td align="right">0.8651221</td>
+<td align="right">0.9227969</td>
+<td align="right">-6.470429</td>
+</tr>
+<tr class="even">
+<td align="left">CD4 T cells</td>
+<td align="right">-0.0008403</td>
+<td align="right">0.1587382</td>
+<td align="right">-0.0216559</td>
+<td align="right">0.9828618</td>
+<td align="right">0.9828618</td>
+<td align="right">-6.484976</td>
+</tr>
 </tbody>
 </table>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-23-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-1">
+Past versions of unnamed-chunk-23-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-23-1.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table>
 <caption>CF.IVAvCF.NO_MOD</caption>
 <colgroup>
-<col width="24%" />
-<col width="13%" />
+<col width="29%" />
 <col width="12%" />
-<col width="13%" />
+<col width="11%" />
 <col width="12%" />
-<col width="12%" />
-<col width="12%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -3018,19 +3605,110 @@ for(i in 1:ncol(contr)){
 <td align="right">0.9866568</td>
 <td align="right">-6.177025</td>
 </tr>
+<tr class="odd">
+<td align="left">dividing innate cells</td>
+<td align="right">0.0034334</td>
+<td align="right">0.0232467</td>
+<td align="right">0.2233408</td>
+<td align="right">0.8247274</td>
+<td align="right">0.9866568</td>
+<td align="right">-6.188731</td>
+</tr>
+<tr class="even">
+<td align="left">proliferating macrophages</td>
+<td align="right">0.0057278</td>
+<td align="right">0.1876178</td>
+<td align="right">0.2118509</td>
+<td align="right">0.8336040</td>
+<td align="right">0.9866568</td>
+<td align="right">-6.191205</td>
+</tr>
+<tr class="odd">
+<td align="left">NK cells</td>
+<td align="right">-0.0036478</td>
+<td align="right">0.0505933</td>
+<td align="right">-0.1918965</td>
+<td align="right">0.8490679</td>
+<td align="right">0.9866568</td>
+<td align="right">-6.195195</td>
+</tr>
+<tr class="even">
+<td align="left">epithelial cells</td>
+<td align="right">-0.0034896</td>
+<td align="right">0.0868234</td>
+<td align="right">-0.0803995</td>
+<td align="right">0.9364385</td>
+<td align="right">0.9866568</td>
+<td align="right">-6.210234</td>
+</tr>
+<tr class="odd">
+<td align="left">innate lymphocyte</td>
+<td align="right">-0.0015606</td>
+<td align="right">0.0733282</td>
+<td align="right">-0.0668821</td>
+<td align="right">0.9471027</td>
+<td align="right">0.9866568</td>
+<td align="right">-6.211222</td>
+</tr>
+<tr class="even">
+<td align="left">CD4 T cells</td>
+<td align="right">0.0007665</td>
+<td align="right">0.1587382</td>
+<td align="right">0.0168600</td>
+<td align="right">0.9866568</td>
+<td align="right">0.9866568</td>
+<td align="right">-6.213299</td>
+</tr>
 </tbody>
 </table>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-23-2.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-2">
+Past versions of unnamed-chunk-23-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-23-2.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table>
 <caption>CF.LUMA_IVAvCF.NO_MOD</caption>
 <colgroup>
-<col width="24%" />
-<col width="13%" />
+<col width="29%" />
 <col width="12%" />
+<col width="11%" />
 <col width="12%" />
-<col width="12%" />
-<col width="12%" />
-<col width="12%" />
+<col width="11%" />
+<col width="11%" />
+<col width="11%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -3048,7 +3726,7 @@ for(i in 1:ncol(contr)){
 <td align="left">neutrophils</td>
 <td align="right">-0.0623699</td>
 <td align="right">0.0365714</td>
-<td align="right">-3.409832</td>
+<td align="right">-3.4098325</td>
 <td align="right">0.0018145</td>
 <td align="right">0.0290321</td>
 <td align="right">-1.482959</td>
@@ -3057,7 +3735,7 @@ for(i in 1:ncol(contr)){
 <td align="left">innate lymphocyte</td>
 <td align="right">0.0449772</td>
 <td align="right">0.0733282</td>
-<td align="right">2.410706</td>
+<td align="right">2.4107062</td>
 <td align="right">0.0220055</td>
 <td align="right">0.1760439</td>
 <td align="right">-3.756250</td>
@@ -3066,7 +3744,7 @@ for(i in 1:ncol(contr)){
 <td align="left">mast cells</td>
 <td align="right">-0.0165537</td>
 <td align="right">0.0158193</td>
-<td align="right">-1.779886</td>
+<td align="right">-1.7798855</td>
 <td align="right">0.0848459</td>
 <td align="right">0.4089010</td>
 <td align="right">-4.914571</td>
@@ -3075,7 +3753,7 @@ for(i in 1:ncol(contr)){
 <td align="left">CD8 T cells</td>
 <td align="right">0.0618318</td>
 <td align="right">0.1671905</td>
-<td align="right">1.684230</td>
+<td align="right">1.6842303</td>
 <td align="right">0.1022253</td>
 <td align="right">0.4089010</td>
 <td align="right">-5.066366</td>
@@ -3084,7 +3762,7 @@ for(i in 1:ncol(contr)){
 <td align="left">NK cells</td>
 <td align="right">0.0236804</td>
 <td align="right">0.0505933</td>
-<td align="right">1.557941</td>
+<td align="right">1.5579412</td>
 <td align="right">0.1293431</td>
 <td align="right">0.4138978</td>
 <td align="right">-5.255670</td>
@@ -3093,7 +3771,7 @@ for(i in 1:ncol(contr)){
 <td align="left">CD4 T cells</td>
 <td align="right">0.0514344</td>
 <td align="right">0.1587382</td>
-<td align="right">1.414851</td>
+<td align="right">1.4148505</td>
 <td align="right">0.1671225</td>
 <td align="right">0.4456600</td>
 <td align="right">-5.455042</td>
@@ -3102,7 +3780,7 @@ for(i in 1:ncol(contr)){
 <td align="left">monocytes</td>
 <td align="right">0.0223527</td>
 <td align="right">0.1046134</td>
-<td align="right">1.247018</td>
+<td align="right">1.2470181</td>
 <td align="right">0.2216793</td>
 <td align="right">0.4552617</td>
 <td align="right">-5.667274</td>
@@ -3111,7 +3789,7 @@ for(i in 1:ncol(contr)){
 <td align="left">DC cells</td>
 <td align="right">0.0342966</td>
 <td align="right">0.1376617</td>
-<td align="right">1.196499</td>
+<td align="right">1.1964989</td>
 <td align="right">0.2406122</td>
 <td align="right">0.4552617</td>
 <td align="right">-5.726384</td>
@@ -3120,7 +3798,7 @@ for(i in 1:ncol(contr)){
 <td align="left">macrophages</td>
 <td align="right">-0.0697972</td>
 <td align="right">1.1311489</td>
-<td align="right">-1.156640</td>
+<td align="right">-1.1566397</td>
 <td align="right">0.2562936</td>
 <td align="right">0.4552617</td>
 <td align="right">-5.771489</td>
@@ -3129,21 +3807,112 @@ for(i in 1:ncol(contr)){
 <td align="left">gamma delta T cells</td>
 <td align="right">-0.0168610</td>
 <td align="right">0.0242845</td>
-<td align="right">-1.088915</td>
+<td align="right">-1.0889147</td>
 <td align="right">0.2845386</td>
 <td align="right">0.4552617</td>
 <td align="right">-5.844982</td>
 </tr>
+<tr class="odd">
+<td align="left">NK-T cells</td>
+<td align="right">0.0075934</td>
+<td align="right">0.0158486</td>
+<td align="right">0.8946787</td>
+<td align="right">0.3778153</td>
+<td align="right">0.5495495</td>
+<td align="right">-6.032605</td>
+</tr>
+<tr class="even">
+<td align="left">B cells</td>
+<td align="right">0.0332548</td>
+<td align="right">0.1209003</td>
+<td align="right">0.8244896</td>
+<td align="right">0.4159878</td>
+<td align="right">0.5546504</td>
+<td align="right">-6.091776</td>
+</tr>
+<tr class="odd">
+<td align="left">proliferating T/NK</td>
+<td align="right">0.0053150</td>
+<td align="right">0.0310578</td>
+<td align="right">0.5312473</td>
+<td align="right">0.5990128</td>
+<td align="right">0.7372465</td>
+<td align="right">-6.288659</td>
+</tr>
+<tr class="even">
+<td align="left">proliferating macrophages</td>
+<td align="right">0.0039370</td>
+<td align="right">0.1876178</td>
+<td align="right">0.1821064</td>
+<td align="right">0.8566796</td>
+<td align="right">0.9363171</td>
+<td align="right">-6.413262</td>
+</tr>
+<tr class="odd">
+<td align="left">epithelial cells</td>
+<td align="right">0.0053809</td>
+<td align="right">0.0868234</td>
+<td align="right">0.1550425</td>
+<td align="right">0.8777973</td>
+<td align="right">0.9363171</td>
+<td align="right">-6.417843</td>
+</tr>
+<tr class="even">
+<td align="left">dividing innate cells</td>
+<td align="right">-0.0001671</td>
+<td align="right">0.0232467</td>
+<td align="right">-0.0135948</td>
+<td align="right">0.9892399</td>
+<td align="right">0.9892399</td>
+<td align="right">-6.429838</td>
+</tr>
 </tbody>
 </table>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-23-3.png" width="768" style="display: block; margin: auto;" /></p>
-<table style="width:100%;">
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-3">
+Past versions of unnamed-chunk-23-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-23-3.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<table>
 <caption>CF.NO_MOD.SvCF.NO_MOD.M</caption>
 <colgroup>
 <col width="29%" />
 <col width="12%" />
 <col width="11%" />
-<col width="11%" />
+<col width="12%" />
 <col width="11%" />
 <col width="11%" />
 <col width="11%" />
@@ -3164,7 +3933,7 @@ for(i in 1:ncol(contr)){
 <td align="left">neutrophils</td>
 <td align="right">0.0399716</td>
 <td align="right">0.0365714</td>
-<td align="right">2.159654</td>
+<td align="right">2.1596541</td>
 <td align="right">0.0386053</td>
 <td align="right">0.3092130</td>
 <td align="right">-4.238117</td>
@@ -3173,7 +3942,7 @@ for(i in 1:ncol(contr)){
 <td align="left">B cells</td>
 <td align="right">0.0881572</td>
 <td align="right">0.1209003</td>
-<td align="right">2.160049</td>
+<td align="right">2.1600493</td>
 <td align="right">0.0386516</td>
 <td align="right">0.3092130</td>
 <td align="right">-4.238184</td>
@@ -3182,7 +3951,7 @@ for(i in 1:ncol(contr)){
 <td align="left">macrophages</td>
 <td align="right">-0.0954724</td>
 <td align="right">1.1311489</td>
-<td align="right">-1.563554</td>
+<td align="right">-1.5635542</td>
 <td align="right">0.1281186</td>
 <td align="right">0.4022276</td>
 <td align="right">-5.236842</td>
@@ -3191,7 +3960,7 @@ for(i in 1:ncol(contr)){
 <td align="left">NK cells</td>
 <td align="right">0.0222587</td>
 <td align="right">0.0505933</td>
-<td align="right">1.447224</td>
+<td align="right">1.4472245</td>
 <td align="right">0.1578166</td>
 <td align="right">0.4022276</td>
 <td align="right">-5.400533</td>
@@ -3200,7 +3969,7 @@ for(i in 1:ncol(contr)){
 <td align="left">CD4 T cells</td>
 <td align="right">0.0486446</td>
 <td align="right">0.1587382</td>
-<td align="right">1.322411</td>
+<td align="right">1.3224106</td>
 <td align="right">0.1957475</td>
 <td align="right">0.4022276</td>
 <td align="right">-5.563891</td>
@@ -3209,7 +3978,7 @@ for(i in 1:ncol(contr)){
 <td align="left">gamma delta T cells</td>
 <td align="right">0.0204081</td>
 <td align="right">0.0242845</td>
-<td align="right">1.302533</td>
+<td align="right">1.3025331</td>
 <td align="right">0.2022756</td>
 <td align="right">0.4022276</td>
 <td align="right">-5.588735</td>
@@ -3218,7 +3987,7 @@ for(i in 1:ncol(contr)){
 <td align="left">mast cells</td>
 <td align="right">0.0113367</td>
 <td align="right">0.0158193</td>
-<td align="right">1.204650</td>
+<td align="right">1.2046501</td>
 <td align="right">0.2374051</td>
 <td align="right">0.4022276</td>
 <td align="right">-5.705992</td>
@@ -3227,7 +3996,7 @@ for(i in 1:ncol(contr)){
 <td align="left">proliferating macrophages</td>
 <td align="right">-0.0258037</td>
 <td align="right">0.1876178</td>
-<td align="right">-1.179550</td>
+<td align="right">-1.1795495</td>
 <td align="right">0.2471137</td>
 <td align="right">0.4022276</td>
 <td align="right">-5.734717</td>
@@ -3236,7 +4005,7 @@ for(i in 1:ncol(contr)){
 <td align="left">proliferating T/NK</td>
 <td align="right">0.0114745</td>
 <td align="right">0.0310578</td>
-<td align="right">1.133464</td>
+<td align="right">1.1334637</td>
 <td align="right">0.2656620</td>
 <td align="right">0.4022276</td>
 <td align="right">-5.786035</td>
@@ -3245,14 +4014,105 @@ for(i in 1:ncol(contr)){
 <td align="left">dividing innate cells</td>
 <td align="right">0.0139205</td>
 <td align="right">0.0232467</td>
-<td align="right">1.119152</td>
+<td align="right">1.1191517</td>
 <td align="right">0.2716253</td>
 <td align="right">0.4022276</td>
 <td align="right">-5.801588</td>
 </tr>
+<tr class="odd">
+<td align="left">epithelial cells</td>
+<td align="right">0.0389018</td>
+<td align="right">0.0868234</td>
+<td align="right">1.1077417</td>
+<td align="right">0.2765315</td>
+<td align="right">0.4022276</td>
+<td align="right">-5.813788</td>
+</tr>
+<tr class="even">
+<td align="left">NK-T cells</td>
+<td align="right">0.0086840</td>
+<td align="right">0.0158486</td>
+<td align="right">1.0111665</td>
+<td align="right">0.3197215</td>
+<td align="right">0.4262954</td>
+<td align="right">-5.913028</td>
+</tr>
+<tr class="odd">
+<td align="left">monocytes</td>
+<td align="right">-0.0115897</td>
+<td align="right">0.1046134</td>
+<td align="right">-0.6389809</td>
+<td align="right">0.5275030</td>
+<td align="right">0.6492345</td>
+<td align="right">-6.214598</td>
+</tr>
+<tr class="even">
+<td align="left">innate lymphocyte</td>
+<td align="right">0.0043002</td>
+<td align="right">0.0733282</td>
+<td align="right">0.2277804</td>
+<td align="right">0.8213044</td>
+<td align="right">0.8980556</td>
+<td align="right">-6.392380</td>
+</tr>
+<tr class="odd">
+<td align="left">DC cells</td>
+<td align="right">0.0058333</td>
+<td align="right">0.1376617</td>
+<td align="right">0.2011164</td>
+<td align="right">0.8419271</td>
+<td align="right">0.8980556</td>
+<td align="right">-6.398113</td>
+</tr>
+<tr class="even">
+<td align="left">CD8 T cells</td>
+<td align="right">0.0012509</td>
+<td align="right">0.1671905</td>
+<td align="right">0.0336741</td>
+<td align="right">0.9733538</td>
+<td align="right">0.9733538</td>
+<td align="right">-6.417864</td>
+</tr>
 </tbody>
 </table>
 <p><img src="figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-23-4.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-4">
+Past versions of unnamed-chunk-23-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/7ae0444a1768710b4e0a76907b9ad296422c0fc2/docs/figure/15.0_proportions_analysis_ann_level_1.Rmd/unnamed-chunk-23-4.png" target="_blank">7ae0444</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="session-info" class="section level1 appendix">
@@ -3273,7 +4133,7 @@ software (click triangle to expand)
  collate  en_AU.UTF-8
  ctype    en_AU.UTF-8
  tz       Etc/UTC
- date     2024-12-24
+ date     2024-12-31
  pandoc   3.1.1 @ /usr/lib/rstudio-server/bin/quarto/bin/tools/ (via rmarkdown)
 
 ─ Packages ───────────────────────────────────────────────────────────────────
