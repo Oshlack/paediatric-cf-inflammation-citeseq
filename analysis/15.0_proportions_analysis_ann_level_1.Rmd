@@ -1,6 +1,6 @@
 ---
 title: "Inflammation of Paediatric Pulmonary Diseases"
-subtitle: "Cell type proportions analysis - annotation level 1"
+subtitle: "Cell type proportions analysis: annotation level 1" 
 author: "Jovana Maksimovic"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 site: workflowr::wflow_site
@@ -76,25 +76,39 @@ props <- getTransformedProps(clusters = seu$ann_level_1,
 props$Proportions %>% knitr::kable()
 ```
 
-
 ## Cell type proportions by sample
 
-```{r, fig.asp=0.6, fig.width=12}
+Create sample meta data table.
+
+```{r}
+seu@meta.data %>%
+  dplyr::select(sample.id,
+                Participant,
+                Disease,
+                Treatment,
+                Severity,
+                Group,
+                Group_severity,
+                Batch, 
+                Age, 
+                Sex) %>%
+     left_join(props$Counts %>% 
+                 data.frame %>%
+                 group_by(sample) %>%
+                 summarise(ncells = sum(Freq)),
+               by = c("sample.id" = "sample")) %>%
+    distinct() -> info
+
+head(info) %>% knitr::kable()
+```
+
+
+```{r, fig.asp=0.75, fig.width=9}
 props$Proportions %>%
   data.frame %>%
-  inner_join(seu@meta.data %>%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity,
-                             Group,
-                             Batch, 
-                             Age, 
-                             Sex), 
+  left_join(info, 
              by = c("sample" = "sample.id")) %>%
-  distinct()-> dat
-
-ggplot(dat, aes(x = sample, y = Freq, fill = clusters)) +
+ggplot(aes(x = sample, y = Freq, fill = clusters)) +
   geom_bar(stat = "identity", color = "black", size = 0.1) +
   theme(axis.text.x = element_text(angle = 90,
                                    vjust = 0.5,
@@ -109,23 +123,8 @@ ggplot(dat, aes(x = sample, y = Freq, fill = clusters)) +
 ## No. cells per sample
 
 ```{r, fig.asp=0.5, fig.width=9}
-props$Counts %>%
-  data.frame %>%
-  inner_join(seu@meta.data %>%
-               dplyr::select(sample.id, 
-                             ann_level_1,
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Group,
-                             Group_severity,
-                             Batch, 
-                             Age, 
-                             Sex), 
-             by = c("sample" = "sample.id", "clusters" = "ann_level_1")) %>%
-  distinct() -> dat
-
-ggplot(dat, aes(x = sample, y = Freq, fill = Disease)) +
+info %>%
+ggplot(aes(x = sample.id, y = ncells, fill = Disease)) +
   geom_bar(stat = "identity") +
   theme(axis.text.x = element_text(angle = 90,
                                    vjust = 0.5,
@@ -137,69 +136,14 @@ ggplot(dat, aes(x = sample, y = Freq, fill = Disease)) +
   geom_hline(yintercept = 1000, linetype = "dashed")
 ```
 
-<!-- Remove sample with too few cells. -->
-
-<!-- ```{r} -->
-<!-- seu <- subset(seu, cells = which(!seu$sample.id %in% c("sample_23.1"))) -->
-
-<!-- # Differences in cell type proportions -->
-<!-- props <- getTransformedProps(clusters = seu$ann_level_1, -->
-<!--                              sample = seu$sample.id, transform="asin") -->
-<!-- props$Proportions %>% knitr::kable() -->
-<!-- ``` -->
-
-## Cell proportions by sample
-
-```{r, fig.asp=0.75, fig.width=9}
-props$Proportions %>%
-  data.frame %>%
-  inner_join(seu@meta.data %>%
-               dplyr::select(sample.id, 
-                             ann_level_1,
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Group,
-                             Group_severity,
-                             Batch, 
-                             Age, 
-                             Sex), 
-             by = c("sample" = "sample.id", "clusters" = "ann_level_1")) %>%
-  distinct() -> dat
-
-ggplot(dat, aes(x = sample, y = Freq, fill = clusters)) +
-  geom_bar(stat = "identity", color = "black", size = 0.1) +
-  theme(axis.text.x = element_text(angle = 90,
-                                   vjust = 0.5,
-                                   hjust = 1),
-        legend.text = element_text(size = 8),
-        legend.position = "bottom") +
-  labs(y = "Proportion", fill = "Cell Label") +
-  scale_fill_paletteer_d("miscpalettes::pastel", direction = 1) +
-  facet_grid(~Group, scales = "free_x", space = "free_x")
-```
-
 ## Cell proportions by cell type
 
 ```{r}
 props$Proportions %>%
   data.frame %>%
-  inner_join(seu@meta.data %>%
-               dplyr::select(sample.id, 
-                             ann_level_1,
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Group,
-                             Group_severity,
-                             Batch, 
-                             Age, 
-                             Sex), 
-             by = c("sample" = "sample.id", "clusters" = "ann_level_1")) %>%
-  distinct() -> dat
-
-ggplot(dat, 
-       aes(x = clusters, y = Freq, fill = clusters)) +
+  left_join(info, 
+             by = c("sample" = "sample.id")) %>%
+ggplot(aes(x = clusters, y = Freq, fill = clusters)) +
   geom_boxplot(outlier.size = 0.1, size = 0.25) +
   theme(axis.text.x = element_text(angle = 45,
                                    vjust = 1,
@@ -228,14 +172,7 @@ for(i in 1:length(dims)){
   data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %>%
-    left_join(seu@meta.data %>%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c("sample" = "sample.id")) %>%
     distinct() -> dat
   
@@ -267,22 +204,11 @@ for(i in 1:length(dims)){
                  gene.selection = "common",
                  plot = FALSE, dim.plot = dims[[i]])
   
-   data.frame(x = mds$x, 
+  data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %>%
-    left_join(seu@meta.data %>%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity,
-                             Participant,
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c("sample" = "sample.id")) %>%
-    group_by(sample) %>%
-    mutate(ncells = n()) %>%
-    ungroup() %>%
     distinct() -> dat
   
   p[[i]] <- ggplot(dat, aes(x = x, y = y, 
@@ -319,14 +245,7 @@ for(i in 1:length(dims)){
   data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %>%
-    left_join(seu@meta.data %>%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c("sample" = "sample.id")) %>%
     distinct() -> dat
   
@@ -361,14 +280,7 @@ for(i in 1:length(dims)){
   data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %>%
-    left_join(seu@meta.data %>%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity, 
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c("sample" = "sample.id")) %>%
     distinct() -> dat
   
@@ -403,19 +315,8 @@ for(i in 1:length(dims)){
    data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %>%
-    left_join(seu@meta.data %>%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity,
-                             Participant,
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c("sample" = "sample.id")) %>%
-    group_by(sample) %>%
-    mutate(ncells = n()) %>%
-    ungroup() %>%
     distinct() -> dat
   
   p[[i]] <- ggplot(dat, aes(x = x, y = y, 
@@ -445,22 +346,11 @@ for(i in 1:length(dims)){
                  gene.selection = "common",
                  plot = FALSE, dim.plot = dims[[i]])
   
-   data.frame(x = mds$x, 
+  data.frame(x = mds$x, 
              y = mds$y,
              sample = rownames(mds$distance.matrix.squared)) %>%
-    left_join(seu@meta.data %>%
-               dplyr::select(sample.id, 
-                             Disease,
-                             Treatment,
-                             Severity,
-                             Participant,
-                             Batch, 
-                             Age, 
-                             Sex), 
+    left_join(info, 
              by = c("sample" = "sample.id")) %>%
-    group_by(sample) %>%
-    mutate(ncells = n()) %>%
-    ungroup() %>%
     distinct() -> dat
   
   p[[i]] <- ggplot(dat, aes(x = x, y = y, 
@@ -487,10 +377,11 @@ wrap_plots(p, cols = 2) + plot_layout(guides = "collect") &
 Principal components analysis (PCA) allows us to mathematically determine the sources of variation in the data. We can then investigate whether these correlate with any of the specifed covariates. First, we calculate the principal components. The scree plot belows shows us that most of the variation in this data is captured by the top 7 principal components.
 
 ```{r}
-# remove outlier sample
-transformed_props <- props$TransformedProps[,colnames(props$TransformedProps) != "sample_23.1"]
+# remove outlying sample
+info <- info[info$sample.id != "sample_23.1",]
+props$TransformedProps <- props$TransformedProps[, colnames(props$TransformedProps) != "sample_23.1"]
 
-PCs <- prcomp(t(transformed_props), center = TRUE, 
+PCs <- prcomp(t(props$TransformedProps), center = TRUE, 
               scale = TRUE, retx = TRUE)
 loadings = PCs$x # pc loadings
 plot(PCs, type="lines") # scree plot
@@ -499,26 +390,10 @@ plot(PCs, type="lines") # scree plot
 Collect all of the known sample traits.
 
 ```{r}
-nGenes = nrow(transformed_props)
-nSamples = ncol(transformed_props)
+nGenes = nrow(props$TransformedProps)
+nSamples = ncol(props$TransformedProps)
 
-info <- seu@meta.data %>%
-  dplyr::select(sample.id, 
-                Disease,
-                Treatment,
-                Severity,
-                Participant,
-                Group_severity,
-                Group,
-                Batch, 
-                Age, 
-                Sex) %>%
-  group_by(sample.id) %>%
-  mutate(ncells = n()) %>%
-  ungroup() %>%
-  distinct()
-
-m <- match(colnames(transformed_props), info$sample.id)
+m <- match(colnames(props$TransformedProps), info$sample.id)
 info <- info[m,]
 
 datTraits <- info %>% dplyr::select(Participant, Batch, Disease, Treatment,
@@ -597,7 +472,7 @@ contr
 Add random effect for samples from the same individual.
 
 ```{r}
-dupcor <- duplicateCorrelation(transformed_props, design=design,
+dupcor <- duplicateCorrelation(props$TransformedProps, design=design,
                                 block=participant)
 dupcor
 ```
@@ -605,7 +480,7 @@ dupcor
 Fit the model.
 
 ```{r}
-fit <- lmFit(transformed_props, design=design, block=participant, 
+fit <- lmFit(props$TransformedProps, design=design, block=participant, 
                 correlation=dupcor$consensus)
 fit2 <- contrasts.fit(fit, contr)
 fit2 <- eBayes(fit2, robust=TRUE, trend=FALSE)
@@ -619,10 +494,10 @@ summary(decideTests(fit2, p.value = pvalue))
 p <- vector("list", ncol(contr))
 
 for(i in 1:ncol(contr)){
-  print(knitr::kable(topTable(fit2, coef = i),
+  print(knitr::kable(topTable(fit2, coef = i, number = Inf),
                      caption = colnames(contr)[i]))
   
-  transformed_props %>% data.frame %>%
+  props$Proportions %>% data.frame %>%
     left_join(info,
               by = c("sample" = "sample.id")) %>%
     mutate(Group = Group_severity) %>%
@@ -649,7 +524,7 @@ for(i in 1:ncol(contr)){
           legend.direction = "horizontal") +
     labs(x = "Group", y = "Proportion",
          colour = "Condition") +
-    facet_wrap(~clusters, scales = "free_y") +
+    facet_wrap(~clusters, scales = "free_y", ncol = 4) +
     ggtitle(colnames(contr)[i]) -> p[[i]]
   
   print(p[[i]])
