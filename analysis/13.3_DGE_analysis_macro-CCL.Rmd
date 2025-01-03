@@ -631,6 +631,9 @@ s[-2,] %>%
 Save the contrast matrix, `edgeR` fit object and `RUVseq` adjusted data as an RDS object for downstream use in plotting, etc.
 
 ```{r}
+#Save group in fit object:
+fit$samples$group <- group
+
 # save LRT results
 deg_results <- list(
   contr = contr,
@@ -696,7 +699,8 @@ plot_ruv_results_summary(contr, cutoff, cellDir, gene_sets_list, gns,
                          group_info = data.frame(Group = group, 
                                                  sample = rownames(ySub$samples)),
                          layout,
-                         pal) -> p
+                         pal,
+                         severity = rep(FALSE, ncol(contr))) -> p
 p
 ```
 
@@ -1139,6 +1143,9 @@ s[-2,] %>%
 Save the contrast matrix, `edgeR` fit object and `RUVseq` adjusted data as an RDS object for downstream use in plotting, etc.
 
 ```{r}
+#Save group in fit object:
+fit$samples$group <- group
+
 # save LRT results
 deg_results <- list(
   contr = contr,
@@ -1203,7 +1210,8 @@ plot_ruv_results_summary(contr, cutoff, cellDir, gene_sets_list, gns,
                          group_info = data.frame(Group = group,
                                                  sample = rownames(ySub$samples)),
                          layout,
-                         pal) -> p
+                         pal,
+                         severity = c(FALSE, FALSE, TRUE)) -> p
 p
 ```
 
