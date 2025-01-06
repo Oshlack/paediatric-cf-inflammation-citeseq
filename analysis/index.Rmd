@@ -82,13 +82,22 @@ Follow the links below to view the different parts of the analysis.
     iii) [Annotation level 3, macro. cells](15.2_proportions_analysis_ann_level_3_macrophages.html)
 
 <!-- line break -->
-15. [Figure 1](15.0_Figure_1.html)
+15. [Figure 1](99.0_Figure_1.html)
 
 <!-- line break -->
-16. [Figure 2](16.0_Figure_2.html)
+16. [Figure 2](99.0_Figure_2.html)
 
 <!-- line break -->
-17.0 [S. Figure ADTs](17.0_Supplementary_Figure_ADTs.html)    
+16. [Figure 3](99.0_Figure_3.html)
+
+<!-- line break -->
+16. [Figure 4](99.0_Figure_4.html)
+
+<!-- line break -->
+16. [Figure 5](99.0_Figure_5.html)
+
+<!-- line break -->
+17.0 [S. Figure ADTs](99.0_Supplementary_Figure_ADTs.html)    
 
 <!-- line break -->
 To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6.
