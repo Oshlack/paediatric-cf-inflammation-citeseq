@@ -65,7 +65,8 @@ rm(seuLst)
 gc()
 ```
 
-# Data integration
+# Prepare figure panels
+## Data integration
 
 Visualise batch effects.
 
@@ -218,7 +219,6 @@ f1b
 
 
 ## Cell proportions by sample
-
 
 ```{r, fig.asp=0.75, fig.width=10}
 seu@meta.data %>%
@@ -400,7 +400,7 @@ seuADT <- seuADT[, seuADT$Batch != 0]
 seuADT
 ```
 
-Visualise ADTs
+## Visualise ADTs
 Make data frame of proteins, clusters, expression levels.
 
 ```{r}
@@ -502,6 +502,7 @@ f1e
 ```
 
 
+# Figure 1
 
 ```{r, fig.asp=1, fig.width=13}
 layout = "
@@ -534,35 +535,35 @@ FFFFGGGG
 
 
 
-```{r, fig.width=10, fig.asp=0.8}
-seu@meta.data %>%
-    data.frame() %>%
-    ggplot(aes(x = sample.id, fill = Group)) +
-    geom_bar(position = position_dodge()) + 
-    geom_text(aes(label = ..count..),
-              stat = "count", vjust = -0.5, 
-              colour = "black", size = 2) +
-  facet_wrap(~Batch, scales = "free_x", ncol = 4) +
-  theme_classic() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 0.5, vjust = 0.5)) +
-  labs(x = "Sample")
-```
+<!-- ```{r, fig.width=10, fig.asp=0.8} -->
+<!-- seu@meta.data %>% -->
+<!--     data.frame() %>% -->
+<!--     ggplot(aes(x = sample.id, fill = Group)) + -->
+<!--     geom_bar(position = position_dodge()) +  -->
+<!--     geom_text(aes(label = ..count..), -->
+<!--               stat = "count", vjust = -0.5,  -->
+<!--               colour = "black", size = 2) + -->
+<!--   facet_wrap(~Batch, scales = "free_x", ncol = 4) + -->
+<!--   theme_classic() + -->
+<!--   theme(axis.text.x = element_text(angle = 90, hjust = 0.5, vjust = 0.5)) + -->
+<!--   labs(x = "Sample") -->
+<!-- ``` -->
 
 
-```{r}
-seu@meta.data %>%
-    data.frame() %>%
-  dplyr::select(sample.id, Group) %>%
-  distinct() %>%
-    ggplot(aes(x = Group, fill = Group)) +
-    geom_bar(position = position_dodge()) + 
-    geom_text(aes(label = ..count..),
-              stat = "count", vjust = -0.5, 
-              colour = "black", size = 3) +
-  theme_classic() +
-  theme(legend.position = "none") +
-  labs(x = "Condition", y = "No. Samples")
-```
+<!-- ```{r} -->
+<!-- seu@meta.data %>% -->
+<!--     data.frame() %>% -->
+<!--   dplyr::select(sample.id, Group) %>% -->
+<!--   distinct() %>% -->
+<!--     ggplot(aes(x = Group, fill = Group)) + -->
+<!--     geom_bar(position = position_dodge()) +  -->
+<!--     geom_text(aes(label = ..count..), -->
+<!--               stat = "count", vjust = -0.5,  -->
+<!--               colour = "black", size = 3) + -->
+<!--   theme_classic() + -->
+<!--   theme(legend.position = "none") + -->
+<!--   labs(x = "Condition", y = "No. Samples") -->
+<!-- ``` -->
 
 
 
