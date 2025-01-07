@@ -513,15 +513,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreef03b66a607a447fc95973e1787ef64fddb4763d3targetblankf03b66aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreee87acccf7deae7a791a8c8d87d9ceaed882400c0targetblanke87accca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/f03b66a607a447fc95973e1787ef64fddb4763d3" target="_blank">f03b66a</a>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/e87acccf7deae7a791a8c8d87d9ceaed882400c0" target="_blank">e87accc</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreef03b66a607a447fc95973e1787ef64fddb4763d3targetblankf03b66aa"
+id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreee87acccf7deae7a791a8c8d87d9ceaed882400c0targetblanke87accca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -531,7 +531,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/f03b66a607a447fc95973e1787ef64fddb4763d3" target="_blank">f03b66a</a>.
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/e87acccf7deae7a791a8c8d87d9ceaed882400c0" target="_blank">e87accc</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -548,7 +548,6 @@ were generated:
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    analysis/obsolete/
     Ignored:    data/C133_Neeland_batch1/
     Ignored:    data/C133_Neeland_merged/
@@ -811,6 +810,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/e87acccf7deae7a791a8c8d87d9ceaed882400c0/analysis/99.0_Figure_1.Rmd" target="_blank">e87accc</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+<td>
+wflow_publish("analysis/99.0_Figure_1.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/99.0_Figure_1.html" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/f03b66a607a447fc95973e1787ef64fddb4763d3/analysis/99.0_Figure_1.Rmd" target="_blank">f03b66a</a>
 </td>
 <td>
@@ -872,11 +905,13 @@ Active assay: RNA (21568 features, 0 variable features)</code></pre>
 <pre class="r"><code>rm(seuLst)
 gc()</code></pre>
 <pre><code>             used    (Mb) gc trigger    (Mb)   max used    (Mb)
-Ncells   12101073   646.3   20376555  1088.3   14086806   752.4
-Vcells 1354184259 10331.7 3693779856 28181.4 3551518023 27096.0</code></pre>
+Ncells   12101636   646.3   20377367  1088.3   14092313   752.7
+Vcells 1354185863 10331.7 3693782074 28181.4 3551519627 27096.0</code></pre>
 </div>
-<div id="data-integration" class="section level1">
-<h1>Data integration</h1>
+<div id="prepare-figure-panels" class="section level1">
+<h1>Prepare figure panels</h1>
+<div id="data-integration" class="section level2">
+<h2>Data integration</h2>
 <p>Visualise batch effects.</p>
 <pre class="r"><code>seu &lt;- ScaleData(seu) %&gt;%
   FindVariableFeatures() %&gt;%
@@ -884,6 +919,43 @@ Vcells 1354184259 10331.7 3693779856 28181.4 3551518023 27096.0</code></pre>
   RunUMAP(dims = 1:30, verbose = FALSE)</code></pre>
 <pre class="r"><code>DimPlot(seu, group.by = &quot;Batch&quot;, reduction = &quot;umap&quot;)</code></pre>
 <p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/figure/99.0_Figure_1.Rmd/unnamed-chunk-5-1.png" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#cluster_pal &lt;- &quot;ggsci::category20_d3&quot;
 cluster_pal &lt;- &quot;miscpalettes::pastel&quot;
 DimPlot(seu, group.by = &quot;ann_level_1&quot;, reduction = &quot;umap&quot;) +
@@ -891,6 +963,44 @@ DimPlot(seu, group.by = &quot;ann_level_1&quot;, reduction = &quot;umap&quot;) +
         legend.text = element_text(size = 10)) +
   scale_color_paletteer_d(palette = cluster_pal)</code></pre>
 <p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
+Past versions of unnamed-chunk-5-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/figure/99.0_Figure_1.Rmd/unnamed-chunk-5-2.png" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <div id="cell-cycle-effect" class="section level2">
 <h2>Cell cycle effect</h2>
 <p>Assign each cell a score, based on its expression of G2/M and S phase
@@ -911,11 +1021,85 @@ seu %&gt;%
 
 (p2 / p1) + plot_layout(guides = &quot;collect&quot;)</code></pre>
 <p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/figure/99.0_Figure_1.Rmd/unnamed-chunk-7-1.png" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Distribution of cell cycle markers.</p>
 <pre class="r"><code># Visualize the distribution of cell cycle markers across
 RidgePlot(seu, features = c(&quot;PCNA&quot;, &quot;TOP2A&quot;, &quot;MCM6&quot;, &quot;MKI67&quot;), ncol = 2,
           log = TRUE)</code></pre>
 <p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/figure/99.0_Figure_1.Rmd/unnamed-chunk-8-1.png" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Using the <code>Seurat</code> <em>Alternate Workflow</em> from <a
 href="https://satijalab.org/seurat/articles/cell_cycle_vignette.html">here</a>,
 calculate the difference between the G2M and S phase scores so that
@@ -1007,6 +1191,43 @@ LabelClusters(p1, id = &quot;ann_level_1&quot;, repel = TRUE,
 
 f1b</code></pre>
 <p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/figure/99.0_Figure_1.Rmd/unnamed-chunk-12-1.png" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cell-proportions-by-sample" class="section level2">
 <h2>Cell proportions by sample</h2>
@@ -1059,6 +1280,43 @@ ggplot(aes(x = sample, y = Freq, fill = clusters)) +
 
 f1c</code></pre>
 <p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-13-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/figure/99.0_Figure_1.Rmd/unnamed-chunk-13-1.png" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>DefaultAssay(seu) &lt;- &quot;RNA&quot;
 Idents(seu) &lt;- &quot;ann_level_1&quot;
 
@@ -1152,6 +1410,43 @@ markers &lt;- markers[markers$gene %in% rownames(seu),]</code></pre>
 
 f1d</code></pre>
 <p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-15-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/figure/99.0_Figure_1.Rmd/unnamed-chunk-15-1.png" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>files &lt;- list.files(here(&quot;data/C133_Neeland_merged&quot;),
                     pattern = &quot;C133_Neeland_full_clean.*(macrophages|t_cells|other_cells)_annotated_full.SEU.rds&quot;,
                     full.names = TRUE)
@@ -1184,8 +1479,10 @@ seuADT</code></pre>
 <pre><code>An object of class Seurat 
 163 features across 168859 samples within 1 assay 
 Active assay: ADT (163 features, 0 variable features)</code></pre>
-<p>Visualise ADTs Make data frame of proteins, clusters, expression
-levels.</p>
+</div>
+<div id="visualise-adts" class="section level2">
+<h2>Visualise ADTs</h2>
+<p>Make data frame of proteins, clusters, expression levels.</p>
 <pre class="r"><code>out &lt;- here(&quot;data&quot;,
             &quot;C133_Neeland_merged&quot;,
             glue(&quot;C133_Neeland_full_clean_all_cells_dsb.ADT.rds&quot;))
@@ -1252,6 +1549,43 @@ seuADT@meta.data %&gt;%
 
 plot(density(dat$Expression))</code></pre>
 <p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-1">
+Past versions of unnamed-chunk-18-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-18-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/figure/99.0_Figure_1.Rmd/unnamed-chunk-18-1.png" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>dat %&gt;%
   dplyr::rename(&quot;Protein&quot; = &quot;ADT&quot;,
                 &quot;DSB Exp.&quot; = &quot;Expression&quot;,
@@ -1280,6 +1614,47 @@ plot(density(dat$Expression))</code></pre>
     as_ComplexHeatmap() -&gt; f1e
 f1e</code></pre>
 <p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-1">
+Past versions of unnamed-chunk-19-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-19-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/figure/99.0_Figure_1.Rmd/unnamed-chunk-19-1.png" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="figure-1" class="section level1">
+<h1>Figure 1</h1>
 <pre class="r"><code>layout = &quot;
 BBBCCCCC
 BBBCCCCC
@@ -1302,35 +1677,73 @@ FFFFGGGG
                                 face = &quot;bold&quot;,
                                 family = &quot;arial&quot;))</code></pre>
 <p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-20-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-1">
+Past versions of unnamed-chunk-20-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-20-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/4db6097becfc620f4dbc97806ff90b7f25d5250c/docs/figure/99.0_Figure_1.Rmd/unnamed-chunk-20-1.png" target="_blank">4db6097</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div id="session-info" class="section level1">
 <h1>Session info</h1>
-<pre class="r"><code>seu@meta.data %&gt;%
-    data.frame() %&gt;%
-    ggplot(aes(x = sample.id, fill = Group)) +
-    geom_bar(position = position_dodge()) + 
-    geom_text(aes(label = ..count..),
-              stat = &quot;count&quot;, vjust = -0.5, 
-              colour = &quot;black&quot;, size = 2) +
-  facet_wrap(~Batch, scales = &quot;free_x&quot;, ncol = 4) +
-  theme_classic() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 0.5, vjust = 0.5)) +
-  labs(x = &quot;Sample&quot;)</code></pre>
-<p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-21-1.png" width="960" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>seu@meta.data %&gt;%
-    data.frame() %&gt;%
-  dplyr::select(sample.id, Group) %&gt;%
-  distinct() %&gt;%
-    ggplot(aes(x = Group, fill = Group)) +
-    geom_bar(position = position_dodge()) + 
-    geom_text(aes(label = ..count..),
-              stat = &quot;count&quot;, vjust = -0.5, 
-              colour = &quot;black&quot;, size = 3) +
-  theme_classic() +
-  theme(legend.position = &quot;none&quot;) +
-  labs(x = &quot;Condition&quot;, y = &quot;No. Samples&quot;)</code></pre>
-<p><img src="figure/99.0_Figure_1.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<!-- ```{r, fig.width=10, fig.asp=0.8} -->
+<!-- seu@meta.data %>% -->
+<!--     data.frame() %>% -->
+<!--     ggplot(aes(x = sample.id, fill = Group)) + -->
+<!--     geom_bar(position = position_dodge()) +  -->
+<!--     geom_text(aes(label = ..count..), -->
+<!--               stat = "count", vjust = -0.5,  -->
+<!--               colour = "black", size = 2) + -->
+<!--   facet_wrap(~Batch, scales = "free_x", ncol = 4) + -->
+<!--   theme_classic() + -->
+<!--   theme(axis.text.x = element_text(angle = 90, hjust = 0.5, vjust = 0.5)) + -->
+<!--   labs(x = "Sample") -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- seu@meta.data %>% -->
+<!--     data.frame() %>% -->
+<!--   dplyr::select(sample.id, Group) %>% -->
+<!--   distinct() %>% -->
+<!--     ggplot(aes(x = Group, fill = Group)) + -->
+<!--     geom_bar(position = position_dodge()) +  -->
+<!--     geom_text(aes(label = ..count..), -->
+<!--               stat = "count", vjust = -0.5,  -->
+<!--               colour = "black", size = 3) + -->
+<!--   theme_classic() + -->
+<!--   theme(legend.position = "none") + -->
+<!--   labs(x = "Condition", y = "No. Samples") -->
+<!-- ``` -->
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
