@@ -78,7 +78,8 @@ seuADT <- seuADT[, seuADT$Batch != 0]
 seuADT
 ```
 
-Visualise ADTs
+# Prepare figure panels
+
 Make data frame of proteins, clusters, expression levels.
 
 ```{r}
@@ -293,6 +294,8 @@ dat %>%
 
 sfig_1c
 ```
+
+# Supplementary Figure
 
 ```{r, fig.asp=1.75, fig.width=8}
 layout = "
