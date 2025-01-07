@@ -170,8 +170,6 @@ top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, 
   # plot up to top X DGE
   grps <- names(contr[,1])[abs(contr[,1]) > 0]
   
-  #if(!severity) grps <- unique(str_remove_all(grps, "\\.M$|\\.S$"))
-    
   edgeR::cpm(raw_counts, log = TRUE) %>% 
     data.frame %>%
     rownames_to_column(var = "gene") %>%
@@ -222,6 +220,8 @@ top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, 
 
 top_camera_sets <- function(results_list, num = 10){
   
+   pal <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
+ 
   lapply(seq_along(results_list), function(i){
     results_list[[i]] %>%
       data.frame %>%
@@ -240,10 +240,47 @@ top_camera_sets <- function(results_list, num = 10){
     geom_vline(xintercept = -log10(0.05),
                linetype = "dashed")  +
     scale_colour_manual(values = pal) +
-    labs(y = "Gene set") +
+    labs(y = "Gene set", size = "Set size") +
     theme_classic(base_size = 10) +
     ggtitle("Camera gene set analysis")
 }
+
+top_camera_sets_by_cell <- function(results_list, num = 10, wrap_width = 75,
+                                    labeller = "label_value"){
+  
+  pal <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
+  
+  lapply(seq_along(results_list), function(i){
+    results_list[[i]] %>%
+      data.frame %>%
+      dplyr::slice(1:min(num, n())) %>%
+      rownames_to_column(var = "Set") %>%
+      mutate(Type = glue("{names(results_list)[i]}; {cell}"))
+  }) %>%
+    bind_rows  %>%
+    mutate(Set = str_wrap(str_replace_all(Set, "_", " "), width = wrap_width),
+           Set = str_remove_all(Set, "GO |REACTOME |HALLMARK |WP "),
+           Rank = n():1) %>%
+    # wrap in curly brackets so we can access the augmented dataset multiple times
+    {
+      ggplot(., aes(x = -log10(FDR), y = Rank,
+                 colour = Direction)) +
+        geom_point(aes(size = NGenes)) +
+        facet_wrap(~Type, ncol = 1, scales = "free_y",
+                   labeller = labeller) +
+        geom_vline(xintercept = -log10(0.05),
+                   linetype = "dashed")  +
+        scale_colour_manual(values = pal) +
+        scale_y_continuous(
+          breaks = .$Rank,
+          labels = .$Set,
+          expand = c(0,.4)) +
+        labs(y = "Gene set", size = "Set size") +
+        theme_classic(base_size = 10) +
+        ggtitle("Camera gene set analysis")
+    }
+}
+
 
 top_ora_sets <- function(results_list, num = 10){
   
@@ -259,21 +296,62 @@ top_ora_sets <- function(results_list, num = 10){
     mutate(Set = str_wrap(str_replace_all(Set, "_", " "), width = 75),
            Set = str_remove_all(Set, "GO |REACTOME |HALLMARK |WP ")) %>%
     ggplot(aes(x = -log10(FDR), y = fct_reorder(Set, -Rank),
-               colour = DE/N*100)) +
+               colour = GR)) +
     geom_point(aes(size = N)) +
     facet_wrap(~Type, ncol = 1, scales = "free_y") +
     geom_vline(xintercept = -log10(0.05),
                linetype = "dashed")  +
     scale_colour_viridis_c(option = "plasma") +
     labs(y = "Gene set",
-         colour = "% DEGs in set",
+         colour = "Gene ratio",
          size = "Set size") +
     theme_classic(base_size = 10) +
     ggtitle("Over-representation gene set analysis")
 }
 
-gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
+top_ora_sets_by_cell <- function(results_list, num = 10, wrap_width = 75,
+                                 labeller = "label_value"){
+  
+  lapply(seq_along(results_list), function(i){
+    results_list[[i]] %>%
+      data.frame %>%
+      dplyr::slice(1:min(num, n())) %>%
+      rownames_to_column(var = "Set") %>%
+      mutate(Type = glue("{names(results_list)[i]}; {cell}"))
+  }) %>%
+    bind_rows  %>%
+    mutate(Set = str_wrap(str_replace_all(Set, "_", " "), width = wrap_width),
+           Set = str_remove_all(Set, "GO |REACTOME |HALLMARK |WP "),
+           Rank = n():1) %>%
+    # wrap in curly brackets so we can access the augmented dataset multiple times
+    {
+      ggplot(., aes(x = -log10(FDR), y = Rank,
+                    colour = GR)) +
+        geom_point(aes(size = N)) +
+        facet_wrap(~Type, ncol = 1, scales = "free_y",
+                   labeller = labeller) +
+        geom_vline(xintercept = -log10(0.05),
+                   linetype = "dashed")  +
+        scale_colour_viridis_c(option = "plasma") +
+        scale_y_continuous(
+          breaks = .$Rank,
+          labels = .$Set,
+          expand = c(0,.4)) +
+        labs(y = "Gene set",
+             colour = "Gene ratio",
+             size = "Set size") +
+        theme_classic(base_size = 10) +
+        ggtitle("Over-representation gene set analysis")
+    }
+}
 
+gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
+  
+  # GeneRatio = k/n
+  # 
+  # k is the overlap between your genes-of-interest and the geneset
+  # n is the number of all unique genes-of-interest
+  
   ora_list <- lapply(seq_along(gene_sets_list), function(i){
     topGSA(gsaseq(unname(gns[deg]),
                   universe = unname(gns),
@@ -293,6 +371,10 @@ gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
       paste(sig_genes_symbol$SYMBOL,collapse=",")
     })) -> tmp$DEG.GENES
     
+    tmp$k <- sapply(strsplit(tmp$DEG.GENES, ","), length)
+    tmp$n <- length(deg)
+    tmp$GR <- tmp$k/tmp$n
+      
     data.table::fwrite(tmp %>%
                   data.frame %>%
                   rownames_to_column(var = "Set"),
@@ -557,3 +639,82 @@ top_deg_heatmap <- function(top, comparison, counts, sample_data){
         RColorBrewer::brewer.pal(11, "RdBu")))
   }
 }
+
+get_deg_data <- function(files, cont_name, cell_freq, treat_lfc = 0, 
+                         cutoff = 0.05, suffix = ".all_samples.fit.rds"){
+  
+  # seu_meta %>%
+  #   data.frame %>%
+  #   dplyr::select(ann_level_2) %>%
+  #   dplyr::filter(str_detect(ann_level_2, "macro")) %>%
+  #   group_by(ann_level_2) %>%
+  #   count() %>%
+  #   janitor::adorn_totals(name = "macrophages") %>%
+  #   arrange(-n) %>%
+  #   dplyr::rename(cell = ann_level_2) -> cell_freq
+  
+  bind_rows(lapply(files, function(f){
+    
+    deg_results <- readRDS(f)
+    lrt <- glmTreat(deg_results$fit, 
+                    contrast = deg_results$contr[,cont_name],
+                    lfc = treat_lfc)
+    top <- as.data.frame(topTags(lrt, n = Inf))
+    cell <- unlist(str_split(str_remove(f, suffix), "/"))[8]
+    dt <- decideTests(lrt, p.value = 0.05)
+    
+    as.data.frame(dt) %>% 
+      rename_with(.cols = 1, ~"sig") %>%
+      rownames_to_column(var = "gene") %>%
+      mutate(cell = cell) %>%
+      left_join(top %>%
+                  rownames_to_column(var = "gene") %>%
+                  dplyr::select(gene, logFC, FDR))
+  })) %>%
+    dplyr::filter(FDR < cutoff) %>%
+    left_join(cell_freq) %>%
+    arrange(-n, logFC) %>%
+    dplyr::select(-n)
+  
+}  
+
+
+draw_treat_volcano_plot <- function(cell, suffix, cutoff = 0.05, lfc_cutoff = 0){
+  f <- here("data",
+            "intermediate_objects",
+            glue("{cell}{suffix}"))
+  
+  deg_results <- readRDS(f)
+  lrt <- glmLRT(deg_results$fit, 
+                contrast = deg_results$contr[, cont_name])
+  treat_lrt <- glmTreat(deg_results$fit, 
+                        contrast = deg_results$contr[, cont_name],
+                        lfc = lfc_cutoff)
+  dat <- data.frame(gene = rownames(lrt),
+                    logCPM = lrt$table$logCPM, 
+                    logFC = lrt$table$logFC,
+                    p = p.adjust(lrt$table$PValue, method = "BH"),
+                    p_treat = p.adjust(treat_lrt$table$PValue, method = "BH"),
+                    dt = as.vector(decideTests(lrt, p.value = cutoff)),
+                    dt_treat = as.vector(decideTests(treat_lrt, p.value = cutoff)))
+  
+  pal_dt <- paletteer::paletteer_d("RColorBrewer::Set1") 
+  
+  ggplot(dat, aes(x = logFC, y = -log10(p))) +
+    geom_point(colour = "lightgrey", shape = 1) +
+    geom_point(data = dat[dat$dt > 0,], colour = pal_dt[1], shape = 1) +
+    geom_point(data = dat[dat$dt < 0,], colour = pal_dt[2], shape = 1) +
+    geom_point(data = dat[dat$dt_treat > 0,], colour = pal_dt[1]) +
+    geom_point(data = dat[dat$dt_treat < 0,], colour = pal_dt[2]) +
+    ggrepel::geom_text_repel(data = dat[dat$dt_treat > 0,], 
+                             aes(label = gene), size = 2,
+                             colour = pal_dt[1]) +
+    ggrepel::geom_text_repel(data = dat[dat$dt_treat < 0,], 
+                             aes(label = gene), size = 2,
+                             colour = pal_dt[2]) +
+    geom_hline(yintercept = -log10(cutoff), linetype = "dashed") +
+    theme_classic() +
+    labs(x = "log2(FC)",
+         y = "-log10(FDR)")
+  
+} 
