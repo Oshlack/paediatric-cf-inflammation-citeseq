@@ -71,9 +71,9 @@ Follow the links below to view the different parts of the analysis.
 
 <!-- line break -->
 14. Differential expression analysis of T/NK and rare cells
-    i) [CD4 T-cells](14.1_DGE_analysis_CD4-T-cells.html) 
-    ii) [CD8 T-cells](14.2_DGE_analysis_CD8-T-cells.html)
-    iii) [DC cells](14.3_DGE_analysis_DC-cells.html)
+    i) [CD4 T-cells](14.0_DGE_analysis_CD4-T-cells.html) 
+    ii) [CD8 T-cells](14.1_DGE_analysis_CD8-T-cells.html)
+    iii) [DC cells](14.2_DGE_analysis_DC-cells.html)
     
 <!-- line break -->
 15. Analyse cell types proportions
@@ -97,7 +97,7 @@ Follow the links below to view the different parts of the analysis.
 16. [Figure 5](99.0_Figure_5.html)
 
 <!-- line break -->
-17.0 [S. Figure ADTs](99.0_Supplementary_Figure_ADTs.html)    
+17. [Supplementary Figure ADTs](99.0_Supplementary_Figure_ADTs.html)    
 
 <!-- line break -->
 To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6.
