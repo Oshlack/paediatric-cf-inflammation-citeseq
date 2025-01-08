@@ -600,17 +600,17 @@ wrap_elements(iva_props) +
   wrap_elements(deg_barplot) +
   wrap_elements(grid::grid.grabExpr(ComplexHeatmap::draw(plot_lfc))) +
   wrap_elements(volc_plot) +
+    wrap_elements(cam_plot + theme(legend.position = "bottom",
+                                 legend.direction = "horizontal",
+                                 legend.box = "vertical",
+                                 legend.margin = margin(-0.5,0,0,0, unit="lines"),
+                        legend.text = element_text(size = 8))) +
   wrap_elements(ora_plot + 
                   theme(legend.position = "bottom",
                         legend.direction = "horizontal",
                         legend.box = "vertical",
                         legend.margin = margin(-0.5,0,0,0, unit="lines"),
                         legend.text = element_text(size = 7))) +
-  wrap_elements(cam_plot + theme(legend.position = "bottom",
-                                 legend.direction = "horizontal",
-                                 legend.box = "vertical",
-                                 legend.margin = margin(-0.5,0,0,0, unit="lines"),
-                        legend.text = element_text(size = 8))) +
   wrap_elements(gene_plot) +
   plot_layout(design = layout) +
   plot_annotation(tag_levels = "A")  &
