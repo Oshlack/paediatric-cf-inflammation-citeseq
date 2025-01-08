@@ -100,6 +100,9 @@ Follow the links below to view the different parts of the analysis.
 17. [Supplementary Figure ADTs](99.0_Supplementary_Figure_ADTs.html)    
 
 <!-- line break -->
+18. [Supplementary Figures 3 and 5](99.0_Supplementary_Figure_3-5.html)    
+
+<!-- line break -->
 To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6.
 
 As per this issue, https://github.com/satijalab/seurat-object/issues/165, if there is an error running sctransform, remove all relevant packages (and purge if using renv) and then install using the following method exactly, to build from source.
