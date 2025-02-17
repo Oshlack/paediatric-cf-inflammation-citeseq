@@ -1,6 +1,6 @@
 # Single-cell atlas of BAL from preschool cystic fibrosis reveals key inflammatory pathways modified by ivacaftor in the early life lung
 
-This repository contains code and output for the analysis described in the pre-print: "Single-cell atlas of BAL from preschool cystic fibrosis reveals key inflammatory pathways modified by ivacaftor in the early life lung".
+This repository contains code and output for the analysis described in the pre-print: ["Single-cell atlas of BAL from preschool cystic fibrosis reveals key inflammatory pathways modified by ivacaftor in the early life lung"]().
 
 The raw single cell RNA-seq and CITE-seq count data generated for this study can be accessed at:
 
