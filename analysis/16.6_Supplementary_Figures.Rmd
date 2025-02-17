@@ -1,0 +1,526 @@
+---
+title: "Supplementary Figures"
+author: "Jovana Maksimovic"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+site: workflowr::wflow_site
+output:
+  bookdown::html_document2:
+    base_format: workflowr::wflow_html
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+Load libraries.
+
+```{r}
+suppressPackageStartupMessages({
+ library(SingleCellExperiment)
+ library(edgeR)
+ library(tidyverse)
+ library(ggplot2)
+ library(Seurat)
+ library(glmGamPoi)
+ library(dittoSeq)
+ library(here)
+ library(clustree)
+ library(patchwork)
+ library(AnnotationDbi)
+ library(org.Hs.eg.db)
+ library(glue)
+ library(speckle)
+ library(tidyHeatmap)
+ library(paletteer)
+ library(dsb)
+ library(ggh4x)
+  library(readxl)
+  library(gt)
+})
+
+source(here("code/utility.R"))
+```
+
+# Load data
+
+```{r}
+files <- list.files(here("data/C133_Neeland_merged"),
+                    pattern = "C133_Neeland_full_clean.*(t_cells|other_cells)_annotated_diet.SEU.rds",
+                    full.names = TRUE)
+
+seuLst <- lapply(files, function(f) readRDS(f))
+
+seu <- merge(seuLst[[1]], 
+             y = seuLst[[2]])
+seu
+```
+
+
+```{r, echo=FALSE}
+# cleanup obsolete objects
+rm(seuLst)
+gc()
+```
+
+
+
+
+# Prepare figure panels
+
+```{r}
+seu@meta.data %>% 
+    data.frame %>% 
+    dplyr::select(ann_level_1) %>%
+    group_by(ann_level_1) %>% 
+    count() %>%
+    arrange(-n) %>%
+    dplyr::rename(cell = ann_level_1) -> cell_freq
+
+cell_freq
+```
+
+```{r}
+files <- list.files(here("data/intermediate_objects"),
+            pattern = ".*all_samples", 
+            full.names = TRUE) 
+files <- files[!str_detect(files, "macro")]
+
+cutoff <- 0.05 
+cont_name <- "CF.NO_MODvNON_CF.CTRL"  
+lfc_cutoff <- 0
+suffix <- ".all_samples.fit.rds"
+  
+get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
+             suffix = suffix) -> dat
+```
+
+
+```{r}
+bind_rows(lapply(files, function(f){
+  deg_results <- readRDS(f)
+  lrt <- glmLRT(deg_results$fit, 
+                contrast = deg_results$contr[,cont_name])
+  tmp <- cbind(summary(decideTests(lrt, p.value = cutoff)) %>% data.frame,
+                    cell = unlist(str_split(str_remove(f, suffix), "/"))[8])
+  tmp
+})) -> dat_deg
+```
+
+```{r}
+dat_deg %>% 
+  left_join(cell_freq) -> dat_deg
+
+pal_dt <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
+
+dat_deg %>%
+  dplyr::filter(Var1 != "NotSig") %>%
+  ggplot(aes(x = fct_reorder(cell, -n), y = Freq, fill = Var1)) +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = pal_dt) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 30,
+                                   hjust = 1,
+                                   vjust = 1,
+                                   size = 7),
+        legend.position = "top") +
+  geom_text(aes(label = Freq), 
+            position = position_dodge(width = 0.9),
+            vjust = -0.5,
+            size = 2.5) +
+  labs(x = "Cell Type",
+       y = "No. DEG (FDR < 0.05)",
+       fill = "Direction") -> deg_barplot
+
+deg_barplot
+```
+
+```{r}
+get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
+             suffix = suffix, cutoff = 1) -> dat_all
+```
+
+```{r, fig.asp=0.5}
+dat_all %>% 
+  left_join(cell_freq) %>%
+  mutate(Direction = as.factor(ifelse(sig == -1, "Down",
+                                      ifelse(sig == 1, "Up", "N.S."))),
+         cell = fct_reorder(cell, -n)) -> dat_all
+
+ggplot(dat_all, aes(x = logFC, y = -log10(FDR), colour = Direction)) + 
+  geom_point(size = 0.5) + 
+  facet_wrap(~cell, ncol = 4) + 
+  theme_classic() +
+  scale_color_manual(values = pal_dt[c(1,3,2)]) +
+  ggrepel::geom_text_repel(data = dat_all[dat_all$sig != 0,], 
+                           aes(label = gene), size = 2) -> volc_plot
+
+volc_plot
+```
+
+```{r}
+dat_all %>%
+  dplyr::select(-sig, -n, -Direction) %>%
+  dplyr::filter(FDR < cutoff) %>%
+  group_by(cell) %>%
+  arrange(PValue, .by_group = TRUE) %>% 
+  gt() %>%
+  tab_header(title = "Differentially expressed genes by cell type",
+             subtitle = cont_name) %>%
+  tab_style(cell_text(size = px(10)),
+            locations = list(cells_body())) %>%
+  tab_style(cell_text(size = px(12), weight = "bold"),
+            locations = list(cells_column_labels())) %>%
+  tab_style(cell_text(size = px(12), weight = "bold"),
+            locations = list(cells_row_groups())) -> tab
+
+tab
+```
+
+# Supplementary Figure 3
+
+```{r, fig.asp=1.75}
+layout <- "
+A
+B
+C
+"
+
+(wrap_elements(deg_barplot + theme(axis.title.x = element_blank(),
+                                   legend.text = element_text(size = 8)))) +
+  wrap_elements(volc_plot + theme(strip.text = element_text(size = 7))) +
+  wrap_table(tab, ignore_tag = TRUE) +
+  plot_layout(design = layout) +
+  plot_annotation(tag_levels = "A")  &
+  theme(plot.tag = element_text(size = 16,
+                                face = "bold",
+                                family = "arial"))
+
+```
+
+# Prepare figure panels
+
+```{r}
+seu@meta.data %>% 
+    data.frame %>% 
+    dplyr::select(ann_level_1) %>%
+    group_by(ann_level_1) %>% 
+    count() %>%
+    arrange(-n) %>%
+    dplyr::rename(cell = ann_level_1) -> cell_freq
+
+cell_freq
+```
+
+```{r}
+files <- list.files(here("data/intermediate_objects"),
+            pattern = ".*CF_samples", 
+            full.names = TRUE) 
+files <- files[!str_detect(files, "macro")]
+
+cutoff <- 0.05 
+cont_name <- "CF.NO_MOD.SvCF.NO_MOD.M"  
+lfc_cutoff <- 0
+suffix <- ".CF_samples.fit.rds"
+  
+get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
+             suffix = suffix) -> dat
+```
+
+
+```{r}
+bind_rows(lapply(files, function(f){
+  deg_results <- readRDS(f)
+  lrt <- glmLRT(deg_results$fit, 
+                contrast = deg_results$contr[,cont_name])
+  tmp <- cbind(summary(decideTests(lrt, p.value = cutoff)) %>% data.frame,
+                    cell = unlist(str_split(str_remove(f, suffix), "/"))[8])
+  tmp
+})) -> dat_deg
+```
+
+```{r}
+dat_deg %>% 
+  left_join(cell_freq) -> dat_deg
+
+pal_dt <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
+
+dat_deg %>%
+  dplyr::filter(Var1 != "NotSig") %>%
+  ggplot(aes(x = fct_reorder(cell, -n), y = Freq, fill = Var1)) +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = pal_dt) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 30,
+                                   hjust = 1,
+                                   vjust = 1,
+                                   size = 7),
+        legend.position = "top") +
+  geom_text(aes(label = Freq), 
+            position = position_dodge(width = 0.9),
+            vjust = -0.5,
+            size = 2.5) +
+  labs(x = "Cell Type",
+       y = "No. DEG (FDR < 0.05)",
+       fill = "Direction") -> deg_barplot
+
+deg_barplot
+```
+
+```{r}
+get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
+             suffix = suffix, cutoff = 1) -> dat_all
+```
+
+```{r, fig.asp=0.5}
+dat_all %>% 
+  left_join(cell_freq) %>%
+  mutate(Direction = as.factor(ifelse(sig == -1, "Down",
+                                      ifelse(sig == 1, "Up", "N.S."))),
+         cell = fct_reorder(cell, -n)) -> dat_all
+
+ggplot(dat_all, aes(x = logFC, y = -log10(FDR), colour = Direction)) + 
+  geom_point(size = 0.5) + 
+  facet_wrap(~cell, ncol = 4) + 
+  theme_classic() +
+  scale_color_manual(values = pal_dt[c(1,3,2)]) +
+  ggrepel::geom_text_repel(data = dat_all[dat_all$sig != 0,], 
+                           aes(label = gene), size = 2) -> volc_plot
+
+volc_plot
+```
+
+```{r}
+dat_all %>%
+  dplyr::select(-sig, -n, -Direction) %>%
+  dplyr::filter(FDR < cutoff) %>%
+  group_by(cell) %>%
+  arrange(PValue, .by_group = TRUE) %>% 
+  gt() %>%
+  tab_header(title = "Differentially expressed genes by cell type",
+             subtitle = cont_name) %>%
+  tab_style(cell_text(size = px(10)),
+            locations = list(cells_body())) %>%
+  tab_style(cell_text(size = px(12), weight = "bold"),
+            locations = list(cells_column_labels())) %>%
+  tab_style(cell_text(size = px(12), weight = "bold"),
+            locations = list(cells_row_groups())) -> tab
+
+tab
+```
+
+# Supplementary Figure 5
+
+```{r, fig.asp=1.75}
+layout <- "
+A
+B
+C
+"
+
+(wrap_elements(deg_barplot + theme(axis.title.x = element_blank(),
+                                   legend.text = element_text(size = 8)))) +
+  wrap_elements(volc_plot + theme(strip.text = element_text(size = 7))) +
+  wrap_table(tab, ignore_tag = TRUE) +
+  plot_layout(design = layout) +
+  plot_annotation(tag_levels = "A")  &
+  theme(plot.tag = element_text(size = 16,
+                                face = "bold",
+                                family = "arial"))
+
+```
+
+# Prepare figure panels
+
+```{r}
+file <- here("data", 
+             "intermediate_objects",
+             "macrophages.all_samples.fit.rds") 
+
+deg_results <- readRDS(file = file)
+
+contr <- deg_results$contr[,1:2]
+
+lapply(1:ncol(contr), function(i) {
+  lrt <- glmLRT(deg_results$fit, contrast = contr[,i])
+  topTags(lrt, n = Inf) %>%
+    data.frame %>%
+    rownames_to_column(var = "Symbol") %>%
+    dplyr::arrange(Symbol) %>%
+    dplyr::rename_with(~ paste0(.x, ".", i))
+}) %>% bind_cols -> all_lrt
+
+```
+
+
+```{r, fig.asp=1}
+all_lrt %>%
+  mutate(IVA = ifelse(FDR.1 < 0.05 & FDR.2 < 0.05, "#FF6B6B",
+                      ifelse(FDR.1 < 0.05 & FDR.2 >= 0.05, "#CC8E00", 
+                             ifelse(FDR.1 >= 0.05 & FDR.2 < 0.05, "#20A4A4",
+                                    "lightgrey")))) -> all_lrt
+
+ggplot(all_lrt, aes(x = logFC.1,
+                    y = logFC.2)) +
+  geom_point(data = subset(all_lrt, IVA %in% "lightgrey"), 
+             aes(colour = "lightgrey"),
+             alpha = 0.25) +
+  geom_point(data = subset(all_lrt, IVA %in% "#20A4A4"), 
+             aes(colour = "#20A4A4"),
+             alpha = 0.5) +
+  geom_point(data = subset(all_lrt, IVA %in% "#CC8E00"), 
+             aes(colour = "#CC8E00"),
+             alpha = 0.5) +
+  geom_point(data = subset(all_lrt, IVA %in% "#FF6B6B"), 
+             aes(colour = "#FF6B6B")) +
+  ggrepel::geom_text_repel(data = subset(all_lrt, (IVA %in% "#20A4A4")),
+                           aes(x = logFC.1, y = logFC.2,
+                               label = Symbol.1),
+                           size = 2, colour = "#20A4A4", max.overlaps = 5) +
+    ggrepel::geom_text_repel(data = subset(all_lrt, (IVA %in% "#CC8E00")),
+                           aes(x = logFC.1, y = logFC.2,
+                               label = Symbol.1),
+                           size = 2, colour = "#CC8E00", max.overlaps = 5) +
+    ggrepel::geom_text_repel(data = subset(all_lrt, (IVA %in% "#FF6B6B")), 
+                           aes(x = logFC.1, y = logFC.2, 
+                               label = Symbol.1), 
+                           size = 2, colour = "#FF6B6B", max.overlaps = Inf) +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "darkgrey") +
+  geom_vline(xintercept = 0, linetype = "dashed", colour = "darkgrey") +
+  labs(x = "log2FC CF.NO_MODvNON_CF.CTRL",
+       y = "log2FC CF.IVAvNON_CF.CTRL") +
+  scale_colour_identity(guide = "legend",
+                        breaks = c("#FF6B6B", "#20A4A4", "#CC8E00","lightgrey"),
+                        labels = c("Sig. in both", 
+                                   "Sig. in CF.IVAvNON_CF.CTRL", 
+                                   "Sig. in CF.NO_MODvNON_CF.CTRL",
+                                   "N.S. in either"),
+                        name = "Statistical significance") +
+  theme_classic() +
+  theme(legend.position = "right",
+        legend.direction = "vertical") -> p1
+
+p1
+```
+
+```{r}
+Hs.c2.all <- convert_gmt_to_list(here("data/c2.all.v2024.1.Hs.entrez.gmt"))
+Hs.h.all <- convert_gmt_to_list(here("data/h.all.v2024.1.Hs.entrez.gmt"))
+Hs.c5.all <- convert_gmt_to_list(here("data/c5.all.v2024.1.Hs.entrez.gmt"))
+
+fibrosis <- create_custom_gene_lists_from_file(here("data/fibrosis_gene_sets.csv"))
+# add fibrosis sets from REACTOME and WIKIPATHWAYS
+fibrosis <- c(lapply(fibrosis, function(l) l[!is.na(l)]),
+              Hs.c2.all[str_detect(names(Hs.c2.all), "FIBROSIS")])
+
+gene_sets_list <- list(HALLMARK = Hs.h.all,
+                       GO = Hs.c5.all,
+                       REACTOME = Hs.c2.all[str_detect(names(Hs.c2.all), "REACTOME")],
+                       WP = Hs.c2.all[str_detect(names(Hs.c2.all), "^WP")],
+                       FIBROSIS = fibrosis)
+
+```
+
+
+```{r, fig.asp=1}
+num <- 10
+
+hallmark <- rbind(read_csv(file = here("output",
+                                       "dge_analysis",
+                                       "macrophages",
+                                       "ORA.HALLMARK.CF.IVAvNON_CF.CTRL.csv")) %>%
+                    slice_head(n = num) %>%
+                    mutate(contrast = "CF.IVAvNON_CF.CTRL",
+                           Rank = 1:min(num, n())),
+                  read_csv(file = here("output",
+                                       "dge_analysis",
+                                       "macrophages",
+                                       "ORA.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv")) %>%
+                    slice_head(n = num) %>%
+                    mutate(contrast = "CF.NO_MODvNON_CF.CTRL",
+                           Rank = 1:min(num, n()))) %>%
+  mutate(dups = duplicated(Set) | duplicated(Set, fromLast = TRUE)) %>%
+  mutate(Set = str_wrap(str_replace_all(Set, "_", " "), width = 75),
+         Set = str_remove_all(Set, "GO |REACTOME |HALLMARK |WP "))
+
+pal <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
+
+sub <- 1:10
+hallmark[sub, ]%>%
+  ggplot(aes(x = -log10(FDR), y = -Rank, colour = GR)) +
+  geom_point(aes(size = N)) +
+  geom_point(shape = 8, colour = "white", size = 3,
+             data = hallmark[sub,][hallmark$dups[sub],],
+             aes(x = -log10(FDR), y = -Rank)) +
+  geom_vline(xintercept = -log10(0.05),
+             linetype = "dashed")  +
+  facet_wrap(~contrast) +
+  scale_colour_viridis_c(option = "cividis") +
+  scale_y_continuous(breaks = -hallmark$Rank[sub], 
+                     labels = hallmark$Set[sub]) +
+  labs(y = "Hallmark Gene Set", size = "Set size") +
+  theme_classic(base_size = 10) -> p2
+
+sub <- 11:20
+hallmark[sub, ]%>%
+  ggplot(aes(x = -log10(FDR), y = -Rank, colour = GR)) +
+  geom_point(aes(size = N)) +
+  geom_point(shape = 8, colour = "white", size = 3,
+             data = hallmark[sub,][hallmark$dups[sub],],
+             aes(x = -log10(FDR), y = -Rank)) +
+  geom_vline(xintercept = -log10(0.05),
+             linetype = "dashed")  +
+    facet_wrap(~contrast) +
+  scale_colour_viridis_c(option = "cividis") +
+  scale_y_continuous(breaks = -hallmark$Rank[sub], 
+                     labels = hallmark$Set[sub]) +
+  labs(y = "Hallmark Gene Set", size = "Set size") +
+  theme_classic(base_size = 10) -> p3
+
+p2 / p3
+
+```
+
+# Supplementary Figure 6
+
+```{r, fig.asp=1.5}
+layout <- "
+AAA
+AAA
+BBB
+CCC
+"
+
+wrap_elements(p1 + theme(text = element_text(size = 8))) + 
+  wrap_elements(p2 + theme(text = element_text(size = 8),
+                           legend.margin = margin(-0.5,0,0,0, unit="lines"),
+                           legend.key.size = unit(1, "lines"))) + 
+  wrap_elements(p3 + theme(text = element_text(size = 8),
+                           legend.margin = margin(-0.5,0,0,0, unit="lines"),
+                           legend.key.size = unit(1, "lines"))) + 
+  plot_layout(design = layout) +
+  plot_annotation(tag_levels = "A")   &
+  theme(plot.tag = element_text(size = 16,
+                                face = "bold",
+                                family = "arial"))
+```
+
+
+
+
+
+# Session info
+
+
+
+
+
+
+
+
+
+
