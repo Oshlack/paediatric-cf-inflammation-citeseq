@@ -14,8 +14,6 @@ output:
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, number_sections = FALSE)
 ```
 
-Follow the links below to view the different parts of the analysis. 
-
 
 # Abstract {-}
 
@@ -47,6 +45,8 @@ Jovana Maksimovic^1,2,9\*^, Shivanthan Shanthikumar ^2,3,4\*^, George Howitt^1,9
 ^\*^Contributed equally
 
 # Analysis Overview {-}
+
+Follow the links below to view the different parts of the analysis. 
 
 1. Remove empty droplets and demultiplex
     i) [Batch 0](01.0_preprocess_batch0.html)
