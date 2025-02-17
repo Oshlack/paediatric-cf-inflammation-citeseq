@@ -1,0 +1,2421 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jovana Maksimovic" />
+
+<meta name="date" content="2025-02-17" />
+
+<title>Supplementary Figures</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">paed-inflammation-CITEseq</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Supplementary Figures</h1>
+<h4 class="author">Jovana Maksimovic</h4>
+<h4 class="date">February 17, 2025</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2025-02-17
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>paed-inflammation-CITEseq/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240216code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240216)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240216code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240216)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree39d718041ea9765b199af996b1da898df5faf009targetblank39d7180a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/39d718041ea9765b199af996b1da898df5faf009" target="_blank">39d7180</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree39d718041ea9765b199af996b1da898df5faf009targetblank39d7180a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/39d718041ea9765b199af996b1da898df5faf009" target="_blank">39d7180</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/obsolete/
+    Ignored:    data/.DS_Store
+    Ignored:    data/C133_Neeland_batch1/
+    Ignored:    data/C133_Neeland_merged/
+    Ignored:    output/dge_analysis/obsolete/
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
+
+Untracked files:
+    Untracked:  analysis/16.0_Figure_1.Rmd
+    Untracked:  analysis/16.1_Figure_2.Rmd
+    Untracked:  analysis/16.2_Figure_3.Rmd
+    Untracked:  analysis/16.3_Figure_4.Rmd
+    Untracked:  analysis/16.4_Figure_5.Rmd
+    Untracked:  analysis/16.5_Supplementary_Figure_ADTs.Rmd
+    Untracked:  analysis/cellxgene_submission.Rmd
+    Untracked:  analysis/cellxgene_submission.nb.html
+    Untracked:  broad_markers_seurat.csv
+    Untracked:  code/background_job.R
+    Untracked:  code/reverse_modifier_severity_comparisons.sh
+    Untracked:  data/.Rprofile
+    Untracked:  data/.gitattributes
+    Untracked:  data/.gitignore
+    Untracked:  data/.renvignore
+    Untracked:  data/Homo_sapiens.gene_info.gz
+    Untracked:  data/analysis/
+    Untracked:  data/cellxgene_cell_ontologies_ann_level_1.xlsx
+    Untracked:  data/cellxgene_cell_ontologies_ann_level_3 (1).xlsx
+    Untracked:  data/cellxgene_cell_ontologies_ann_level_3.xlsx
+    Untracked:  data/code/
+    Untracked:  data/data/
+    Untracked:  data/homologs.rds
+    Untracked:  data/intermediate_objects/CD4 T cells.CF_samples.fit.rds
+    Untracked:  data/intermediate_objects/CD4 T cells.all_samples.fit.rds
+    Untracked:  data/intermediate_objects/CD8 T cells.CF_samples.fit.rds
+    Untracked:  data/intermediate_objects/CD8 T cells.all_samples.fit.rds
+    Untracked:  data/intermediate_objects/DC cells.CF_samples.fit.rds
+    Untracked:  data/intermediate_objects/DC cells.all_samples.fit.rds
+
+Unstaged changes:
+    Modified:   .gitignore
+    Modified:   analysis/06.0_azimuth_annotation.Rmd
+    Modified:   analysis/09.0_integrate_cluster_macro_cells.Rmd
+    Modified:   analysis/13.1_DGE_analysis_macro-alveolar.Rmd
+    Modified:   analysis/13.7_DGE_analysis_macro-proliferating.Rmd
+    Modified:   analysis/15.0_proportions_analysis_ann_level_1.Rmd
+    Deleted:    analysis/99.0_Figure_1.Rmd
+    Deleted:    analysis/99.0_Figure_2.Rmd
+    Deleted:    analysis/99.0_Figure_3.Rmd
+    Deleted:    analysis/99.0_Figure_4.Rmd
+    Deleted:    analysis/99.0_Figure_5.Rmd
+    Deleted:    analysis/99.0_Supplementary_Figure_3-5.Rmd
+    Deleted:    analysis/99.0_Supplementary_Figure_ADTs.Rmd
+    Modified:   code/utility.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/16.6_Supplementary_Figures.Rmd</code>) and HTML
+(<code>docs/16.6_Supplementary_Figures.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/39d718041ea9765b199af996b1da898df5faf009/analysis/16.6_Supplementary_Figures.Rmd" target="_blank">39d7180</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-02-17
+</td>
+<td>
+wflow_publish("analysis/16.6_Supplementary_Figures.Rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>Load libraries.</p>
+<pre class="r"><code>suppressPackageStartupMessages({
+ library(SingleCellExperiment)
+ library(edgeR)
+ library(tidyverse)
+ library(ggplot2)
+ library(Seurat)
+ library(glmGamPoi)
+ library(dittoSeq)
+ library(here)
+ library(clustree)
+ library(patchwork)
+ library(AnnotationDbi)
+ library(org.Hs.eg.db)
+ library(glue)
+ library(speckle)
+ library(tidyHeatmap)
+ library(paletteer)
+ library(dsb)
+ library(ggh4x)
+  library(readxl)
+  library(gt)
+})
+
+source(here(&quot;code/utility.R&quot;))</code></pre>
+<div id="load-data" class="section level1">
+<h1>Load data</h1>
+<pre class="r"><code>files &lt;- list.files(here(&quot;data/C133_Neeland_merged&quot;),
+                    pattern = &quot;C133_Neeland_full_clean.*(t_cells|other_cells)_annotated_diet.SEU.rds&quot;,
+                    full.names = TRUE)
+
+seuLst &lt;- lapply(files, function(f) readRDS(f))
+
+seu &lt;- merge(seuLst[[1]], 
+             y = seuLst[[2]])
+seu</code></pre>
+<pre><code>An object of class Seurat 
+19973 features across 29198 samples within 1 assay 
+Active assay: RNA (19973 features, 0 variable features)</code></pre>
+<pre><code>            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells  11797890  630.1   19374160 1034.7  13730012  733.3
+Vcells 138309781 1055.3  375197739 2862.6 328456905 2506.0</code></pre>
+</div>
+<div id="prepare-figure-panels" class="section level1">
+<h1>Prepare figure panels</h1>
+<pre class="r"><code>seu@meta.data %&gt;% 
+    data.frame %&gt;% 
+    dplyr::select(ann_level_1) %&gt;%
+    group_by(ann_level_1) %&gt;% 
+    count() %&gt;%
+    arrange(-n) %&gt;%
+    dplyr::rename(cell = ann_level_1) -&gt; cell_freq
+
+cell_freq</code></pre>
+<pre><code># A tibble: 14 × 2
+# Groups:   cell [14]
+   cell                      n
+   &lt;chr&gt;                 &lt;int&gt;
+ 1 CD8 T cells            7268
+ 2 CD4 T cells            5482
+ 3 DC cells               4094
+ 4 B cells                3769
+ 5 monocytes              3225
+ 6 epithelial cells       1847
+ 7 innate lymphocyte      1481
+ 8 NK cells                695
+ 9 neutrophils             477
+10 proliferating T/NK      250
+11 gamma delta T cells     244
+12 dividing innate cells   176
+13 mast cells               99
+14 NK-T cells               91</code></pre>
+<pre class="r"><code>files &lt;- list.files(here(&quot;data/intermediate_objects&quot;),
+            pattern = &quot;.*all_samples&quot;, 
+            full.names = TRUE) 
+files &lt;- files[!str_detect(files, &quot;macro&quot;)]
+
+cutoff &lt;- 0.05 
+cont_name &lt;- &quot;CF.NO_MODvNON_CF.CTRL&quot;  
+lfc_cutoff &lt;- 0
+suffix &lt;- &quot;.all_samples.fit.rds&quot;
+  
+get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
+             suffix = suffix) -&gt; dat</code></pre>
+<pre><code>Zero log2-FC threshold detected. Switch to glmLRT() instead. 
+Zero log2-FC threshold detected. Switch to glmLRT() instead. 
+Zero log2-FC threshold detected. Switch to glmLRT() instead. </code></pre>
+<pre class="r"><code>bind_rows(lapply(files, function(f){
+  deg_results &lt;- readRDS(f)
+  lrt &lt;- glmLRT(deg_results$fit, 
+                contrast = deg_results$contr[,cont_name])
+  tmp &lt;- cbind(summary(decideTests(lrt, p.value = cutoff)) %&gt;% data.frame,
+                    cell = unlist(str_split(str_remove(f, suffix), &quot;/&quot;))[8])
+  tmp
+})) -&gt; dat_deg</code></pre>
+<pre class="r"><code>dat_deg %&gt;% 
+  left_join(cell_freq) -&gt; dat_deg
+
+pal_dt &lt;- c(paletteer::paletteer_d(&quot;RColorBrewer::Set1&quot;)[2:1], &quot;grey&quot;) 
+
+dat_deg %&gt;%
+  dplyr::filter(Var1 != &quot;NotSig&quot;) %&gt;%
+  ggplot(aes(x = fct_reorder(cell, -n), y = Freq, fill = Var1)) +
+  geom_col(position = &quot;dodge&quot;) +
+  scale_fill_manual(values = pal_dt) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 30,
+                                   hjust = 1,
+                                   vjust = 1,
+                                   size = 7),
+        legend.position = &quot;top&quot;) +
+  geom_text(aes(label = Freq), 
+            position = position_dodge(width = 0.9),
+            vjust = -0.5,
+            size = 2.5) +
+  labs(x = &quot;Cell Type&quot;,
+       y = &quot;No. DEG (FDR &lt; 0.05)&quot;,
+       fill = &quot;Direction&quot;) -&gt; deg_barplot
+
+deg_barplot</code></pre>
+<p><img src="figure/16.6_Supplementary_Figures.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
+             suffix = suffix, cutoff = 1) -&gt; dat_all</code></pre>
+<pre><code>Zero log2-FC threshold detected. Switch to glmLRT() instead. 
+Zero log2-FC threshold detected. Switch to glmLRT() instead. 
+Zero log2-FC threshold detected. Switch to glmLRT() instead. </code></pre>
+<pre class="r"><code>dat_all %&gt;% 
+  left_join(cell_freq) %&gt;%
+  mutate(Direction = as.factor(ifelse(sig == -1, &quot;Down&quot;,
+                                      ifelse(sig == 1, &quot;Up&quot;, &quot;N.S.&quot;))),
+         cell = fct_reorder(cell, -n)) -&gt; dat_all
+
+ggplot(dat_all, aes(x = logFC, y = -log10(FDR), colour = Direction)) + 
+  geom_point(size = 0.5) + 
+  facet_wrap(~cell, ncol = 4) + 
+  theme_classic() +
+  scale_color_manual(values = pal_dt[c(1,3,2)]) +
+  ggrepel::geom_text_repel(data = dat_all[dat_all$sig != 0,], 
+                           aes(label = gene), size = 2) -&gt; volc_plot
+
+volc_plot</code></pre>
+<p><img src="figure/16.6_Supplementary_Figures.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dat_all %&gt;%
+  dplyr::select(-sig, -n, -Direction) %&gt;%
+  dplyr::filter(FDR &lt; cutoff) %&gt;%
+  group_by(cell) %&gt;%
+  arrange(PValue, .by_group = TRUE) %&gt;% 
+  gt() %&gt;%
+  tab_header(title = &quot;Differentially expressed genes by cell type&quot;,
+             subtitle = cont_name) %&gt;%
+  tab_style(cell_text(size = px(10)),
+            locations = list(cells_body())) %&gt;%
+  tab_style(cell_text(size = px(12), weight = &quot;bold&quot;),
+            locations = list(cells_column_labels())) %&gt;%
+  tab_style(cell_text(size = px(12), weight = &quot;bold&quot;),
+            locations = list(cells_row_groups())) -&gt; tab
+
+tab</code></pre>
+<div id="wgnkqkasit" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wgnkqkasit table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#wgnkqkasit thead, #wgnkqkasit tbody, #wgnkqkasit tfoot, #wgnkqkasit tr, #wgnkqkasit td, #wgnkqkasit th {
+  border-style: none;
+}
+
+#wgnkqkasit p {
+  margin: 0;
+  padding: 0;
+}
+
+#wgnkqkasit .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#wgnkqkasit .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#wgnkqkasit .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#wgnkqkasit .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#wgnkqkasit .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#wgnkqkasit .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#wgnkqkasit .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#wgnkqkasit .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#wgnkqkasit .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#wgnkqkasit .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#wgnkqkasit .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#wgnkqkasit .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#wgnkqkasit .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#wgnkqkasit .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#wgnkqkasit .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wgnkqkasit .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#wgnkqkasit .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#wgnkqkasit .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#wgnkqkasit .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wgnkqkasit .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#wgnkqkasit .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wgnkqkasit .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#wgnkqkasit .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wgnkqkasit .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wgnkqkasit .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wgnkqkasit .gt_left {
+  text-align: left;
+}
+
+#wgnkqkasit .gt_center {
+  text-align: center;
+}
+
+#wgnkqkasit .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#wgnkqkasit .gt_font_normal {
+  font-weight: normal;
+}
+
+#wgnkqkasit .gt_font_bold {
+  font-weight: bold;
+}
+
+#wgnkqkasit .gt_font_italic {
+  font-style: italic;
+}
+
+#wgnkqkasit .gt_super {
+  font-size: 65%;
+}
+
+#wgnkqkasit .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#wgnkqkasit .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#wgnkqkasit .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#wgnkqkasit .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#wgnkqkasit .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#wgnkqkasit .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#wgnkqkasit .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#wgnkqkasit .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#wgnkqkasit div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="6" class="gt_heading gt_title gt_font_normal" style>Differentially expressed genes by cell type</td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="6" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style>CF.NO_MODvNON_CF.CTRL</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="gene">gene</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="logFC">logFC</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="logCPM">logCPM</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="LR">LR</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="PValue">PValue</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="FDR">FDR</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <th colspan="6" class="gt_group_heading" style="font-size: 12px; font-weight: bold;" scope="colgroup" id="CD8 T cells">CD8 T cells</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="CD8 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">ADGRG1</td>
+<td headers="CD8 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">2.5021012</td>
+<td headers="CD8 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">4.466645</td>
+<td headers="CD8 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">24.19243</td>
+<td headers="CD8 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">8.717442e-07</td>
+<td headers="CD8 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.00758679</td></tr>
+    <tr><td headers="CD8 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">SULF2</td>
+<td headers="CD8 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">-1.9413497</td>
+<td headers="CD8 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">4.396383</td>
+<td headers="CD8 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">21.06761</td>
+<td headers="CD8 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">4.433591e-06</td>
+<td headers="CD8 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.01467086</td></tr>
+    <tr><td headers="CD8 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">CTSB</td>
+<td headers="CD8 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">1.7399768</td>
+<td headers="CD8 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">5.731016</td>
+<td headers="CD8 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">20.81551</td>
+<td headers="CD8 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">5.057172e-06</td>
+<td headers="CD8 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.01467086</td></tr>
+    <tr><td headers="CD8 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">ANKRD36C</td>
+<td headers="CD8 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">1.1218820</td>
+<td headers="CD8 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">5.875441</td>
+<td headers="CD8 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">18.48672</td>
+<td headers="CD8 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">1.710926e-05</td>
+<td headers="CD8 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.03411823</td></tr>
+    <tr><td headers="CD8 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">REL</td>
+<td headers="CD8 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">0.8640961</td>
+<td headers="CD8 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">6.809838</td>
+<td headers="CD8 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">18.22763</td>
+<td headers="CD8 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">1.960142e-05</td>
+<td headers="CD8 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.03411823</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="6" class="gt_group_heading" style="font-size: 12px; font-weight: bold;" scope="colgroup" id="DC cells">DC cells</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="DC cells  gene" class="gt_row gt_left" style="font-size: 10px;">CEACAM4</td>
+<td headers="DC cells  logFC" class="gt_row gt_right" style="font-size: 10px;">2.2610736</td>
+<td headers="DC cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">4.072314</td>
+<td headers="DC cells  LR" class="gt_row gt_right" style="font-size: 10px;">21.02323</td>
+<td headers="DC cells  PValue" class="gt_row gt_right" style="font-size: 10px;">4.537474e-06</td>
+<td headers="DC cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.02775101</td></tr>
+    <tr><td headers="DC cells  gene" class="gt_row gt_left" style="font-size: 10px;">SLC16A10</td>
+<td headers="DC cells  logFC" class="gt_row gt_right" style="font-size: 10px;">2.9741874</td>
+<td headers="DC cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">6.331395</td>
+<td headers="DC cells  LR" class="gt_row gt_right" style="font-size: 10px;">20.45649</td>
+<td headers="DC cells  PValue" class="gt_row gt_right" style="font-size: 10px;">6.100236e-06</td>
+<td headers="DC cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.02775101</td></tr>
+    <tr><td headers="DC cells  gene" class="gt_row gt_left" style="font-size: 10px;">ALDH1A2</td>
+<td headers="DC cells  logFC" class="gt_row gt_right" style="font-size: 10px;">4.8973876</td>
+<td headers="DC cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">4.276887</td>
+<td headers="DC cells  LR" class="gt_row gt_right" style="font-size: 10px;">19.76101</td>
+<td headers="DC cells  PValue" class="gt_row gt_right" style="font-size: 10px;">8.775486e-06</td>
+<td headers="DC cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.02775101</td></tr>
+    <tr><td headers="DC cells  gene" class="gt_row gt_left" style="font-size: 10px;">TGM2</td>
+<td headers="DC cells  logFC" class="gt_row gt_right" style="font-size: 10px;">3.6728039</td>
+<td headers="DC cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">5.302445</td>
+<td headers="DC cells  LR" class="gt_row gt_right" style="font-size: 10px;">19.14835</td>
+<td headers="DC cells  PValue" class="gt_row gt_right" style="font-size: 10px;">1.209417e-05</td>
+<td headers="DC cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.02868435</td></tr>
+    <tr><td headers="DC cells  gene" class="gt_row gt_left" style="font-size: 10px;">CCL5</td>
+<td headers="DC cells  logFC" class="gt_row gt_right" style="font-size: 10px;">3.3089485</td>
+<td headers="DC cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">4.416919</td>
+<td headers="DC cells  LR" class="gt_row gt_right" style="font-size: 10px;">17.83687</td>
+<td headers="DC cells  PValue" class="gt_row gt_right" style="font-size: 10px;">2.406746e-05</td>
+<td headers="DC cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.04566559</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+<div id="supplementary-figure-3" class="section level1">
+<h1>Supplementary Figure 3</h1>
+<pre class="r"><code>layout &lt;- &quot;
+A
+B
+C
+&quot;
+
+(wrap_elements(deg_barplot + theme(axis.title.x = element_blank(),
+                                   legend.text = element_text(size = 8)))) +
+  wrap_elements(volc_plot + theme(strip.text = element_text(size = 7))) +
+  wrap_table(tab, ignore_tag = TRUE) +
+  plot_layout(design = layout) +
+  plot_annotation(tag_levels = &quot;A&quot;)  &amp;
+  theme(plot.tag = element_text(size = 16,
+                                face = &quot;bold&quot;,
+                                family = &quot;arial&quot;))</code></pre>
+<p><img src="figure/16.6_Supplementary_Figures.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="prepare-figure-panels-1" class="section level1">
+<h1>Prepare figure panels</h1>
+<pre class="r"><code>seu@meta.data %&gt;% 
+    data.frame %&gt;% 
+    dplyr::select(ann_level_1) %&gt;%
+    group_by(ann_level_1) %&gt;% 
+    count() %&gt;%
+    arrange(-n) %&gt;%
+    dplyr::rename(cell = ann_level_1) -&gt; cell_freq
+
+cell_freq</code></pre>
+<pre><code># A tibble: 14 × 2
+# Groups:   cell [14]
+   cell                      n
+   &lt;chr&gt;                 &lt;int&gt;
+ 1 CD8 T cells            7268
+ 2 CD4 T cells            5482
+ 3 DC cells               4094
+ 4 B cells                3769
+ 5 monocytes              3225
+ 6 epithelial cells       1847
+ 7 innate lymphocyte      1481
+ 8 NK cells                695
+ 9 neutrophils             477
+10 proliferating T/NK      250
+11 gamma delta T cells     244
+12 dividing innate cells   176
+13 mast cells               99
+14 NK-T cells               91</code></pre>
+<pre class="r"><code>files &lt;- list.files(here(&quot;data/intermediate_objects&quot;),
+            pattern = &quot;.*CF_samples&quot;, 
+            full.names = TRUE) 
+files &lt;- files[!str_detect(files, &quot;macro&quot;)]
+
+cutoff &lt;- 0.05 
+cont_name &lt;- &quot;CF.NO_MOD.SvCF.NO_MOD.M&quot;  
+lfc_cutoff &lt;- 0
+suffix &lt;- &quot;.CF_samples.fit.rds&quot;
+  
+get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
+             suffix = suffix) -&gt; dat</code></pre>
+<pre><code>Zero log2-FC threshold detected. Switch to glmLRT() instead. 
+Zero log2-FC threshold detected. Switch to glmLRT() instead. 
+Zero log2-FC threshold detected. Switch to glmLRT() instead. </code></pre>
+<pre class="r"><code>bind_rows(lapply(files, function(f){
+  deg_results &lt;- readRDS(f)
+  lrt &lt;- glmLRT(deg_results$fit, 
+                contrast = deg_results$contr[,cont_name])
+  tmp &lt;- cbind(summary(decideTests(lrt, p.value = cutoff)) %&gt;% data.frame,
+                    cell = unlist(str_split(str_remove(f, suffix), &quot;/&quot;))[8])
+  tmp
+})) -&gt; dat_deg</code></pre>
+<pre class="r"><code>dat_deg %&gt;% 
+  left_join(cell_freq) -&gt; dat_deg
+
+pal_dt &lt;- c(paletteer::paletteer_d(&quot;RColorBrewer::Set1&quot;)[2:1], &quot;grey&quot;) 
+
+dat_deg %&gt;%
+  dplyr::filter(Var1 != &quot;NotSig&quot;) %&gt;%
+  ggplot(aes(x = fct_reorder(cell, -n), y = Freq, fill = Var1)) +
+  geom_col(position = &quot;dodge&quot;) +
+  scale_fill_manual(values = pal_dt) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 30,
+                                   hjust = 1,
+                                   vjust = 1,
+                                   size = 7),
+        legend.position = &quot;top&quot;) +
+  geom_text(aes(label = Freq), 
+            position = position_dodge(width = 0.9),
+            vjust = -0.5,
+            size = 2.5) +
+  labs(x = &quot;Cell Type&quot;,
+       y = &quot;No. DEG (FDR &lt; 0.05)&quot;,
+       fill = &quot;Direction&quot;) -&gt; deg_barplot
+
+deg_barplot</code></pre>
+<p><img src="figure/16.6_Supplementary_Figures.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
+             suffix = suffix, cutoff = 1) -&gt; dat_all</code></pre>
+<pre><code>Zero log2-FC threshold detected. Switch to glmLRT() instead. 
+Zero log2-FC threshold detected. Switch to glmLRT() instead. 
+Zero log2-FC threshold detected. Switch to glmLRT() instead. </code></pre>
+<pre class="r"><code>dat_all %&gt;% 
+  left_join(cell_freq) %&gt;%
+  mutate(Direction = as.factor(ifelse(sig == -1, &quot;Down&quot;,
+                                      ifelse(sig == 1, &quot;Up&quot;, &quot;N.S.&quot;))),
+         cell = fct_reorder(cell, -n)) -&gt; dat_all
+
+ggplot(dat_all, aes(x = logFC, y = -log10(FDR), colour = Direction)) + 
+  geom_point(size = 0.5) + 
+  facet_wrap(~cell, ncol = 4) + 
+  theme_classic() +
+  scale_color_manual(values = pal_dt[c(1,3,2)]) +
+  ggrepel::geom_text_repel(data = dat_all[dat_all$sig != 0,], 
+                           aes(label = gene), size = 2) -&gt; volc_plot
+
+volc_plot</code></pre>
+<p><img src="figure/16.6_Supplementary_Figures.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dat_all %&gt;%
+  dplyr::select(-sig, -n, -Direction) %&gt;%
+  dplyr::filter(FDR &lt; cutoff) %&gt;%
+  group_by(cell) %&gt;%
+  arrange(PValue, .by_group = TRUE) %&gt;% 
+  gt() %&gt;%
+  tab_header(title = &quot;Differentially expressed genes by cell type&quot;,
+             subtitle = cont_name) %&gt;%
+  tab_style(cell_text(size = px(10)),
+            locations = list(cells_body())) %&gt;%
+  tab_style(cell_text(size = px(12), weight = &quot;bold&quot;),
+            locations = list(cells_column_labels())) %&gt;%
+  tab_style(cell_text(size = px(12), weight = &quot;bold&quot;),
+            locations = list(cells_row_groups())) -&gt; tab
+
+tab</code></pre>
+<div id="mpfzttxwtw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mpfzttxwtw table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#mpfzttxwtw thead, #mpfzttxwtw tbody, #mpfzttxwtw tfoot, #mpfzttxwtw tr, #mpfzttxwtw td, #mpfzttxwtw th {
+  border-style: none;
+}
+
+#mpfzttxwtw p {
+  margin: 0;
+  padding: 0;
+}
+
+#mpfzttxwtw .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#mpfzttxwtw .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#mpfzttxwtw .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#mpfzttxwtw .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#mpfzttxwtw .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#mpfzttxwtw .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#mpfzttxwtw .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#mpfzttxwtw .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#mpfzttxwtw .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#mpfzttxwtw .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#mpfzttxwtw .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#mpfzttxwtw .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#mpfzttxwtw .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#mpfzttxwtw .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#mpfzttxwtw .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mpfzttxwtw .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#mpfzttxwtw .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#mpfzttxwtw .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#mpfzttxwtw .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mpfzttxwtw .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#mpfzttxwtw .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mpfzttxwtw .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#mpfzttxwtw .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mpfzttxwtw .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mpfzttxwtw .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mpfzttxwtw .gt_left {
+  text-align: left;
+}
+
+#mpfzttxwtw .gt_center {
+  text-align: center;
+}
+
+#mpfzttxwtw .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#mpfzttxwtw .gt_font_normal {
+  font-weight: normal;
+}
+
+#mpfzttxwtw .gt_font_bold {
+  font-weight: bold;
+}
+
+#mpfzttxwtw .gt_font_italic {
+  font-style: italic;
+}
+
+#mpfzttxwtw .gt_super {
+  font-size: 65%;
+}
+
+#mpfzttxwtw .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#mpfzttxwtw .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#mpfzttxwtw .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#mpfzttxwtw .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#mpfzttxwtw .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#mpfzttxwtw .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#mpfzttxwtw .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#mpfzttxwtw .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#mpfzttxwtw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="6" class="gt_heading gt_title gt_font_normal" style>Differentially expressed genes by cell type</td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="6" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style>CF.NO_MOD.SvCF.NO_MOD.M</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="gene">gene</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="logFC">logFC</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="logCPM">logCPM</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="LR">LR</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="PValue">PValue</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-size: 12px; font-weight: bold;" scope="col" id="FDR">FDR</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <th colspan="6" class="gt_group_heading" style="font-size: 12px; font-weight: bold;" scope="colgroup" id="CD8 T cells">CD8 T cells</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="CD8 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">IER2</td>
+<td headers="CD8 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">-0.6465572</td>
+<td headers="CD8 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">8.658428</td>
+<td headers="CD8 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">22.79010</td>
+<td headers="CD8 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">1.806940e-06</td>
+<td headers="CD8 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.0152957508</td></tr>
+    <tr><td headers="CD8 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">CMC1</td>
+<td headers="CD8 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">1.2609872</td>
+<td headers="CD8 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">6.539998</td>
+<td headers="CD8 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">21.10521</td>
+<td headers="CD8 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">4.347451e-06</td>
+<td headers="CD8 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.0184005852</td></tr>
+    <tr><td headers="CD8 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">MSMO1</td>
+<td headers="CD8 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">-1.1619299</td>
+<td headers="CD8 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">6.038531</td>
+<td headers="CD8 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">18.99984</td>
+<td headers="CD8 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">1.307294e-05</td>
+<td headers="CD8 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.0368874786</td></tr>
+    <tr><td headers="CD8 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">CST7</td>
+<td headers="CD8 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">1.0002086</td>
+<td headers="CD8 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">8.977818</td>
+<td headers="CD8 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">17.99144</td>
+<td headers="CD8 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">2.219008e-05</td>
+<td headers="CD8 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.0399874695</td></tr>
+    <tr><td headers="CD8 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">FBLN5</td>
+<td headers="CD8 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">-1.9805997</td>
+<td headers="CD8 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">4.858811</td>
+<td headers="CD8 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">17.87264</td>
+<td headers="CD8 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">2.361930e-05</td>
+<td headers="CD8 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.0399874695</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="6" class="gt_group_heading" style="font-size: 12px; font-weight: bold;" scope="colgroup" id="CD4 T cells">CD4 T cells</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="CD4 T cells  gene" class="gt_row gt_left" style="font-size: 10px;">AREG</td>
+<td headers="CD4 T cells  logFC" class="gt_row gt_right" style="font-size: 10px;">-3.6207178</td>
+<td headers="CD4 T cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">4.269030</td>
+<td headers="CD4 T cells  LR" class="gt_row gt_right" style="font-size: 10px;">21.04842</td>
+<td headers="CD4 T cells  PValue" class="gt_row gt_right" style="font-size: 10px;">4.478209e-06</td>
+<td headers="CD4 T cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.0382842050</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="6" class="gt_group_heading" style="font-size: 12px; font-weight: bold;" scope="colgroup" id="DC cells">DC cells</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="DC cells  gene" class="gt_row gt_left" style="font-size: 10px;">FABP4</td>
+<td headers="DC cells  logFC" class="gt_row gt_right" style="font-size: 10px;">3.0135376</td>
+<td headers="DC cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">5.586100</td>
+<td headers="DC cells  LR" class="gt_row gt_right" style="font-size: 10px;">28.38368</td>
+<td headers="DC cells  PValue" class="gt_row gt_right" style="font-size: 10px;">9.950036e-08</td>
+<td headers="DC cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.0009380894</td></tr>
+    <tr><td headers="DC cells  gene" class="gt_row gt_left" style="font-size: 10px;">SCD</td>
+<td headers="DC cells  logFC" class="gt_row gt_right" style="font-size: 10px;">2.9594586</td>
+<td headers="DC cells  logCPM" class="gt_row gt_right" style="font-size: 10px;">4.314568</td>
+<td headers="DC cells  LR" class="gt_row gt_right" style="font-size: 10px;">20.58858</td>
+<td headers="DC cells  PValue" class="gt_row gt_right" style="font-size: 10px;">5.693474e-06</td>
+<td headers="DC cells  FDR" class="gt_row gt_right" style="font-size: 10px;">0.0268390379</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+<div id="supplementary-figure-5" class="section level1">
+<h1>Supplementary Figure 5</h1>
+<pre class="r"><code>layout &lt;- &quot;
+A
+B
+C
+&quot;
+
+(wrap_elements(deg_barplot + theme(axis.title.x = element_blank(),
+                                   legend.text = element_text(size = 8)))) +
+  wrap_elements(volc_plot + theme(strip.text = element_text(size = 7))) +
+  wrap_table(tab, ignore_tag = TRUE) +
+  plot_layout(design = layout) +
+  plot_annotation(tag_levels = &quot;A&quot;)  &amp;
+  theme(plot.tag = element_text(size = 16,
+                                face = &quot;bold&quot;,
+                                family = &quot;arial&quot;))</code></pre>
+<p><img src="figure/16.6_Supplementary_Figures.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="prepare-figure-panels-2" class="section level1">
+<h1>Prepare figure panels</h1>
+<pre class="r"><code>file &lt;- here(&quot;data&quot;, 
+             &quot;intermediate_objects&quot;,
+             &quot;macrophages.all_samples.fit.rds&quot;) 
+
+deg_results &lt;- readRDS(file = file)
+
+contr &lt;- deg_results$contr[,1:2]
+
+lapply(1:ncol(contr), function(i) {
+  lrt &lt;- glmLRT(deg_results$fit, contrast = contr[,i])
+  topTags(lrt, n = Inf) %&gt;%
+    data.frame %&gt;%
+    rownames_to_column(var = &quot;Symbol&quot;) %&gt;%
+    dplyr::arrange(Symbol) %&gt;%
+    dplyr::rename_with(~ paste0(.x, &quot;.&quot;, i))
+}) %&gt;% bind_cols -&gt; all_lrt</code></pre>
+<pre class="r"><code>all_lrt %&gt;%
+  mutate(IVA = ifelse(FDR.1 &lt; 0.05 &amp; FDR.2 &lt; 0.05, &quot;#FF6B6B&quot;,
+                      ifelse(FDR.1 &lt; 0.05 &amp; FDR.2 &gt;= 0.05, &quot;#CC8E00&quot;, 
+                             ifelse(FDR.1 &gt;= 0.05 &amp; FDR.2 &lt; 0.05, &quot;#20A4A4&quot;,
+                                    &quot;lightgrey&quot;)))) -&gt; all_lrt
+
+ggplot(all_lrt, aes(x = logFC.1,
+                    y = logFC.2)) +
+  geom_point(data = subset(all_lrt, IVA %in% &quot;lightgrey&quot;), 
+             aes(colour = &quot;lightgrey&quot;),
+             alpha = 0.25) +
+  geom_point(data = subset(all_lrt, IVA %in% &quot;#20A4A4&quot;), 
+             aes(colour = &quot;#20A4A4&quot;),
+             alpha = 0.5) +
+  geom_point(data = subset(all_lrt, IVA %in% &quot;#CC8E00&quot;), 
+             aes(colour = &quot;#CC8E00&quot;),
+             alpha = 0.5) +
+  geom_point(data = subset(all_lrt, IVA %in% &quot;#FF6B6B&quot;), 
+             aes(colour = &quot;#FF6B6B&quot;)) +
+  ggrepel::geom_text_repel(data = subset(all_lrt, (IVA %in% &quot;#20A4A4&quot;)),
+                           aes(x = logFC.1, y = logFC.2,
+                               label = Symbol.1),
+                           size = 2, colour = &quot;#20A4A4&quot;, max.overlaps = 5) +
+    ggrepel::geom_text_repel(data = subset(all_lrt, (IVA %in% &quot;#CC8E00&quot;)),
+                           aes(x = logFC.1, y = logFC.2,
+                               label = Symbol.1),
+                           size = 2, colour = &quot;#CC8E00&quot;, max.overlaps = 5) +
+    ggrepel::geom_text_repel(data = subset(all_lrt, (IVA %in% &quot;#FF6B6B&quot;)), 
+                           aes(x = logFC.1, y = logFC.2, 
+                               label = Symbol.1), 
+                           size = 2, colour = &quot;#FF6B6B&quot;, max.overlaps = Inf) +
+  geom_hline(yintercept = 0, linetype = &quot;dashed&quot;, colour = &quot;darkgrey&quot;) +
+  geom_vline(xintercept = 0, linetype = &quot;dashed&quot;, colour = &quot;darkgrey&quot;) +
+  labs(x = &quot;log2FC CF.NO_MODvNON_CF.CTRL&quot;,
+       y = &quot;log2FC CF.IVAvNON_CF.CTRL&quot;) +
+  scale_colour_identity(guide = &quot;legend&quot;,
+                        breaks = c(&quot;#FF6B6B&quot;, &quot;#20A4A4&quot;, &quot;#CC8E00&quot;,&quot;lightgrey&quot;),
+                        labels = c(&quot;Sig. in both&quot;, 
+                                   &quot;Sig. in CF.IVAvNON_CF.CTRL&quot;, 
+                                   &quot;Sig. in CF.NO_MODvNON_CF.CTRL&quot;,
+                                   &quot;N.S. in either&quot;),
+                        name = &quot;Statistical significance&quot;) +
+  theme_classic() +
+  theme(legend.position = &quot;right&quot;,
+        legend.direction = &quot;vertical&quot;) -&gt; p1
+
+p1</code></pre>
+<p><img src="figure/16.6_Supplementary_Figures.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Hs.c2.all &lt;- convert_gmt_to_list(here(&quot;data/c2.all.v2024.1.Hs.entrez.gmt&quot;))
+Hs.h.all &lt;- convert_gmt_to_list(here(&quot;data/h.all.v2024.1.Hs.entrez.gmt&quot;))
+Hs.c5.all &lt;- convert_gmt_to_list(here(&quot;data/c5.all.v2024.1.Hs.entrez.gmt&quot;))
+
+fibrosis &lt;- create_custom_gene_lists_from_file(here(&quot;data/fibrosis_gene_sets.csv&quot;))
+# add fibrosis sets from REACTOME and WIKIPATHWAYS
+fibrosis &lt;- c(lapply(fibrosis, function(l) l[!is.na(l)]),
+              Hs.c2.all[str_detect(names(Hs.c2.all), &quot;FIBROSIS&quot;)])
+
+gene_sets_list &lt;- list(HALLMARK = Hs.h.all,
+                       GO = Hs.c5.all,
+                       REACTOME = Hs.c2.all[str_detect(names(Hs.c2.all), &quot;REACTOME&quot;)],
+                       WP = Hs.c2.all[str_detect(names(Hs.c2.all), &quot;^WP&quot;)],
+                       FIBROSIS = fibrosis)</code></pre>
+<pre class="r"><code>num &lt;- 10
+
+hallmark &lt;- rbind(read_csv(file = here(&quot;output&quot;,
+                                       &quot;dge_analysis&quot;,
+                                       &quot;macrophages&quot;,
+                                       &quot;ORA.HALLMARK.CF.IVAvNON_CF.CTRL.csv&quot;)) %&gt;%
+                    slice_head(n = num) %&gt;%
+                    mutate(contrast = &quot;CF.IVAvNON_CF.CTRL&quot;,
+                           Rank = 1:min(num, n())),
+                  read_csv(file = here(&quot;output&quot;,
+                                       &quot;dge_analysis&quot;,
+                                       &quot;macrophages&quot;,
+                                       &quot;ORA.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv&quot;)) %&gt;%
+                    slice_head(n = num) %&gt;%
+                    mutate(contrast = &quot;CF.NO_MODvNON_CF.CTRL&quot;,
+                           Rank = 1:min(num, n()))) %&gt;%
+  mutate(dups = duplicated(Set) | duplicated(Set, fromLast = TRUE)) %&gt;%
+  mutate(Set = str_wrap(str_replace_all(Set, &quot;_&quot;, &quot; &quot;), width = 75),
+         Set = str_remove_all(Set, &quot;GO |REACTOME |HALLMARK |WP &quot;))
+
+pal &lt;- c(paletteer::paletteer_d(&quot;RColorBrewer::Set1&quot;)[2:1], &quot;grey&quot;) 
+
+sub &lt;- 1:10
+hallmark[sub, ]%&gt;%
+  ggplot(aes(x = -log10(FDR), y = -Rank, colour = GR)) +
+  geom_point(aes(size = N)) +
+  geom_point(shape = 8, colour = &quot;white&quot;, size = 3,
+             data = hallmark[sub,][hallmark$dups[sub],],
+             aes(x = -log10(FDR), y = -Rank)) +
+  geom_vline(xintercept = -log10(0.05),
+             linetype = &quot;dashed&quot;)  +
+  facet_wrap(~contrast) +
+  scale_colour_viridis_c(option = &quot;cividis&quot;) +
+  scale_y_continuous(breaks = -hallmark$Rank[sub], 
+                     labels = hallmark$Set[sub]) +
+  labs(y = &quot;Hallmark Gene Set&quot;, size = &quot;Set size&quot;) +
+  theme_classic(base_size = 10) -&gt; p2
+
+sub &lt;- 11:20
+hallmark[sub, ]%&gt;%
+  ggplot(aes(x = -log10(FDR), y = -Rank, colour = GR)) +
+  geom_point(aes(size = N)) +
+  geom_point(shape = 8, colour = &quot;white&quot;, size = 3,
+             data = hallmark[sub,][hallmark$dups[sub],],
+             aes(x = -log10(FDR), y = -Rank)) +
+  geom_vline(xintercept = -log10(0.05),
+             linetype = &quot;dashed&quot;)  +
+    facet_wrap(~contrast) +
+  scale_colour_viridis_c(option = &quot;cividis&quot;) +
+  scale_y_continuous(breaks = -hallmark$Rank[sub], 
+                     labels = hallmark$Set[sub]) +
+  labs(y = &quot;Hallmark Gene Set&quot;, size = &quot;Set size&quot;) +
+  theme_classic(base_size = 10) -&gt; p3
+
+p2 / p3</code></pre>
+<p><img src="figure/16.6_Supplementary_Figures.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="supplementary-figure-6" class="section level1">
+<h1>Supplementary Figure 6</h1>
+<pre class="r"><code>layout &lt;- &quot;
+AAA
+AAA
+BBB
+CCC
+&quot;
+
+wrap_elements(p1 + theme(text = element_text(size = 8))) + 
+  wrap_elements(p2 + theme(text = element_text(size = 8),
+                           legend.margin = margin(-0.5,0,0,0, unit=&quot;lines&quot;),
+                           legend.key.size = unit(1, &quot;lines&quot;))) + 
+  wrap_elements(p3 + theme(text = element_text(size = 8),
+                           legend.margin = margin(-0.5,0,0,0, unit=&quot;lines&quot;),
+                           legend.key.size = unit(1, &quot;lines&quot;))) + 
+  plot_layout(design = layout) +
+  plot_annotation(tag_levels = &quot;A&quot;)   &amp;
+  theme(plot.tag = element_text(size = 16,
+                                face = &quot;bold&quot;,
+                                family = &quot;arial&quot;))</code></pre>
+<p><img src="figure/16.6_Supplementary_Figures.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="session-info" class="section level1">
+<h1>Session info</h1>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 22.04.4 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
+LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0
+
+locale:
+ [1] LC_CTYPE=en_AU.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_AU.UTF-8        LC_COLLATE=en_AU.UTF-8    
+ [5] LC_MONETARY=en_AU.UTF-8    LC_MESSAGES=en_AU.UTF-8   
+ [7] LC_PAPER=en_AU.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_AU.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: Etc/UTC
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices datasets  utils     methods  
+[8] base     
+
+other attached packages:
+ [1] gt_0.11.1                   readxl_1.4.3               
+ [3] ggh4x_0.2.8                 dsb_1.0.3                  
+ [5] paletteer_1.6.0             tidyHeatmap_1.8.1          
+ [7] speckle_1.2.0               glue_1.8.0                 
+ [9] org.Hs.eg.db_3.18.0         AnnotationDbi_1.64.1       
+[11] patchwork_1.3.0             clustree_0.5.1             
+[13] ggraph_2.2.0                here_1.0.1                 
+[15] dittoSeq_1.14.2             glmGamPoi_1.14.3           
+[17] SeuratObject_4.1.4          Seurat_4.4.0               
+[19] lubridate_1.9.3             forcats_1.0.0              
+[21] stringr_1.5.1               dplyr_1.1.4                
+[23] purrr_1.0.2                 readr_2.1.5                
+[25] tidyr_1.3.1                 tibble_3.2.1               
+[27] ggplot2_3.5.0               tidyverse_2.0.0            
+[29] edgeR_4.0.15                limma_3.58.1               
+[31] SingleCellExperiment_1.24.0 SummarizedExperiment_1.32.0
+[33] Biobase_2.62.0              GenomicRanges_1.54.1       
+[35] GenomeInfoDb_1.38.6         IRanges_2.36.0             
+[37] S4Vectors_0.40.2            BiocGenerics_0.48.1        
+[39] MatrixGenerics_1.14.0       matrixStats_1.2.0          
+[41] workflowr_1.7.1            
+
+loaded via a namespace (and not attached):
+  [1] fs_1.6.5                spatstat.sparse_3.0-3   bitops_1.0-7           
+  [4] httr_1.4.7              RColorBrewer_1.1-3      doParallel_1.0.17      
+  [7] tools_4.3.3             sctransform_0.4.1       utf8_1.2.4             
+ [10] R6_2.5.1                lazyeval_0.2.2          uwot_0.1.16            
+ [13] GetoptLong_1.0.5        withr_3.0.0             sp_2.1-3               
+ [16] gridExtra_2.3           progressr_0.14.0        cli_3.6.3              
+ [19] spatstat.explore_3.2-6  labeling_0.4.3          prismatic_1.1.1        
+ [22] sass_0.4.9              spatstat.data_3.0-4     ggridges_0.5.6         
+ [25] pbapply_1.7-2           parallelly_1.37.0       rstudioapi_0.15.0      
+ [28] RSQLite_2.3.5           generics_0.1.3          shape_1.4.6            
+ [31] vroom_1.6.5             ica_1.0-3               spatstat.random_3.2-2  
+ [34] dendextend_1.17.1       Matrix_1.6-5            fansi_1.0.6            
+ [37] abind_1.4-5             lifecycle_1.0.4         whisker_0.4.1          
+ [40] yaml_2.3.8              SparseArray_1.2.4       Rtsne_0.17             
+ [43] grid_4.3.3              blob_1.2.4              promises_1.2.1         
+ [46] crayon_1.5.2            miniUI_0.1.1.1          lattice_0.22-5         
+ [49] cowplot_1.1.3           KEGGREST_1.42.0         pillar_1.9.0           
+ [52] knitr_1.45              ComplexHeatmap_2.18.0   rjson_0.2.21           
+ [55] future.apply_1.11.1     codetools_0.2-19        leiden_0.4.3.1         
+ [58] getPass_0.2-4           data.table_1.15.0       vctrs_0.6.5            
+ [61] png_0.1-8               cellranger_1.1.0        gtable_0.3.4           
+ [64] rematch2_2.1.2          cachem_1.0.8            xfun_0.42              
+ [67] S4Arrays_1.2.0          mime_0.12               tidygraph_1.3.1        
+ [70] survival_3.7-0          pheatmap_1.0.12         iterators_1.0.14       
+ [73] statmod_1.5.0           ellipsis_0.3.2          fitdistrplus_1.1-11    
+ [76] ROCR_1.0-11             nlme_3.1-164            bit64_4.0.5            
+ [79] RcppAnnoy_0.0.22        rprojroot_2.0.4         bslib_0.6.1            
+ [82] irlba_2.3.5.1           KernSmooth_2.23-24      colorspace_2.1-0       
+ [85] DBI_1.2.1               tidyselect_1.2.1        processx_3.8.3         
+ [88] bit_4.0.5               compiler_4.3.3          git2r_0.33.0           
+ [91] xml2_1.3.6              DelayedArray_0.28.0     plotly_4.10.4          
+ [94] scales_1.3.0            lmtest_0.9-40           callr_3.7.3            
+ [97] digest_0.6.34           goftest_1.2-3           spatstat.utils_3.0-4   
+[100] rmarkdown_2.25          XVector_0.42.0          htmltools_0.5.8.1      
+[103] pkgconfig_2.0.3         highr_0.10              fastmap_1.1.1          
+[106] rlang_1.1.4             GlobalOptions_0.1.2     htmlwidgets_1.6.4      
+[109] shiny_1.8.0             farver_2.1.1            jquerylib_0.1.4        
+[112] zoo_1.8-12              jsonlite_1.8.8          mclust_6.1             
+[115] RCurl_1.98-1.14         magrittr_2.0.3          GenomeInfoDbData_1.2.11
+[118] munsell_0.5.0           Rcpp_1.0.12             viridis_0.6.5          
+[121] reticulate_1.35.0       stringi_1.8.3           zlibbioc_1.48.0        
+[124] MASS_7.3-60.0.1         plyr_1.8.9              parallel_4.3.3         
+[127] listenv_0.9.1           ggrepel_0.9.5           deldir_2.0-2           
+[130] Biostrings_2.70.2       graphlayouts_1.1.0      splines_4.3.3          
+[133] tensor_1.5              hms_1.1.3               circlize_0.4.15        
+[136] locfit_1.5-9.8          ps_1.7.6                igraph_2.0.1.1         
+[139] spatstat.geom_3.2-8     reshape2_1.4.4          evaluate_0.23          
+[142] renv_1.0.3              BiocManager_1.30.22     tzdb_0.4.0             
+[145] foreach_1.5.2           tweenr_2.0.3            httpuv_1.6.14          
+[148] RANN_2.6.1              polyclip_1.10-6         future_1.33.1          
+[151] clue_0.3-65             scattermore_1.2         ggforce_0.4.2          
+[154] xtable_1.8-4            later_1.3.2             viridisLite_0.4.2      
+[157] memoise_2.0.1           cluster_2.1.6           timechange_0.3.0       
+[160] globals_0.16.2         </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
