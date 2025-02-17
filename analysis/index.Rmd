@@ -1,5 +1,5 @@
 ---
-title: "Inflammation of Paediatric Pulmonary Diseases"
+title: "Single-cell atlas of BAL from preschool cystic fibrosis reveals key inflammatory pathways modified by ivacaftor in the early life lung"
 description: |
 author:
   - name: Jovana Maksimovic and George Howitt
@@ -19,8 +19,23 @@ Follow the links below to view the different parts of the analysis.
 
 # Abstract {-}
 
+Aberrant inflammation and structural lung damage occurs early in life for people with cystic fibrosis (CF). Even in the era of CFTR modulators, anti-inflammatory therapy may still be needed to prevent establishment, and lifelong consequences, of bronchiectasis. In this study, we integrated transcriptome-wide single-cell RNA sequencing data, highly multiplexed surface protein expression, and functional pathway analysis to comprehensively investigate inflammatory cell responses in 37 BAL samples from children with CF and 8 BAL samples from non-CF controls. We show widespread dysregulation of macrophage function in the preschool CF lung, including alterations in pathways associated with SARS-COV-1 and -2 responses, TNF/IFN signalling and cholesterol homeostasis, that were further altered by the early development of bronchiectasis. We showed that the CFTR modulator ivacaftor restores some of these macrophage-related functional deficits and reduces expression of pathways associated with neutrophil infiltration, however the modulator lumacaftor/ivacaftor was not associated with any detectable change in response. This work represents the most comprehensive, multi-omic single-cell analysis of bronchoalveolar lavage from preschool children and the results inform the future development of anti-inflammatory therapy for children with CF.
+
 # Authors {-}
- 
+Jovana Maksimovic^1,2,9*^, Shivanthan Shanthikumar ^2,3,4*^, George Howitt^1,9^, Gunjan Dixit^1,9^, Peter F Hickey^5,6^, William Ho^5^, Casey J.A. Anttila^5^, Daniel V. Brown^5^, Anne Senabouth^7,8^, Dominik Kaczorowski^7,8^, Daniela Amann-Zalcenstein^5,6^, Joseph E. Powell^7,8^, Sarath C. Ranganathan^2,3,4^, Alicia Oshlack^1,9,10^, Melanie R. Neeland^2,3#^.
+
+^1^ Computational Biology Program, Peter MacCallum Cancer Centre, Parkville, VIC, Australia
+^2^ Respiratory Diseases, Murdoch Children’s Research Institute, Parkville, VIC, Australia
+^3^ Department of Paediatrics, University of Melbourne, Parkville, VIC, Australia
+^4^ Respiratory and Sleep Medicine, Royal Children’s Hospital, Parkville, VIC, Australia
+^5^ Advanced Genomics Facility, Advanced Technology and Biology Division, WEHI, Parkville, VIC, Australia
+^6^ Department of Medical Biology, University of Melbourne, Parkville, VIC, Australia
+^7^ Garvan-Weizmann Centre for Cellular Genomics, Garvan Institute of Medical Research, Sydney, NSW, Australia
+^8^ UNSW Cellular Genomics Futures Institute, University of New South Wales, Sydney, NSW, Australia
+^9^ Sir Peter MacCallum Department of Oncology, University of Melbourne, Parkville, VIC, Australia
+^10^ School of Mathematics and Statistics, University of Melbourne, Parkville, VIC, Australia
+^*^Contributed equally
+
 # Analysis Overview {-}
 
 1. Remove empty droplets and demultiplex
@@ -103,26 +118,22 @@ Follow the links below to view the different parts of the analysis.
 18. [Supplementary Figures 3 and 5](99.0_Supplementary_Figure_3-5.html)    
 
 <!-- line break -->
-To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6.
+<!-- To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6. -->
 
-As per this issue, https://github.com/satijalab/seurat-object/issues/165, if there is an error running sctransform, remove all relevant packages (and purge if using renv) and then install using the following method exactly, to build from source.
+<!-- As per this issue, https://github.com/satijalab/seurat-object/issues/165, if there is an error running sctransform, remove all relevant packages (and purge if using renv) and then install using the following method exactly, to build from source. -->
 
-if (!requireNamespace("remotes", quietly = TRUE)) {
-  install.packages("remotes")
-}
-options(repos = c("https://satijalab.r-universe.dev", getOption("repos")))
-remotes::install_version("SeuratObject", "4.1.4")
-remotes::install_version("Seurat", "4.4.0", upgrade = FALSE) # remotes will try to upgrade SeuratObject to v5, we need to tell it no
+<!-- if (!requireNamespace("remotes", quietly = TRUE)) { -->
+<!--   install.packages("remotes") -->
+<!-- } -->
+<!-- options(repos = c("https://satijalab.r-universe.dev", getOption("repos"))) -->
+<!-- remotes::install_version("SeuratObject", "4.1.4") -->
+<!-- remotes::install_version("Seurat", "4.4.0", upgrade = FALSE) # remotes will try to upgrade SeuratObject to v5, we need to tell it no -->
 
 
 # Licenses {-}
 
 The code in this analysis is covered by the [MIT license][mit] and the written
 content on this website is covered by a [Creative Commons CC-BY][cc] license.
-
-
-# Citations {-}
-
 
 
 # Version Information  {-}
