@@ -10,9 +10,9 @@
 
 
 
-<meta name="date" content="2025-01-08" />
+<meta name="date" content="2025-02-17" />
 
-<title>Inflammation of Paediatric Pulmonary Diseases</title>
+<title>Single-cell atlas of BAL from preschool cystic fibrosis reveals key inflammatory pathways modified by ivacaftor in the early life lung</title>
 
 <script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -350,10 +350,11 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Inflammation of Paediatric Pulmonary
-Diseases</h1>
+<h1 class="title toc-ignore">Single-cell atlas of BAL from preschool
+cystic fibrosis reveals key inflammatory pathways modified by ivacaftor
+in the early life lung</h1>
 <h4 class="author">Jovana Maksimovic and George Howitt</h4>
-<h4 class="date">2025-01-08</h4>
+<h4 class="date">2025-02-17</h4>
 
 </div>
 
@@ -382,7 +383,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2025-01-08
+<strong>Last updated:</strong> 2025-02-17
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -513,15 +514,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreed981df6ee91d60f066ca65ba46d6a7b3407c3e91targetblankd981df6a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreef658337f3ba5eec8d755c399304ec3489915dcbatargetblankf658337a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/d981df6ee91d60f066ca65ba46d6a7b3407c3e91" target="_blank">d981df6</a>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/f658337f3ba5eec8d755c399304ec3489915dcba" target="_blank">f658337</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreed981df6ee91d60f066ca65ba46d6a7b3407c3e91targetblankd981df6a"
+id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreef658337f3ba5eec8d755c399304ec3489915dcbatargetblankf658337a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -531,7 +532,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/d981df6ee91d60f066ca65ba46d6a7b3407c3e91" target="_blank">d981df6</a>.
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/f658337f3ba5eec8d755c399304ec3489915dcba" target="_blank">f658337</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -549,6 +550,7 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/obsolete/
+    Ignored:    data/.DS_Store
     Ignored:    data/C133_Neeland_batch1/
     Ignored:    data/C133_Neeland_merged/
     Ignored:    output/dge_analysis/obsolete/
@@ -556,9 +558,23 @@ Ignored files:
     Ignored:    renv/staging/
 
 Untracked files:
+    Untracked:  analysis/cellxgene_submission.Rmd
+    Untracked:  analysis/cellxgene_submission.nb.html
     Untracked:  broad_markers_seurat.csv
     Untracked:  code/background_job.R
     Untracked:  code/reverse_modifier_severity_comparisons.sh
+    Untracked:  data/.Rprofile
+    Untracked:  data/.gitattributes
+    Untracked:  data/.gitignore
+    Untracked:  data/.renvignore
+    Untracked:  data/Homo_sapiens.gene_info.gz
+    Untracked:  data/analysis/
+    Untracked:  data/cellxgene_cell_ontologies_ann_level_1.xlsx
+    Untracked:  data/cellxgene_cell_ontologies_ann_level_3 (1).xlsx
+    Untracked:  data/cellxgene_cell_ontologies_ann_level_3.xlsx
+    Untracked:  data/code/
+    Untracked:  data/data/
+    Untracked:  data/homologs.rds
     Untracked:  data/intermediate_objects/CD4 T cells.CF_samples.fit.rds
     Untracked:  data/intermediate_objects/CD4 T cells.all_samples.fit.rds
     Untracked:  data/intermediate_objects/CD8 T cells.CF_samples.fit.rds
@@ -572,24 +588,11 @@ Unstaged changes:
     Modified:   analysis/09.0_integrate_cluster_macro_cells.Rmd
     Modified:   analysis/13.1_DGE_analysis_macro-alveolar.Rmd
     Modified:   analysis/13.7_DGE_analysis_macro-proliferating.Rmd
+    Modified:   analysis/15.0_proportions_analysis_ann_level_1.Rmd
     Modified:   analysis/99.0_Figure_4.Rmd
+    Modified:   analysis/99.0_Figure_5.Rmd
+    Modified:   analysis/99.0_Supplementary_Figure_3-5.Rmd
     Modified:   code/utility.R
-    Modified:   data/intermediate_objects/macro-APOC2+.CF_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-APOC2+.all_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-CCL.CF_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-CCL.all_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-IFI27.CF_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-IFI27.all_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-alveolar.CF_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-alveolar.all_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-lipid.CF_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-lipid.all_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-monocyte-derived.CF_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-monocyte-derived.all_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-proliferating.CF_samples.fit.rds
-    Modified:   data/intermediate_objects/macro-proliferating.all_samples.fit.rds
-    Modified:   data/intermediate_objects/macrophages.CF_samples.fit.rds
-    Modified:   data/intermediate_objects/macrophages.all_samples.fit.rds
 
 </code></pre>
 <p>
@@ -634,6 +637,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/f658337f3ba5eec8d755c399304ec3489915dcba/analysis/index.Rmd" target="_blank">f658337</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-02-17
+</td>
+<td>
+wflow_publish("analysis/index.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/38ed75be1663e41e25bdf967ae3bceacf7797ab4/docs/index.html" target="_blank">38ed75b</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-01-08
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2162,9 +2199,53 @@ Start workflowr project.
 analysis.</p>
 <div id="abstract" class="section level1 unnumbered">
 <h1 class="unnumbered">Abstract</h1>
+<p>Aberrant inflammation and structural lung damage occurs early in life
+for people with cystic fibrosis (CF). Even in the era of CFTR
+modulators, anti-inflammatory therapy may still be needed to prevent
+establishment, and lifelong consequences, of bronchiectasis. In this
+study, we integrated transcriptome-wide single-cell RNA sequencing data,
+highly multiplexed surface protein expression, and functional pathway
+analysis to comprehensively investigate inflammatory cell responses in
+37 BAL samples from children with CF and 8 BAL samples from non-CF
+controls. We show widespread dysregulation of macrophage function in the
+preschool CF lung, including alterations in pathways associated with
+SARS-COV-1 and -2 responses, TNF/IFN signalling and cholesterol
+homeostasis, that were further altered by the early development of
+bronchiectasis. We showed that the CFTR modulator ivacaftor restores
+some of these macrophage-related functional deficits and reduces
+expression of pathways associated with neutrophil infiltration, however
+the modulator lumacaftor/ivacaftor was not associated with any
+detectable change in response. This work represents the most
+comprehensive, multi-omic single-cell analysis of bronchoalveolar lavage
+from preschool children and the results inform the future development of
+anti-inflammatory therapy for children with CF.</p>
 </div>
 <div id="authors" class="section level1 unnumbered">
 <h1 class="unnumbered">Authors</h1>
+<p>Jovana Maksimovic<sup>1,2,9<em>^, Shivanthan Shanthikumar
+^2,3,4</em></sup>, George Howitt<sup>1,9</sup>, Gunjan
+Dixit<sup>1,9</sup>, Peter F Hickey<sup>5,6</sup>, William
+Ho<sup>5</sup>, Casey J.A. Anttila<sup>5</sup>, Daniel V.
+Brown<sup>5</sup>, Anne Senabouth<sup>7,8</sup>, Dominik
+Kaczorowski<sup>7,8</sup>, Daniela Amann-Zalcenstein<sup>5,6</sup>,
+Joseph E. Powell<sup>7,8</sup>, Sarath C. Ranganathan<sup>2,3,4</sup>,
+Alicia Oshlack<sup>1,9,10</sup>, Melanie R. Neeland<sup>2,3#</sup>.</p>
+<p><sup>1</sup> Computational Biology Program, Peter MacCallum Cancer
+Centre, Parkville, VIC, Australia <sup>2</sup> Respiratory Diseases,
+Murdoch Children’s Research Institute, Parkville, VIC, Australia
+<sup>3</sup> Department of Paediatrics, University of Melbourne,
+Parkville, VIC, Australia <sup>4</sup> Respiratory and Sleep Medicine,
+Royal Children’s Hospital, Parkville, VIC, Australia <sup>5</sup>
+Advanced Genomics Facility, Advanced Technology and Biology Division,
+WEHI, Parkville, VIC, Australia <sup>6</sup> Department of Medical
+Biology, University of Melbourne, Parkville, VIC, Australia <sup>7</sup>
+Garvan-Weizmann Centre for Cellular Genomics, Garvan Institute of
+Medical Research, Sydney, NSW, Australia <sup>8</sup> UNSW Cellular
+Genomics Futures Institute, University of New South Wales, Sydney, NSW,
+Australia <sup>9</sup> Sir Peter MacCallum Department of Oncology,
+University of Melbourne, Parkville, VIC, Australia <sup>10</sup> School
+of Mathematics and Statistics, University of Melbourne, Parkville, VIC,
+Australia ^*^Contributed equally</p>
 </div>
 <div id="analysis-overview" class="section level1 unnumbered">
 <h1 class="unnumbered">Analysis Overview</h1>
@@ -2286,25 +2367,14 @@ ADTs</a></li>
 and 5</a></li>
 </ol>
 <!-- line break -->
-<p>To ensure reproducibility, I had to install these versions of the
-following packages specifically: Seurat_4.4.0, SeuratObject_4.1.4,
-SeuratData_0.2.2 (very specifically this commit “<a
-href="mailto:satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d"
-class="email">satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d</a>”,
-Azimuth_0.4.6.</p>
-<p>As per this issue, <a
-href="https://github.com/satijalab/seurat-object/issues/165"
-class="uri">https://github.com/satijalab/seurat-object/issues/165</a>,
-if there is an error running sctransform, remove all relevant packages
-(and purge if using renv) and then install using the following method
-exactly, to build from source.</p>
-<p>if (!requireNamespace(“remotes”, quietly = TRUE)) {
-install.packages(“remotes”) } options(repos = c(“<a
-href="https://satijalab.r-universe.dev"
-class="uri">https://satijalab.r-universe.dev</a>”, getOption(“repos”)))
-remotes::install_version(“SeuratObject”, “4.1.4”)
-remotes::install_version(“Seurat”, “4.4.0”, upgrade = FALSE) # remotes
-will try to upgrade SeuratObject to v5, we need to tell it no</p>
+<!-- To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6. -->
+<!-- As per this issue, https://github.com/satijalab/seurat-object/issues/165, if there is an error running sctransform, remove all relevant packages (and purge if using renv) and then install using the following method exactly, to build from source. -->
+<!-- if (!requireNamespace("remotes", quietly = TRUE)) { -->
+<!--   install.packages("remotes") -->
+<!-- } -->
+<!-- options(repos = c("https://satijalab.r-universe.dev", getOption("repos"))) -->
+<!-- remotes::install_version("SeuratObject", "4.1.4") -->
+<!-- remotes::install_version("Seurat", "4.4.0", upgrade = FALSE) # remotes will try to upgrade SeuratObject to v5, we need to tell it no -->
 </div>
 <div id="licenses" class="section level1 unnumbered">
 <h1 class="unnumbered">Licenses</h1>
@@ -2313,9 +2383,6 @@ href="https://choosealicense.com/licenses/mit/" title="MIT License">MIT
 license</a> and the written content on this website is covered by a <a
 href="https://choosealicense.com/licenses/cc-by-4.0/"
 title="CC-BY License">Creative Commons CC-BY</a> license.</p>
-</div>
-<div id="citations" class="section level1 unnumbered">
-<h1 class="unnumbered">Citations</h1>
 </div>
 <div id="version-information" class="section level1 unnumbered">
 <h1 class="unnumbered">Version Information</h1>
