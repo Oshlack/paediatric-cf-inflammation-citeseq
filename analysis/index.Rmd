@@ -48,6 +48,8 @@ Jovana Maksimovic^1,2,9\*^, Shivanthan Shanthikumar ^2,3,4\*^, George Howitt^1,9
 
 Follow the links below to view the different parts of the analysis. 
 
+## Quality Control and Filtering
+
 1. Remove empty droplets and demultiplex
     i) [Batch 0](01.0_preprocess_batch0.html)
     ii) [Batch 1](01.1_preprocess_batch1.html)
@@ -65,6 +67,9 @@ Follow the links below to view the different parts of the analysis.
 4. [Filter doublets](04.0_filter_doublets.html)
 
 5. [Remove ambient contamination](05.0_remove_ambient.html)
+
+<!-- line break -->
+## Cell Clustering and Annotation
 
 6. Annotate using Human Lung Cell Atlas v2.0
     i) [Without ambient removal](06.0_azimuth_annotation.html)
@@ -84,6 +89,8 @@ Follow the links below to view the different parts of the analysis.
 12. [Annotate rare cells](12.0_manual_annotations_other_cells.html) 
 
 <!-- line break -->
+## Differential Expression Analysis between Conditions
+
 13. Differential expression analysis of macrophages
     i) [Macrophages](13.0_DGE_analysis_macrophages.html)
     ii) [Alveolar macrophages](13.1_DGE_analysis_macro-alveolar.html)
@@ -107,25 +114,16 @@ Follow the links below to view the different parts of the analysis.
     iii) [Annotation level 3, macro. cells](15.2_proportions_analysis_ann_level_3_macrophages.html)
 
 <!-- line break -->
-15. [Figure 1](16.0_Figure_1.html)
+# Manuscript Figures
 
-<!-- line break -->
-16. [Figure 2](16.1_Figure_2.html)
-
-<!-- line break -->
-16. [Figure 3](16.2_Figure_3.html)
-
-<!-- line break -->
-16. [Figure 4](16.3_Figure_4.html)
-
-<!-- line break -->
-16. [Figure 5](16.4_Figure_5.html)
-
-<!-- line break -->
-17. [Supplementary Figure ADTs](16.5_Supplementary_Figure_ADTs.html)    
-
-<!-- line break -->
-18. [Supplementary Figures](16.6_Supplementary_Figures.html)    
+16. Manuscript figures 
+    i) [Figure 1](16.0_Figure_1.html)
+    ii) [Figure 2](16.1_Figure_2.html)
+    iii) [Figure 3](16.2_Figure_3.html)
+    iv) [Figure 4](16.3_Figure_4.html)
+    v) [Figure 5](16.4_Figure_5.html)
+    vi) [Supplementary Figure ADTs](16.5_Supplementary_Figure_ADTs.html)    
+    vii) [Supplementary Figures](16.6_Supplementary_Figures.html)    
 
 <!-- line break -->
 <!-- To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6. -->
