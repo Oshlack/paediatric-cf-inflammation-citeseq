@@ -1,0 +1,136 @@
+---
+title: "Getting Started"
+author: "Jovana Maksimovic"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+site: workflowr::wflow_site
+output:
+  bookdown::html_document2:
+    base_format: workflowr::wflow_html
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+    number_sections: true
+---
+
+```{r knitr, include = FALSE}
+knitr::opts_chunk$set(autodep        = TRUE,
+                      cache          = FALSE,
+                      cache.comments = FALSE,
+                      echo           = TRUE,
+                      error          = FALSE,
+                      fig.align      = "center",
+                      fig.width      = 10,
+                      fig.height     = 8,
+                      message        = FALSE,
+                      warning        = FALSE)
+```
+
+This page describes how to download the data and code used in this analysis,
+set up the project directory and reproduce the analysis. We have used the
+[`workflowr`][workflowr] and [`renv`][renv] packages to organise this project and 
+ensure reproducibility.
+
+# Getting the code {#code}
+
+All the code and outputs of this analysis are available from GitHub at
+[https://github.com/Oshlack/paediatric-cf-inflammation-citeseq](https://github.com/Oshlack/paediatric-cf-inflammation-citeseq). If you want to replicate the analysis you can either clone the repository or 
+download it as a zipped directory.
+
+Once you have a local copy of the repository you should see the following
+directory structure:
+
+* `analysis/` - Contains the RMarkdown documents with the various stages of
+analysis. These are numbered according to the order they should be run.
+* `code/` - R scripts with custom functions used in some analysis stages. 
+* `data/` - This directory contains the data files used in the analysis with
+sub-directories for different data types (see [Getting the data](#data) for
+details). Processed intermediate data files will also be placed here.
+* `docs/` - This directory contains the analysis website html files hosted at
+  [https://oshlacklab.com/paediatric-cf-inflammation-citeseq/](https://oshlacklab.com/paediatric-cf-inflammation-citeseq/), 
+  as well as the image files.
+* `output/` - Directory for output files produced by the analysis.
+* `renv/` 
+* `README.md` - README describing the project.
+* `.Rprofile` - Custom R profile for the project including set up for
+  `workflowr`.
+* `.gitattributes`
+* `.gitmodules`
+* `.gitignore` - Details of files and directories that are excluded from the
+  repository.
+* `.renvignore` - `renv` ignore file
+* `_workflowr.yml` - `workflowr` configuration file.
+* `paed-inflammation-CITEseq.Rproj` - RStudio project file.
+* `renv.lock` - `renv` lock file, used to restore and install correct versions of
+R packages required for this project.
+
+This analysis was completed using `r R.version.string`. To ensure reproducibility
+the `renv` package was used to track package sources and versions. Ensure you 
+have the correct version of R and `renv` installed prior to beginning. To 
+install the necessary package versions you can use:
+
+```r
+renv::restore()
+```
+
+For more information on using `renv` see the `renv` [website][renv].
+
+
+# Getting the data {#data}
+
+<!-- The raw single cell RNA-seq and CITE-seq counts generated for this study can be  -->
+<!-- downloaded as RDS files from [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6651465.svg)](https://doi.org/10.5281/zenodo.6651465). -->
+
+<!-- To use the RDS objects, after cloning or downloading the GitHub repository to  -->
+<!-- your computer, please extract the `raw_counts.tar.gz` archive under the  -->
+<!-- `data/SCEs` directory, using:  -->
+
+
+<!-- In this project we have also used publicly available single cell RNA-seq data  -->
+<!-- generated from RBC-depleted cells from non-small cell lung tumor and the blood  -->
+<!-- of 7 patients. The raw count data and metadata can be downloaded from  -->
+<!-- [GSE127465][geo]. The `GSE127465_RAW.tar` and  -->
+<!-- `GSE127465_human_cell_metadata_54773x25.tsv.gz` are required. The downloaded  -->
+<!-- `tar` file should be extracted under the `data` directory by running the  -->
+<!-- following command: -->
+
+
+<!-- The `GSE127465_human_cell_metadata_54773x25.tsv.gz` should be placed in the  -->
+<!-- newly created `GSE127465_RAW` directory. -->
+
+<!-- The downstream analysis code assumes the following directory structure inside  -->
+<!-- the `data/` directory: -->
+
+<!-- * `GSE127465_RAW` -->
+<!--     * `GSE127465_human_cell_metadata_54773x25.tsv.gz` -->
+<!--     * `GSM3635278_human_p1t1_raw_counts.tsv.gz` -->
+<!--     * ... -->
+<!--     * ... -->
+<!--     * `GSM3635303_human_p7b1_raw_counts.tsv.gz` -->
+
+
+# Running the analysis {#analysis}
+
+The analysis directory contains the following analysis files:
+
+```{r, echo=FALSE}
+list.files(path = here::here("analysis"), pattern = "[01][0-9]_*")
+```
+
+As indicated by the numbering they should be run in this order. If you want to
+reproduce the entire analysis this can be easily done using `workflowr`.
+
+```r
+workflowr::wflow_build(republish = TRUE)
+```
+
+It is also possible to run individual stages of the analysis, either by
+providing the names of the file you want to run to `workflowr::wflow_build()` or
+by manually knitting the document (for example using the 'Knit' button in
+RStudio). Note, most parts of the analysis require outputs generated by a 
+previous step and so will not run unless the preceding steps have already been 
+executed.
+
+[geo]: <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE127465> "geo"
+[workflowr]: <https://workflowr.github.io/workflowr/> "workflowr"
+[renv]: <https://rstudio.github.io/renv/articles/renv.html> "renv"
