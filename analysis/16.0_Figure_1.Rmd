@@ -313,57 +313,12 @@ markers <- markers[markers$gene %in% rownames(seu),]
 ## `Seurat` marker gene dotplot
 
 ```{r, fig.width=12, fig.asp=0.4}
-draw_marker_gene_dotplot(seu, 
-                         markers, 
-                         "ann_level_1", 
+draw_marker_gene_dotplot(seu,
+                         markers,
+                         "ann_level_1",
                          cluster_pal,
                          direction = 1,
                          num = 5) -> f1d
-
-# DefaultAssay(seu) <- "RNA"
-# 
-# markers %>%
-#   group_by(cluster) %>%
-#   slice_head(n = 10) %>%
-#   mutate(cluster = as.character(cluster)) %>%
-#   ungroup() %>%
-#   dplyr::arrange(cluster, .by_group = FALSE) -> markers
-# 
-# d <- duplicated(markers$gene)
-# markers[!d,] %>%
-#   group_by(cluster) %>%
-#   slice_head(n = 5) -> top
-# 
-# pal <- setNames(paletteer::paletteer_d(cluster_pal),
-#                 unique(markers$cluster))
-# cell_type_cols <- pal[top$cluster]
-# 
-# strip <- strip_themed(background_x = elem_list_rect(fill = unique(cell_type_cols)))
-# DotPlot(seu,
-#         features = top$gene,
-#         group.by = "ann_level_1",
-#         cols = c("azure1", "blueviolet"),
-#         dot.scale = 3,
-#         assay = "SCT") +
-#   FontSize(x.text = 9, y.text = 9) +
-#   labs(y = element_blank(), x = element_blank()) +
-#   facet_grid2(~top$cluster, 
-#               scales = "free_x", 
-#               space = "free_x", 
-#               strip = strip) +
-#   theme(axis.text.x = element_text(angle = 90,
-#                                    hjust = 1,
-#                                    vjust = 0.5,
-#                                    size = 8),
-#         axis.text.y = element_text(size = 8),
-#         legend.text = element_text(size = 8),
-#         legend.title = element_text(size = 9),
-#         legend.position = "right",
-#         strip.text = element_text(size = 0),
-#         text = element_text(family = "arial"),
-#         axis.ticks = element_blank(),
-#         axis.line = element_blank(),
-#         panel.spacing = unit(2, "mm")) -> f1d
 
 f1d
 ```
@@ -514,9 +469,9 @@ DDDDDDDD
 FFFFGGGG
 FFFFGGGG
 "
-(wrap_elements(f1b) + 
-    wrap_elements(f1c) + 
-    wrap_elements(f1d) + 
+(wrap_elements(f1b + theme(plot.margin = unit(rep(0,4), "cm"))) + 
+    wrap_elements(f1c + theme(plot.margin = unit(rep(0,4), "cm"))) + 
+    wrap_elements(f1d + theme(plot.margin = unit(rep(0,4), "cm"))) + 
     wrap_plots(list(f1e %>% 
                       ComplexHeatmap::draw(heatmap_legend_side = "right") %>% 
                       grid::grid.grabExpr())) +
