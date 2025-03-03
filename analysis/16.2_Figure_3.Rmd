@@ -1,0 +1,723 @@
+---
+title: "Figure 3"
+author: "Jovana Maksimovic"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+site: workflowr::wflow_site
+output:
+  bookdown::html_document2:
+    base_format: workflowr::wflow_html
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+Load libraries.
+
+```{r}
+suppressPackageStartupMessages({
+ library(SingleCellExperiment)
+ library(edgeR)
+ library(tidyverse)
+ library(ggplot2)
+ library(Seurat)
+ library(glmGamPoi)
+ library(dittoSeq)
+ library(here)
+ library(clustree)
+ library(patchwork)
+ library(AnnotationDbi)
+ library(org.Hs.eg.db)
+ library(glue)
+ library(speckle)
+ library(tidyHeatmap)
+ library(paletteer)
+ library(dsb)
+ library(ggh4x)
+  library(readxl)
+})
+
+source(here("code/utility.R"))
+```
+
+# Load data
+
+```{r}
+files <- list.files(here("data/C133_Neeland_merged"),
+                    pattern = "C133_Neeland_full_clean.*(macrophages|t_cells|other_cells)_annotated_diet.SEU.rds",
+                    full.names = TRUE)
+
+seuLst <- lapply(files[2:4], function(f) readRDS(f))
+
+seu <- merge(seuLst[[1]], 
+             y = c(seuLst[[2]], 
+                   seuLst[[3]]))
+seu
+```
+
+
+```{r, echo=FALSE}
+# cleanup obsolete objects
+rm(seuLst)
+gc()
+```
+
+
+Create sample meta data table.
+
+```{r}
+props <- getTransformedProps(clusters = seu$ann_level_3,
+                             sample = seu$sample.id, transform="asin")
+
+seu@meta.data %>%
+  dplyr::select(sample.id,
+                Participant,
+                Disease,
+                Treatment,
+                Severity,
+                Group,
+                Group_severity,
+                Batch, 
+                Age, 
+                Sex) %>%
+     left_join(props$Counts %>% 
+                 data.frame %>%
+                 group_by(sample) %>%
+                 summarise(ncells = sum(Freq)),
+               by = c("sample.id" = "sample")) %>%
+    distinct() -> info
+
+head(info) %>% knitr::kable()
+```
+
+# Prepare figure panels
+
+```{r, fig.asp=0.5}
+# 3A: monocytes, NK-T cells, CD4 Tregs, macro-IGF1
+
+props <- getTransformedProps(clusters = seu$ann_level_3[!str_detect(seu$ann_level_3, "macro")],
+                             sample = seu$sample.id[!str_detect(seu$ann_level_3, "macro")], transform="asin")
+
+props$Proportions %>% data.frame %>%
+  left_join(info,
+            by = c("sample" = "sample.id")) %>%
+  dplyr::filter(Group %in% c("CF.NO_MOD", "NON_CF.CTRL"),
+                clusters %in% c("monocytes", 
+                                "NK-T cells",
+                                "CD4 T-reg")) -> dat
+
+sig_names <- as_labeller(
+     c("CD4 T-reg" = "CD4 T-reg",
+       "monocytes" = "monocytes*",
+       "NK-T cells" = "NK-T cells",
+       "macro-IGF1" = "macro-IGF1*"))
+
+pal <- RColorBrewer::brewer.pal(8, "Set2")[1:4]
+names(pal) <- c("CF.IVA","CF.LUMA_IVA","CF.NO_MOD","NON_CF.CTRL")
+  
+dat %>%
+ggplot(aes(x = Group,
+                y = Freq,
+                colour = Group)) +
+  geom_jitter(stat = "identity",
+              width = 0.15,
+              size = 1) +
+  theme_classic() +
+  theme(axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.title.x = element_blank(),
+          axis.text.y = element_text(7),
+          legend.position = "bottom",
+          legend.direction = "horizontal",
+          strip.text = element_text(size = 8)) +
+  labs(x = "Group", y = "Proportion") +
+  facet_wrap(~clusters, scales = "free_y", ncol = 4,
+             labeller = sig_names) +
+  stat_summary(
+    geom = "point",
+    fun.y = "mean",
+    col = "black",
+    shape = "_",
+    size = 10) +
+  scale_color_manual(values = pal) -> p1
+```
+
+```{r, fig.asp=0.4}
+props <- getTransformedProps(clusters = seu$ann_level_3[str_detect(seu$ann_level_3, "macro")],
+                             sample = seu$sample.id[str_detect(seu$ann_level_3, "macro")], transform="asin")
+
+props$Proportions %>% data.frame %>%
+  left_join(info,
+            by = c("sample" = "sample.id")) %>%
+  dplyr::filter(Group %in% c("CF.NO_MOD", "NON_CF.CTRL"),
+                clusters %in% c("macro-IGF1")) -> dat
+
+dat %>%
+ggplot(aes(x = Group,
+                y = Freq,
+                colour = Group)) +
+  geom_jitter(stat = "identity",
+              width = 0.15,
+              size = 1) +
+  theme_classic() +
+  theme(axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.title.x = element_blank(),
+          axis.text.y = element_text(7),
+          legend.position = "bottom",
+          legend.direction = "horizontal",
+          strip.text = element_text(size = 8)) +
+  labs(x = "Group", y = "Proportion") +
+  facet_wrap(~clusters, scales = "free_y", ncol = 4,
+             labeller = sig_names) +
+  stat_summary(
+    geom = "point",
+    fun.y = "mean",
+    col = "black",
+    shape = "_",
+    size = 10) +
+  scale_color_manual(values = pal) -> p2
+
+layout <- "AAAB"
+cf_props <- (p1 + 
+                (p2 + theme(axis.title.y = element_blank()))) + 
+  plot_layout(design = layout, guides = "collect") &
+  theme(axis.text.y = element_text(size = 6,
+                                   angle = 90,
+                                   hjust = 0.5),
+        legend.text = element_text(size = 8),
+        legend.key.spacing = unit(0, "lines"),
+        legend.margin = margin(-0.5,0,0,0, unit="lines"),
+        legend.direction = "horizontal",
+        legend.position = "bottom") 
+
+cf_props
+```
+
+
+
+```{r}
+seu@meta.data %>% 
+    data.frame %>% 
+    dplyr::select(ann_level_2) %>%
+    dplyr::filter(str_detect(ann_level_2, "macro")) %>%
+    group_by(ann_level_2) %>% 
+    count() %>%
+    janitor::adorn_totals(name = "macrophages") %>%
+    arrange(-n) %>%
+    dplyr::rename(cell = ann_level_2) -> cell_freq
+
+cell_freq
+```
+
+```{r}
+files <- list.files(here("data/intermediate_objects"),
+            pattern = "macro.*all_samples", 
+            full.names = TRUE) 
+ 
+cutoff <- 0.05 
+cont_name <- "CF.NO_MODvNON_CF.CTRL"
+lfc_cutoff <- log2(1.1)
+suffix <- ".all_samples.fit.rds"
+  
+get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
+             suffix = suffix) -> dat
+```
+
+```{r}
+dat %>%
+  dplyr::select(gene, cell, logFC) %>%
+  distinct() %>%
+  pivot_wider(
+    names_from = cell,        # Column whose values become new column names
+    values_from = logFC,
+    values_fill = list(logFC = NA)) %>%
+   arrange(across(all_of(cell_freq$cell[cell_freq$cell %in% dat$cell]))) %>%
+  column_to_rownames(var = "gene") -> dat_lfc
+```
+
+```{r, fig.asp=1.75}
+col_fun <- circlize::colorRamp2(seq(0, 100000, length.out = 9), 
+                                (RColorBrewer::brewer.pal(9, "PiYG")))
+col_split <- c(rep("aggregate", 1), rep("sub-type", ncol(dat_lfc) - 1))
+
+pal_dt <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
+col_lfc_fun <- circlize::colorRamp2(seq(-2, 2, length.out = 3), 
+                                    c(pal_dt[1], "white", pal_dt[2]))
+
+ComplexHeatmap::HeatmapAnnotation(df = cell_freq %>%
+                                    dplyr::filter(cell %in% colnames(dat_lfc)) %>%
+                                    column_to_rownames(var = "cell") %>%
+                                    dplyr::rename(`No. cells` = n),
+                                  which = "column",
+                                  show_annotation_name = FALSE,
+                                  col = list(`No. cells` = col_fun),
+                                  annotation_legend_param = list(
+                                    `No. cells` = list(direction = "vertical"))) -> col_ann
+
+ComplexHeatmap::HeatmapAnnotation(df = data.frame(multiple = (rowSums(!is.na(dat_lfc)) > 1)),
+                                  which = "row",
+                                  col = list(multiple = c("FALSE" = "#fdcce5","TRUE" = "#8bd3c7")),
+                                  annotation_legend_param = list(
+                                    multiple = list(direction = "vertical",
+                                                    ncol = 1))) -> row_ann
+
+ComplexHeatmap::Heatmap(dat_lfc, 
+                        name = "logFC",
+                        column_split = col_split,
+                        column_title = NULL,
+                        cluster_rows = FALSE,
+                        cluster_columns = FALSE,
+                        rect_gp = grid::gpar(col = "white", lwd = 1),
+                        row_names_gp = grid::gpar(fontsize = 7),
+                        column_names_gp = grid::gpar(fontsize = 7),
+                        col = col_lfc_fun,
+                        top_annotation = col_ann,
+                        right_annotation = row_ann,
+                        heatmap_legend_param = list(direction = "vertical")) -> plot_lfc
+
+ComplexHeatmap::draw(as(list(plot_lfc), "HeatmapList"), 
+                     heatmap_legend_side = "right", 
+                     annotation_legend_side = "right",
+                     merge_legends = TRUE) -> plot_lfc
+plot_lfc
+```
+
+
+```{r}
+bind_rows(lapply(files, function(f){
+  deg_results <- readRDS(f)
+  lrt <- glmLRT(deg_results$fit, 
+                contrast = deg_results$contr[,cont_name])
+  tmp <- cbind(summary(decideTests(lrt, p.value = cutoff)) %>% data.frame,
+                    cell = unlist(str_split(str_remove(f, suffix), "/"))[8])
+  tmp
+})) -> dat_deg
+```
+
+```{r, fig.asp=1}
+dat_deg %>% 
+  left_join(cell_freq) -> dat_deg
+
+pal_dt <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
+
+dat_deg %>%
+  dplyr::filter(Var1 != "NotSig") %>%
+  ggplot(aes(x = fct_reorder(cell, n), y = Freq, fill = Var1)) +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = pal_dt) +
+  theme_classic() +
+  theme(axis.text.y = element_text(angle = -45,
+                                   hjust = 1,
+                                   vjust = 1,
+                                   size = 7),
+        legend.position = "top") +
+  geom_text(aes(label = Freq), 
+            position = position_dodge(width = 0.9),
+            vjust = -0.5,
+            angle = 270,
+            size = 2.5) +
+  labs(x = "Cell Type",
+       y = "No. DEG (FDR < 0.05)",
+       fill = "Direction") +
+  coord_flip() -> deg_barplot
+
+deg_barplot
+```
+
+
+```{r, fig.asp=1}
+volc_plot <- draw_treat_volcano_plot(cell = "macrophages",
+                                     suffix = suffix,
+                                     cutoff = cutoff,
+                                     lfc_cutoff = lfc_cutoff)
+volc_plot
+```
+
+
+```{r}
+Hs.c2.all <- convert_gmt_to_list(here("data/c2.all.v2024.1.Hs.entrez.gmt"))
+Hs.h.all <- convert_gmt_to_list(here("data/h.all.v2024.1.Hs.entrez.gmt"))
+Hs.c5.all <- convert_gmt_to_list(here("data/c5.all.v2024.1.Hs.entrez.gmt"))
+
+fibrosis <- create_custom_gene_lists_from_file(here("data/fibrosis_gene_sets.csv"))
+# add fibrosis sets from REACTOME and WIKIPATHWAYS
+fibrosis <- c(lapply(fibrosis, function(l) l[!is.na(l)]),
+              Hs.c2.all[str_detect(names(Hs.c2.all), "FIBROSIS")])
+
+gene_sets_list <- list(HALLMARK = Hs.h.all,
+                       GO = Hs.c5.all,
+                       REACTOME = Hs.c2.all[str_detect(names(Hs.c2.all), "REACTOME")],
+                       WP = Hs.c2.all[str_detect(names(Hs.c2.all), "^WP")],
+                       FIBROSIS = fibrosis)
+
+```
+
+
+```{r, fig.asp=0.5}
+# alveolar macrophages, macro-CCL, macro-lipid, Monocyte-derived macrophages
+cell_types <- c("macro-alveolar", 
+                "macro-monocyte-derived")
+
+# TNFA signalling by NFKB, inflammatory responses, MTORC1 signalling, and cholesterol homeostasis
+
+selected <- "ALLOGRAFT_REJECTION|ANDROGEN_RESPONSE"
+results_list <- lapply(cell_types, function(cell_type){
+  read_csv(file = here("output",
+                       "dge_analysis",
+                       cell_type,
+                       "CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv")) %>%
+    dplyr::filter(!str_detect(Set, selected)) %>%
+    column_to_rownames(var = "Set") %>%
+                       mutate(cell = cell_type)
+})
+names(results_list) <- rep("HALLMARK", length(results_list))
+
+labels <- as_labeller(
+     c("HALLMARK; macro-alveolar" = "macro-alveolar",
+       "HALLMARK; macro-monocyte-derived" = "macro-monocyte-derived"))
+  
+top_camera_sets_by_cell(results_list, num = 4, labeller = labels) + 
+  theme(plot.title = element_blank(),
+        axis.text.y = element_text(size = 7,
+                                   angle = 0)) -> cam_plot_hallmark
+
+cam_plot_hallmark
+```
+
+```{r, fig.asp=0.8}
+# alveolar macrophages, macro-CCL, macro-lipid, Monocyte-derived macrophages
+cell_types <- c("macro-alveolar", "macro-CCL", "macro-lipid",
+                "macro-monocyte-derived")
+
+# eukaryotic translation and elongation, SRP dependent cotranslational protein targeting to membrane, SARS-COV-1 and -2 host response and influenza infection
+# L1CAM interactions, RHO GTPASES and IL-10 signalling
+
+selected <- "EUKARYOTIC_TRANSLATION_ELONGATION|SRP_DEPENDENT_COTRANSLATIONAL|SARS_COV_1_MODULATES|SARS_COV_2_MODULATES|INFLUENZA_INFECTION|L1CAM_INTERACTIONS|INTERLEUKIN_10_SIGNALING|RHO_GTPASES_ACTIVATE_IQGAPS"
+results_list <- lapply(cell_types, function(cell_type){
+  read_csv(file = here("output",
+                       "dge_analysis",
+                       cell_type,
+                       "CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv")) %>%
+    dplyr::filter(str_detect(Set, selected)) %>%
+    column_to_rownames(var = "Set") %>%
+                       mutate(cell = cell_type)
+})
+names(results_list) <- rep("REACTOME", length(results_list))
+
+labels <- as_labeller(
+     c("REACTOME; macro-alveolar" = "macro-alveolar",
+       "REACTOME; macro-CCL" = "macro-CCL",
+       "REACTOME; macro-lipid" = "macro-lipid",
+       "REACTOME; macro-monocyte-derived" = "macro-monocyte-derived"))
+
+top_camera_sets_by_cell(results_list, num = 5, wrap_width = 50,
+                        labeller = labels) + 
+  theme(plot.title = element_blank(),
+        axis.text.y = element_text(size = 6,
+                                   angle = 30)) -> cam_plot_reactome
+
+cam_plot_reactome 
+```
+
+```{r, fig.asp=0.5}
+cell_types <- c("macrophages", "macro-alveolar")
+
+fibrosis <- lapply(cell_types, function(cell_type){
+  read_csv(file = here("output",
+                       "dge_analysis",
+                       cell_type,
+                       "ORA.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv"))  %>%
+    column_to_rownames(var = "Set") %>%
+                       mutate(cell = cell_type)
+})
+names(fibrosis) <- rep("FIBROSIS", length(fibrosis))
+
+wp <- lapply(cell_types, function(cell_type){
+  read_csv(file = here("output",
+                       "dge_analysis",
+                       cell_type,
+                       "ORA.WP.CF.NO_MODvNON_CF.CTRL.csv"))  %>%
+    dplyr::filter(str_detect(Set, "PROFIBROTIC")) %>%
+    column_to_rownames(var = "Set") %>%
+                       mutate(cell = cell_type)
+})
+names(wp) <- rep("WP", length(wp))
+
+results_list <- c(fibrosis, wp)
+
+labels <- as_labeller(
+     c("FIBROSIS; macro-alveolar" = "macro-alveolar",
+       "WP; macro-alveolar" = "macro-alveolar",
+       "FIBROSIS; macrophages" = "macrophages",
+       "WP; macrophages" = "macrophages"))
+
+top_ora_sets_by_cell(results_list, num = 2, wrap_width = 30,
+                     labeller = labels) + 
+  theme(plot.title = element_blank(),
+        axis.text.y = element_text(size = 8,
+                                   angle = 0)) -> ora_plot_fibrosis
+
+ora_plot_fibrosis 
+```
+
+
+# Figure 3
+
+```{r, fig.asp=1.8, fig.width=10}
+layout <- "
+AAAAAAA
+BBBCCCC
+BBBCCCC
+BBBCCCC
+DDDCCCC
+DDDCCCC
+EEECCCC
+EEECCCC
+EEECCCC
+EEECCCC
+GGGHHHH
+GGGHHHH
+"
+
+wrap_elements(cf_props & theme(legend.position = "right",
+                               legend.direction = "vertical")) +
+  wrap_elements(deg_barplot) +
+  wrap_elements(grid::grid.grabExpr(ComplexHeatmap::draw(plot_lfc))) +
+  wrap_elements(volc_plot) +
+  wrap_elements(cam_plot_reactome + theme(legend.position = "bottom",
+                                          legend.direction = "horizontal",
+                                          legend.box = "vertical",
+                                          legend.margin = margin(-0.5,0,0,0, unit="lines"),
+                                          legend.key.size = unit(0.5, unit="lines"),
+                                          legend.text = element_text(size = 6),
+                                          axis.title = element_text(size = 8),
+                                          axis.text = element_text(size = 6))) +
+  wrap_elements(cam_plot_hallmark+ theme(legend.position = "bottom",
+                                          legend.direction = "horizontal",
+                                          legend.box = "vertical",
+                                          legend.margin = margin(-0.5,0,0,0, unit="lines"),
+                                          legend.key.size = unit(0.5, unit="lines"),
+                                          legend.text = element_text(size = 8))) +
+  wrap_elements(ora_plot_fibrosis) +
+  plot_layout(design = layout) +
+  plot_annotation(tag_levels = "A")  &
+  theme(plot.tag = element_text(size = 16,
+                                face = "bold",
+                                family = "arial"))
+
+```
+
+<!-- ```{r} -->
+<!-- Hs.c2.all <- convert_gmt_to_list(here("data/c2.all.v2024.1.Hs.entrez.gmt")) -->
+<!-- Hs.h.all <- convert_gmt_to_list(here("data/h.all.v2024.1.Hs.entrez.gmt")) -->
+<!-- Hs.c5.all <- convert_gmt_to_list(here("data/c5.all.v2024.1.Hs.entrez.gmt")) -->
+
+<!-- fibrosis <- create_custom_gene_lists_from_file(here("data/fibrosis_gene_sets.csv")) -->
+<!-- # add fibrosis sets from REACTOME and WIKIPATHWAYS -->
+<!-- fibrosis <- c(lapply(fibrosis, function(l) l[!is.na(l)]), -->
+<!--               Hs.c2.all[str_detect(names(Hs.c2.all), "FIBROSIS")]) -->
+
+<!-- gene_sets_list <- list(HALLMARK = Hs.h.all, -->
+<!--                        GO = Hs.c5.all, -->
+<!--                        REACTOME = Hs.c2.all[str_detect(names(Hs.c2.all), "REACTOME")], -->
+<!--                        WP = Hs.c2.all[str_detect(names(Hs.c2.all), "^WP")], -->
+<!--                        FIBROSIS = fibrosis) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- library(gggsea) -->
+<!-- f <- files[8] -->
+<!-- deg_results <- readRDS(f) -->
+<!-- lrt <- glmLRT(deg_results$fit,  -->
+<!--               contrast = deg_results$contr[, cont_name]) -->
+<!-- statistic <- sign(lrt$table$logFC) * sqrt(lrt$table$LR) -->
+<!-- names(statistic) <- unname(gns[rownames(lrt)]) -->
+
+<!-- gns <- AnnotationDbi::mapIds(org.Hs.eg.db, -->
+<!--                              keys = rownames(lrt), -->
+<!--                              column = c("ENTREZID"), -->
+<!--                              keytype = "SYMBOL", -->
+<!--                              multiVals = "first") -->
+
+<!-- barcodeplot(statistic,  -->
+<!--             ids2indices(gene_sets_list$HALLMARK["HALLMARK_CHOLESTEROL_HOMEOSTASIS"], -->
+<!--             names(statistic))[[1]]) -->
+<!-- barcodeplot(statistic,  -->
+<!--             ids2indices(gene_sets_list$HALLMARK["HALLMARK_MTORC1_SIGNALING"], -->
+<!--             names(statistic))[[1]]) -->
+
+<!-- #df needs the ranked list and a set list -->
+<!-- df <- gseaCurve(sort(statistic, decreasing = TRUE), gene_sets_list$HALLMARK["HALLMARK_CHOLESTEROL_HOMEOSTASIS"]) -->
+<!-- ggplot2::ggplot() +  -->
+<!--   geom_gsea(df, zeroline = TRUE) + -->
+<!--   theme_classic() -->
+
+<!-- df <- gseaCurve(sort(statistic, decreasing = TRUE), gene_sets_list$HALLMARK["HALLMARK_MTORC1_SIGNALING"]) -->
+<!-- ggplot2::ggplot() +  -->
+<!--   geom_gsea(df, zeroline = TRUE) + -->
+<!--   theme_classic() -->
+<!-- ``` -->
+
+<!-- ```{r, fig.asp=0.7, fig.width=9} -->
+<!-- layout <- " -->
+<!-- AAABB -->
+<!-- AAABB -->
+<!-- CCCCC -->
+<!-- " -->
+
+<!-- wrap_elements(p1) + -->
+<!--  volc_plots[[8]] + -->
+<!--   wrap_elements(grid::grid.grabExpr(ComplexHeatmap::draw(plot_lfc))) + -->
+<!--   plot_layout(design = layout) + -->
+<!--   plot_annotation(tag_levels = "A") -->
+
+<!-- ``` -->
+
+
+
+
+<!-- ```{r} -->
+<!-- uniq_genes <- vector("list", ncol(dat_lfc)) -->
+<!-- tmp <- dat_lfc -->
+<!-- for(i in 1:ncol(dat_lfc)){ -->
+<!--   uniq_genes[[i]] <- rownames(tmp)[!is.na(tmp[,1])] -->
+<!--   if(ncol(tmp) > 1){ -->
+<!--     next_start <- min(which(is.na(tmp[,1]))) -->
+<!--     tmp <- tmp[next_start:nrow(tmp), 2:ncol(tmp), drop = FALSE] -->
+<!--   } -->
+<!-- } -->
+<!-- names(uniq_genes) <- colnames(dat_lfc) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- lapply(seq_along(uniq_genes), function(i){ -->
+<!--   f <- files[str_detect(files, names(uniq_genes)[i])] -->
+<!--   deg_results <- readRDS(f) -->
+<!--   log_cpm <- cpm(deg_results$adj$normalizedCounts, log = TRUE) -->
+<!--   m <- match(uniq_genes[[i]], rownames(log_cpm)) -->
+<!--   log_cpm <- log_cpm[m, ] -->
+<!--   contr <- deg_results$contr -->
+<!--   # extract group column names of design matrix based on contrast name  -->
+<!--   design_colnames <- names(contr[, cont_name])[contr[, cont_name] != 0] -->
+<!--   # extract group columns from design matrix based on names -->
+<!--   design_cols <- deg_results$fit$design[, design_colnames] -->
+<!--   # create logical vector to combine groups if necessary -->
+<!--   group_select <- lapply(unlist(str_split(cont_name, "v")),  -->
+<!--                          function(x) str_detect(colnames(design_cols), x)) -->
+<!--   # create logical labels for each sample based on group -->
+<!--   group_keep <- lapply(group_select, function(x){ -->
+<!--     if(!is.vector(design_cols[, x])){ -->
+<!--       as.logical(rowMax(design_cols[, x])) -->
+<!--     } else { -->
+<!--       as.logical(unname(design_cols[, x])) -->
+<!--     } -->
+<!--   }) -->
+
+<!--   adj_cpm <- lapply(group_keep, function(keep) log_cpm[,keep]) -->
+<!--   cbind(adj_cpm[[1]], adj_cpm[[2]]) %>% -->
+<!--     data.frame() %>% -->
+<!--     rownames_to_column(var = "gene") -->
+<!-- }) -> uniq_genes_cpm -->
+
+<!-- bind_rows(uniq_genes_cpm) %>% -->
+<!--   column_to_rownames(var = "gene") %>% -->
+<!--   as.matrix() -> uniq_genes_cpm -->
+<!-- ``` -->
+
+<!-- ```{r, fig.asp=1, fig.width=11} -->
+<!-- col_fun <- circlize::colorRamp2(seq(-4, 4, length.out = 11),  -->
+<!--                                 rev(RColorBrewer::brewer.pal(11, "PiYG"))) -->
+<!-- col_fun_list <- setNames(replicate(length(uniq_genes), col_fun, simplify = FALSE),  -->
+<!--                          names(uniq_genes)) -->
+
+<!-- row_ann <- ComplexHeatmap::HeatmapAnnotation(df = dat_lfc,  -->
+<!--                                         col = col_fun_list, -->
+<!--                                         show_legend = c(TRUE, rep(FALSE, 4)), -->
+<!--                                         which = "row", -->
+<!--                                         annotation_legend_param = list( -->
+<!--                                           macrophages = list( -->
+<!--                                             title = "log2(FC)" -->
+<!--                                           )), -->
+<!--                                         annotation_name_gp = grid::gpar(fontsize = 8), -->
+<!--                                         annotation_name_side = "top") -->
+
+<!-- col_split <- c(rep("CF.NO_MOD", 24), rep("NON_CF.CTRL", 8)) -->
+<!-- row_split <- unlist(sapply(seq_along(uniq_genes), function(i){ -->
+<!--   rep(names(uniq_genes)[i], length(uniq_genes[[i]])) -->
+<!-- })) -->
+<!-- row_split <- factor(row_split, levels = c("macrophages", -->
+<!--                                           "macro-alveolar", -->
+<!--                                           "macro-CCL", -->
+<!--                                           "macro-monocyte-derived", -->
+<!--                                           "macro-lipid")) -->
+<!-- col_fun_main <- circlize::colorRamp2(seq(-4, 4, length.out = 11),  -->
+<!--                                      rev(RColorBrewer::brewer.pal(11, "RdBu"))) -->
+
+<!-- ComplexHeatmap::Heatmap(t(scale(t(uniq_genes_cpm))), -->
+<!--                         name = "scaled exp.", -->
+<!--                         cluster_rows = TRUE, -->
+<!--                         cluster_columns = FALSE, -->
+<!--                         rect_gp = grid::gpar(col = "white", lwd = 1), -->
+<!--                         row_names_gp = grid::gpar(fontsize = 8), -->
+<!--                         column_names_gp = grid::gpar(fontsize = 8), -->
+
+<!--                         left_annotation = row_ann, -->
+<!--                         column_split = col_split, -->
+<!--                         cluster_row_slices = FALSE, -->
+<!--                         row_split = row_split, -->
+<!--                         row_title_gp = grid::gpar(fontsize = 8), -->
+<!--                         col = col_fun_main, -->
+<!--                         row_title = NULL) -->
+<!-- ``` -->
+
+<!-- ```{r, fig.asp=1} -->
+<!-- lapply(files, function(f){ -->
+<!--   deg_results <- readRDS(f) -->
+<!--   lrt <- glmLRT(deg_results$fit,  -->
+<!--                 contrast = deg_results$contr[,cont_name]) -->
+<!--   treat_lrt <- glmTreat(deg_results$fit,  -->
+<!--                 contrast = deg_results$contr[,cont_name], -->
+<!--                 lfc = log2(1.2)) -->
+<!--   dat <- data.frame(gene = rownames(lrt), -->
+<!--                     logCPM = lrt$table$logCPM,  -->
+<!--                     logFC = lrt$table$logFC, -->
+<!--                     dt = as.vector(decideTests(lrt, p.value = 0.05)), -->
+<!--                     dt_treat = as.vector(decideTests(treat_lrt, p.value = 0.05))) -->
+<!--   ggplot(dat, aes(x = logCPM, y = logFC)) + -->
+<!--     geom_point(colour = "lightgrey", shape =1) + -->
+<!--     geom_point(data = dat[dat$dt > 0,], colour = "red", shape = 1) + -->
+<!--     geom_point(data = dat[dat$dt < 0,], colour = "blue", shape = 1) + -->
+<!--     geom_point(data = dat[dat$dt_treat > 0,], colour = "red") + -->
+<!--     geom_point(data = dat[dat$dt_treat < 0,], colour = "blue") + -->
+<!--     ggrepel::geom_text_repel(data = dat[dat$dt != 0,],  -->
+<!--                              aes(label = gene), size = 2) + -->
+<!--     geom_hline(yintercept = 0, linetype = "dashed") + -->
+<!--     theme_classic() + -->
+<!--     ggtitle(unlist(str_split(str_remove(f, ".all_samples.fit.rds"), "/"))[8]) -->
+
+<!-- }) -> ma_plots -->
+
+<!-- ma_plots -->
+<!-- ``` -->
+
+
+
+# Session info
+
+
+
+
+
+
+
+
+
+
