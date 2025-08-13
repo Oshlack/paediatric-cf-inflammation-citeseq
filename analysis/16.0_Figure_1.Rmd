@@ -45,118 +45,311 @@ suppressPackageStartupMessages({
 source(here("code/utility.R"))
 ```
 
-# Load data
+# Prepare figure panels
+## ADT heatmap
+
+Load the ADT data from save, pre-processed objects.
 
 ```{r}
 files <- list.files(here("data/C133_Neeland_merged"),
-                    pattern = "C133_Neeland_full_clean.*(macrophages|t_cells|other_cells)_annotated_diet.SEU.rds",
+                    pattern = "C133_Neeland_full_clean.*(macrophages|t_cells|other_cells)_annotated_full.SEU.rds",
                     full.names = TRUE)
 
-seuLst <- lapply(files[2:4], function(f) readRDS(f))
+# read in the ADT data, excluding everything else
+seuLst <- lapply(files, function(f){
+  s <- readRDS(f)
+  DefaultAssay(s) <- "ADT"
+  DietSeurat(s, assays = "ADT", dimreducs = NULL)
+})
 
-seu <- merge(seuLst[[1]], 
-             y = c(seuLst[[2]], 
-                   seuLst[[3]]))
-seu
+adt_names <- rownames(seuLst[[1]][["ADT"]]@counts)
+seuLst <- lapply(seuLst, function(s){
+  DefaultAssay(s) <- "ADT"
+  
+  if(!all(rownames(s) == adt_names)){
+    adt_counts <- s[["ADT"]]@counts
+    rownames(adt_counts) <- adt_names
+    CreateSeuratObject(counts = adt_counts,
+                       assay = "ADT",
+                       meta.data = s@meta.data)
+    
+  } else {
+    s
+  }
+})
+
+seuADT <- merge(seuLst[[1]], 
+                y = c(seuLst[[2]], 
+                      seuLst[[3]]))
+seuADT <- seuADT[, seuADT$Batch != 0]
+seuADT
 ```
+
+Normalise the ADT data across all cells using DSB.
 
 ```{r}
-rm(seuLst)
-gc()
+# read in TotalSeq feature information
+read_csv(file = here("data",
+                     "C133_Neeland_batch1",
+                     "data",
+                     "sample_sheets",
+                     "ADT_features.csv")) -> adt_data
+pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human "
+adt_data$name <- gsub(pattern, "", adt_data$name)
+
+out <- here("data",
+            "C133_Neeland_merged",
+            glue("C133_Neeland_full_clean_all_cells_dsb.ADT.rds"))
+if(!file.exists(out)){
+  adt_data %>%
+    dplyr::filter(grepl("[Ii]sotype", name)) %>%
+    pull(name) -> isotype_controls
+  
+  # normalise ADT using DSB normalisation
+  adt_dsb <- ModelNegativeADTnorm(cell_protein_matrix = seuADT[["ADT"]]@counts,
+                                  denoise.counts = TRUE,
+                                  use.isotype.control = TRUE,
+                                  isotype.control.name.vec = isotype_controls)
+  saveRDS(adt_dsb, file = out)
+  
+} else {
+  adt_dsb <- readRDS(out)
+  
+}
+
+seuADT[["ADT"]]@data <- adt_dsb
+seuADT
 ```
-
-# Prepare figure panels
-## Data integration
-
-Visualise batch effects.
-
-```{r, message=FALSE, warning=FALSE, fig.asp=0.9}
-seu <- ScaleData(seu) %>%
-  FindVariableFeatures() %>%
-  RunPCA(dims = 1:30, verbose = FALSE) %>%
-  RunUMAP(dims = 1:30, verbose = FALSE)
-```
+Set up mapping for long cell type labels to short labels.
 
 ```{r}
-DimPlot(seu, group.by = "Batch", reduction = "umap")
+labels <- unique(seuADT$ann_level_3)
 
-#cluster_pal <- "ggsci::category20_d3"
-cluster_pal <- "miscpalettes::pastel"
-DimPlot(seu, group.by = "ann_level_1", reduction = "umap") +
-  theme(legend.direction = "vertical",
-        legend.text = element_text(size = 10)) +
-  scale_color_paletteer_d(palette = cluster_pal)
+# Make a lookup table: label -> ann_level_1/2/3
+hier_lut <- tibble(label = labels) %>%
+  mutate(
+    ann_level_1 = case_when(
+      str_detect(label, "^macro") ~ "myeloid",
+      label %in% c("monocytes","neutrophil-like","mast cells") ~ "myeloid",
+      label %in% c("cDC1","cDC2","plasmacytoid DC","migratory DC") ~ "myeloid",
+      label %in% c("CD4 T cells","CD8 T-rm","CD8 T-GZMK","CD8 T-inflammasome",
+                   "CD4 T-rm","CD4 T-NFKB","CD4 T-naïve","CD4 T-IFN","CD4 T-reg",
+                   "gamma delta T cells","NK-T cells","proliferating T/NK") ~ "lymphoid",
+      label %in% c("NK cells","innate lymphocytes","dividing innate cells") ~ "lymphoid",
+      label %in% c("B cells","HSP+ B cells","plasma B cells") ~ "lymphoid",
+      label %in% c("secretory epithelial cells","ciliated epithelial cells") ~ "epithelial",
+      TRUE ~ "other"
+    ),
+    ann_level_2 = case_when(
+      # Myeloid
+      str_detect(label, "^macro") ~ "macrophages",
+      label %in% c("monocytes") ~ "monocytes",
+      label %in% c("neutrophil-like", "mast cells") ~ "granulocytes",
+      label %in% c("cDC1","cDC2","plasmacytoid DC","migratory DC") ~ "dendritic cells",
+
+      # Lymphoid
+      label %in% c("CD4 T cells","CD4 T-rm","CD4 T-NFKB","CD4 T-naïve","CD4 T-IFN","CD4 T-reg",
+                   "CD8 T-rm","CD8 T-GZMK","CD8 T-inflammasome","gamma delta T cells","NK-T cells",
+                   "proliferating T/NK") ~ "T cells",
+      label %in% c("NK cells","innate lymphocytes","dividing innate cells") ~ "innate lymphoid",
+      label %in% c("B cells","HSP+ B cells","plasma B cells") ~ "B cells",
+
+      # Epithelial
+      label %in% c("secretory epithelial cells","ciliated epithelial cells") ~ "epithelial cells",
+      TRUE ~ "other"
+    ),
+    ann_level_3 = case_when(
+      # Macrophage subtypes
+      label == "macro-alveolar" ~ "macro-alveolar",
+      str_detect(label, "^macro-alveolar") ~ label,  # keep specific alveolar flavors
+      label %in% c("macro-interstitial","macro-monocyte-derived","macro-T") ~ label,
+      label %in% c("macro-proliferating-S","macro-proliferating-G2M") ~ "macro-proliferating",
+
+      # DC subtypes
+      label %in% c("cDC1","cDC2","plasmacytoid DC","migratory DC") ~ label,
+
+      # Neutro/mono/mast
+      label %in% c("monocytes","neutrophil-like","mast cells") ~ label,
+
+      # T cells
+      label == "CD4 T cells" ~ "CD4 T cells",
+      label %in% c("CD4 T-rm","CD4 T-NFKB","CD4 T-naïve","CD4 T-IFN","CD4 T-reg") ~ label,
+      label %in% c("CD8 T-rm","CD8 T-GZMK","CD8 T-inflammasome") ~ label,
+      label %in% c("gamma delta T cells","NK-T cells") ~ label,
+      label == "proliferating T/NK" ~ "proliferating T-NK",
+
+      # NK / ILC
+      label %in% c("NK cells","innate lymphocytes","dividing innate cells") ~ label,
+
+      # B lineage
+      label %in% c("B cells","HSP+ B cells","plasma B cells") ~ label,
+
+      # Epithelia
+      label %in% c("secretory epithelial cells","ciliated epithelial cells") ~ label,
+
+      TRUE ~ label
+    )
+  )
+
+# Inspect:
+hier_lut
 ```
 
-
-## Cell cycle effect
-
-Assign each cell a score, based on its expression of G2/M and S phase markers as described in the Seurat workflow [here](https://satijalab.org/seurat/articles/cell_cycle_vignette.html).
-
-```{r, warning=FALSE}
-s.genes <- cc.genes.updated.2019$s.genes
-g2m.genes <- cc.genes.updated.2019$g2m.genes
-
-seu <- CellCycleScoring(seu, s.features = s.genes, g2m.features = g2m.genes, 
-                        set.ident = TRUE)
-```
-
-PCA of cell cycle genes.
-
-```{r, fig.asp=1.25}
-DimPlot(seu, group.by = "Phase") -> p1
-
-seu %>%
-  RunPCA(features = c(s.genes, g2m.genes),
-                      dims = 1:30, verbose = FALSE) %>%
-  DimPlot(reduction = "pca") -> p2
-
-(p2 / p1) + plot_layout(guides = "collect")
-```
-
-Distribution of cell cycle markers.
-
-```{r, fig.asp=0.8}
-# Visualize the distribution of cell cycle markers across
-RidgePlot(seu, features = c("PCNA", "TOP2A", "MCM6", "MKI67"), ncol = 2,
-          log = TRUE)
-```
-
-Using the `Seurat` *Alternate Workflow* from [here](https://satijalab.org/seurat/articles/cell_cycle_vignette.html), calculate the difference between the G2M and S phase scores so that signals separating non-cycling cells and cycling cells will be maintained, but differences in cell cycle phase among proliferating cells (which are often uninteresting), can be regressed out of the data.
+Map long labels to short labels.
 
 ```{r}
-seu$CC.Difference <- seu$S.Score - seu$G2M.Score
+# mapping to get short labels
+lab_map <- c(
+  "DC cells"                  = "DC",
+  "mast cells"                = "Mast",
+  "B cells"                   = "B",
+  "monocytes"                 = "Mono",
+  "epithelial cells"          = "Epi",
+  "neutrophils"               = "Neut",
+  "dividing innate cells"     = "Div innate",
+  "NK cells"                  = "NK",
+  "CD4 T cells"               = "CD4 T",
+  "CD8 T cells"               = "CD8 T",
+  "innate lymphocyte"         = "ILC",
+  "gamma delta T cells"       = "γδ T",
+  "NK-T cells"                = "NKT",
+  "proliferating T/NK"        = "Prolif T/NK",
+  "macrophages"               = "Mac",
+  "proliferating macrophages" = "Prolif Mac"
+)
+
+# map long labels to short labels
+seuADT$short_labels <- lab_map[seuADT$ann_level_1]
+# match ordering of the levels betwen long and short labels
+lut <- unique(seuADT@meta.data[, c("ann_level_1", "short_labels")])
+lut <- lut[match(levels(factor(seuADT$ann_level_1)), lut$ann_level_1), , drop = FALSE]
+# update level ordering for short labels
+seuADT$short_labels <- factor(seuADT$short_labels, levels = lut$short_labels)
 ```
 
 
-## Integrate RNA data
+Make data frame of proteins, clusters, expression levels. Examine distribution of expression for heatmap scaling.
+
+```{r}
+# ADTs <- read_csv(file = here("data",
+#                        "Proteins_broad_22.04.22.csv"))
+# pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human "
+# ADTs$Description <- gsub(pattern, "", ADTs$Description)
+
+labels <- readxl::read_excel(here("data/main_proteins.xlsx"))
+
+unnest(enframe(setNames(str_split(labels$`main proteins`, ", "),
+                        labels$`cell type`),
+               value = "ADT",
+               name = "cluster"),
+       cols = ADT) %>%
+  arrange(cluster) %>%
+  distinct() -> markers
+
+markers <- markers[markers$ADT %in% rownames(seuADT),]
+
+seuADT@meta.data %>%
+  dplyr::select(short_labels) %>%
+  rownames_to_column(var = "cell") %>%
+  inner_join(as.data.frame(t(seuADT[["ADT"]]@data)) %>%
+               rownames_to_column(var = "cell")) %>%
+  pivot_longer(c(-cell, -short_labels),
+               names_to = "ADT",
+               values_to = "Expression") %>%
+  dplyr::group_by(short_labels, ADT) %>%
+  dplyr::summarize(Expression = mean(Expression)) %>%
+  ungroup() %>%
+  dplyr::filter(ADT %in% markers$ADT) -> dat
+
+plot(density(dat$Expression))
+```
+
+
+```{r}
+dat %>%
+  dplyr::rename("Protein" = "ADT",
+                "ADT Exp." = "Expression",
+                "Cell type" = "short_labels") %>%
+  tidyHeatmap::heatmap(
+    .column = Protein,
+    .row = `Cell type`,
+    .value = `ADT Exp.`,
+    scale = "none",
+    rect_gp = grid::gpar(col = "white", lwd = 1),
+    show_row_names = TRUE, 
+    cluster_rows = FALSE,
+    cluster_columns = FALSE,
+    column_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
+    column_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
+    row_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
+    row_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
+    column_title_side = "top",
+    palette_value = circlize::colorRamp2(seq(0, 2, length.out = 11),
+                                         rev(RColorBrewer::brewer.pal(11, "RdYlBu"))),
+    heatmap_legend_param = list(direction = "vertical")) %>%
+  add_tile(`Cell type`, show_legend = FALSE,
+           show_annotation_name = FALSE,
+           palette = paletteer_d("miscpalettes::pastel", 
+                                 length(unique(seuADT$ann_level_1)))) %>%
+    as_ComplexHeatmap() -> f1e
+f1e
+```
+
+
+## UMAP of all cells
 
 Split by *batch* for integration. Normalise with `SCTransform`. Increase the strength of alignment by increasing `k.anchor` parameter to 20 as recommended in Seurat Fast integration with RPCA [vignette](https://satijalab.org/seurat/articles/integration_rpca.html).
 
-First, integrate the RNA data.
-
 ```{r}
+# clean up memory
+gc()
+
 out <- here("data",
             "C133_Neeland_merged",
             glue("C133_Neeland_full_clean_integrated_all_cells.SEU.rds"))
 
-gns <- AnnotationDbi::select(org.Hs.eg.db,
-                             keys = rownames(seu),
-                             columns = c("CHR","ENTREZID"),
-                             keytype = "SYMBOL",
-                             multiVals = "first")
-m <- match(rownames(seu), gns$SYMBOL)
-gns <- gns[m,]
-# remove HLA, immunoglobulin, MT, RP, MRP and sex genes prior to integration
-var_regex = '^HLA-|^IG[HJKL]|^MT-|^RPL|^MRPL'
-keep <- !(str_detect(rownames(seu), var_regex) | gns$CHR %in% c("X","Y"))
-seu <- seu[keep,] 
-  
 if(!file.exists(out)){
+  
+  # load annotated cells for each cell type group
+  files <- list.files(here("data/C133_Neeland_merged"),
+                      pattern = "C133_Neeland_full_clean.*(macrophages|t_cells|other_cells)_annotated_diet.SEU.rds",
+                      full.names = TRUE)
+  seuLst <- lapply(files[2:4], function(f) readRDS(f))
+  # merge into a single object
+  seu <- merge(seuLst[[1]],
+               y = c(seuLst[[2]],
+                     seuLst[[3]]))
+  rm(seuLst)
+  gc()
+  
+  # Assign each cell a score, based on its expression of G2/M and S phase markers as described in the Seurat workflow
+  # https://satijalab.org/seurat/articles/cell_cycle_vignette.html
+  s.genes <- cc.genes.updated.2019$s.genes
+  g2m.genes <- cc.genes.updated.2019$g2m.genes
+  seu <- CellCycleScoring(seu, s.features = s.genes, g2m.features = g2m.genes, 
+                          set.ident = TRUE)
+
+  # Using the `Seurat` *Alternate Workflow* from (https://satijalab.org/seurat/articles/cell_cycle_vignette.html),
+  # calculate the difference between the G2M and S phase scores so that signals separating non-cycling cells and cycling
+  # cells will be maintained, but differences in cell cycle phase among proliferating cells (which are often
+  # uninteresting), can be regressed out of the data.
+  seu$CC.Difference <- seu$S.Score - seu$G2M.Score
+  
+  gns <- AnnotationDbi::select(org.Hs.eg.db,
+                               keys = rownames(seu),
+                               columns = c("CHR","ENTREZID"),
+                               keytype = "SYMBOL",
+                               multiVals = "first")
+  
+  m <- match(rownames(seu), gns$SYMBOL)
+  gns <- gns[m,]
+  # remove HLA, immunoglobulin, MT, RP, MRP and sex genes prior to integration
+  var_regex = '^HLA-|^IG[HJKL]|^MT-|^RPL|^MRPL'
+  keep <- !(str_detect(rownames(seu), var_regex) | gns$CHR %in% c("X","Y"))
+  seu <- seu[keep,] 
+
   DefaultAssay(seu) <- "RNA"
   VariableFeatures(seu) <- NULL
-  seu[["pca"]] <- NULL
-  seu[["umap"]] <- NULL
   
   seuLst <- SplitObject(seu, split.by = "Batch")
   rm(seu)
@@ -187,27 +380,41 @@ if(!file.exists(out)){
   if(any(str_detect(fs::group_ids()$group_name, 
                     "oshlack_lab"))) fs::file_chown(out, 
                                                     group_id = "oshlack_lab")
-  
 } else {
   seu <- readRDS(file = out)
   
 }
 ```
 
+Map long cell type labels to short labels for RNA data.
+
 ```{r}
-seu <- subset(seu, cells = which(seu$ann_level_2 != "macro-T"))
+# map long labels to short labels
+seu$short_labels <- lab_map[seu$ann_level_1]
+# match ordering of the levels betwen long and short labels
+lut <- unique(seu@meta.data[, c("ann_level_1", "short_labels")])
+lut <- lut[match(levels(factor(seu$ann_level_1)), lut$ann_level_1), , drop = FALSE]
+# update level ordering for short labels
+seu$short_labels <- factor(seu$short_labels, levels = lut$short_labels)
 ```
+
 
 ```{r, fig.asp=1}
 options(ggrepel.max.overlaps = Inf)
+cluster_pal <- "miscpalettes::pastel"
+
+DimPlot(seu, group.by = "Group")
+FeaturePlot(seu, features = "Age") +
+  scale_color_viridis_c(option = "magma", direction = -1)
+
 DimPlot(seu, 
-        group.by = "ann_level_1", label = F, repel = T,
-        label.size = 3) +
-  scale_color_paletteer_d(cluster_pal, direction = 1) +
+        group.by = "short_labels", label = F) +
+  scale_color_paletteer_d(cluster_pal) +
   NoLegend() -> p1
 
-LabelClusters(p1, id = "ann_level_1", repel = TRUE, 
-              size = 2, box = TRUE, fontfamily = "arial") +
+LabelClusters(p1, id = "short_labels", repel = TRUE,
+              size = 2.5, box = TRUE,
+              fontface = "bold") +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank(),
@@ -217,12 +424,20 @@ LabelClusters(p1, id = "ann_level_1", repel = TRUE,
 f1b
 ```
 
-
 ## Cell proportions by sample
 
 ```{r, fig.asp=0.75, fig.width=10}
+samp_map <-
+c(
+  "CF.IVA" = "CF (iva)",
+  "CF.LUMA_IVA" = "CF (luma/iva)",
+  "CF.NO_MOD" = "CF (no mod)",
+  "NON_CF.CTRL" = "Non-CF control"
+)
+
 seu@meta.data %>%
   dplyr::select(sample.id, Group) %>%
+  mutate(Group = samp_map[Group]) %>%
   count(sample.id, Group) %>% 
   ungroup() %>%
 ggplot(aes(x = sample.id, y = n, fill = Group)) +
@@ -237,9 +452,10 @@ ggplot(aes(x = sample.id, y = n, fill = Group)) +
         plot.margin = unit(c(0, 0, 0, 0), "lines")) +
   labs(y = "Number of cells", fill = "Condition") +
   scale_fill_paletteer_d("RColorBrewer::Set2", direction = 1) +
-  facet_grid(~Group, scales = "free_x", space = "free_x") -> p2
+  facet_grid(~Group, scales = "free_x", space = "free_x") +
+  scale_y_continuous(expand = expansion(mult = c(0.01, 0.02))) -> p2
 
-props <- getTransformedProps(clusters = seu$ann_level_1,
+props <- getTransformedProps(clusters = seu$short_labels,
                              sample = seu$sample.id, transform="asin")
 
 props$Proportions %>%
@@ -261,15 +477,18 @@ ggplot(aes(x = sample, y = Freq, fill = clusters)) +
         plot.margin = unit(c(0, 0, 0, 0), "lines")) +
   labs(y = "Cell type proportion", fill = "Cell type", x = "Sample") +
   scale_fill_paletteer_d("miscpalettes::pastel", direction = 1) +
-  facet_grid(~Group, scales = "free_x", space = "free_x") -> p3
+  facet_grid(~Group, scales = "free_x", space = "free_x") +
+  scale_y_continuous(expand = expansion(mult = c(0.02, 0.03))) -> p3
 
 (p2 / p3) + plot_layout(guides = "collect") &
   theme(legend.text = element_text(size = 8),
         legend.title = element_text(size = 10),
-        legend.key.size = unit(1, "lines")) -> f1c
+        legend.key.size = unit(0.8, "lines")) -> f1c
 
 f1c
 ```
+
+## `Seurat` marker gene dotplot
 
 ```{r}
 DefaultAssay(seu) <- "RNA"
@@ -310,8 +529,6 @@ if(!file.exists(out)){
 markers <- markers[markers$gene %in% rownames(seu),]
 ```
 
-## `Seurat` marker gene dotplot
-
 ```{r, fig.width=12, fig.asp=0.4}
 draw_marker_gene_dotplot(seu,
                          markers,
@@ -323,139 +540,69 @@ draw_marker_gene_dotplot(seu,
 f1d
 ```
 
-```{r}
-files <- list.files(here("data/C133_Neeland_merged"),
-                    pattern = "C133_Neeland_full_clean.*(macrophages|t_cells|other_cells)_annotated_full.SEU.rds",
-                    full.names = TRUE)
-
-seuLst <- lapply(files[2:4], function(f) readRDS(f))
-
-adt_names <- rownames(seuLst[[1]][["ADT"]]@counts)
-seuLst <- lapply(seuLst, function(s){
-  DefaultAssay(s) <- "ADT"
-  
-  if(!all(rownames(s) == adt_names)){
-    adt_counts <- s[["ADT"]]@counts
-    rownames(adt_counts) <- adt_names
-    CreateSeuratObject(counts = adt_counts,
-                       assay = "ADT",
-                       meta.data = s@meta.data)
-    
-  } else {
-    DietSeurat(s, assays = "ADT", dimreducs = NULL)
-    
-  }
-  
-})
-
-seuADT <- merge(seuLst[[1]], 
-                y = c(seuLst[[2]], 
-                      seuLst[[3]]))
-seuADT <- seuADT[, seuADT$Batch != 0]
-seuADT
-```
-
-## Visualise ADTs
-Make data frame of proteins, clusters, expression levels.
+## Cell type dendrogram
 
 ```{r}
-out <- here("data",
-            "C133_Neeland_merged",
-            glue("C133_Neeland_full_clean_all_cells_dsb.ADT.rds"))
+library(dplyr)
+library(data.tree)
+library(igraph)
+library(ggraph)
 
-read_csv(file = here("data",
-                     "C133_Neeland_batch1",
-                     "data",
-                     "sample_sheets",
-                     "ADT_features.csv")) -> adt_data
-pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human "
-adt_data$name <- gsub(pattern, "", adt_data$name)
+# df has ann_level_1/2/3 (one row per cell)
+paths <- (seu@meta.data %>% 
+            dplyr::select(ann_level_3) %>%
+            dplyr::rename(label = ann_level_3)) %>%
+  left_join(hier_lut) %>%
+  mutate(across(starts_with("ann_level_"), ~ tidyr::replace_na(.x, "unassigned"))) %>%
+  count(ann_level_1, ann_level_2, ann_level_3, name = "cells") %>%
+  mutate(pathString = paste("all cells", ann_level_1, ann_level_2, ann_level_3, sep = "/"))
 
-if(!file.exists(out)){
-  adt_data %>%
-    dplyr::filter(grepl("[Ii]sotype", name)) %>%
-    pull(name) -> isotype_controls
-  
-  # normalise ADT using DSB normalisation
-  adt_dsb <- ModelNegativeADTnorm(cell_protein_matrix = seuADT[["ADT"]]@counts,
-                                  denoise.counts = TRUE,
-                                  use.isotype.control = TRUE,
-                                  isotype.control.name.vec = isotype_controls)
-  saveRDS(adt_dsb, file = out)
-  
-} else {
-  adt_dsb <- readRDS(out)
-  
-}
 
-seuADT[["ADT"]]@data <- adt_dsb
-seuADT
+# ----- 2) tree & propagate counts -----
+tree <- as.Node(paths, pathName = "pathString")
+tree$Do(function(node) {
+  if (!node$isLeaf) node$cells <- sum(sapply(node$children, function(ch) ifelse(is.null(ch$cells), 0, ch$cells)))
+}, traversal = "post-order")
+
+# ----- 3) nodes/edges + lineage & clean labels -----
+nodes <- ToDataFrameTree(tree, "levelName", "pathString", "cells", "level") %>%
+  transmute(
+    name       = pathString,  # unique vertex id (full path)
+    short_name = str_squish(str_replace(levelName, "^[^A-Za-z]+", "")),  # strip only leading non-letters
+    cells      = cells,
+    depth      = level,
+    lineage    = sub("^all cells/([^/]+).*", "\\1", name)  # ann_level_1 from path segment 2
+  )
+
+edges <- nodes %>%
+  mutate(parent = ifelse(name == "all cells", NA_character_, dirname(name))) %>%
+  filter(!is.na(parent)) %>%
+  dplyr::select(from = parent, to = name)
+
+g <- graph_from_data_frame(edges, vertices = nodes, directed = TRUE)
+
+# mark leaves once (optional; ggraph usually provides `leaf` automatically for dendrograms)
+V(g)$leaf <- igraph::degree(g, mode = "out") == 0
+
+ggraph(g, layout = "dendrogram") +
+  geom_edge_diagonal(color = "lightgrey") +
+  geom_node_point(aes(size = cells, colour = lineage)) +
+  geom_node_text(aes(label = short_name),
+                 angle = 0, 
+                 hjust = 0, 
+                 size = 3, 
+                 nudge_y = 0.05,
+                 show.legend = FALSE) +
+  scale_size_continuous(name = "No. cells", range = c(1, 6)) +
+  # Root on left, leaves on right, with padding on BOTH sides
+  coord_flip(clip = "off") +  # KEY: no clipping
+  scale_y_reverse(expand = expansion(mult = c(0.02, 0.3))) +
+  theme_void() +
+  theme(plot.margin = margin(rep(0, 4))) +
+  labs(colour = "Lineage") -> f1f
+
+f1f
 ```
-
-```{r}
-# ADTs <- read_csv(file = here("data",
-#                        "Proteins_broad_22.04.22.csv"))
-# pattern <- "anti-human/mouse |anti-human/mouse/rat |anti-mouse/human |anti-human "
-# ADTs$Description <- gsub(pattern, "", ADTs$Description)
-
-labels <- readxl::read_excel(here("data/main_proteins.xlsx"))
-
-unnest(enframe(setNames(str_split(labels$`main proteins`, ", "),
-                        labels$`cell type`),
-               value = "ADT",
-               name = "cluster"),
-       cols = ADT) %>%
-  arrange(cluster) %>%
-  distinct() -> markers
-
-markers <- markers[markers$ADT %in% rownames(seuADT),]
-
-seuADT@meta.data %>%
-  dplyr::select(ann_level_1) %>%
-  rownames_to_column(var = "cell") %>%
-  inner_join(as.data.frame(t(seuADT[["ADT"]]@data)) %>%
-               rownames_to_column(var = "cell")) %>%
-  pivot_longer(c(-cell, -ann_level_1),
-               names_to = "ADT",
-               values_to = "Expression") %>%
-  dplyr::group_by(ann_level_1, ADT) %>%
-  dplyr::summarize(Expression = mean(Expression)) %>%
-  ungroup() %>%
-  dplyr::filter(ADT %in% markers$ADT) -> dat
-
-plot(density(dat$Expression))
-```
-
-```{r}
-dat %>%
-  dplyr::rename("Protein" = "ADT",
-                "ADT Exp." = "Expression",
-                "Cell type" = "ann_level_1") %>%
-  tidyHeatmap::heatmap(
-    .column = Protein,
-    .row = `Cell type`,
-    .value = `ADT Exp.`,
-    scale = "none",
-    rect_gp = grid::gpar(col = "white", lwd = 1),
-    show_row_names = TRUE, 
-    cluster_rows = FALSE,
-    cluster_columns = FALSE,
-    column_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
-    column_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
-    row_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
-    row_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
-    column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(0, 2, length.out = 11),
-                                         rev(RColorBrewer::brewer.pal(11, "Spectral"))),
-    heatmap_legend_param = list(direction = "vertical")) %>%
-  add_tile(`Cell type`, show_legend = FALSE,
-           show_annotation_name = FALSE,
-           palette = paletteer_d("miscpalettes::pastel", 
-                                 length(unique(seuADT$ann_level_1)))) %>%
-    as_ComplexHeatmap() -> f1e
-f1e
-```
-
 
 # Figure 1
 
@@ -464,8 +611,14 @@ layout = "
 BBBCCCCC
 BBBCCCCC
 BBBCCCCC
+BBBCCCCC
 DDDDDDDD
 DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+FFFFGGGG
+FFFFGGGG
+FFFFGGGG
 FFFFGGGG
 FFFFGGGG
 "
@@ -473,52 +626,21 @@ FFFFGGGG
     wrap_elements(f1c + theme(plot.margin = unit(rep(0,4), "cm"))) + 
     wrap_elements(f1d + theme(plot.margin = unit(rep(0,4), "cm"))) + 
     wrap_plots(list(f1e %>% 
-                      ComplexHeatmap::draw(heatmap_legend_side = "right") %>% 
+                      ComplexHeatmap::draw(heatmap_legend_side = "left") %>% 
                       grid::grid.grabExpr())) +
-    plot_spacer()) + 
+    wrap_elements(f1f + theme(plot.margin = unit(rep(0,4), "cm")))) + 
   plot_layout(design = layout) +
-  plot_annotation(tag_levels = list(c("B","C","D","E"))) &
-  theme(plot.tag = element_text(size = 16,
+  plot_annotation(tag_levels = list(c("B","C","D","E","F"))) &
+  theme(plot.tag = element_text(size = 24,
                                 face = "bold",
                                 family = "arial"))
   
 ```
 
+
+
 # Session info
 
-
-
-
-
-<!-- ```{r, fig.width=10, fig.asp=0.8} -->
-<!-- seu@meta.data %>% -->
-<!--     data.frame() %>% -->
-<!--     ggplot(aes(x = sample.id, fill = Group)) + -->
-<!--     geom_bar(position = position_dodge()) +  -->
-<!--     geom_text(aes(label = ..count..), -->
-<!--               stat = "count", vjust = -0.5,  -->
-<!--               colour = "black", size = 2) + -->
-<!--   facet_wrap(~Batch, scales = "free_x", ncol = 4) + -->
-<!--   theme_classic() + -->
-<!--   theme(axis.text.x = element_text(angle = 90, hjust = 0.5, vjust = 0.5)) + -->
-<!--   labs(x = "Sample") -->
-<!-- ``` -->
-
-
-<!-- ```{r} -->
-<!-- seu@meta.data %>% -->
-<!--     data.frame() %>% -->
-<!--   dplyr::select(sample.id, Group) %>% -->
-<!--   distinct() %>% -->
-<!--     ggplot(aes(x = Group, fill = Group)) + -->
-<!--     geom_bar(position = position_dodge()) +  -->
-<!--     geom_text(aes(label = ..count..), -->
-<!--               stat = "count", vjust = -0.5,  -->
-<!--               colour = "black", size = 3) + -->
-<!--   theme_classic() + -->
-<!--   theme(legend.position = "none") + -->
-<!--   labs(x = "Condition", y = "No. Samples") -->
-<!-- ``` -->
 
 
 

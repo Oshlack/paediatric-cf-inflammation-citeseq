@@ -183,6 +183,7 @@ top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, 
                               names_to = "sample", 
                               values_to = "norm")) %>%
     left_join(group_info) %>%
+    left_join(top) %>%
     dplyr::filter(Group %in% grps,
                   gene %in% rownames(top)[1:min(num, max(which(top$FDR < cutoff)))]) %>%
     mutate(Group = case_when(severity ~ Group,
@@ -511,49 +512,126 @@ draw_umap_with_labels <- function(seu, ann_level, cluster_pal, direction = 1){
 draw_marker_gene_dotplot <- function(seu, markers, ann_level, cluster_pal, direction = 1, num = 5){
   #markers <- readRDS(rds_path)
   
-  markers %>%
+  # markers %>%
+  #   group_by(cluster) %>%
+  #   slice_head(n = 10) %>%
+  #   mutate(cluster = as.character(cluster)) %>%
+  #   ungroup() %>%
+  #   dplyr::arrange(cluster, .by_group = FALSE) -> markers
+  # 
+  # d <- duplicated(markers$gene)
+  # markers[!d,] %>%
+  #   group_by(cluster) %>%
+  #   slice_head(n = num) -> top
+  # 
+  # pal <- setNames(paletteer::paletteer_d(cluster_pal, direction = direction),
+  #                 unique(markers$cluster))
+  # cell_type_cols <- pal[top$cluster]
+  # 
+  # DefaultAssay(seu) <- "RNA"
+  # strip <- strip_themed(background_x = elem_list_rect(fill = unique(cell_type_cols)))
+  # DotPlot(seu,
+  #         features = top$gene,
+  #         group.by = ann_level,
+  #         cols = c("azure1", "blueviolet"),
+  #         dot.scale = 3,
+  #         assay = "SCT") +
+  #   FontSize(x.text = 9, y.text = 9) +
+  #   labs(y = element_blank(), x = element_blank()) +
+  #   facet_grid2(~top$cluster,
+  #               scales = "free_x",
+  #               space = "free_x",
+  #                strip = strip) +
+  #   theme(axis.text.x = element_text(angle = 90,
+  #                                    hjust = 1,
+  #                                    vjust = 0.5,
+  #                                    size = 8),
+  #         axis.text.y = element_text(size = 8),
+  #         legend.text = element_text(size = 8),
+  #         legend.title = element_text(size = 9),
+  #         legend.position = "bottom",
+  #         strip.text = element_text(size = 0),
+  #         text = element_text(family = "arial"),
+  #         axis.ticks = element_blank(),
+  #         axis.line = element_blank(),
+  #         panel.spacing = unit(2, "points"))
+  
+  # --- top markers per cluster (as you had) ---
+  markers_top <- markers %>%
+    distinct(cluster, gene, .keep_all = TRUE) %>%
     group_by(cluster) %>%
-    slice_head(n = 10) %>%
-    mutate(cluster = as.character(cluster)) %>%
-    ungroup() %>%
-    dplyr::arrange(cluster, .by_group = FALSE) -> markers
+    arrange(desc(avg_log2FC), .by_group = TRUE) %>%
+    slice_head(n = num) %>%
+    ungroup()
   
-  d <- duplicated(markers$gene)
-  markers[!d,] %>%
-    group_by(cluster) %>%
-    slice_head(n = num) -> top
+  # features in cluster blocks (keeps your ranking)
+  features_vec <- markers_top %>%
+    arrange(cluster, desc(avg_log2FC)) %>%
+    pull(gene) %>%
+    unique()
   
-  pal <- setNames(paletteer::paletteer_d(cluster_pal, direction = direction),
-                  unique(markers$cluster))
-  cell_type_cols <- pal[top$cluster]
+  # feature -> cluster lookup
+  feat2clust <- markers_top %>%
+    dplyr::select(gene, cluster) %>%
+    distinct()
   
-  DefaultAssay(seu) <- "RNA"
-  strip <- strip_themed(background_x = elem_list_rect(fill = unique(cell_type_cols)))
-  DotPlot(seu,
-          features = top$gene,
-          group.by = ann_level,
-          cols = c("azure1", "blueviolet"),
-          dot.scale = 3,
-          assay = "SCT") +
-    FontSize(x.text = 9, y.text = 9) +
-    labs(y = element_blank(), x = element_blank()) +
-    facet_grid2(~top$cluster,
-                scales = "free_x",
-                space = "free_x",
-                 strip = strip) +
-    theme(axis.text.x = element_text(angle = 90,
-                                     hjust = 1,
-                                     vjust = 0.5,
-                                     size = 8),
-          axis.text.y = element_text(size = 8),
-          legend.text = element_text(size = 8),
-          legend.title = element_text(size = 9),
-          legend.position = "bottom",
-          strip.text = element_text(size = 0),
-          text = element_text(family = "arial"),
-          axis.ticks = element_blank(),
-          axis.line = element_blank(),
-          panel.spacing = unit(2, "points"))
+  # clean key for alphabetical sort
+  clean_key <- function(x) str_to_lower(str_replace_all(trimws(x), "[^A-Za-z]+", " "))
+  
+  cluster_labels <- unique(feat2clust$cluster)
+  cluster_lvls <- as.character(cluster_labels[order(clean_key(cluster_labels))])
+  
+  # build strip colours in that order
+  pal_vec_raw <- paletteer::paletteer_d(cluster_pal, direction = direction)
+  pal_vec <- setNames(rep_len(pal_vec_raw, length(cluster_lvls)), cluster_lvls)
+  
+  strip <- ggh4x::strip_themed(
+    background_x = ggh4x::elem_list_rect(fill = scales::alpha(unname(pal_vec[cluster_lvls]), 0.75)),
+    text_x       = ggh4x::elem_list_text(colour = "black", face = "bold")
+  )
+  
+  # ---- DotPlot then inject faceting var ----
+  DefaultAssay(seu) <- "SCT"
+  p <- Seurat::DotPlot(seu, features = features_vec, group.by = ann_level,
+                       cols = c("#e0ecf4", "#88419d"), dot.scale = 3)
+  
+  p$data <- p$data %>%
+    left_join(feat2clust, by = c("features.plot" = "gene")) %>%
+    mutate(cluster = factor(cluster, levels = cluster_lvls))
+  
+  # build a labeller that ggplot/ggh4x understands
+  facet_labeller <- labeller(
+    cluster = as_labeller(lab_map, default = label_value)  # <- key change
+  )
+  
+  p <- p +
+    ggh4x::facet_grid2(
+      ~ cluster,
+      scales   = "free_x",
+      space    = "free_x",
+      strip    = strip,
+      labeller = facet_labeller
+    ) +
+    scale_y_discrete(labels = function(x) lab_map[x]) +  # y-axis short names
+    Seurat::FontSize(x.text = 9, y.text = 9) +
+    labs(x = NULL, y = NULL) +
+    theme_bw(base_family = "Arial") +
+    theme(
+      axis.text.x   = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 8),
+      axis.text.y   = element_text(size = 8),
+      legend.text   = element_text(size = 8),
+      legend.title  = element_text(size = 9),
+      legend.position = "bottom",
+      strip.text.x  = element_text(size = 8, margin = margin(2, 2, 2, 2)),
+      strip.background = element_rect(colour = NA),
+      panel.spacing = unit(3, "pt"),
+      axis.ticks    = element_blank(),
+      axis.line     = element_blank(),
+      panel.border = element_blank()
+    )
+  
+  p
+  
 }
 
 draw_cell_type_proportions_barplot <- function(seu, ann_level, cluster_pal,
