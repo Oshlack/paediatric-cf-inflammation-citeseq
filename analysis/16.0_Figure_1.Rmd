@@ -39,7 +39,7 @@ suppressPackageStartupMessages({
  library(paletteer)
  library(dsb)
  library(ggh4x)
-  library(readxl)
+ library(readxl)
 })
 
 source(here("code/utility.R"))
@@ -285,7 +285,7 @@ dat %>%
     row_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
     column_title_side = "top",
     palette_value = circlize::colorRamp2(seq(0, 2, length.out = 11),
-                                         rev(RColorBrewer::brewer.pal(11, "RdYlBu"))),
+                                            rev(RColorBrewer::brewer.pal(11, "RdYlBu"))),
     heatmap_legend_param = list(direction = "vertical")) %>%
   add_tile(`Cell type`, show_legend = FALSE,
            show_annotation_name = FALSE,
@@ -531,9 +531,10 @@ markers <- markers[markers$gene %in% rownames(seu),]
 
 ```{r, fig.width=12, fig.asp=0.4}
 draw_marker_gene_dotplot(seu,
-                         markers,
-                         "ann_level_1",
+                         markers %>% mutate(cluster = as.character(cluster)),
+                         ann_level = "ann_level_1",
                          cluster_pal,
+                         lab_map = lab_map,
                          direction = 1,
                          num = 5) -> f1d
 
