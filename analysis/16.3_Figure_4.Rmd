@@ -97,6 +97,36 @@ head(info) %>% knitr::kable()
 
 # Prepare figure panels
 
+Set up short/better names for cell types and conditions in figure.
+
+```{r}
+lab_map <- c(
+  "macro-alveolar"          = "AM",
+  "macro-IGF1"              = "AM.IGF1",
+  "macro-CCL"               = "AM.CCL",
+  "macro-lipid"             = "AM.Lipid",
+  "macro-MT"                = "AM.MT",
+  "macro-IFN"               = "AM.IFN",
+  "macro-APOC2+"            = "AM.APOC2",
+  "macro-CCL18"             = "AM.CCL18",
+  "macro-IFI27"             = "AM.IFI27",
+  "macro-monocyte-derived"  = "Mac\nMono.Deriv",
+  "macro-interstitial"      = "Mac.Interstitial",
+  "macro-lipid-APOC2+"      = "AM.Lipid.APOC2",
+  "macro-T"                 = "Mac.T",
+  "macro-IFI27+CCL18+"      = "AM.IFI27.CCL18",
+  "macro-IFI27+APOC2+"      = "AM.IFI27.APOC2",
+  "macro-proliferating"     = "Mac.Prolif",
+  "macrophages"             = "All Macs\n(exc. Prolif)"
+)
+
+samp_map <-
+c(
+  "CF.NO_MOD.S" = "CF (no mod)(S)", 
+  "CF.NO_MOD.M" = "CF (no mod)(M)"
+)
+```
+
 ```{r, fig.asp=0.5}
 # HSP+ B, CD4 T-IFN
 
@@ -114,16 +144,17 @@ sig_names <- as_labeller(
      c("CD4 T-IFN" = "CD4 T-IFN",
        "HSP+ B cells" = "HSP+ B cells"))
 
-pal <- RColorBrewer::brewer.pal(8, "Accent")[1:2]
-names(pal) <- c("CF.NO_MOD.S", "CF.NO_MOD.M")
+pal <- setNames(RColorBrewer::brewer.pal(2, "Accent"),
+                unname(samp_map))
   
 dat %>%
+  mutate(Group_severity = samp_map[Group_severity]) %>%
 ggplot(aes(x = Group_severity,
                 y = Freq,
                 colour = Group_severity)) +
   geom_jitter(stat = "identity",
               width = 0.15,
-              size = 1) +
+              size = 2) +
   theme_classic() +
   theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank(),
@@ -224,20 +255,21 @@ ComplexHeatmap::HeatmapAnnotation(df = cell_freq %>%
                                     `No. cells` = list(direction = "vertical",
                                                        labels_gp = grid::gpar(fontsize = 7)))) -> col_ann
 
-ComplexHeatmap::Heatmap(dat_lfc[order(rowSums(dat_lfc, na.rm = TRUE),
-                                      decreasing = TRUE),], 
+colnames(dat_lfc) <- lab_map[colnames(dat_lfc)]
+ComplexHeatmap::Heatmap(dat_lfc,
                         name = "logFC",
                         column_split = col_split,
                         column_title = NULL,
                         cluster_rows = FALSE,
                         cluster_columns = FALSE,
                         rect_gp = grid::gpar(col = "white", lwd = 1),
-                        row_names_gp = grid::gpar(fontsize = 7),
-                        column_names_gp = grid::gpar(fontsize = 8),
-                        column_names_rot = 90,
+                        row_names_gp = grid::gpar(fontsize = 8),
+                        column_names_gp = grid::gpar(fontsize = 8,
+                                                     just = "centre"),
+                        column_names_rot = 0,
+                        column_names_centered = TRUE,
                         top_annotation = col_ann,
                         col = col_lfc_fun,
-                        #right_annotation = row_ann,
                         heatmap_legend_param = list(direction = "vertical",
                                                     labels_gp = grid::gpar(fontsize = 7))) -> plot_lfc
 
@@ -248,25 +280,13 @@ ComplexHeatmap::draw(as(list(plot_lfc), "HeatmapList"),
 plot_lfc
 ```
 
-
-```{r}
-bind_rows(lapply(files, function(f){
-  deg_results <- readRDS(f)
-  lrt <- glmLRT(deg_results$fit, 
-                contrast = deg_results$contr[,cont_name])
-  tmp <- cbind(summary(decideTests(lrt, p.value = 0.05)) %>% data.frame,
-                    cell = unlist(str_split(str_remove(f, suffix), "/"))[8])
-  tmp
-})) -> dat_deg
-```
-
 ```{r}
 bind_rows(lapply(files, function(f){
   deg_results <- readRDS(f)
   lrt <- glmLRT(deg_results$fit, 
                 contrast = deg_results$contr[,cont_name])
   tmp <- cbind(summary(decideTests(lrt, p.value = cutoff)) %>% data.frame,
-                    cell = unlist(str_split(str_remove(f, suffix), "/"))[8])
+                    cell = str_extract(basename(f), "^[^.]+"))
   tmp
 })) -> dat_deg
 ```
@@ -277,14 +297,15 @@ dat_deg %>%
 
 dat_deg %>%
   dplyr::filter(Var1 != "NotSig") %>%
+  mutate(cell = lab_map[as.character(cell)]) %>%
   ggplot(aes(x = fct_reorder(cell, -n), y = Freq, fill = Var1)) +
   geom_col(position = "dodge") +
   scale_fill_manual(values = pal_dt) +
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 30,
-                                   hjust = 1,
+  theme(axis.text.x = element_text(angle = 0,
+                                   hjust = 0.5,
                                    vjust = 1,
-                                   size = 7),
+                                   size = 8),
         legend.position = "top") +
   geom_text(aes(label = Freq), 
             position = position_dodge(width = 0.9),
@@ -305,20 +326,23 @@ ABB
 CCC
 "
 
-wrap_elements(p1 + theme(legend.direction = "vertical")) +
+wrap_elements(p1 + theme(legend.direction = "vertical",
+                         plot.margin = margin(rep(0,4)))) +
 (wrap_elements(deg_barplot + theme(axis.title.x = element_blank(),
-                                   legend.text = element_text(size = 8)))) +
+                                   legend.text = element_text(size = 8),
+               plot.margin = margin(rep(0,4))))) +
   #wrap_elements(volc_plot + theme(strip.text = element_text(size = 7))) +
-  wrap_elements(grid::grid.grabExpr(ComplexHeatmap::draw(plot_lfc))) +
+  wrap_elements(grid::grid.grabExpr(ComplexHeatmap::draw(plot_lfc,
+                                                         padding = unit(0, "mm")))) +
   plot_layout(design = layout) +
   plot_annotation(tag_levels = "A")  &
-  theme(plot.tag = element_text(size = 16,
+  theme(plot.tag = element_text(size = 24,
                                 face = "bold",
                                 family = "arial"))
 
 ```
 
-# Supplementary Figure X
+# Supplementary Figure 4
 
 ```{r}
 dat %>%
@@ -351,13 +375,16 @@ ComplexHeatmap::HeatmapAnnotation(df = cell_freq %>%
                                     `No. cells` = list(direction = "vertical",
                                                        labels_gp = grid::gpar(fontsize = 7)))) -> col_ann
 
-ComplexHeatmap::HeatmapAnnotation(df = data.frame(multiple = (rowSums(!is.na(dat_lfc_supp)) > 1)),
+ComplexHeatmap::HeatmapAnnotation(df = data.frame(`Sig. ≥2 cell types` = (rowSums(!is.na(dat_lfc_supp)) > 1),
+                                                  check.names = FALSE),
                                   which = "row",
-                                  col = list(multiple = c("FALSE" = "#fdcce5","TRUE" = "#8bd3c7")),
+                                  col = list(`Sig. ≥2 cell types` = c("FALSE" = "#fdcce5","TRUE" = "#8bd3c7")),
                                   annotation_legend_param = list(
-                                    multiple = list(direction = "vertical",
-                                                    ncol = 1))) -> row_ann
+                                    `Sig. ≥2 cell types` = list(direction = "vertical",
+                                                    ncol = 1)),
+                                  show_annotation_name = FALSE) -> row_ann
 
+colnames(dat_lfc_supp) <- lab_map[colnames(dat_lfc_supp)]
 ComplexHeatmap::Heatmap(dat_lfc_supp, 
                         name = "logFC",
                         column_split = col_split,
@@ -384,25 +411,29 @@ plot_lfc_supp
 ```{r}
 get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
              suffix = suffix, cutoff = 1) -> dat_all
-```
 
-```{r, fig.asp=1}
 dat_all %>% 
   left_join(cell_freq) %>%
   mutate(Direction = as.factor(ifelse(sig == -1, "Down",
                                       ifelse(sig == 1, "Up", "N.S."))),
          cell = fct_reorder(cell, -n)) -> dat_all
-
-ggplot(dat_all, aes(x = logFC, y = -log10(FDR), colour = Direction)) + 
-  geom_point(size = 0.5) + 
-  facet_wrap(~cell, ncol = 4) + 
-  theme_classic() +
-  scale_color_manual(values = pal_dt[c(1,3,2)]) +
-  ggrepel::geom_text_repel(data = dat_all[dat_all$sig != 0,], 
-                           aes(label = gene), size = 2) -> volc_plot
-
-volc_plot
 ```
+
+<!-- ```{r, fig.asp=1} -->
+<!-- dat_all %>% -->
+<!--   mutate(cell = lab_map[cell]) -> dat_all -->
+
+<!-- ggplot(dat_all, -->
+<!--        aes(x = logFC, y = -log10(FDR), colour = Direction)) +  -->
+<!--   geom_point(size = 0.5) +  -->
+<!--   facet_wrap(~cell, ncol = 4) +  -->
+<!--   theme_classic() + -->
+<!--   scale_color_manual(values = pal_dt[c(1,3,2)]) + -->
+<!--   ggrepel::geom_text_repel(data = dat_all[dat_all$sig != 0,],  -->
+<!--                            aes(label = gene), size = 2) -> volc_plot -->
+
+<!-- volc_plot -->
+<!-- ``` -->
 
 <!-- ```{r, fig.asp=1} -->
 <!-- volc_plot <- draw_treat_volcano_plot(cell = "macrophages", -->
