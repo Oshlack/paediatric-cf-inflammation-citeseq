@@ -10,3 +10,5 @@ code/voomByGroup
 data/*/data/SCEs/*.rds
 data/*/data/emptyDrops/*.rds
 data/C133_Neeland*
+*/obsolete
+data/*h5ad*
