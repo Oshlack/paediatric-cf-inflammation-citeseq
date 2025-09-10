@@ -1,0 +1,336 @@
+---
+title: "Supplementary Figures"
+author: "Jovana Maksimovic"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+site: workflowr::wflow_site
+output:
+  bookdown::html_document2:
+    base_format: workflowr::wflow_html
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+Load libraries.
+
+```{r}
+suppressPackageStartupMessages({
+ library(SingleCellExperiment)
+ library(edgeR)
+ library(tidyverse)
+ library(ggplot2)
+ library(Seurat)
+ library(glmGamPoi)
+ library(dittoSeq)
+ library(here)
+ library(clustree)
+ library(patchwork)
+ library(AnnotationDbi)
+ library(org.Hs.eg.db)
+ library(glue)
+ library(speckle)
+ library(tidyHeatmap)
+ library(paletteer)
+ library(dsb)
+ library(ggh4x)
+  library(readxl)
+  library(gt)
+})
+
+source(here("code/utility.R"))
+```
+
+
+# Prepare figure panels
+
+```{r}
+file <- here("data", 
+             "intermediate_objects",
+             "macrophages.all_samples.fit.rds") 
+
+deg_results <- readRDS(file = file)
+
+contr <- deg_results$contr[,1:2]
+
+lapply(1:ncol(contr), function(i) {
+  lrt <- glmLRT(deg_results$fit, contrast = contr[,i])
+  topTags(lrt, n = Inf) %>%
+    data.frame %>%
+    rownames_to_column(var = "Symbol") %>%
+    dplyr::arrange(Symbol) %>%
+    dplyr::rename_with(~ paste0(.x, ".", i))
+}) %>% bind_cols -> all_lrt
+
+```
+
+
+```{r, fig.asp=1}
+all_lrt %>%
+  mutate(IVA = ifelse(FDR.1 < 0.05 & FDR.2 < 0.05, "#FF6B6B",
+                      ifelse(FDR.1 < 0.05 & FDR.2 >= 0.05, "#CC8E00", 
+                             ifelse(FDR.1 >= 0.05 & FDR.2 < 0.05, "#20A4A4",
+                                    "lightgrey")))) -> all_lrt
+
+ggplot(all_lrt, aes(x = logFC.1,
+                    y = logFC.2)) +
+  geom_point(data = subset(all_lrt, IVA %in% "lightgrey"), 
+             aes(colour = "lightgrey"),
+             alpha = 0.25) +
+  geom_point(data = subset(all_lrt, IVA %in% "#20A4A4"), 
+             aes(colour = "#20A4A4"),
+             alpha = 0.5) +
+  geom_point(data = subset(all_lrt, IVA %in% "#CC8E00"), 
+             aes(colour = "#CC8E00"),
+             alpha = 0.5) +
+  geom_point(data = subset(all_lrt, IVA %in% "#FF6B6B"), 
+             aes(colour = "#FF6B6B")) +
+  ggrepel::geom_text_repel(data = subset(all_lrt, (IVA %in% "#20A4A4")),
+                           aes(x = logFC.1, y = logFC.2,
+                               label = Symbol.1),
+                           size = 2.5, colour = "#20A4A4", max.overlaps = 5) +
+    ggrepel::geom_text_repel(data = subset(all_lrt, (IVA %in% "#CC8E00")),
+                           aes(x = logFC.1, y = logFC.2,
+                               label = Symbol.1),
+                           size = 2.5, colour = "#CC8E00", max.overlaps = 5) +
+    ggrepel::geom_text_repel(data = subset(all_lrt, (IVA %in% "#FF6B6B")), 
+                           aes(x = logFC.1, y = logFC.2, 
+                               label = Symbol.1), 
+                           size = 2.5, colour = "#FF6B6B", max.overlaps = Inf) +
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "darkgrey") +
+  geom_vline(xintercept = 0, linetype = "dashed", colour = "darkgrey") +
+  labs(x = "log2FC CF (no mod) vs Non-CF ctrl",
+       y = "log2FC CF (iva) vs Non-CF ctrl") +
+  scale_colour_identity(guide = "legend",
+                        breaks = c("#FF6B6B", "#20A4A4", "#CC8E00","lightgrey"),
+                        labels = c("Sig. in both", 
+                                   "Only in CF (iva) vs Non-CF ctrl", 
+                                   "Only in CF (no mod) vs Non-CF ctrl",
+                                   "Not Sig."),
+                        name = "Statistical Significance") +
+  theme_classic() +
+  theme(legend.position = "bottom",
+        legend.direction = "vertical",
+        legend.title = element_text(hjust = 0.5)) +
+  guides(colour = guide_legend(ncol = 4)) -> p1
+
+p1
+```
+
+```{r}
+Hs.c2.all <- convert_gmt_to_list(here("data/c2.all.v2024.1.Hs.entrez.gmt"))
+Hs.h.all <- convert_gmt_to_list(here("data/h.all.v2024.1.Hs.entrez.gmt"))
+Hs.c5.all <- convert_gmt_to_list(here("data/c5.all.v2024.1.Hs.entrez.gmt"))
+
+fibrosis <- create_custom_gene_lists_from_file(here("data/fibrosis_gene_sets.csv"))
+# add fibrosis sets from REACTOME and WIKIPATHWAYS
+fibrosis <- c(lapply(fibrosis, function(l) l[!is.na(l)]),
+              Hs.c2.all[str_detect(names(Hs.c2.all), "FIBROSIS")])
+
+gene_sets_list <- list(HALLMARK = Hs.h.all,
+                       GO = Hs.c5.all,
+                       REACTOME = Hs.c2.all[str_detect(names(Hs.c2.all), "REACTOME")],
+                       WP = Hs.c2.all[str_detect(names(Hs.c2.all), "^WP")],
+                       FIBROSIS = fibrosis)
+
+```
+
+
+```{r}
+num <- 10
+
+hallmark_ora <- rbind(read_csv(file = here("output",
+                                       "dge_analysis",
+                                       "macrophages",
+                                       "ORA.HALLMARK.CF.IVAvNON_CF.CTRL.csv")) %>%
+                    slice_head(n = num) %>%
+                    mutate(contrast = "CF (iva) vs. Non-CF control",
+                           Rank = 1:n()),
+                  read_csv(file = here("output",
+                                       "dge_analysis",
+                                       "macrophages",
+                                       "ORA.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv")) %>%
+                    slice_head(n = num) %>%
+                    mutate(contrast = "CF (no mod) vs. Non-CF control",
+                           Rank = 1:n())) 
+
+library(dplyr)
+library(ggplot2)
+library(tidytext)   # for reorder_within() / scale_y_reordered()
+library(scales)     # for squish
+
+# df is your tibble
+dotdat <- hallmark_ora %>%
+  mutate(
+    score = -log10(pmax(FDR, .Machine$double.xmin)),  # avoid Inf if FDR==0
+    de_prop = DE / N,
+    Set     = gsub("^HALLMARK_", "(H) ", Set),     # replace prefix
+    Set     = gsub("_", " ", Set),                 # remove underscores
+    # order within each contrast by Rank (1 = top), shown at top of facet
+    Set_ord = reorder_within(Set, -Rank, contrast)
+  )
+
+ggplot(dotdat, aes(x = score, y = Set_ord, size = N, color = de_prop)) +
+  geom_point() +
+  scale_y_reordered() +
+  facet_wrap(~ contrast, scales = "free_y", ncol = 1) +
+  scale_size(range = c(1, 3), name = "Gene Set Size") +
+  scale_color_viridis_c(name = "Gene Ratio", oob = squish,
+                        option = "plasma") +
+  geom_vline(xintercept = -log10(0.05),
+               linetype = "dashed")  +
+  labs(
+    x = expression(-log[10](FDR)),
+    y = NULL,
+  ) +
+  theme_classic(base_size = 10) -> p2
+
+p2
+
+```
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidytext)  # for reorder_within / scale_y_reordered
+library(scales)
+
+dotdat <- hallmark_ora %>%
+  mutate(
+    score   = -log10(pmax(FDR, .Machine$double.xmin)),
+    de_prop = DE / N,
+    # clean set labels
+    Set_lbl = gsub("^HALLMARK_", "(H) ", Set),
+    Set_lbl = gsub("_", " ", Set_lbl)
+  ) %>%
+  group_by(Set_lbl) %>%
+  mutate(in_both = dplyr::n_distinct(contrast) > 1) %>%
+  ungroup() %>%
+  # keep facet-wise ordering by Rank
+  mutate(Set_ord = reorder_within(Set_lbl, -Rank, contrast))
+
+p2 <- ggplot(dotdat, aes(x = score, y = Set_ord, size = N)) +
+  # Base layer: filled points, no outline
+  geom_point(
+    aes(fill = de_prop),
+    shape = 21,
+    colour = "transparent",   # ensure no border is drawn
+    stroke = 0,
+    alpha = 0.95
+  ) +
+  # Outline layer: only for sets present in both contrasts
+  geom_point(
+    data = dplyr::filter(dotdat, in_both),
+    aes(fill = de_prop),
+    shape = 21,
+    colour = "grey",
+    stroke = 1.2,
+    alpha = 0.95
+  ) +
+  scale_y_reordered() +
+  facet_wrap(~ contrast, scales = "free_y", ncol = 1) +
+  scale_size(range = c(1, 4), name = "Gene Set Size") +
+  scale_fill_viridis_c(name = "Gene Ratio", oob = squish, option = "plasma") +
+  geom_vline(xintercept = -log10(0.05), linetype = "dashed") +
+  labs(x = expression(-log[10](FDR)), y = NULL) +
+  theme_classic(base_size = 10)
+
+p2
+```
+
+
+# Figure 6
+
+```{r, fig.asp=1.4}
+layout <- "
+AAA
+AAA
+AAA
+BBB
+BBB
+"
+
+wrap_elements(p1 + theme(text = element_text(size = 10),
+                         plot.margin = margin(rep(0, 4)))) + 
+  wrap_elements(p2 + theme(text = element_text(size = 10),
+                           legend.margin = margin(-0.5,0,0,0, unit="lines"),
+                           legend.key.size = unit(1, "lines"),
+                           plot.margin = margin(rep(0, 4)))) + 
+  plot_layout(design = layout) +
+  plot_annotation(tag_levels = "A")   &
+  theme(plot.tag = element_text(size = 24,
+                                face = "bold",
+                                family = "arial")) -> fig6
+fig6
+```
+
+Save figure as PDF.
+
+```{r}
+pdf(here("output","pdf_figures","Figure_6.pdf"), width = 7, height = 9)
+fig6
+dev.off()
+```
+
+
+<!-- ```{r} -->
+<!-- library(ggplot2) -->
+<!-- library(patchwork) -->
+<!-- library(cowplot)   # alignment -->
+<!-- library(grid)      # unit() -->
+<!-- library(here) -->
+
+<!-- # Example plots (your real p1, p2, p3, ... here) -->
+<!-- # p1 <- ... -->
+<!-- # p2 <- ... -->
+<!-- # p3 <- ... -->
+
+<!-- # 1) Align (hv = both directions; axis = which sides must line up) -->
+<!-- aligned <- align_plots(p1, p2, align = "h", axis = "l") -->
+
+<!-- # 2) Rebuild as ggplots (now with harmonised widths) -->
+<!-- p1a <- ggplotify::as.ggplot(aligned[[1]]) -->
+<!-- p2a <- ggplotify::as.ggplot(aligned[[2]]) -->
+
+<!-- layout <- " -->
+<!-- AAA -->
+<!-- AAA -->
+<!-- AAA -->
+<!-- BBB -->
+<!-- BBB -->
+<!-- " -->
+
+<!-- fig <- (p1a + p2a) + -->
+<!--   plot_layout(design = layout) + -->
+<!--   plot_annotation( -->
+<!--     tag_levels = "A", -->
+<!--     theme = theme(plot.tag = element_text(size = 48, face = "bold", family = "Arial")) -->
+<!--   ) -->
+
+<!-- ggsave( -->
+<!--   filename = "Figure_6.pdf", -->
+<!--   plot = fig, -->
+<!--   path = here("output", "pdf_figures"), -->
+<!--   width = 6, height = 9, units = "in", -->
+<!--   device = cairo_pdf -->
+<!-- ) -->
+
+<!-- ``` -->
+
+
+
+# Session info
+
+
+
+
+
+
+
+
+
+
