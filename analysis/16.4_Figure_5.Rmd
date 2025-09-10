@@ -96,6 +96,36 @@ head(info) %>% knitr::kable()
 
 # Prepare figure panels
 
+```{r}
+lab_map <- c(
+  "macro-alveolar"          = "AM",
+  "macro-IGF1"              = "AM.IGF1",
+  "macro-CCL"               = "AM.CCL",
+  "macro-lipid"             = "AM.Lipid",
+  "macro-MT"                = "AM.MT",
+  "macro-IFN"               = "AM.IFN",
+  "macro-APOC2+"            = "AM.APOC2",
+  "macro-CCL18"             = "AM.CCL18",
+  "macro-IFI27"             = "AM.IFI27",
+  "macro-monocyte-derived"  = "Mac.Mono.Deriv",
+  "macro-interstitial"      = "Mac.Interstitial",
+  "macro-lipid-APOC2+"      = "AM.Lipid.APOC2",
+  "macro-T"                 = "Mac.T",
+  "macro-IFI27+CCL18+"      = "AM.IFI27.CCL18",
+  "macro-IFI27+APOC2+"      = "AM.IFI27.APOC2",
+  "macro-proliferating"     = "Mac.Prolif",
+  "macrophages"             = "All Macs (exc. Prolif)"
+)
+
+samp_map <-
+c(
+  "CF.IVA" = "CF (iva)",
+  "CF.LUMA_IVA" = "CF (luma/iva)",
+  "CF.NO_MOD" = "CF (no mod)",
+  "NON_CF.CTRL" = "Non-CF control"
+)
+```
+
 ```{r, fig.asp=0.5}
 props <- getTransformedProps(clusters = seu$ann_level_3[!str_detect(seu$ann_level_3, "macro")],
                              sample = seu$sample.id[!str_detect(seu$ann_level_3, "macro")], transform="asin")
@@ -114,23 +144,24 @@ sig_names <- as_labeller(
        "monocytes" = "monocytes",
        "NK-T cells" = "NK-T cells"))
 
-pal <- RColorBrewer::brewer.pal(8, "Set2")[1:4]
-names(pal) <- c("CF.IVA","CF.LUMA_IVA","CF.NO_MOD","NON_CF.CTRL")
+pal <- setNames(RColorBrewer::brewer.pal(4, "Set2"),
+                unname(samp_map))
   
 dat %>%
 dplyr::filter(Group %in% c("CF.IVA", "CF.NO_MOD"),
                 clusters %in% "NK-T cells") %>%
+  mutate(Group = samp_map[Group]) %>%
 ggplot(aes(x = Group,
                 y = Freq,
                 colour = Group)) +
   geom_jitter(stat = "identity",
               width = 0.15,
-              size = 1) +
+              size = 1.5) +
   theme_classic() +
   theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank(),
           axis.title.x = element_blank(),
-          axis.text.y = element_text(7),
+          axis.text.y = element_text(size = 7),
           legend.position = "bottom",
           legend.direction = "horizontal",
           strip.text = element_text(size = 8)) +
@@ -149,17 +180,18 @@ dat %>%
 dplyr::filter(Group %in% c("CF.IVA", "NON_CF.CTRL"),
                 clusters %in% c("CD4 T-IFN",
                                 "monocytes")) %>%
+  mutate(Group = samp_map[Group]) %>%
 ggplot(aes(x = Group,
                 y = Freq,
                 colour = Group)) +
   geom_jitter(stat = "identity",
               width = 0.15,
-              size = 1) +
+              size = 1.5) +
   theme_classic() +
   theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank(),
           axis.title.x = element_blank(),
-          axis.text.y = element_text(7),
+          axis.text.y = element_text(size = 7),
           legend.position = "bottom",
           legend.direction = "horizontal",
           strip.text = element_text(size = 8)) +
@@ -178,7 +210,7 @@ layout <- "ABB"
 iva_props <- (p1 + 
                 (p2 + theme(axis.title.y = element_blank()))) + 
   plot_layout(design = layout) &
-  theme(axis.text.y = element_text(size = 6,
+  theme(axis.text.y = element_text(size = 7,
                                    angle = 90,
                                    hjust = 0.5),
         legend.text = element_text(size = 8),
@@ -209,24 +241,25 @@ sig_names <- as_labeller(
      c("CD4 T-IFN" = "CD4 T-IFN",
        "CD4 T-reg" = "CD4 T-reg",
        "monocytes" = "monocytes",
-       "macro-CCL18" = "macro-CCL18",
+       "macro-CCL18" = "AM.CCL18",
        "NK-T cells" = "NK-T cells"))
 
 dat %>%
 dplyr::filter(Group %in% c("CF.LUMA_IVA", "CF.NO_MOD"),
                 clusters %in% "NK-T cells") %>%
+  mutate(Group = samp_map[Group]) %>%
 ggplot(aes(x = Group,
                 y = Freq,
                 colour = Group)) +
   geom_jitter(stat = "identity",
               width = 0.15,
-              size = 1,
+              size = 1.5,
               show.legend = FALSE) +
   theme_classic() +
   theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank(),
           axis.title.x = element_blank(),
-          axis.text.y = element_text(7),
+          axis.text.y = element_text(size = 7),
           legend.position = "bottom",
           legend.direction = "horizontal",
           strip.text = element_text(size = 8)) +
@@ -246,18 +279,19 @@ dplyr::filter(Group %in% c("CF.LUMA_IVA", "NON_CF.CTRL"),
                 clusters %in% c("CD4 T-IFN",
                                 "CD4 T-reg",
                                 "monocytes")) %>%
+  mutate(Group = samp_map[Group]) %>%
 ggplot(aes(x = Group,
                 y = Freq,
                 colour = Group)) +
   geom_jitter(stat = "identity",
               width = 0.15,
-              size = 1,
+              size = 1.5,
               show.legend = FALSE) +
   theme_classic() +
   theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank(),
           axis.title.x = element_blank(),
-          axis.text.y = element_text(7),
+          axis.text.y = element_text(size = 7),
           legend.position = "bottom",
           legend.direction = "horizontal",
           strip.text = element_text(size = 8)) +
@@ -286,17 +320,18 @@ props$Proportions %>% data.frame %>%
 dat %>%
 dplyr::filter(Group %in% c("CF.LUMA_IVA", "CF.NO_MOD", "NON_CF.CTRL"),
                 clusters %in% c("macro-CCL18")) %>%
+  mutate(Group = samp_map[Group]) %>%
 ggplot(aes(x = Group,
                 y = Freq,
                 colour = Group)) +
   geom_jitter(stat = "identity",
               width = 0.15,
-              size = 1) +
+              size = 1.5) +
   theme_classic() +
   theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank(),
           axis.title.x = element_blank(),
-          axis.text.y = element_text(7),
+          axis.text.y = element_text(size = 7),
           legend.position = "bottom",
           legend.direction = "horizontal",
           strip.text = element_text(size = 8)) +
@@ -319,7 +354,7 @@ lumaiva_props <- (p1 +
   theme(axis.text.y = element_text(size = 6,
                                    angle = 90,
                                    hjust = 0.5),
-        legend.text = element_text(size = 8),
+        legend.text = element_text(size = 10),
         legend.key.spacing = unit(0, "lines"),
         legend.position = "bottom",
         legend.margin = margin(-0.5,0,0,0, unit="lines"))
@@ -387,13 +422,16 @@ ComplexHeatmap::HeatmapAnnotation(df = cell_freq %>%
                                   annotation_legend_param = list(
                                     `No. cells` = list(direction = "vertical"))) -> col_ann
 
-ComplexHeatmap::HeatmapAnnotation(df = data.frame(multiple = (rowSums(!is.na(dat_lfc)) > 1)),
+ComplexHeatmap::HeatmapAnnotation(df = data.frame(`Sig. ≥2 cell types` = (rowSums(!is.na(dat_lfc)) > 1),
+                                                  check.names = FALSE),
                                   which = "row",
-                                  col = list(multiple = c("FALSE" = "#fdcce5","TRUE" = "#8bd3c7")),
+                                  col = list(`Sig. ≥2 cell types` = c("FALSE" = "#fdcce5","TRUE" = "#8bd3c7")),
                                   annotation_legend_param = list(
-                                    multiple = list(direction = "vertical",
-                                                    ncol = 1))) -> row_ann
+                                    `Sig. ≥2 cell types` = list(direction = "vertical",
+                                                    ncol = 1)),
+                                  show_annotation_name = FALSE) -> row_ann
 
+colnames(dat_lfc) <- lab_map[colnames(dat_lfc)]
 ComplexHeatmap::Heatmap(dat_lfc, 
                         name = "logFC",
                         column_split = col_split,
@@ -402,7 +440,7 @@ ComplexHeatmap::Heatmap(dat_lfc,
                         cluster_columns = FALSE,
                         rect_gp = grid::gpar(col = "white", lwd = 1),
                         row_names_gp = grid::gpar(fontsize = 7),
-                        column_names_gp = grid::gpar(fontsize = 7),
+                        column_names_gp = grid::gpar(fontsize = 8),
                         col = col_lfc_fun,
                         top_annotation = col_ann,
                         right_annotation = row_ann,
@@ -421,7 +459,7 @@ bind_rows(lapply(files, function(f){
   lrt <- glmLRT(deg_results$fit, 
                 contrast = deg_results$contr[,cont_name])
   tmp <- cbind(summary(decideTests(lrt, p.value = cutoff)) %>% data.frame,
-                    cell = unlist(str_split(str_remove(f, ".CF_samples.fit.rds"), "/"))[8])
+                    cell = str_extract(basename(f), "^[^.]+"))
   tmp
 })) -> dat_deg
 ```
@@ -433,6 +471,7 @@ dat_deg %>%
 pal_dt <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
 
 dat_deg %>%
+  mutate(cell = lab_map[cell]) %>%
   dplyr::filter(Var1 != "NotSig") %>%
   ggplot(aes(x = fct_reorder(cell, n), y = Freq, fill = Var1)) +
   geom_col(position = "dodge") +
@@ -441,7 +480,7 @@ dat_deg %>%
   theme(axis.text.y = element_text(angle = -45,
                                    hjust = 1,
                                    vjust = 1,
-                                   size = 7),
+                                   size = 8),
         legend.position = "top") +
   geom_text(aes(label = Freq), 
             position = position_dodge(width = 0.9),
@@ -549,10 +588,11 @@ cpm(norm_counts, log = TRUE) %>%
   mutate(group = str_remove_all(group, "(.M|.S)$")) %>%
   dplyr::filter(group %in% str_split(cont_name, "v")[[1]]) -> dat
 
-ggplot(dat, aes(x = group, y = logCPM, colour = group)) +
- # geom_violin() +
+dat %>%
+  mutate(group = samp_map[group]) %>%
+ggplot(aes(x = group, y = logCPM, colour = group)) +
   geom_jitter(width = 0.15,
-              size = 1) +
+              size = 1.5) +
   stat_summary(geom = "point",
                fun.y = "mean",
                col = "black",
@@ -563,7 +603,9 @@ ggplot(dat, aes(x = group, y = logCPM, colour = group)) +
     theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank(),
           axis.title.x = element_blank(),
-          axis.text.y = element_text(7),
+          axis.text.y = element_text(size = 7,
+                                   angle = 90,
+                                   hjust = 0.5),
           legend.position = "bottom",
           legend.direction = "horizontal",
           strip.text = element_text(size = 8)) +
@@ -597,112 +639,115 @@ HHHHHHH
 HHHHHHH
 "
 
-wrap_elements(iva_props) +
-  wrap_elements(lumaiva_props) +
-  wrap_elements(deg_barplot) +
-  wrap_elements(grid::grid.grabExpr(ComplexHeatmap::draw(plot_lfc))) +
-  wrap_elements(volc_plot) +
-    wrap_elements(cam_plot + theme(legend.position = "bottom",
+wrap_elements(iva_props + theme(plot.margin = margin(rep(0,4)))) +
+  wrap_elements(lumaiva_props + theme(plot.margin = margin(rep(0,4)))) +
+  wrap_elements(deg_barplot + theme(plot.margin = margin(rep(0,4)))) +
+  wrap_elements(grid::grid.grabExpr(ComplexHeatmap::draw(plot_lfc,
+                                                         padding = unit(0, "mm")))) +
+  wrap_elements(volc_plot + theme(plot.margin = margin(rep(0,4)))) +
+  wrap_elements(cam_plot + theme(legend.position = "bottom",
                                  legend.direction = "horizontal",
                                  legend.box = "vertical",
                                  legend.margin = margin(-0.5,0,0,0, unit="lines"),
-                        legend.text = element_text(size = 8))) +
+                                 legend.text = element_text(size = 8),
+                                 plot.margin = margin(rep(0,4)))) +
   wrap_elements(ora_plot + 
                   theme(legend.position = "bottom",
                         legend.direction = "horizontal",
                         legend.box = "vertical",
                         legend.margin = margin(-0.5,0,0,0, unit="lines"),
-                        legend.text = element_text(size = 7))) +
-  wrap_elements(gene_plot) +
+                        legend.text = element_text(size = 7),
+                        plot.margin = margin(rep(0,4)))) +
+  wrap_elements(gene_plot + theme(plot.margin = margin(rep(0,4)))) +
   plot_layout(design = layout) +
   plot_annotation(tag_levels = "A")  &
-  theme(plot.tag = element_text(size = 16,
+  theme(plot.tag = element_text(size = 24,
                                 face = "bold",
                                 family = "arial"))
 
 ```
 
-# Prepare figure panels
+<!-- # Prepare figure panels -->
 
-```{r}
-files <- list.files(here("data/intermediate_objects"),
-            pattern = "macro.*all_samples", 
-            full.names = TRUE) 
- 
-cutoff <- 0.05 
-cont_name <- "CF.IVAvNON_CF.CTRL"
-lfc_cutoff <- 0
-suffix <- ".all_samples.fit.rds"
-  
-get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
-             suffix = suffix) -> dat
-```
+<!-- ```{r} -->
+<!-- files <- list.files(here("data/intermediate_objects"), -->
+<!--             pattern = "macro.*all_samples",  -->
+<!--             full.names = TRUE)  -->
 
-```{r}
-bind_rows(lapply(files, function(f){
-  deg_results <- readRDS(f)
-  if(cont_name %in% colnames(deg_results$contr)){
-    lrt <- glmLRT(deg_results$fit, 
-                  contrast = deg_results$contr[,cont_name])
-    tmp <- cbind(summary(decideTests(lrt, p.value = cutoff)) %>% data.frame,
-                 cell = unlist(str_split(str_remove(f, suffix), "/"))[8])
-    tmp
-  }
-})) -> dat_deg
-```
+<!-- cutoff <- 0.05  -->
+<!-- cont_name <- "CF.IVAvNON_CF.CTRL" -->
+<!-- lfc_cutoff <- 0 -->
+<!-- suffix <- ".all_samples.fit.rds" -->
 
-```{r}
-dat_deg %>% 
-  left_join(cell_freq) -> dat_deg
+<!-- get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff, -->
+<!--              suffix = suffix) -> dat -->
+<!-- ``` -->
 
-pal_dt <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
+<!-- ```{r} -->
+<!-- bind_rows(lapply(files, function(f){ -->
+<!--   deg_results <- readRDS(f) -->
+<!--   if(cont_name %in% colnames(deg_results$contr)){ -->
+<!--     lrt <- glmLRT(deg_results$fit,  -->
+<!--                   contrast = deg_results$contr[,cont_name]) -->
+<!--     tmp <- cbind(summary(decideTests(lrt, p.value = cutoff)) %>% data.frame, -->
+<!--                  cell = unlist(str_split(str_remove(f, suffix), "/"))[8]) -->
+<!--     tmp -->
+<!--   } -->
+<!-- })) -> dat_deg -->
+<!-- ``` -->
 
-dat_deg %>%
-  dplyr::filter(Var1 != "NotSig") %>%
-  ggplot(aes(x = fct_reorder(cell, -n), y = Freq, fill = Var1)) +
-  geom_col(position = "dodge") +
-  scale_fill_manual(values = pal_dt) +
-  theme_classic() +
-  theme(axis.text.x = element_text(angle = 30,
-                                   hjust = 1,
-                                   vjust = 1,
-                                   size = 7),
-        legend.position = "top") +
-  geom_text(aes(label = Freq), 
-            position = position_dodge(width = 0.9),
-            vjust = -0.5,
-            size = 2.5) +
-  labs(x = "Cell Type",
-       y = "No. DEG (FDR < 0.05)",
-       fill = "Direction") -> deg_barplot
+<!-- ```{r} -->
+<!-- dat_deg %>%  -->
+<!--   left_join(cell_freq) -> dat_deg -->
 
-deg_barplot
-```
+<!-- pal_dt <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey")  -->
 
-```{r}
-get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff,
-             suffix = suffix, cutoff = 1) -> dat_all
-```
+<!-- dat_deg %>% -->
+<!--   dplyr::filter(Var1 != "NotSig") %>% -->
+<!--   ggplot(aes(x = fct_reorder(cell, -n), y = Freq, fill = Var1)) + -->
+<!--   geom_col(position = "dodge") + -->
+<!--   scale_fill_manual(values = pal_dt) + -->
+<!--   theme_classic() + -->
+<!--   theme(axis.text.x = element_text(angle = 30, -->
+<!--                                    hjust = 1, -->
+<!--                                    vjust = 1, -->
+<!--                                    size = 7), -->
+<!--         legend.position = "top") + -->
+<!--   geom_text(aes(label = Freq),  -->
+<!--             position = position_dodge(width = 0.9), -->
+<!--             vjust = -0.5, -->
+<!--             size = 2.5) + -->
+<!--   labs(x = "Cell Type", -->
+<!--        y = "No. DEG (FDR < 0.05)", -->
+<!--        fill = "Direction") -> deg_barplot -->
 
-```{r}
-dat_all %>% 
-  left_join(cell_freq) %>%
-  mutate(Direction = as.factor(ifelse(sig == -1, "Down",
-                                      ifelse(sig == 1, "Up", "N.S."))),
-         cell = fct_reorder(cell, -n)) -> dat_all
+<!-- deg_barplot -->
+<!-- ``` -->
 
-ggplot(dat_all, aes(x = logFC, y = -log10(FDR), colour = Direction)) + 
-  geom_point(size = 0.5) + 
-  facet_wrap(~cell, ncol = 4) + 
-  theme_classic() +
-  scale_color_manual(values = pal_dt[c(1,3,2)]) +
-  ggrepel::geom_text_repel(data = dat_all[dat_all$sig != 0,], 
-                           aes(label = gene), size = 2) -> volc_plot
+<!-- ```{r} -->
+<!-- get_deg_data(files, cont_name, cell_freq, treat_lfc = lfc_cutoff, -->
+<!--              suffix = suffix, cutoff = 1) -> dat_all -->
+<!-- ``` -->
 
-volc_plot
-```
+<!-- ```{r} -->
+<!-- dat_all %>%  -->
+<!--   left_join(cell_freq) %>% -->
+<!--   mutate(Direction = as.factor(ifelse(sig == -1, "Down", -->
+<!--                                       ifelse(sig == 1, "Up", "N.S."))), -->
+<!--          cell = fct_reorder(cell, -n)) -> dat_all -->
 
-# Supplementary Figure 6
+<!-- ggplot(dat_all, aes(x = logFC, y = -log10(FDR), colour = Direction)) +  -->
+<!--   geom_point(size = 0.5) +  -->
+<!--   facet_wrap(~cell, ncol = 4) +  -->
+<!--   theme_classic() + -->
+<!--   scale_color_manual(values = pal_dt[c(1,3,2)]) + -->
+<!--   ggrepel::geom_text_repel(data = dat_all[dat_all$sig != 0,],  -->
+<!--                            aes(label = gene), size = 2) -> volc_plot -->
+
+<!-- volc_plot -->
+<!-- ``` -->
+
+<!-- # Supplementary Figure 6 -->
 
 <!-- ```{r} -->
 <!-- library(gggsea) -->
