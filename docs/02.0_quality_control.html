@@ -11,11 +11,11 @@
 
 <meta name="author" content="Jovana Maksimovic" />
 
-<meta name="date" content="2024-02-27" />
+<meta name="date" content="2025-09-11" />
 
 <title>Quality control of C133_Neeland data</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -354,7 +354,7 @@ div.tocify {
 <h1 class="title toc-ignore">Quality control of C133_Neeland data</h1>
 <h3 class="subtitle">Batches 0-6</h3>
 <h4 class="author">Jovana Maksimovic</h4>
-<h4 class="date">February 27, 2024</h4>
+<h4 class="date">September 11, 2025</h4>
 
 </div>
 
@@ -383,7 +383,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-02-27
+<strong>Last updated:</strong> 2025-09-11
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -392,8 +392,9 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 aria-hidden="true"></span> 0
 </p>
 <p>
-<strong>Knit directory:</strong> <code>paed-inflammation-CITEseq/</code>
-<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+<strong>Knit directory:</strong>
+<code>paediatric-cf-inflammation-citeseq/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
 title="This is the local directory in which the code in this file was executed.">
 </span>
 </p>
@@ -514,13 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong4741d87">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree12bd53f76fa2bcceb4d645953cc42de2c28066f0targetblank12bd53fa">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 4741d87
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/12bd53f76fa2bcceb4d645953cc42de2c28066f0" target="_blank">12bd53f</a>
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong4741d87"
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree12bd53f76fa2bcceb4d645953cc42de2c28066f0targetblank12bd53fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -529,7 +532,8 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 4741d87.
+The results in this page were generated with repository version
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/12bd53f76fa2bcceb4d645953cc42de2c28066f0" target="_blank">12bd53f</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -546,31 +550,86 @@ were generated:
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    code/obsolete/
+    Ignored:    data/.DS_Store
+    Ignored:    data/C133_Neeland_batch0/
+    Ignored:    data/C133_Neeland_batch1/
+    Ignored:    data/C133_Neeland_batch2/
+    Ignored:    data/C133_Neeland_batch3/
+    Ignored:    data/C133_Neeland_batch4/
+    Ignored:    data/C133_Neeland_batch5/
+    Ignored:    data/C133_Neeland_batch6/
+    Ignored:    data/C133_Neeland_merged/
+    Ignored:    data/Neeland_processed_data_1.h5ad
+    Ignored:    data/Neeland_processed_data_2.h5ad
+    Ignored:    data/Neeland_processed_data_3.h5ad
+    Ignored:    data/intermediate_objects/.DS_Store
+    Ignored:    data/updated_h5ad_files/
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
 
 Untracked files:
-    Untracked:  .DS_Store
-    Untracked:  analysis/05.0_remove_ambient.Rmd
-    Untracked:  analysis/06.0_azimuth_annotation.Rmd
-    Untracked:  analysis/06.1_azimuth_annotation_decontx.Rmd
-    Untracked:  code/dropletutils.R
-    Untracked:  code/utility.R
-    Untracked:  data/.DS_Store
-    Untracked:  data/C133_Neeland_batch0/
-    Untracked:  data/C133_Neeland_batch1/
-    Untracked:  data/C133_Neeland_batch2/
-    Untracked:  data/C133_Neeland_batch3/
-    Untracked:  data/C133_Neeland_batch4/
-    Untracked:  data/C133_Neeland_batch5/
-    Untracked:  data/C133_Neeland_batch6/
-    Untracked:  data/CZI_samples_design_with_micro.xlsx
-    Untracked:  renv.lock
-    Untracked:  renv/
+    Untracked:  analysis/14.2_DGE_analysis_ciliated-epithelial-cells.Rmd
+    Untracked:  analysis/cellxgene_submission.Rmd
+    Untracked:  analysis/epithelial_cell_analysis.Rmd
+    Untracked:  analysis/epithelial_cell_analysis.nb.html
+    Untracked:  data/GOBP_CYTOKINE_MEDIATED_SIGNALING_PATHWAY.v2025.1.Hs.tsv
+    Untracked:  data/cellxgene_cell_ontologies_ann_level_3.xlsx
+    Untracked:  data/gencode.v44.primary_assembly.annotation.gtf
+    Untracked:  output/dge_analysis/epithelial cells/
+    Untracked:  output/pdf_figures/
 
 Unstaged changes:
-    Modified:   .Rprofile
-    Modified:   .gitignore
-    Modified:   analysis/01.0_preprocess_batch0.Rmd
-    Modified:   analysis/01.1_preprocess_batch1.Rmd
+    Modified:   .DS_Store
+    Modified:   analysis/13.0_DGE_analysis_macrophages.Rmd
+    Modified:   analysis/13.1_DGE_analysis_macro-alveolar.Rmd
+    Modified:   analysis/13.2_DGE_analysis_macro-APOC2+.Rmd
+    Modified:   analysis/13.3_DGE_analysis_macro-CCL.Rmd
+    Modified:   analysis/13.4_DGE_analysis_macro-IFI27.Rmd
+    Modified:   analysis/13.5_DGE_analysis_macro-lipid.Rmd
+    Modified:   analysis/13.6_DGE_analysis_macro-monocyte-derived.Rmd
+    Modified:   analysis/13.7_DGE_analysis_macro-proliferating.Rmd
+    Modified:   analysis/14.0_DGE_analysis_CD4-T-cells.Rmd
+    Modified:   analysis/14.1_DGE_analysis_CD8-T-cells.Rmd
+    Modified:   analysis/14.2_DGE_analysis_DC-cells.Rmd
+    Modified:   data/intermediate_objects/macrophages.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/macrophages.all_samples.fit.rds
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/ORA.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
 
 </code></pre>
 <p>
@@ -585,7 +644,6 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
 These are the previous versions of the repository in which changes were
 made to the R Markdown (<code>analysis/02.0_quality_control.Rmd</code>)
@@ -618,27 +676,10 @@ Message
 <tbody>
 <tr>
 <td>
-Rmd
-</td>
-<td>
-4741d87
-</td>
-<td>
-Jovana Maksimovic
-</td>
-<td>
-2024-02-27
-</td>
-<td>
-wflow_publish("analysis/02.0_quality_control.Rmd")
-</td>
-</tr>
-<tr>
-<td>
 html
 </td>
 <td>
-cab70ad
+<a href="https://rawcdn.githack.com/Oshlack/paediatric-cf-inflammation-citeseq/f9991813bcbf2e631870e6f2ec936bf2e183dbc0/docs/02.0_quality_control.html" target="_blank">f999181</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -655,7 +696,7 @@ Build site.
 Rmd
 </td>
 <td>
-e846b43
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/4741d87085d9e573523aba8f47a0ef7dbc911db1/analysis/02.0_quality_control.Rmd" target="_blank">4741d87</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -672,7 +713,7 @@ wflow_publish("analysis/02.0_quality_control.Rmd")
 html
 </td>
 <td>
-ab023d9
+<a href="https://rawcdn.githack.com/Oshlack/paediatric-cf-inflammation-citeseq/cab70ad4cfac9290be445950aceea86affc77d13/docs/02.0_quality_control.html" target="_blank">cab70ad</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -689,7 +730,41 @@ Build site.
 Rmd
 </td>
 <td>
-335d800
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/e846b430b086bcfcd86832fc91ce21aa949b6825/analysis/02.0_quality_control.Rmd" target="_blank">e846b43</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+<td>
+wflow_publish("analysis/02.0_quality_control.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Oshlack/paediatric-cf-inflammation-citeseq/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/02.0_quality_control.html" target="_blank">ab023d9</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-02-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/335d800a37a7627e1987a68e5a4f30b6a66ea079/analysis/02.0_quality_control.Rmd" target="_blank">335d800</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -738,7 +813,7 @@ sceLst &lt;- sapply(files, function(fn){
 })
 
 sceLst</code></pre>
-<pre><code>$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch0/data/SCEs/C133_Neeland_batch0.preprocessed.SCE.rds`
+<pre><code>$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch0/data/SCEs/C133_Neeland_batch0.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 33538 34583 
 metadata(1): Samples
@@ -753,7 +828,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(0):
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 24823 
 metadata(1): Samples
@@ -768,7 +843,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(2): HTO ADT
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 53160 
 metadata(1): Samples
@@ -783,7 +858,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(2): HTO ADT
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 64842 
 metadata(1): Samples
@@ -798,7 +873,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(2): HTO ADT
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 50208 
 metadata(1): Samples
@@ -813,7 +888,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(2): HTO ADT
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 50668 
 metadata(1): Samples
@@ -828,7 +903,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(2): HTO ADT
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 51119 
 metadata(1): Samples
@@ -860,7 +935,7 @@ id="fnref1"><sup>1</sup></a>.</p>
 })
 
 sceLst</code></pre>
-<pre><code>$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch0/data/SCEs/C133_Neeland_batch0.preprocessed.SCE.rds`
+<pre><code>$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch0/data/SCEs/C133_Neeland_batch0.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 33538 34583 
 metadata(1): Samples
@@ -875,7 +950,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(0):
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 24823 
 metadata(1): Samples
@@ -890,7 +965,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(2): HTO ADT
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 53160 
 metadata(1): Samples
@@ -905,7 +980,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(2): HTO ADT
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 64842 
 metadata(1): Samples
@@ -920,7 +995,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(2): HTO ADT
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 50208 
 metadata(1): Samples
@@ -935,7 +1010,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(2): HTO ADT
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 50668 
 metadata(1): Samples
@@ -950,7 +1025,7 @@ reducedDimNames(0):
 mainExpName: Gene Expression
 altExpNames(2): HTO ADT
 
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`
 class: SingleCellExperiment 
 dim: 36601 51119 
 metadata(1): Samples
@@ -1104,7 +1179,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-1.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1151,7 +1237,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-2.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-2.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1198,7 +1295,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-3.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-3.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1245,7 +1353,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-4.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-4.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1292,7 +1411,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-5.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-5.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1339,7 +1469,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-6.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-6.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1386,7 +1527,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-7.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-by-genetic-donor-7.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2297,7 +2449,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-1.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2342,7 +2505,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-2.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-2.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2387,7 +2561,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-3.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-3.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2432,7 +2617,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-4.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-4.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2477,7 +2673,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-5.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-5.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2522,7 +2729,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-6.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-6.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2567,7 +2785,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-7.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/barplot-highlighting-outliers-7.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2660,7 +2889,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-1.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2708,7 +2948,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-2.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-2.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2756,7 +3007,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-3.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-3.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2804,7 +3066,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-4.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-4.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2852,7 +3125,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-5.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-5.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2900,7 +3184,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-6.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-6.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2948,7 +3243,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-7.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-highlighting-outliers-7.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3025,7 +3331,7 @@ experimental design following QC.</p>
 })
 
 p</code></pre>
-<pre><code>$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch0/data/SCEs/C133_Neeland_batch0.preprocessed.SCE.rds`</code></pre>
+<pre><code>$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch0/data/SCEs/C133_Neeland_batch0.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-1.png" alt="Distributions of various QC metrics for all cells in the dataset passing QC. This includes the library sizes and proportion of reads mapped to mitochondrial genes." width="672" />
 <p class="caption">
@@ -3058,7 +3364,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-1.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3072,7 +3389,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-2.png" alt="Distributions of various QC metrics for all cells in the dataset passing QC. This includes the library sizes and proportion of reads mapped to mitochondrial genes." width="672" />
 <p class="caption">
@@ -3105,7 +3422,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-2.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-2.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3119,7 +3447,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-3.png" alt="Distributions of various QC metrics for all cells in the dataset passing QC. This includes the library sizes and proportion of reads mapped to mitochondrial genes." width="672" />
 <p class="caption">
@@ -3152,7 +3480,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-3.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-3.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3166,7 +3505,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-4.png" alt="Distributions of various QC metrics for all cells in the dataset passing QC. This includes the library sizes and proportion of reads mapped to mitochondrial genes." width="672" />
 <p class="caption">
@@ -3199,7 +3538,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-4.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-4.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3213,7 +3563,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-5.png" alt="Distributions of various QC metrics for all cells in the dataset passing QC. This includes the library sizes and proportion of reads mapped to mitochondrial genes." width="672" />
 <p class="caption">
@@ -3246,7 +3596,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-5.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-5.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3260,7 +3621,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-6.png" alt="Distributions of various QC metrics for all cells in the dataset passing QC. This includes the library sizes and proportion of reads mapped to mitochondrial genes." width="672" />
 <p class="caption">
@@ -3293,7 +3654,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-6.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-6.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3307,7 +3679,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-7.png" alt="Distributions of various QC metrics for all cells in the dataset passing QC. This includes the library sizes and proportion of reads mapped to mitochondrial genes." width="672" />
 <p class="caption">
@@ -3340,7 +3712,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-7.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/qcplot-post-outlier-removal-7.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3383,7 +3766,7 @@ sceFlt[batch][[1]]$dmmHTO &lt;- sceFlt[batch][[1]]$Capture</code></pre>
 })
 
 p</code></pre>
-<pre><code>$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch0/data/SCEs/C133_Neeland_batch0.preprocessed.SCE.rds`</code></pre>
+<pre><code>$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch0/data/SCEs/C133_Neeland_batch0.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-1.png" alt="Breakdown of the samples following QC." width="672" />
 <p class="caption">
@@ -3414,7 +3797,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-1.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3428,7 +3822,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch1/data/SCEs/C133_Neeland_batch1.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-2.png" alt="Breakdown of the samples following QC." width="672" />
 <p class="caption">
@@ -3459,7 +3853,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-2.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-2.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3473,7 +3878,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch2/data/SCEs/C133_Neeland_batch2.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-3.png" alt="Breakdown of the samples following QC." width="672" />
 <p class="caption">
@@ -3504,7 +3909,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-3.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-3.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3518,7 +3934,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch3/data/SCEs/C133_Neeland_batch3.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-4.png" alt="Breakdown of the samples following QC." width="672" />
 <p class="caption">
@@ -3549,7 +3965,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-4.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-4.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3563,7 +3990,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch4/data/SCEs/C133_Neeland_batch4.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-5.png" alt="Breakdown of the samples following QC." width="672" />
 <p class="caption">
@@ -3594,7 +4021,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-5.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-5.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3608,7 +4046,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch5/data/SCEs/C133_Neeland_batch5.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-6.png" alt="Breakdown of the samples following QC." width="672" />
 <p class="caption">
@@ -3639,7 +4077,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-6.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-6.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3653,7 +4102,7 @@ Jovana Maksimovic
 </div>
 </div>
 <pre><code>
-$`/Users/maksimovicjovana/Work/Projects/MCRI/melanie.neeland/paed-inflammation-CITEseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`</code></pre>
+$`/Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/data/C133_Neeland_batch6/data/SCEs/C133_Neeland_batch6.preprocessed.SCE.rds`</code></pre>
 <div class="figure" style="text-align: center">
 <img src="figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-7.png" alt="Breakdown of the samples following QC." width="672" />
 <p class="caption">
@@ -3684,7 +4133,18 @@ Date
 <tbody>
 <tr>
 <td>
-ab023d9
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-7.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/ab023d97621f8ddd227a07bdb2699b4ca637f13b/docs/figure/02.0_quality_control.Rmd/experiment-by-donor-postqc-7.png" target="_blank">ab023d9</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -3746,9 +4206,9 @@ Session information
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 4.3.2 (2023-10-31)
+<pre><code>R version 4.3.3 (2024-02-29)
 Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.3
+Running under: macOS 15.5
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
@@ -3790,8 +4250,8 @@ other attached packages:
 [23] BiocGenerics_0.48.1                    
 [24] MatrixGenerics_1.14.0                  
 [25] matrixStats_1.2.0                      
-[26] patchwork_1.2.0                        
-[27] glue_1.7.0                             
+[26] patchwork_1.3.1                        
+[27] glue_1.8.0                             
 [28] here_1.0.1                             
 [29] lubridate_1.9.3                        
 [30] forcats_1.0.0                          
@@ -3801,7 +4261,7 @@ other attached packages:
 [34] readr_2.1.5                            
 [35] tidyr_1.3.1                            
 [36] tibble_3.2.1                           
-[37] ggplot2_3.4.4                          
+[37] ggplot2_3.5.2                          
 [38] tidyverse_2.0.0                        
 [39] BiocStyle_2.30.0                       
 [40] workflowr_1.7.1                        
@@ -3813,8 +4273,8 @@ loaded via a namespace (and not attached):
   [7] lifecycle_1.0.4           edgeR_4.0.15             
   [9] rprojroot_2.0.4           processx_3.8.3           
  [11] lattice_0.22-5            magrittr_2.0.3           
- [13] limma_3.58.1              sass_0.4.8               
- [15] rmarkdown_2.25            jquerylib_0.1.4          
+ [13] limma_3.58.1              sass_0.4.10              
+ [15] rmarkdown_2.29            jquerylib_0.1.4          
  [17] yaml_2.3.8                metapod_1.10.1           
  [19] httpuv_1.6.14             DBI_1.2.1                
  [21] abind_1.4-5               zlibbioc_1.48.0          
@@ -3823,14 +4283,14 @@ loaded via a namespace (and not attached):
  [27] ggrepel_0.9.5             irlba_2.3.5.1            
  [29] dqrng_0.3.2               DelayedMatrixStats_1.24.0
  [31] codetools_0.2-19          DelayedArray_0.28.0      
- [33] xml2_1.3.6                tidyselect_1.2.0         
+ [33] xml2_1.3.6                tidyselect_1.2.1         
  [35] farver_2.1.1              ScaledMatrix_1.10.0      
  [37] viridis_0.6.5             BiocFileCache_2.10.1     
  [39] GenomicAlignments_1.38.2  jsonlite_1.8.8           
- [41] BiocNeighbors_1.20.2      tools_4.3.2              
+ [41] BiocNeighbors_1.20.2      tools_4.3.3              
  [43] progress_1.2.3            Rcpp_1.0.12              
  [45] gridExtra_2.3             SparseArray_1.2.4        
- [47] xfun_0.42                 withr_3.0.0              
+ [47] xfun_0.52                 withr_3.0.0              
  [49] BiocManager_1.30.22       fastmap_1.1.1            
  [51] bluster_1.12.0            fansi_1.0.6              
  [53] callr_3.7.3               digest_0.6.34            
@@ -3838,28 +4298,28 @@ loaded via a namespace (and not attached):
  [57] R6_2.5.1                  colorspace_2.1-0         
  [59] biomaRt_2.58.2            RSQLite_2.3.5            
  [61] utf8_1.2.4                generics_0.1.3           
- [63] renv_1.0.3                rtracklayer_1.62.0       
+ [63] renv_1.1.4                rtracklayer_1.62.0       
  [65] prettyunits_1.2.0         httr_1.4.7               
  [67] S4Arrays_1.2.0            whisker_0.4.1            
- [69] pkgconfig_2.0.3           gtable_0.3.4             
+ [69] pkgconfig_2.0.3           gtable_0.3.6             
  [71] blob_1.2.4                XVector_0.42.0           
- [73] htmltools_0.5.7           RBGL_1.78.0              
+ [73] htmltools_0.5.8.1         RBGL_1.78.0              
  [75] ProtGenerics_1.34.0       scales_1.3.0             
- [77] png_0.1-8                 knitr_1.45               
+ [77] png_0.1-8                 knitr_1.50               
  [79] rstudioapi_0.15.0         tzdb_0.4.0               
  [81] rjson_0.2.21              curl_5.2.0               
- [83] cachem_1.0.8              parallel_4.3.2           
+ [83] cachem_1.0.8              parallel_4.3.3           
  [85] vipor_0.4.7               restfulr_0.0.15          
- [87] pillar_1.9.0              grid_4.3.2               
+ [87] pillar_1.9.0              grid_4.3.3               
  [89] vctrs_0.6.5               promises_1.2.1           
  [91] BiocSingular_1.18.0       dbplyr_2.4.0             
  [93] beachmat_2.18.1           cluster_2.1.6            
  [95] beeswarm_0.4.0            evaluate_0.23            
- [97] cli_3.6.2                 locfit_1.5-9.8           
- [99] compiler_4.3.2            Rsamtools_2.18.0         
-[101] rlang_1.1.3               crayon_1.5.2             
+ [97] cli_3.6.5                 locfit_1.5-9.8           
+ [99] compiler_4.3.3            Rsamtools_2.18.0         
+[101] rlang_1.1.6               crayon_1.5.2             
 [103] labeling_0.4.3            ps_1.7.6                 
-[105] getPass_0.2-4             fs_1.6.3                 
+[105] getPass_0.2-4             fs_1.6.6                 
 [107] ggbeeswarm_0.7.2          stringi_1.8.3            
 [109] viridisLite_0.4.2         BiocParallel_1.36.0      
 [111] babelgene_22.9            munsell_0.5.0            
@@ -3867,9 +4327,13 @@ loaded via a namespace (and not attached):
 [115] Matrix_1.6-5              hms_1.1.3                
 [117] sparseMatrixStats_1.14.0  bit64_4.0.5              
 [119] KEGGREST_1.42.0           statmod_1.5.0            
-[121] highr_0.10                igraph_2.0.1.1           
-[123] memoise_2.0.1             bslib_0.6.1              
-[125] bit_4.0.5                </code></pre>
+[121] igraph_2.0.1.1            memoise_2.0.1            
+[123] bslib_0.6.1               bit_4.0.5                </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="footnotes footnotes-end-of-document">
