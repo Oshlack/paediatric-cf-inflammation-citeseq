@@ -11,11 +11,11 @@
 
 <meta name="author" content="Jovana Maksimovic and George Howitt" />
 
-<meta name="date" content="2024-03-20" />
+<meta name="date" content="2025-09-11" />
 
 <title>Integrate and cluster T cells</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -353,7 +353,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Integrate and cluster T cells</h1>
 <h4 class="author">Jovana Maksimovic and George Howitt</h4>
-<h4 class="date">March 20, 2024</h4>
+<h4 class="date">September 11, 2025</h4>
 
 </div>
 
@@ -382,7 +382,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-03-20
+<strong>Last updated:</strong> 2025-09-11
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -391,8 +391,9 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 aria-hidden="true"></span> 0
 </p>
 <p>
-<strong>Knit directory:</strong> <code>paed-inflammation-CITEseq/</code>
-<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+<strong>Knit directory:</strong>
+<code>paediatric-cf-inflammation-citeseq/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
 title="This is the local directory in which the code in this file was executed.">
 </span>
 </p>
@@ -513,15 +514,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtree6f4600be06114c5cce3a973ef0136c2449e8e7cetargetblank6f4600ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree38e61e84210fda5b8bcbdaa4573df4795c58b697targetblank38e61e8a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/6f4600be06114c5cce3a973ef0136c2449e8e7ce" target="_blank">6f4600b</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/38e61e84210fda5b8bcbdaa4573df4795c58b697" target="_blank">38e61e8</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtree6f4600be06114c5cce3a973ef0136c2449e8e7cetargetblank6f4600ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree38e61e84210fda5b8bcbdaa4573df4795c58b697targetblank38e61e8a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -531,7 +532,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/6f4600be06114c5cce3a973ef0136c2449e8e7ce" target="_blank">6f4600b</a>.
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/38e61e84210fda5b8bcbdaa4573df4795c58b697" target="_blank">38e61e8</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -548,6 +549,9 @@ were generated:
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    code/obsolete/
+    Ignored:    data/.DS_Store
     Ignored:    data/C133_Neeland_batch0/
     Ignored:    data/C133_Neeland_batch1/
     Ignored:    data/C133_Neeland_batch2/
@@ -556,62 +560,75 @@ Ignored files:
     Ignored:    data/C133_Neeland_batch5/
     Ignored:    data/C133_Neeland_batch6/
     Ignored:    data/C133_Neeland_merged/
+    Ignored:    data/Neeland_processed_data_1.h5ad
+    Ignored:    data/Neeland_processed_data_2.h5ad
+    Ignored:    data/Neeland_processed_data_3.h5ad
+    Ignored:    data/intermediate_objects/.DS_Store
+    Ignored:    data/updated_h5ad_files/
     Ignored:    renv/library/
     Ignored:    renv/staging/
 
 Untracked files:
-    Untracked:  analysis/scar.Rmd
-    Untracked:  analysis/scar.nb.html
-    Untracked:  output/cluster_markers/ADT/
-    Untracked:  output/cluster_markers/ADT_decontx/
-    Untracked:  output/cluster_markers/RNA/
-    Untracked:  output/cluster_markers/RNA_decontx/
+    Untracked:  analysis/14.2_DGE_analysis_ciliated-epithelial-cells.Rmd
+    Untracked:  analysis/cellxgene_submission.Rmd
+    Untracked:  analysis/epithelial_cell_analysis.Rmd
+    Untracked:  analysis/epithelial_cell_analysis.nb.html
+    Untracked:  data/GOBP_CYTOKINE_MEDIATED_SIGNALING_PATHWAY.v2025.1.Hs.tsv
+    Untracked:  data/cellxgene_cell_ontologies_ann_level_3.xlsx
+    Untracked:  data/gencode.v44.primary_assembly.annotation.gtf
+    Untracked:  output/dge_analysis/epithelial cells/
+    Untracked:  output/pdf_figures/
 
 Unstaged changes:
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c0.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c1.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c10.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c11.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c12.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c13.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c14.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c15.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c16.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c17.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c18.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c19.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c2.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c20.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c21.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c3.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c4.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c5.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c6.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c7.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c8.csv
-    Deleted:    output/cluster_markers/t_cells/REACTOME-cluster-limma-c9.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c0.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c1.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c10.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c11.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c12.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c13.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c14.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c15.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c16.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c17.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c18.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c19.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c2.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c20.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c21.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c3.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c4.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c5.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c6.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c7.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c8.csv
-    Deleted:    output/cluster_markers/t_cells/up-cluster-limma-c9.csv
+    Modified:   .DS_Store
+    Modified:   analysis/13.0_DGE_analysis_macrophages.Rmd
+    Modified:   analysis/13.1_DGE_analysis_macro-alveolar.Rmd
+    Modified:   analysis/13.2_DGE_analysis_macro-APOC2+.Rmd
+    Modified:   analysis/13.3_DGE_analysis_macro-CCL.Rmd
+    Modified:   analysis/13.4_DGE_analysis_macro-IFI27.Rmd
+    Modified:   analysis/13.5_DGE_analysis_macro-lipid.Rmd
+    Modified:   analysis/13.6_DGE_analysis_macro-monocyte-derived.Rmd
+    Modified:   analysis/13.7_DGE_analysis_macro-proliferating.Rmd
+    Modified:   analysis/14.0_DGE_analysis_CD4-T-cells.Rmd
+    Modified:   analysis/14.1_DGE_analysis_CD8-T-cells.Rmd
+    Modified:   analysis/14.2_DGE_analysis_DC-cells.Rmd
+    Modified:   data/intermediate_objects/macrophages.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/macrophages.all_samples.fit.rds
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/ORA.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
 
 </code></pre>
 <p>
@@ -626,7 +643,6 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
 These are the previous versions of the repository in which changes were
 made to the R Markdown
@@ -660,10 +676,27 @@ Message
 <tbody>
 <tr>
 <td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Oshlack/paediatric-cf-inflammation-citeseq/048f0f32a5506129d5830a31e4b0c24cc80bbe00/docs/07.1_integrate_cluster_t_cells_decontx.html" target="_blank">048f0f3</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-03-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
 Rmd
 </td>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/6f4600be06114c5cce3a973ef0136c2449e8e7ce/analysis/07.1_integrate_cluster_t_cells_decontx.Rmd" target="_blank">6f4600b</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/6f4600be06114c5cce3a973ef0136c2449e8e7ce/analysis/07.1_integrate_cluster_t_cells_decontx.Rmd" target="_blank">6f4600b</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -681,7 +714,7 @@ wflow_publish(c("analysis/index.Rmd",
 html
 </td>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/07.1_integrate_cluster_t_cells_decontx.html" target="_blank">fb50017</a>
+<a href="https://rawcdn.githack.com/Oshlack/paediatric-cf-inflammation-citeseq/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/07.1_integrate_cluster_t_cells_decontx.html" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -698,7 +731,7 @@ Build site.
 Rmd
 </td>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/3e9ce40d940e7ba45c3525f26758f86b2f10fec7/analysis/07.1_integrate_cluster_t_cells_decontx.Rmd" target="_blank">3e9ce40</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/3e9ce40d940e7ba45c3525f26758f86b2f10fec7/analysis/07.1_integrate_cluster_t_cells_decontx.Rmd" target="_blank">3e9ce40</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -783,7 +816,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-3-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-3-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-3-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -840,7 +884,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-5-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-5-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-5-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -882,7 +937,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-6-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-6-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-6-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -958,6 +1024,27 @@ if(!file.exists(out)){
   seu &lt;- readRDS(file = out)
   
 }</code></pre>
+<pre><code>  |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   3%  |                                                                              |=====                                                                 |   7%  |                                                                              |=======                                                               |  10%  |                                                                              |=========                                                             |  13%  |                                                                              |============                                                          |  17%  |                                                                              |==============                                                        |  20%  |                                                                              |================                                                      |  23%  |                                                                              |===================                                                   |  27%  |                                                                              |=====================                                                 |  30%  |                                                                              |=======================                                               |  33%  |                                                                              |==========================                                            |  37%  |                                                                              |============================                                          |  40%  |                                                                              |==============================                                        |  43%  |                                                                              |=================================                                     |  47%  |                                                                              |===================================                                   |  50%  |                                                                              |=====================================                                 |  53%  |                                                                              |========================================                              |  57%  |                                                                              |==========================================                            |  60%  |                                                                              |============================================                          |  63%  |                                                                              |===============================================                       |  67%  |                                                                              |=================================================                     |  70%  |                                                                              |===================================================                   |  73%  |                                                                              |======================================================                |  77%  |                                                                              |========================================================              |  80%  |                                                                              |==========================================================            |  83%  |                                                                              |=============================================================         |  87%  |                                                                              |===============================================================       |  90%  |                                                                              |=================================================================     |  93%  |                                                                              |====================================================================  |  97%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   3%  |                                                                              |=====                                                                 |   7%  |                                                                              |=======                                                               |  10%  |                                                                              |=========                                                             |  13%  |                                                                              |============                                                          |  17%  |                                                                              |==============                                                        |  20%  |                                                                              |================                                                      |  23%  |                                                                              |===================                                                   |  27%  |                                                                              |=====================                                                 |  30%  |                                                                              |=======================                                               |  33%  |                                                                              |==========================                                            |  37%  |                                                                              |============================                                          |  40%  |                                                                              |==============================                                        |  43%  |                                                                              |=================================                                     |  47%  |                                                                              |===================================                                   |  50%  |                                                                              |=====================================                                 |  53%  |                                                                              |========================================                              |  57%  |                                                                              |==========================================                            |  60%  |                                                                              |============================================                          |  63%  |                                                                              |===============================================                       |  67%  |                                                                              |=================================================                     |  70%  |                                                                              |===================================================                   |  73%  |                                                                              |======================================================                |  77%  |                                                                              |========================================================              |  80%  |                                                                              |==========================================================            |  83%  |                                                                              |=============================================================         |  87%  |                                                                              |===============================================================       |  90%  |                                                                              |=================================================================     |  93%  |                                                                              |====================================================================  |  97%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   4%  |                                                                              |=====                                                                 |   7%  |                                                                              |========                                                              |  11%  |                                                                              |==========                                                            |  15%  |                                                                              |=============                                                         |  19%  |                                                                              |================                                                      |  22%  |                                                                              |==================                                                    |  26%  |                                                                              |=====================                                                 |  30%  |                                                                              |=======================                                               |  33%  |                                                                              |==========================                                            |  37%  |                                                                              |=============================                                         |  41%  |                                                                              |===============================                                       |  44%  |                                                                              |==================================                                    |  48%  |                                                                              |====================================                                  |  52%  |                                                                              |=======================================                               |  56%  |                                                                              |=========================================                             |  59%  |                                                                              |============================================                          |  63%  |                                                                              |===============================================                       |  67%  |                                                                              |=================================================                     |  70%  |                                                                              |====================================================                  |  74%  |                                                                              |======================================================                |  78%  |                                                                              |=========================================================             |  81%  |                                                                              |============================================================          |  85%  |                                                                              |==============================================================        |  89%  |                                                                              |=================================================================     |  93%  |                                                                              |===================================================================   |  96%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   4%  |                                                                              |=====                                                                 |   7%  |                                                                              |========                                                              |  11%  |                                                                              |==========                                                            |  15%  |                                                                              |=============                                                         |  19%  |                                                                              |================                                                      |  22%  |                                                                              |==================                                                    |  26%  |                                                                              |=====================                                                 |  30%  |                                                                              |=======================                                               |  33%  |                                                                              |==========================                                            |  37%  |                                                                              |=============================                                         |  41%  |                                                                              |===============================                                       |  44%  |                                                                              |==================================                                    |  48%  |                                                                              |====================================                                  |  52%  |                                                                              |=======================================                               |  56%  |                                                                              |=========================================                             |  59%  |                                                                              |============================================                          |  63%  |                                                                              |===============================================                       |  67%  |                                                                              |=================================================                     |  70%  |                                                                              |====================================================                  |  74%  |                                                                              |======================================================                |  78%  |                                                                              |=========================================================             |  81%  |                                                                              |============================================================          |  85%  |                                                                              |==============================================================        |  89%  |                                                                              |=================================================================     |  93%  |                                                                              |===================================================================   |  96%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |====                                                                  |   5%  |                                                                              |=======                                                               |  10%  |                                                                              |==========                                                            |  15%  |                                                                              |==============                                                        |  20%  |                                                                              |==================                                                    |  25%  |                                                                              |=====================                                                 |  30%  |                                                                              |========================                                              |  35%  |                                                                              |============================                                          |  40%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |==========================================                            |  60%  |                                                                              |==============================================                        |  65%  |                                                                              |=================================================                     |  70%  |                                                                              |====================================================                  |  75%  |                                                                              |========================================================              |  80%  |                                                                              |============================================================          |  85%  |                                                                              |===============================================================       |  90%  |                                                                              |==================================================================    |  95%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |====                                                                  |   5%  |                                                                              |=======                                                               |  10%  |                                                                              |==========                                                            |  15%  |                                                                              |==============                                                        |  20%  |                                                                              |==================                                                    |  25%  |                                                                              |=====================                                                 |  30%  |                                                                              |========================                                              |  35%  |                                                                              |============================                                          |  40%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |==========================================                            |  60%  |                                                                              |==============================================                        |  65%  |                                                                              |=================================================                     |  70%  |                                                                              |====================================================                  |  75%  |                                                                              |========================================================              |  80%  |                                                                              |============================================================          |  85%  |                                                                              |===============================================================       |  90%  |                                                                              |==================================================================    |  95%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   4%  |                                                                              |======                                                                |   8%  |                                                                              |=========                                                             |  12%  |                                                                              |============                                                          |  17%  |                                                                              |===============                                                       |  21%  |                                                                              |==================                                                    |  25%  |                                                                              |====================                                                  |  29%  |                                                                              |=======================                                               |  33%  |                                                                              |==========================                                            |  38%  |                                                                              |=============================                                         |  42%  |                                                                              |================================                                      |  46%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  54%  |                                                                              |=========================================                             |  58%  |                                                                              |============================================                          |  62%  |                                                                              |===============================================                       |  67%  |                                                                              |==================================================                    |  71%  |                                                                              |====================================================                  |  75%  |                                                                              |=======================================================               |  79%  |                                                                              |==========================================================            |  83%  |                                                                              |=============================================================         |  88%  |                                                                              |================================================================      |  92%  |                                                                              |===================================================================   |  96%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   4%  |                                                                              |======                                                                |   8%  |                                                                              |=========                                                             |  12%  |                                                                              |============                                                          |  17%  |                                                                              |===============                                                       |  21%  |                                                                              |==================                                                    |  25%  |                                                                              |====================                                                  |  29%  |                                                                              |=======================                                               |  33%  |                                                                              |==========================                                            |  38%  |                                                                              |=============================                                         |  42%  |                                                                              |================================                                      |  46%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  54%  |                                                                              |=========================================                             |  58%  |                                                                              |============================================                          |  62%  |                                                                              |===============================================                       |  67%  |                                                                              |==================================================                    |  71%  |                                                                              |====================================================                  |  75%  |                                                                              |=======================================================               |  79%  |                                                                              |==========================================================            |  83%  |                                                                              |=============================================================         |  88%  |                                                                              |================================================================      |  92%  |                                                                              |===================================================================   |  96%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   5%  |                                                                              |======                                                                |   9%  |                                                                              |==========                                                            |  14%  |                                                                              |=============                                                         |  18%  |                                                                              |================                                                      |  23%  |                                                                              |===================                                                   |  27%  |                                                                              |======================                                                |  32%  |                                                                              |=========================                                             |  36%  |                                                                              |=============================                                         |  41%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |=========================================                             |  59%  |                                                                              |=============================================                         |  64%  |                                                                              |================================================                      |  68%  |                                                                              |===================================================                   |  73%  |                                                                              |======================================================                |  77%  |                                                                              |=========================================================             |  82%  |                                                                              |============================================================          |  86%  |                                                                              |================================================================      |  91%  |                                                                              |===================================================================   |  95%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   5%  |                                                                              |======                                                                |   9%  |                                                                              |==========                                                            |  14%  |                                                                              |=============                                                         |  18%  |                                                                              |================                                                      |  23%  |                                                                              |===================                                                   |  27%  |                                                                              |======================                                                |  32%  |                                                                              |=========================                                             |  36%  |                                                                              |=============================                                         |  41%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |=========================================                             |  59%  |                                                                              |=============================================                         |  64%  |                                                                              |================================================                      |  68%  |                                                                              |===================================================                   |  73%  |                                                                              |======================================================                |  77%  |                                                                              |=========================================================             |  82%  |                                                                              |============================================================          |  86%  |                                                                              |================================================================      |  91%  |                                                                              |===================================================================   |  95%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   5%  |                                                                              |======                                                                |   9%  |                                                                              |==========                                                            |  14%  |                                                                              |=============                                                         |  18%  |                                                                              |================                                                      |  23%  |                                                                              |===================                                                   |  27%  |                                                                              |======================                                                |  32%  |                                                                              |=========================                                             |  36%  |                                                                              |=============================                                         |  41%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |=========================================                             |  59%  |                                                                              |=============================================                         |  64%  |                                                                              |================================================                      |  68%  |                                                                              |===================================================                   |  73%  |                                                                              |======================================================                |  77%  |                                                                              |=========================================================             |  82%  |                                                                              |============================================================          |  86%  |                                                                              |================================================================      |  91%  |                                                                              |===================================================================   |  95%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   5%  |                                                                              |======                                                                |   9%  |                                                                              |==========                                                            |  14%  |                                                                              |=============                                                         |  18%  |                                                                              |================                                                      |  23%  |                                                                              |===================                                                   |  27%  |                                                                              |======================                                                |  32%  |                                                                              |=========================                                             |  36%  |                                                                              |=============================                                         |  41%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |=========================================                             |  59%  |                                                                              |=============================================                         |  64%  |                                                                              |================================================                      |  68%  |                                                                              |===================================================                   |  73%  |                                                                              |======================================================                |  77%  |                                                                              |=========================================================             |  82%  |                                                                              |============================================================          |  86%  |                                                                              |================================================================      |  91%  |                                                                              |===================================================================   |  95%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   5%  |                                                                              |======                                                                |   9%  |                                                                              |==========                                                            |  14%  |                                                                              |=============                                                         |  18%  |                                                                              |================                                                      |  23%  |                                                                              |===================                                                   |  27%  |                                                                              |======================                                                |  32%  |                                                                              |=========================                                             |  36%  |                                                                              |=============================                                         |  41%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |=========================================                             |  59%  |                                                                              |=============================================                         |  64%  |                                                                              |================================================                      |  68%  |                                                                              |===================================================                   |  73%  |                                                                              |======================================================                |  77%  |                                                                              |=========================================================             |  82%  |                                                                              |============================================================          |  86%  |                                                                              |================================================================      |  91%  |                                                                              |===================================================================   |  95%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   5%  |                                                                              |======                                                                |   9%  |                                                                              |==========                                                            |  14%  |                                                                              |=============                                                         |  18%  |                                                                              |================                                                      |  23%  |                                                                              |===================                                                   |  27%  |                                                                              |======================                                                |  32%  |                                                                              |=========================                                             |  36%  |                                                                              |=============================                                         |  41%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |=========================================                             |  59%  |                                                                              |=============================================                         |  64%  |                                                                              |================================================                      |  68%  |                                                                              |===================================================                   |  73%  |                                                                              |======================================================                |  77%  |                                                                              |=========================================================             |  82%  |                                                                              |============================================================          |  86%  |                                                                              |================================================================      |  91%  |                                                                              |===================================================================   |  95%  |                                                                              |======================================================================| 100%</code></pre>
 </div>
 <div id="integrate-adt-data" class="section level2">
 <h2>Integrate ADT data</h2>
@@ -1063,7 +1150,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-10-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-10-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-10-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1109,7 +1207,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-11-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-11-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-11-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1169,7 +1278,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-12-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-12-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-12-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1208,7 +1328,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-13-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-13-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-13-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1251,7 +1382,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-14-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-14-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-14-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1290,7 +1432,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-15-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-15-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-15-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1332,9 +1485,98 @@ if(!file.exists(out)){
 } else {
   seuADT &lt;- readRDS(file = out)
   
-}
+}</code></pre>
+<pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 
-clustree::clustree(seuADT, prefix = &quot;wsnn_res.&quot;)</code></pre>
+Number of nodes: 10405
+Number of edges: 332172
+
+Running smart local moving algorithm...
+Maximum modularity in 10 random starts: 0.9597
+Number of communities: 14
+Elapsed time: 3 seconds
+Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 10405
+Number of edges: 332172
+
+Running smart local moving algorithm...
+Maximum modularity in 10 random starts: 0.9477
+Number of communities: 14
+Elapsed time: 3 seconds
+Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 10405
+Number of edges: 332172
+
+Running smart local moving algorithm...
+Maximum modularity in 10 random starts: 0.9380
+Number of communities: 18
+Elapsed time: 3 seconds
+Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 10405
+Number of edges: 332172
+
+Running smart local moving algorithm...
+Maximum modularity in 10 random starts: 0.9311
+Number of communities: 20
+Elapsed time: 3 seconds
+Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 10405
+Number of edges: 332172
+
+Running smart local moving algorithm...
+Maximum modularity in 10 random starts: 0.9248
+Number of communities: 22
+Elapsed time: 3 seconds
+Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 10405
+Number of edges: 332172
+
+Running smart local moving algorithm...
+Maximum modularity in 10 random starts: 0.9185
+Number of communities: 22
+Elapsed time: 3 seconds
+Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 10405
+Number of edges: 332172
+
+Running smart local moving algorithm...
+Maximum modularity in 10 random starts: 0.9124
+Number of communities: 23
+Elapsed time: 3 seconds
+Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 10405
+Number of edges: 332172
+
+Running smart local moving algorithm...
+Maximum modularity in 10 random starts: 0.9065
+Number of communities: 23
+Elapsed time: 2 seconds
+Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 10405
+Number of edges: 332172
+
+Running smart local moving algorithm...
+Maximum modularity in 10 random starts: 0.9006
+Number of communities: 23
+Elapsed time: 3 seconds
+Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 10405
+Number of edges: 332172
+
+Running smart local moving algorithm...
+Maximum modularity in 10 random starts: 0.8950
+Number of communities: 25
+Elapsed time: 2 seconds</code></pre>
+<pre class="r"><code>clustree::clustree(seuADT, prefix = &quot;wsnn_res.&quot;)</code></pre>
 <p><img src="figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
@@ -1360,7 +1602,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-16-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-16-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-16-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1409,7 +1662,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-17-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-17-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-17-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1451,7 +1715,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-18-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-18-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-18-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1540,7 +1815,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-21-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-21-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-21-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1584,7 +1870,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-22-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-22-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-22-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1649,7 +1946,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1689,7 +1997,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-2.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-2.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-2.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1729,7 +2048,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-3.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-3.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-24-3.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1789,7 +2119,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-26-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-26-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-26-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1846,7 +2187,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-27-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-27-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-27-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1890,7 +2242,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-28-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-28-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-28-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -1933,7 +2296,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-29-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-29-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-29-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2054,7 +2428,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-32-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-32-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-32-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2092,7 +2477,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-32-2.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-32-2.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-32-2.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2161,7 +2557,29 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-33-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-33-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/048f0f32a5506129d5830a31e4b0c24cc80bbe00/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-33-1.png" target="_blank">048f0f3</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-03-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-33-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2367,7 +2785,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-39-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-39-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-39-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2422,7 +2851,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-40-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-40-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-40-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2480,7 +2920,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-41-1.png" target="_blank">fb50017</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b920a3463254f5d9bf318d3b7858253225d2a39b/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-41-1.png" target="_blank">b920a34</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-05
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/fb50017ed442ed4516c36acf9e3baf8bfbbb0ddc/docs/figure/07.1_integrate_cluster_t_cells_decontx.Rmd/unnamed-chunk-41-1.png" target="_blank">fb50017</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -2527,9 +2978,9 @@ Session information
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 4.3.2 (2023-10-31)
+<pre><code>R version 4.3.3 (2024-02-29)
 Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.3.1
+Running under: macOS 15.5
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
@@ -2547,9 +2998,9 @@ attached base packages:
 
 other attached packages:
  [1] dsb_1.0.3                   tidyHeatmap_1.8.1          
- [3] speckle_1.2.0               glue_1.7.0                 
+ [3] speckle_1.2.0               glue_1.8.0                 
  [5] org.Hs.eg.db_3.18.0         AnnotationDbi_1.64.1       
- [7] patchwork_1.2.0             clustree_0.5.1             
+ [7] patchwork_1.3.1             clustree_0.5.1             
  [9] ggraph_2.2.0                here_1.0.1                 
 [11] dittoSeq_1.14.2             glmGamPoi_1.14.3           
 [13] SeuratObject_4.1.4          Seurat_4.4.0               
@@ -2557,7 +3008,7 @@ other attached packages:
 [17] stringr_1.5.1               dplyr_1.1.4                
 [19] purrr_1.0.2                 readr_2.1.5                
 [21] tidyr_1.3.1                 tibble_3.2.1               
-[23] ggplot2_3.5.0               tidyverse_2.0.0            
+[23] ggplot2_3.5.2               tidyverse_2.0.0            
 [25] edgeR_4.0.15                limma_3.58.1               
 [27] SingleCellExperiment_1.24.0 SummarizedExperiment_1.32.0
 [29] Biobase_2.62.0              GenomicRanges_1.54.1       
@@ -2567,61 +3018,95 @@ other attached packages:
 [37] workflowr_1.7.1            
 
 loaded via a namespace (and not attached):
-  [1] fs_1.6.3                spatstat.sparse_3.0-3   bitops_1.0-7           
-  [4] httr_1.4.7              RColorBrewer_1.1-3      doParallel_1.0.17      
-  [7] backports_1.4.1         tools_4.3.2             sctransform_0.4.1      
- [10] utf8_1.2.4              R6_2.5.1                lazyeval_0.2.2         
- [13] uwot_0.1.16             GetoptLong_1.0.5        withr_3.0.0            
- [16] sp_2.1-3                gridExtra_2.3           progressr_0.14.0       
- [19] cli_3.6.2               Cairo_1.6-2             spatstat.explore_3.2-6 
- [22] prismatic_1.1.1         labeling_0.4.3          sass_0.4.8             
- [25] spatstat.data_3.0-4     ggridges_0.5.6          pbapply_1.7-2          
- [28] parallelly_1.37.0       rstudioapi_0.15.0       RSQLite_2.3.5          
- [31] generics_0.1.3          shape_1.4.6             vroom_1.6.5            
- [34] ica_1.0-3               spatstat.random_3.2-2   dendextend_1.17.1      
- [37] Matrix_1.6-5            ggbeeswarm_0.7.2        fansi_1.0.6            
- [40] abind_1.4-5             lifecycle_1.0.4         whisker_0.4.1          
- [43] yaml_2.3.8              SparseArray_1.2.4       Rtsne_0.17             
- [46] paletteer_1.6.0         grid_4.3.2              blob_1.2.4             
- [49] promises_1.2.1          crayon_1.5.2            miniUI_0.1.1.1         
- [52] lattice_0.22-5          cowplot_1.1.3           KEGGREST_1.42.0        
- [55] pillar_1.9.0            knitr_1.45              ComplexHeatmap_2.18.0  
- [58] rjson_0.2.21            future.apply_1.11.1     codetools_0.2-19       
- [61] leiden_0.4.3.1          getPass_0.2-4           data.table_1.15.0      
- [64] vctrs_0.6.5             png_0.1-8               gtable_0.3.4           
- [67] rematch2_2.1.2          cachem_1.0.8            xfun_0.42              
- [70] S4Arrays_1.2.0          mime_0.12               tidygraph_1.3.1        
- [73] survival_3.5-8          pheatmap_1.0.12         iterators_1.0.14       
- [76] statmod_1.5.0           ellipsis_0.3.2          fitdistrplus_1.1-11    
- [79] ROCR_1.0-11             nlme_3.1-164            bit64_4.0.5            
- [82] RcppAnnoy_0.0.22        rprojroot_2.0.4         bslib_0.6.1            
- [85] irlba_2.3.5.1           vipor_0.4.7             KernSmooth_2.23-22     
- [88] colorspace_2.1-0        DBI_1.2.1               ggrastr_1.0.2          
- [91] tidyselect_1.2.0        processx_3.8.3          bit_4.0.5              
- [94] compiler_4.3.2          git2r_0.33.0            DelayedArray_0.28.0    
- [97] plotly_4.10.4           checkmate_2.3.1         scales_1.3.0           
-[100] lmtest_0.9-40           callr_3.7.3             digest_0.6.34          
-[103] goftest_1.2-3           spatstat.utils_3.0-4    rmarkdown_2.25         
-[106] XVector_0.42.0          htmltools_0.5.7         pkgconfig_2.0.3        
-[109] highr_0.10              fastmap_1.1.1           rlang_1.1.3            
-[112] GlobalOptions_0.1.2     htmlwidgets_1.6.4       shiny_1.8.0            
-[115] farver_2.1.1            jquerylib_0.1.4         zoo_1.8-12             
-[118] jsonlite_1.8.8          mclust_6.1              RCurl_1.98-1.14        
-[121] magrittr_2.0.3          GenomeInfoDbData_1.2.11 munsell_0.5.0          
-[124] Rcpp_1.0.12             viridis_0.6.5           reticulate_1.35.0      
-[127] stringi_1.8.3           zlibbioc_1.48.0         MASS_7.3-60.0.1        
-[130] plyr_1.8.9              parallel_4.3.2          listenv_0.9.1          
-[133] ggrepel_0.9.5           deldir_2.0-2            Biostrings_2.70.2      
-[136] graphlayouts_1.1.0      splines_4.3.2           tensor_1.5             
-[139] hms_1.1.3               circlize_0.4.15         locfit_1.5-9.8         
-[142] ps_1.7.6                igraph_2.0.1.1          spatstat.geom_3.2-8    
-[145] reshape2_1.4.4          evaluate_0.23           renv_1.0.3             
-[148] tzdb_0.4.0              foreach_1.5.2           tweenr_2.0.3           
-[151] httpuv_1.6.14           RANN_2.6.1              polyclip_1.10-6        
-[154] future_1.33.1           clue_0.3-65             scattermore_1.2        
-[157] ggforce_0.4.2           xtable_1.8-4            later_1.3.2            
-[160] viridisLite_0.4.2       memoise_2.0.1           beeswarm_0.4.0         
-[163] cluster_2.1.6           timechange_0.3.0        globals_0.16.2         </code></pre>
+  [1] fs_1.6.6                  spatstat.sparse_3.0-3    
+  [3] bitops_1.0-7              httr_1.4.7               
+  [5] RColorBrewer_1.1-3        doParallel_1.0.17        
+  [7] backports_1.4.1           tools_4.3.3              
+  [9] sctransform_0.4.1         utf8_1.2.4               
+ [11] R6_2.5.1                  lazyeval_0.2.2           
+ [13] uwot_0.1.16               GetoptLong_1.0.5         
+ [15] withr_3.0.0               sp_2.1-3                 
+ [17] gridExtra_2.3             progressr_0.14.0         
+ [19] cli_3.6.5                 Cairo_1.6-2              
+ [21] spatstat.explore_3.2-6    prismatic_1.1.1          
+ [23] labeling_0.4.3            sass_0.4.10              
+ [25] spatstat.data_3.0-4       ggridges_0.5.6           
+ [27] pbapply_1.7-2             parallelly_1.37.0        
+ [29] rstudioapi_0.15.0         RSQLite_2.3.5            
+ [31] generics_0.1.3            shape_1.4.6              
+ [33] vroom_1.6.5               ica_1.0-3                
+ [35] spatstat.random_3.2-2     dendextend_1.17.1        
+ [37] Matrix_1.6-5              ggbeeswarm_0.7.2         
+ [39] fansi_1.0.6               abind_1.4-5              
+ [41] lifecycle_1.0.4           whisker_0.4.1            
+ [43] yaml_2.3.8                SparseArray_1.2.4        
+ [45] Rtsne_0.17                paletteer_1.6.0          
+ [47] grid_4.3.3                blob_1.2.4               
+ [49] promises_1.2.1            crayon_1.5.2             
+ [51] miniUI_0.1.1.1            lattice_0.22-5           
+ [53] cowplot_1.1.3             KEGGREST_1.42.0          
+ [55] pillar_1.9.0              knitr_1.50               
+ [57] ComplexHeatmap_2.18.0     rjson_0.2.21             
+ [59] future.apply_1.11.1       codetools_0.2-19         
+ [61] leiden_0.4.3.1            getPass_0.2-4            
+ [63] data.table_1.15.0         vctrs_0.6.5              
+ [65] png_0.1-8                 gtable_0.3.6             
+ [67] rematch2_2.1.2            cachem_1.0.8             
+ [69] xfun_0.52                 S4Arrays_1.2.0           
+ [71] mime_0.12                 tidygraph_1.3.1          
+ [73] survival_3.5-8            pheatmap_1.0.12          
+ [75] iterators_1.0.14          statmod_1.5.0            
+ [77] ellipsis_0.3.2            fitdistrplus_1.1-11      
+ [79] ROCR_1.0-11               nlme_3.1-164             
+ [81] bit64_4.0.5               RcppAnnoy_0.0.22         
+ [83] rprojroot_2.0.4           bslib_0.6.1              
+ [85] irlba_2.3.5.1             vipor_0.4.7              
+ [87] KernSmooth_2.23-22        colorspace_2.1-0         
+ [89] DBI_1.2.1                 ggrastr_1.0.2            
+ [91] tidyselect_1.2.1          processx_3.8.3           
+ [93] bit_4.0.5                 compiler_4.3.3           
+ [95] git2r_0.33.0              DelayedArray_0.28.0      
+ [97] plotly_4.10.4             checkmate_2.3.1          
+ [99] scales_1.3.0              lmtest_0.9-40            
+[101] callr_3.7.3               digest_0.6.34            
+[103] goftest_1.2-3             spatstat.utils_3.0-4     
+[105] rmarkdown_2.29            XVector_0.42.0           
+[107] htmltools_0.5.8.1         pkgconfig_2.0.3          
+[109] sparseMatrixStats_1.14.0  fastmap_1.1.1            
+[111] rlang_1.1.6               GlobalOptions_0.1.2      
+[113] htmlwidgets_1.6.4         DelayedMatrixStats_1.24.0
+[115] shiny_1.8.0               farver_2.1.1             
+[117] jquerylib_0.1.4           zoo_1.8-12               
+[119] jsonlite_1.8.8            mclust_6.1               
+[121] RCurl_1.98-1.14           magrittr_2.0.3           
+[123] GenomeInfoDbData_1.2.11   munsell_0.5.0            
+[125] Rcpp_1.0.12               viridis_0.6.5            
+[127] reticulate_1.42.0         stringi_1.8.3            
+[129] zlibbioc_1.48.0           MASS_7.3-60.0.1          
+[131] plyr_1.8.9                parallel_4.3.3           
+[133] listenv_0.9.1             ggrepel_0.9.5            
+[135] deldir_2.0-2              Biostrings_2.70.2        
+[137] graphlayouts_1.1.0        splines_4.3.3            
+[139] tensor_1.5                hms_1.1.3                
+[141] circlize_0.4.15           locfit_1.5-9.8           
+[143] ps_1.7.6                  igraph_2.0.1.1           
+[145] spatstat.geom_3.2-8       reshape2_1.4.4           
+[147] evaluate_0.23             renv_1.1.4               
+[149] BiocManager_1.30.22       tzdb_0.4.0               
+[151] foreach_1.5.2             tweenr_2.0.3             
+[153] httpuv_1.6.14             RANN_2.6.1               
+[155] polyclip_1.10-6           future_1.33.1            
+[157] clue_0.3-65               scattermore_1.2          
+[159] ggforce_0.4.2             xtable_1.8-4             
+[161] later_1.3.2               viridisLite_0.4.2        
+[163] memoise_2.0.1             beeswarm_0.4.0           
+[165] cluster_2.1.6             timechange_0.3.0         
+[167] globals_0.16.2           </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 
