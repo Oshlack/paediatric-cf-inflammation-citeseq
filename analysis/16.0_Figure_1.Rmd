@@ -284,8 +284,8 @@ dat %>%
     row_names_gp = grid::gpar(fontsize = 8, fontfamily = "arial"),
     row_title_gp = grid::gpar(fontsize = 10, fontfamily = "arial"),
     column_title_side = "top",
-    palette_value = circlize::colorRamp2(seq(0, 2, length.out = 11),
-                                            rev(RColorBrewer::brewer.pal(11, "RdYlBu"))),
+    palette_value = circlize::colorRamp2(seq(0, 2, length.out = 9),
+                                            (RColorBrewer::brewer.pal(9, "Greens"))),
     heatmap_legend_param = list(direction = "vertical")) %>%
   add_tile(`Cell type`, show_legend = FALSE,
            show_annotation_name = FALSE,
@@ -295,6 +295,9 @@ dat %>%
 f1e
 ```
 
+```{r}
+
+```
 
 ## UMAP of all cells
 
@@ -487,6 +490,33 @@ ggplot(aes(x = sample, y = Freq, fill = clusters)) +
 
 f1c
 ```
+```{r, fig.asp=1}
+props$Proportions %>%
+  data.frame %>%
+  inner_join(seu@meta.data %>%
+               dplyr::select(sample.id,
+                             Group),
+             by = c("sample" = "sample.id")) %>%
+  mutate(Group = samp_map[Group]) %>%
+  distinct() %>%
+ggplot(aes(x = Group, y = Freq, fill = Group)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.15, size = 0.5, alpha = 0.8) +
+  facet_wrap(~ clusters, scales = "free_y") +
+  labs(
+    x = "Group",
+    y = "Cell type proportion"
+  ) +
+  theme_classic() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "none"
+  ) +
+  scale_fill_paletteer_d("RColorBrewer::Set2", direction = 1) -> group_props
+
+group_props
+```
 
 ## `Seurat` marker gene dotplot
 
@@ -638,6 +668,11 @@ FFFFGGGG
   
 ```
 
+# Supplementary Figure X
+
+```{r, fig.asp=1}
+group_props
+```
 
 
 # Session info
