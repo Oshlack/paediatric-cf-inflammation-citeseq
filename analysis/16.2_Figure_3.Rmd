@@ -40,6 +40,7 @@ suppressPackageStartupMessages({
  library(dsb)
  library(ggh4x)
   library(readxl)
+  library(purrr)
 })
 
 source(here("code/utility.R"))
@@ -117,7 +118,10 @@ lab_map <- c(
   "macro-IFI27+CCL18+"      = "AM.IFI27.CCL18",
   "macro-IFI27+APOC2+"      = "AM.IFI27.APOC2",
   "macro-proliferating"     = "Mac.Prolif",
-  "macrophages"             = "All Macs (exc. Prolif)"
+  "macrophages"             = "All Macs (exc. Prolif)",
+  "CD4 T-reg" = "CD4 T-reg",
+  "monocytes" = "monocytes",
+  "NK-T cells" = "NK-T cells"
 )
 
 samp_map <-
@@ -125,7 +129,10 @@ c(
   "CF.IVA" = "CF (iva)",
   "CF.LUMA_IVA" = "CF (luma/iva)",
   "CF.NO_MOD" = "CF (no mod)",
-  "NON_CF.CTRL" = "Non-CF control"
+  "NON_CF.CTRL" = "Non-CF control",
+  "healthy" = "Control",
+  "mild" = "Mild",
+  "severe" = "Severe"
 )
 ```
 
@@ -143,30 +150,63 @@ props$Proportions %>% data.frame %>%
                                 "NK-T cells",
                                 "CD4 T-reg")) -> dat
 
-sig_names <- as_labeller(
-     c("CD4 T-reg" = "CD4 T-reg",
-       "monocytes" = "monocytes*",
-       "NK-T cells" = "NK-T cells",
-       "macro-IGF1" = "AM-IGF1*"))
+sig_names <- as_labeller(lab_map)
 
-pal <- setNames(RColorBrewer::brewer.pal(4, "Set2"),
+prop.non_macros.fit <- readRDS(here("data/intermediate_objects/prop.ann_level3.non-macrophages.fit.rds"))
+prop.macros.fit <- readRDS(here("data/intermediate_objects/prop.ann_level3.macrophages.fit.rds"))
+
+fits <- list(
+  non_macros = prop.non_macros.fit,
+  macros = prop.macros.fit
+)
+
+stats_all <- map_dfr(
+  fits,
+  ~ topTable(.x,
+             coef = "CF.NO_MODvNON_CF.CTRL",
+             n = Inf) %>%
+      rownames_to_column("clusters"),
+  .id = "fit"
+)
+
+stat_labels <- stats_all %>%
+  filter(clusters %in% unique(dat$clusters)) %>%
+  distinct(clusters, .keep_all = TRUE) %>%
+  mutate(
+    sig = case_when(
+      adj.P.Val < 0.001 ~ "***",
+      adj.P.Val < 0.01  ~ "**",
+      adj.P.Val < 0.05  ~ "*",
+      TRUE ~ ""
+    ),
+    label = sprintf("p = %.2g\nFDR = %.2g%s", 
+                    P.Value, adj.P.Val, sig)
+  )
+
+y_pos <- dat %>%
+  group_by(clusters) %>%
+  summarise(y = max(Freq, na.rm = TRUE) * 0.9)
+
+stat_labels <- left_join(stat_labels, y_pos, by = "clusters")
+
+pal <- setNames(RColorBrewer::brewer.pal(7, "Set2"),
                 unname(samp_map))
 dat %>%
   mutate(Group = samp_map[Group]) %>%
-ggplot(aes(x = Group,
-                y = Freq,
-                colour = Group)) +
+  ggplot(aes(x = Group,
+             y = Freq,
+             colour = Group)) +
   geom_jitter(stat = "identity",
               width = 0.15,
               size = 1) +
   theme_classic() +
   theme(axis.text.x = element_blank(),
-          axis.ticks.x = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(7),
-          legend.position = "bottom",
-          legend.direction = "horizontal",
-          strip.text = element_text(size = 8)) +
+        axis.ticks.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_text(size = 7),
+        legend.position = "bottom",
+        legend.direction = "horizontal",
+        strip.text = element_text(size = 8)) +
   labs(x = "Group", y = "Proportion") +
   facet_wrap(~clusters, scales = "free_y", ncol = 4,
              labeller = sig_names) +
@@ -176,7 +216,12 @@ ggplot(aes(x = Group,
     col = "black",
     shape = "_",
     size = 10) +
-  scale_color_manual(values = pal) -> p1
+  scale_color_manual(values = pal) +
+  geom_text(
+  data = stat_labels,
+  aes(x = 1.5, y = y, label = label),
+  inherit.aes = FALSE,
+  size = 3) -> p1
 
 p1
 ```
@@ -191,9 +236,28 @@ props$Proportions %>% data.frame %>%
   dplyr::filter(Group %in% c("CF.NO_MOD", "NON_CF.CTRL"),
                 clusters %in% c("macro-IGF1")) -> dat
 
+stat_labels <- stats_all %>%
+  filter(clusters %in% unique(dat$clusters)) %>%
+  distinct(clusters, .keep_all = TRUE) %>%
+  mutate(
+    sig = case_when(
+      adj.P.Val < 0.001 ~ "***",
+      adj.P.Val < 0.01  ~ "**",
+      adj.P.Val < 0.05  ~ "*",
+      TRUE ~ ""
+    ),
+    label = sprintf("p = %.2g\nFDR = %.2g%s", 
+                    P.Value, adj.P.Val, sig)
+  )
+
+y_pos <- dat %>%
+  group_by(clusters) %>%
+  summarise(y = max(Freq, na.rm = TRUE) * 0.9)
+
+stat_labels <- left_join(stat_labels, y_pos, by = "clusters")
+
 dat %>%
-  mutate(Group = samp_map[Group],
-         clusters = lab_map[as.character(clusters)]) %>%
+  mutate(Group = samp_map[Group]) %>%
 ggplot(aes(x = Group,
                 y = Freq,
                 colour = Group)) +
@@ -204,19 +268,25 @@ ggplot(aes(x = Group,
   theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank(),
           axis.title.x = element_blank(),
-          axis.text.y = element_text(7),
+          axis.text.y = element_text(size = 7),
           legend.position = "bottom",
           legend.direction = "horizontal",
           strip.text = element_text(size = 8)) +
   labs(x = "Group", y = "Proportion") +
-  facet_wrap(~clusters, scales = "free_y", ncol = 4) +
+  facet_wrap(~clusters, scales = "free_y", ncol = 4,
+             labeller = sig_names) +
   stat_summary(
     geom = "point",
     fun.y = "mean",
     col = "black",
     shape = "_",
     size = 10) +
-  scale_color_manual(values = pal) -> p2
+  scale_color_manual(values = pal)  +
+  geom_text(
+  data = stat_labels,
+  aes(x = 1.5, y = y, label = label),
+  inherit.aes = FALSE,
+  size = 3) -> p2
 
 layout <- "AAAB"
 cf_props <- (p1 + 
@@ -560,6 +630,203 @@ wrap_elements(cf_props & theme(legend.position = "right",
 ```
 
 
+# Supplemental
+
+```{r}
+library(ComplexHeatmap)
+library(circlize)
+library(msigdbr)
+library(fgsea)
+
+# ── Preparation function ───────────────────────────────────────────────────────
+# Run once per cell type, returns all objects needed for plotting
+deg_results <- lapply(files, function(f) readRDS(f))
+
+prepare_tnfa <- function(idx, celltype_name, deg_results) {
+  
+  lrt <- glmLRT(deg_results[[idx]]$fit, contrast = deg_results[[idx]]$contr[,1])
+  top <- topTags(lrt, n = Inf) %>% data.frame()
+  
+  entrez <- mapIds(
+    org.Hs.eg.db,
+    keys      = rownames(lrt),
+    column    = "ENTREZID",
+    keytype   = "SYMBOL",
+    multiVals = "first"
+  )
+  
+  mat     <- deg_results[[idx]]$adj$normalizedCounts %>% as.data.frame() %>% as.matrix()
+  mat_log <- log2(mat + 0.5)
+  mat_z   <- t(scale(t(mat_log)))
+  
+  metadata <- seu@meta.data
+  metadata[match(colnames(mat_z), metadata$sample.id), ] %>%
+    remove_rownames() %>%
+    dplyr::select(sample.id, Group, Treatment, Severity, Age) %>%
+    distinct() %>%
+    dplyr::filter(Treatment %in% c("Healthy", "untreated")) -> metadata_subset
+  
+  sample_anno <- HeatmapAnnotation(
+    Severity = samp_map[metadata_subset$Severity],
+    Group    = samp_map[metadata_subset$Group],
+    Age      = metadata_subset$Age
+  )
+  
+  tnfa_genes <- top[unname(entrez[rownames(top)]) %in%
+                      gene_sets_list$HALLMARK$HALLMARK_TNFA_SIGNALING_VIA_NFKB, ] %>%
+    arrange(logFC)
+  
+  ranked_genes <- top %>%
+    rownames_to_column(var = "gene") %>%
+    arrange(desc(logFC)) %>%
+    dplyr::select(gene, logFC) %>%
+    deframe()
+  
+  hallmarks <- msigdbr(species = "Homo sapiens", category = "H") %>%
+    split(x = .$gene_symbol, f = .$gs_name)
+  
+  set.seed(42)
+  gsea_res <- fgsea(pathways = hallmarks, stats = ranked_genes,
+                    minSize = 15, maxSize = 500, nperm = 1000)
+  
+  gsea_res_tidy <- gsea_res %>%
+    arrange(pval) %>%
+    #filter(padj < 0.05) %>%
+    slice_min(pval, n = 20) %>%
+    mutate(pathway = gsub("HALLMARK_", "", pathway))
+  
+  tnfa_row           <- gsea_res_tidy %>% filter(grepl("TNFA", pathway))
+  tnfa_genes_leading <- if (nrow(tnfa_row) > 0) unlist(tnfa_row[1, 8]) else NULL
+  
+  tnfa_genes_min <- c("TNFAIP3", "NFKBIA", "TNF", "IL1B", "IL1A",
+                      "CXCL2", "CXCL3", "NR4A1", "NR4A2")
+  
+  list(
+    celltype_name      = celltype_name,
+    lrt                = lrt,
+    entrez             = entrez,
+    mat_z              = mat_z,
+    metadata_subset    = metadata_subset,
+    sample_anno        = sample_anno,
+    tnfa_genes         = tnfa_genes,
+    tnfa_genes_min     = tnfa_genes_min,
+    tnfa_genes_leading = tnfa_genes_leading,
+    gsea_res_tidy      = gsea_res_tidy
+  )
+}
+
+# ── Plot functions ─────────────────────────────────────────────────────────────
+
+plot_barcode <- function(obj) {
+  statistic <- sign(obj$lrt$table$logFC) * sqrt(obj$lrt$table$LR)
+  id <- ids2indices(
+    gene_sets_list$HALLMARK$HALLMARK_TNFA_SIGNALING_VIA_NFKB,
+    unname(obj$entrez[rownames(obj$lrt)])
+  )
+  barcodeplot(
+    statistics = statistic,
+    index      = unlist(id),
+    main       = glue("HALLMARK_TNFA_SIGNALING_VIA_NFKB — {obj$celltype_name}"),
+    xlab       = glue("Signed LRT statistic (CF (no mod) - Non-CF (ctrl)) — {obj$celltype_name}")
+  )
+}
+
+plot_gsea <- function(obj) {
+  obj$gsea_res_tidy %>%
+    mutate(direction = ifelse(NES > 0, "Up", "Down")) %>%
+    ggplot(aes(x = -log10(padj), y = reorder(pathway, -log10(padj)),
+               size = abs(NES), colour = direction)) +
+    geom_point() +
+    scale_colour_manual(values = c("Up" = "#E41A1C", "Down" = "#377EB8"),
+                        name = "Direction") +
+    scale_size_continuous(range = c(2, 8), name = "NES") +
+    geom_vline(xintercept = -log10(0.05), linetype = "dashed", colour = "grey50") +
+    labs(x = "-log10(adj. p-value)", y = NULL,
+         title = glue("GSEA — Hallmark gene sets — {obj$celltype_name}")) +
+    theme_bw() +
+    theme(axis.text.y = element_text(size = 8))
+}
+
+# gene_set: one of "full", "min", "leading"
+# split: whether to split columns by Group
+plot_tnfa_heatmap <- function(obj, gene_set = c("full", "min", "leading"), split = TRUE) {
+  
+  gene_set <- match.arg(gene_set)
+  
+  tnfa_subset <- switch(gene_set,
+    "full"    = obj$tnfa_genes,
+    "min"     = obj$tnfa_genes[rownames(obj$tnfa_genes) %in% obj$tnfa_genes_min, ],
+    "leading" = {
+      if (is.null(obj$tnfa_genes_leading)) {
+        message(glue("TNFa pathway not significant in {obj$celltype_name}"))
+        return(invisible(NULL))
+      }
+      obj$tnfa_genes[rownames(obj$tnfa_genes) %in% obj$tnfa_genes_leading, ]
+    }
+  )
+  
+  label <- switch(gene_set,
+    "full"    = "full TNFa gene set",
+    "min"     = "min TNFa gene set",
+    "leading" = "leading edge TNFa genes"
+  )
+  
+  row_anno <- rowAnnotation(
+    Significant = tnfa_subset$FDR < 0.05,
+    logFC = anno_barplot(tnfa_subset$logFC, gp = gpar(fill = "grey40"),
+                         border = FALSE, width = unit(2, "cm"))
+  )
+  
+  ht <- Heatmap(
+    obj$mat_z[rownames(tnfa_subset),
+              colnames(obj$mat_z) %in% unique(obj$metadata_subset$sample.id)],
+    name = "z-score",
+    col  = colorRamp2(c(-2, 0, 2), c("blue", "white", "red")),
+    cluster_rows    = FALSE,
+    cluster_columns = TRUE,
+    show_row_names  = TRUE,
+    show_column_names = TRUE,
+    top_annotation  = obj$sample_anno,
+    right_annotation = row_anno,
+    column_split    = if (split) obj$metadata_subset$Group else NULL,
+    row_names_gp    = gpar(fontsize = 8),
+    column_title    = NULL
+  )
+  
+  draw(ht, column_title = glue("{obj$celltype_name} — {label}"))
+}
+```
+
+
+```{r}
+am   <- prepare_tnfa(idx = 1, celltype_name = "macro-alveolar", deg_results)
+mono <- prepare_tnfa(idx = 6, celltype_name = "macro-monocyte-derived", deg_results)
+```
+
+```{r}
+plot_barcode(am)
+plot_barcode(mono)
+```
+
+```{r}
+plot_gsea(am)
+plot_gsea(mono)
+```
+
+```{r, fig.asp=1.75, fig.width=10}
+plot_tnfa_heatmap(am, gene_set = "full", split = TRUE)
+plot_tnfa_heatmap(mono, gene_set = "full", split = TRUE)
+```
+
+```{r}
+plot_tnfa_heatmap(am,   gene_set = "min")
+plot_tnfa_heatmap(mono, gene_set = "min")
+```
+
+```{r, fig.asp=1.25, fig.width=10}
+plot_tnfa_heatmap(am,   gene_set = "leading")
+plot_tnfa_heatmap(mono, gene_set = "leading")
+```
 
 # Session info
 
