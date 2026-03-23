@@ -630,7 +630,7 @@ wrap_elements(cf_props & theme(legend.position = "right",
 ```
 
 
-# Supplemental
+# Supplement
 
 ```{r}
 library(ComplexHeatmap)
