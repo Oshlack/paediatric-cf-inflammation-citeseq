@@ -668,7 +668,7 @@ FFFFGGGG
   
 ```
 
-# Supplementary Figure X
+# Supplement
 
 ```{r, fig.asp=1}
 group_props
