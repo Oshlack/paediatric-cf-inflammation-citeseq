@@ -12,3 +12,4 @@ data/*/data/emptyDrops/*.rds
 data/C133_Neeland*
 */obsolete
 data/*h5ad*
+analysis/obsolete
