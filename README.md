@@ -6,7 +6,7 @@ This repository contains code and output for the analysis described in the manus
 The raw single cell RNA-seq and CITE-seq count data generated for this study can be accessed at:
 
 The code and analysis results can be viewed at the [analysis webpage](https://oshlacklab.com/paediatric-cf-inflammation-citeseq/index.html). 
-To reproduce the complete analysis follow the instructions on the [getting started]() page.
+To reproduce the complete analysis follow the instructions on the [getting started](https://oshlacklab.com/paediatric-cf-inflammation-citeseq/getting_started.html) page.
 
 The code in this analysis is covered by the [MIT license](https://opensource.org/license/mit) and the written content is covered by a [Creative Commons CC-BY 4.0 license](https://creativecommons.org/licenses/by/4.0/).
 
