@@ -124,8 +124,9 @@ Follow the links below to view the different parts of the analysis.
     iii) [Figure 3](16.2_Figure_3.html)
     iv) [Figure 4](16.3_Figure_4.html)
     v) [Figure 5](16.4_Figure_5.html)
-    vi) [Supplementary Figure ADTs](16.5_Supplementary_Figure_ADTs.html)    
-    vii) [Supplementary Figures](16.6_Supplementary_Figures.html)    
+    vi) [Figure 6](16.5_Figure_6.html)
+    vii) [Supplementary Figures](16.6_Supplementary_Figure_2.html)    
+    viii) [Supplementary Figures](16.7_Supplementary_Figures.html)    
 
 <!-- line break -->
 # Licenses {-}
