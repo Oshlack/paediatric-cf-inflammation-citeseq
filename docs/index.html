@@ -10,11 +10,11 @@
 
 
 
-<meta name="date" content="2025-02-20" />
+<meta name="date" content="2026-04-01" />
 
-<title>Single-cell atlas of BAL from preschool cystic fibrosis reveals key inflammatory pathways modified by ivacaftor in the early life lung</title>
+<title>Single-cell profiling of BAL in preschool cystic fibrosis reveals macrophage dysregulation and ivacaftor-modified inflammatory programs in the early life lung</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -350,11 +350,11 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Single-cell atlas of BAL from preschool
-cystic fibrosis reveals key inflammatory pathways modified by ivacaftor
-in the early life lung</h1>
+<h1 class="title toc-ignore">Single-cell profiling of BAL in preschool
+cystic fibrosis reveals macrophage dysregulation and ivacaftor-modified
+inflammatory programs in the early life lung</h1>
 <h4 class="author">Jovana Maksimovic</h4>
-<h4 class="date">2025-02-20</h4>
+<h4 class="date">2026-04-01</h4>
 
 </div>
 
@@ -383,7 +383,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2025-02-20
+<strong>Last updated:</strong> 2026-04-01
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -392,8 +392,9 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 aria-hidden="true"></span> 0
 </p>
 <p>
-<strong>Knit directory:</strong> <code>paed-inflammation-CITEseq/</code>
-<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+<strong>Knit directory:</strong>
+<code>paediatric-cf-inflammation-citeseq/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
 title="This is the local directory in which the code in this file was executed.">
 </span>
 </p>
@@ -514,15 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree7654aa31dfde8e1f006e2ee46ac5dbfa6aba3e5btargetblank7654aa3a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree48b6fc457bc4d4ab8b71d668f799b8f715853bd1targetblank48b6fc4a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/7654aa31dfde8e1f006e2ee46ac5dbfa6aba3e5b" target="_blank">7654aa3</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/48b6fc457bc4d4ab8b71d668f799b8f715853bd1" target="_blank">48b6fc4</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree7654aa31dfde8e1f006e2ee46ac5dbfa6aba3e5btargetblank7654aa3a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree48b6fc457bc4d4ab8b71d668f799b8f715853bd1targetblank48b6fc4a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -532,7 +533,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/7654aa31dfde8e1f006e2ee46ac5dbfa6aba3e5b" target="_blank">7654aa3</a>.
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/48b6fc457bc4d4ab8b71d668f799b8f715853bd1" target="_blank">48b6fc4</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -549,58 +550,99 @@ were generated:
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
     Ignored:    analysis/obsolete/
+    Ignored:    code/obsolete/
     Ignored:    data/.DS_Store
+    Ignored:    data/C133_Neeland_batch0/
     Ignored:    data/C133_Neeland_batch1/
+    Ignored:    data/C133_Neeland_batch2/
+    Ignored:    data/C133_Neeland_batch3/
+    Ignored:    data/C133_Neeland_batch4/
+    Ignored:    data/C133_Neeland_batch5/
+    Ignored:    data/C133_Neeland_batch6/
     Ignored:    data/C133_Neeland_merged/
-    Ignored:    output/dge_analysis/obsolete/
+    Ignored:    data/Neeland_processed_data_1.h5ad
+    Ignored:    data/Neeland_processed_data_2.h5ad
+    Ignored:    data/Neeland_processed_data_3.h5ad
+    Ignored:    data/intermediate_objects/.DS_Store
+    Ignored:    data/updated_h5ad_files/
+    Ignored:    output/.DS_Store
     Ignored:    renv/library/
     Ignored:    renv/staging/
 
 Untracked files:
-    Untracked:  analysis/16.2_Figure_3.Rmd
-    Untracked:  analysis/16.3_Figure_4.Rmd
-    Untracked:  analysis/16.4_Figure_5.Rmd
-    Untracked:  analysis/16.5_Supplementary_Figure_ADTs.Rmd
     Untracked:  analysis/cellxgene_submission.Rmd
-    Untracked:  analysis/cellxgene_submission.nb.html
-    Untracked:  broad_markers_seurat.csv
-    Untracked:  code/background_job.R
-    Untracked:  code/reverse_modifier_severity_comparisons.sh
-    Untracked:  data/.Rprofile
-    Untracked:  data/.gitattributes
-    Untracked:  data/.gitignore
-    Untracked:  data/.renvignore
-    Untracked:  data/Homo_sapiens.gene_info.gz
-    Untracked:  data/analysis/
-    Untracked:  data/cellxgene_cell_ontologies_ann_level_1.xlsx
-    Untracked:  data/cellxgene_cell_ontologies_ann_level_3 (1).xlsx
+    Untracked:  data/GOBP_CYTOKINE_MEDIATED_SIGNALING_PATHWAY.v2025.1.Hs.tsv
     Untracked:  data/cellxgene_cell_ontologies_ann_level_3.xlsx
-    Untracked:  data/code/
-    Untracked:  data/data/
-    Untracked:  data/homologs.rds
-    Untracked:  data/intermediate_objects/CD4 T cells.CF_samples.fit.rds
-    Untracked:  data/intermediate_objects/CD4 T cells.all_samples.fit.rds
-    Untracked:  data/intermediate_objects/CD8 T cells.CF_samples.fit.rds
-    Untracked:  data/intermediate_objects/CD8 T cells.all_samples.fit.rds
-    Untracked:  data/intermediate_objects/DC cells.CF_samples.fit.rds
-    Untracked:  data/intermediate_objects/DC cells.all_samples.fit.rds
+    Untracked:  data/gencode.v44.primary_assembly.annotation.gtf
 
 Unstaged changes:
+    Modified:   .DS_Store
     Modified:   .gitignore
-    Modified:   analysis/06.0_azimuth_annotation.Rmd
-    Modified:   analysis/09.0_integrate_cluster_macro_cells.Rmd
+    Modified:   README.md
+    Modified:   analysis/13.0_DGE_analysis_macrophages.Rmd
     Modified:   analysis/13.1_DGE_analysis_macro-alveolar.Rmd
+    Modified:   analysis/13.2_DGE_analysis_macro-APOC2+.Rmd
+    Modified:   analysis/13.3_DGE_analysis_macro-CCL.Rmd
+    Modified:   analysis/13.4_DGE_analysis_macro-IFI27.Rmd
+    Modified:   analysis/13.5_DGE_analysis_macro-lipid.Rmd
+    Modified:   analysis/13.6_DGE_analysis_macro-monocyte-derived.Rmd
     Modified:   analysis/13.7_DGE_analysis_macro-proliferating.Rmd
+    Modified:   analysis/14.0_DGE_analysis_CD4-T-cells.Rmd
+    Modified:   analysis/14.1_DGE_analysis_CD8-T-cells.Rmd
+    Modified:   analysis/14.2_DGE_analysis_DC-cells.Rmd
     Modified:   analysis/15.0_proportions_analysis_ann_level_1.Rmd
-    Deleted:    analysis/99.0_Figure_1.Rmd
-    Deleted:    analysis/99.0_Figure_2.Rmd
-    Deleted:    analysis/99.0_Figure_3.Rmd
-    Deleted:    analysis/99.0_Figure_4.Rmd
-    Deleted:    analysis/99.0_Figure_5.Rmd
-    Deleted:    analysis/99.0_Supplementary_Figure_3-5.Rmd
-    Deleted:    analysis/99.0_Supplementary_Figure_ADTs.Rmd
-    Modified:   code/utility.R
+    Modified:   analysis/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd
+    Modified:   analysis/15.2_proportions_analysis_ann_level_3_macrophages.Rmd
+    Modified:   analysis/16.0_Figure_1.Rmd
+    Modified:   analysis/16.1_Figure_2.Rmd
+    Modified:   analysis/16.2_Figure_3.Rmd
+    Modified:   analysis/16.3_Figure_4.Rmd
+    Modified:   analysis/16.4_Figure_5.Rmd
+    Modified:   analysis/16.5_Figure_6.Rmd
+    Modified:   analysis/getting_started.Rmd
+    Deleted:    output/Figure1A.jpeg
+    Modified:   output/Figure1A.png
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/ORA.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/pdf_figures/Figure_1.pdf
+    Modified:   output/pdf_figures/Figure_4.pdf
+    Modified:   output/pdf_figures/Figure_5.pdf
+    Modified:   output/pdf_figures/Figure_6.pdf
 
 </code></pre>
 <p>
@@ -615,7 +657,6 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
 These are the previous versions of the repository in which changes were
 made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
@@ -645,6 +686,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/48b6fc457bc4d4ab8b71d668f799b8f715853bd1/analysis/index.Rmd" target="_blank">48b6fc4</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2026-04-01
+</td>
+<td>
+wflow_publish(c("analysis/14.3_epithelial_cell_analysis.Rmd",
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Oshlack/paediatric-cf-inflammation-citeseq/bcc86bff539f353b5a586b22cf50aaef879682d4/docs/index.html" target="_blank">bcc86bf</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2025-02-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1302,7 +1377,7 @@ html
 Jovana Maksimovic
 </td>
 <td>
-2024-10-06
+2024-10-07
 </td>
 <td>
 Build site.
@@ -1319,7 +1394,7 @@ Rmd
 Jovana Maksimovic
 </td>
 <td>
-2024-10-06
+2024-10-07
 </td>
 <td>
 wflow_publish("analysis/index.Rmd")
@@ -2326,7 +2401,7 @@ html
 Jovana Maksimovic
 </td>
 <td>
-2024-02-20
+2024-02-21
 </td>
 <td>
 Build site.
@@ -2343,7 +2418,7 @@ Rmd
 Jovana Maksimovic
 </td>
 <td>
-2024-02-20
+2024-02-21
 </td>
 <td>
 wflow_publish("analysis/index.Rmd")
@@ -2360,7 +2435,7 @@ html
 Jovana Maksimovic
 </td>
 <td>
-2024-02-20
+2024-02-21
 </td>
 <td>
 Build site.
@@ -2377,7 +2452,7 @@ Rmd
 Jovana Maksimovic
 </td>
 <td>
-2024-02-20
+2024-02-21
 </td>
 <td>
 wflow_publish("analysis/index.Rmd")
@@ -2408,9 +2483,11 @@ Start workflowr project.
 </div>
 </div>
 <p>This site presents the code and results of the analyses described in
-the pre-print: <a href="">“Single-cell atlas of BAL from preschool
-cystic fibrosis reveals key inflammatory pathways modified by ivacaftor
-in the early life lung”</a>.</p>
+the manuscript: <a
+href="https://doi.org/10.1016/j.mucimm.2026.03.012">“Single-cell
+profiling of BAL in preschool cystic fibrosis reveals macrophage
+dysregulation and ivacaftor-modified inflammatory programs in the early
+life lung”</a>.</p>
 <p>All the code and results of this analysis are available from GitHub
 at <a
 href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq">https://github.com/Oshlack/paediatric-cf-inflammation-citeseq</a>.
@@ -2421,22 +2498,24 @@ href="getting_started.html">getting started</a> page.</p>
 <p>Aberrant inflammation and structural lung damage occurs early in life
 for people with cystic fibrosis (CF). Even in the era of CFTR
 modulators, anti-inflammatory therapy may still be needed to prevent
-establishment, and lifelong consequences, of bronchiectasis. In this
-study, we integrated transcriptome-wide single-cell RNA sequencing data,
-highly multiplexed surface protein expression, and functional pathway
-analysis to comprehensively investigate inflammatory cell responses in
-37 BAL samples from children with CF and 8 BAL samples from non-CF
-controls. We show widespread dysregulation of macrophage function in the
-preschool CF lung, including alterations in pathways associated with
-SARS-COV-1 and -2 responses, TNF/IFN signalling and cholesterol
-homeostasis, that were further altered by the early development of
-bronchiectasis. We showed that the CFTR modulator ivacaftor restores
-some of these macrophage-related functional deficits and reduces
-expression of pathways associated with neutrophil infiltration, however
-the modulator lumacaftor/ivacaftor was not associated with any
-detectable change in response. This work represents the most
-comprehensive, multi-omic single-cell analysis of bronchoalveolar lavage
-from preschool children and the results inform the future development of
+establishment and lifelong consequences of bronchiectasis. In this
+study, we integrated transcriptome-wide single-cell RNA sequencing data
+and highly multiplexed surface protein expression to create the largest
+comprehensive paediatric lower airway atlas of &gt;190,000 cells from 45
+bronchoalveolar lavage (BAL) samples resulting in 43 immune and
+epithelial cell populations, all available for exploration on CELLxGENE.
+We then investigated inflammatory cell responses in children with CF to
+show widespread gene expression dysregulation of macrophage populations
+in the preschool CF lung. This included alterations in pathways
+associated with TNF and IFN signalling, cholesterol homeostasis, as well
+as pulmonary fibrosis, that were further altered by the early
+development of bronchiectasis. We showed that the CFTR modulator
+ivacaftor restores some of these macrophage-related functional deficits
+and reduces expression of pathways associated with neutrophil
+infiltration, however the modulator lumacaftor/ivacaftor did not result
+in any detectable changes in transcriptional response. This work
+represents a comprehensive, multi-omic single-cell analysis of BAL from
+preschool children and the results may inform the future development of
 anti-inflammatory therapy for children with CF.</p>
 </div>
 <div id="authors" class="section level1 unnumbered">
@@ -2448,7 +2527,7 @@ Ho<sup>5</sup>, Casey J.A. Anttila<sup>5</sup>, Daniel V.
 Brown<sup>5</sup>, Anne Senabouth<sup>7,8</sup>, Dominik
 Kaczorowski<sup>7,8</sup>, Daniela Amann-Zalcenstein<sup>5,6</sup>,
 Joseph E. Powell<sup>7,8</sup>, Sarath C. Ranganathan<sup>2,3,4</sup>,
-Alicia Oshlack<sup>1,9,10</sup>, Melanie R. Neeland<sup>2,3#</sup>.</p>
+Alicia Oshlack<sup>1,9</sup>, Melanie R. Neeland<sup>2,3#</sup>.</p>
 <p><sup>1</sup> Computational Biology Program, Peter MacCallum Cancer
 Centre, Parkville, VIC, Australia</p>
 <p><sup>2</sup> Respiratory Diseases, Murdoch Children’s Research
@@ -2467,8 +2546,6 @@ Institute of Medical Research, Sydney, NSW, Australia</p>
 New South Wales, Sydney, NSW, Australia</p>
 <p><sup>9</sup> Sir Peter MacCallum Department of Oncology, University
 of Melbourne, Parkville, VIC, Australia</p>
-<p><sup>10</sup> School of Mathematics and Statistics, University of
-Melbourne, Parkville, VIC, Australia</p>
 <p><sup>*</sup>Contributed equally</p>
 </div>
 <div id="analysis-overview" class="section level1 unnumbered">
@@ -2558,6 +2635,8 @@ macrophages</a></li>
 <li><a href="14.0_DGE_analysis_CD4-T-cells.html">CD4 T-cells</a></li>
 <li><a href="14.1_DGE_analysis_CD8-T-cells.html">CD8 T-cells</a></li>
 <li><a href="14.2_DGE_analysis_DC-cells.html">DC cells</a></li>
+<li><a href="14.3_epithelial_cell_analysis.html">Epithelial
+cells</a></li>
 </ol></li>
 </ol>
 <!-- line break -->
@@ -2595,14 +2674,6 @@ Figures</a></li>
 </ol></li>
 </ol>
 <!-- line break -->
-<!-- To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6. -->
-<!-- As per this issue, https://github.com/satijalab/seurat-object/issues/165, if there is an error running sctransform, remove all relevant packages (and purge if using renv) and then install using the following method exactly, to build from source. -->
-<!-- if (!requireNamespace("remotes", quietly = TRUE)) { -->
-<!--   install.packages("remotes") -->
-<!-- } -->
-<!-- options(repos = c("https://satijalab.r-universe.dev", getOption("repos"))) -->
-<!-- remotes::install_version("SeuratObject", "4.1.4") -->
-<!-- remotes::install_version("Seurat", "4.4.0", upgrade = FALSE) # remotes will try to upgrade SeuratObject to v5, we need to tell it no -->
 </div>
 <div id="licenses" class="section level1 unnumbered">
 <h1 class="unnumbered">Licenses</h1>
@@ -2611,6 +2682,7 @@ href="https://choosealicense.com/licenses/mit/" title="MIT License">MIT
 license</a> and the written content on this website is covered by a <a
 href="https://choosealicense.com/licenses/cc-by-4.0/"
 title="CC-BY License">Creative Commons CC-BY</a> license.</p>
+<!-- line break -->
 </div>
 <div id="version-information" class="section level1 unnumbered">
 <h1 class="unnumbered">Version Information</h1>
@@ -2626,23 +2698,18 @@ Session information
 <div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.3.3 (2024-02-29)
-Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 22.04.4 LTS
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS 15.5
 
 Matrix products: default
-BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
-LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
 
 locale:
- [1] LC_CTYPE=en_AU.UTF-8       LC_NUMERIC=C              
- [3] LC_TIME=en_AU.UTF-8        LC_COLLATE=en_AU.UTF-8    
- [5] LC_MONETARY=en_AU.UTF-8    LC_MESSAGES=en_AU.UTF-8   
- [7] LC_PAPER=en_AU.UTF-8       LC_NAME=C                 
- [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-[11] LC_MEASUREMENT=en_AU.UTF-8 LC_IDENTIFICATION=C       
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
-time zone: Etc/UTC
-tzcode source: system (glibc)
+time zone: Australia/Melbourne
+tzcode source: internal
 
 attached base packages:
 [1] stats     graphics  grDevices datasets  utils     methods   base     
@@ -2652,20 +2719,25 @@ other attached packages:
 
 loaded via a namespace (and not attached):
  [1] jsonlite_1.8.8      compiler_4.3.3      BiocManager_1.30.22
- [4] renv_1.0.3          promises_1.2.1      Rcpp_1.0.12        
+ [4] renv_1.1.4          promises_1.2.1      Rcpp_1.0.12        
  [7] stringr_1.5.1       git2r_0.33.0        callr_3.7.3        
 [10] later_1.3.2         jquerylib_0.1.4     yaml_2.3.8         
-[13] fastmap_1.1.1       R6_2.5.1            knitr_1.45         
+[13] fastmap_1.1.1       R6_2.5.1            knitr_1.50         
 [16] tibble_3.2.1        rprojroot_2.0.4     bslib_0.6.1        
-[19] pillar_1.9.0        rlang_1.1.4         utf8_1.2.4         
+[19] pillar_1.9.0        rlang_1.1.6         utf8_1.2.4         
 [22] cachem_1.0.8        stringi_1.8.3       httpuv_1.6.14      
-[25] xfun_0.42           getPass_0.2-4       fs_1.6.5           
-[28] sass_0.4.9          cli_3.6.3           magrittr_2.0.3     
+[25] xfun_0.52           getPass_0.2-4       fs_1.6.6           
+[28] sass_0.4.10         cli_3.6.5           magrittr_2.0.3     
 [31] ps_1.7.6            digest_0.6.34       processx_3.8.3     
 [34] rstudioapi_0.15.0   lifecycle_1.0.4     vctrs_0.6.5        
 [37] evaluate_0.23       glue_1.8.0          whisker_0.4.1      
-[40] fansi_1.0.6         rmarkdown_2.25      httr_1.4.7         
+[40] fansi_1.0.6         rmarkdown_2.29      httr_1.4.7         
 [43] tools_4.3.3         pkgconfig_2.0.3     htmltools_0.5.8.1  </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 
