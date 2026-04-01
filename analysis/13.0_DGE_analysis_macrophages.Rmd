@@ -450,6 +450,8 @@ for(k in 1:6){
     ifelse(ySub$samples$Participant == d, 1, 0)  
   }, USE.NAMES = TRUE)
   
+  design <- cbind(design, dups)
+  
   contr <- makeContrasts(CF.NO_MODvNON_CF.CTRL = 0.5*(CF.NO_MOD.M + CF.NO_MOD.S) - NON_CF.CTRL,
                          CF.IVAvNON_CF.CTRL = 0.5*(CF.IVA.M + CF.IVA.S) - NON_CF.CTRL,
                          CF.LUMA_IVAvNON_CF.CTRL = 0.5*(CF.LUMA_IVA.M + CF.LUMA_IVA.S) - NON_CF.CTRL,
@@ -916,6 +918,7 @@ WGCNA::labeledHeatmap(Matrix = t(moduleTraitCor),
                                           min(10, nSamples), 
                                           " PCs"))
 ```
+
 #### Select `k` value
 
 First, we need to select `k` for use with `RUVseq`.
@@ -962,7 +965,9 @@ for(k in 1:6){
   dups <- sapply(dups, function(d){
     ifelse(ySub$samples$Participant == d, 1, 0)
   }, USE.NAMES = TRUE)
-
+  
+  design <- cbind(design, dups)
+  
   contr <- makeContrasts(CF.IVAvCF.NO_MOD = 0.5*(CF.IVA.S + CF.IVA.M) - 0.5*(CF.NO_MOD.S + CF.NO_MOD.M),
                          CF.LUMA_IVAvCF.NO_MOD = 0.5*(CF.LUMA_IVA.S + CF.LUMA_IVA.M) - 0.5*(CF.NO_MOD.S + CF.NO_MOD.M),
                          CF.NO_MOD.SvCF.NO_MOD.M = CF.NO_MOD.S - CF.NO_MOD.M,
