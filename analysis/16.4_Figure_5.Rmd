@@ -662,25 +662,25 @@ HHHHHHH
   plot_annotation(tag_levels = "A")  &
   theme(plot.tag = element_text(size = 24,
                                 face = "bold",
-                                family = "arial"))
+                                family = "arial")) -> p
+
+p
+
+ggsave(here("output/pdf_figures/Figure_5.pdf"), 
+       plot = p, width = 10, height = 17, units = "in", device = cairo_pdf)
 
 ```
 
 # Supplement
 
-```{r, fig.width=10}
-layout <- "
-AAAA
-BBBB
-"
-
-wrap_elements(iva_props + theme(plot.margin = margin(rep(0,4)))) +
-  wrap_elements(lumaiva_props + theme(plot.margin = margin(rep(0,4)))) +
-  plot_layout(design = layout) +
-  plot_annotation(tag_levels = "A")  &
-  theme(plot.tag = element_text(size = 24,
-                                face = "bold",
-                                family = "arial"))
+```{r, fig.asp=0.3, fig.width=10}
+#wrap_elements(iva_props + theme(plot.margin = margin(rep(0,4)))) +
+   wrap_elements(lumaiva_props + theme(plot.margin = margin(rep(0,4)))) #+
+  # plot_layout(design = layout) +
+  # plot_annotation(tag_levels = "A")  &
+  # theme(plot.tag = element_text(size = 24,
+  #                               face = "bold",
+  #                               family = "arial"))
 ```
 
 

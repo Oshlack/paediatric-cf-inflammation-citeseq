@@ -625,8 +625,12 @@ wrap_elements(cf_props & theme(legend.position = "right",
   plot_annotation(tag_levels = "A")  &
   theme(plot.tag = element_text(size = 24,
                                 face = "bold",
-                                family = "arial"))
+                                family = "arial")) -> p
 
+p
+
+ggsave(here("output/pdf_figures/Figure_3.pdf"), 
+       plot = p, width = 10, height = 19, units = "in", device = cairo_pdf)
 ```
 
 

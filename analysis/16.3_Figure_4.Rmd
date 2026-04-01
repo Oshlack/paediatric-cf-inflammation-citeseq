@@ -397,13 +397,11 @@ plot_macro_heatmap <- function(dat_combined, sig_only = FALSE) {
   # --- 3. Optionally filter to genes significant in macrophages AND other subsets ---
   if (sig_only) {
     
-    # Genes significant in macrophages
     sig_in_macro <- dat_combined %>%
       filter(celltype == "macrophages", sig != 0) %>%
       pull(gene) %>%
       unique()
     
-    # Genes significant in at least one other subset
     sig_in_other <- dat_combined %>%
       filter(celltype != "macrophages", sig != 0) %>%
       pull(gene) %>%
@@ -421,7 +419,7 @@ plot_macro_heatmap <- function(dat_combined, sig_only = FALSE) {
   }
   
   # --- 4. Column annotation ---
-  sample_anno <- dat_macro %>%
+  sample_anno <- dat_combined %>%
     dplyr::select(sample, Group_severity, Age) %>%
     distinct() %>%
     column_to_rownames("sample")
@@ -443,7 +441,7 @@ plot_macro_heatmap <- function(dat_combined, sig_only = FALSE) {
     show_annotation_name = FALSE
   )
   
-  # --- 5. Row annotation: significance in other subsets ---
+  # --- 5. Row annotation data: significance in other subsets ---
   sig_other <- dat_combined %>%
     group_by(gene, celltype) %>%
     summarise(
@@ -466,7 +464,7 @@ plot_macro_heatmap <- function(dat_combined, sig_only = FALSE) {
   
   sig_other     <- sig_other[, celltype_order, drop = FALSE]
   sig_other_chr <- sig_other %>% mutate(across(everything(), as.character))
-  # Remove macrophages column when plotting sig_only to avoid redundancy
+
   if (sig_only) {
     sig_other_chr <- sig_other_chr %>% dplyr::select(-any_of("macrophages"))
   }
@@ -479,6 +477,37 @@ plot_macro_heatmap <- function(dat_combined, sig_only = FALSE) {
     "Not significant" = "#E8E8E8"
   )
   
+  # --- 6. Z-score normalise ---
+  expr_mat_z <- t(scale(t(expr_mat)))
+  
+  # --- 7. Build heatmap without row annotation to get clustered row order ---
+  ht_tmp <- Heatmap(
+    expr_mat_z,
+    name              = "Expression",
+    top_annotation    = ha_col,
+    show_row_names    = TRUE,
+    show_column_names = TRUE,
+    cluster_rows      = TRUE,
+    cluster_columns   = TRUE,
+    row_names_gp      = gpar(fontsize = 8),
+    column_names_gp   = gpar(fontsize = 8),
+    heatmap_legend_param = list(
+      title = bquote(bold("Scaled log"[2]~"expression"))
+    ),
+    column_split = sample_anno$Group_severity,
+    column_title = NULL
+  )
+  
+  # Draw to invisible device to extract row order
+  pdf(NULL)
+  ht_tmp
+  clustered_row_order <- rownames(ht_tmp@matrix)
+  dev.off()
+  
+  # --- 8. Reorder annotation to match clustered row order ---
+  sig_other_chr <- sig_other_chr[clustered_row_order, , drop = FALSE]
+  
+  # --- 9. Build row annotation with correctly ordered data ---
   ha_row <- rowAnnotation(
     df  = sig_other_chr,
     col = setNames(
@@ -490,21 +519,18 @@ plot_macro_heatmap <- function(dat_combined, sig_only = FALSE) {
     annotation_name_side = "top"
   )
   
-  # --- 6. Z-score normalise ---
-  expr_mat_z <- t(scale(t(expr_mat)))
-  
-  # --- 7. Build heatmap ---
+  # --- 10. Build final heatmap with correct row annotation ---
   ht <- Heatmap(
     expr_mat_z,
-    name             = "Expression",
-    top_annotation   = ha_col,
-    right_annotation = ha_row,
-    show_row_names   = TRUE,
+    name              = "Expression",
+    top_annotation    = ha_col,
+    right_annotation  = ha_row,
+    show_row_names    = TRUE,
     show_column_names = TRUE,
-    cluster_rows     = TRUE,
-    cluster_columns  = TRUE,
-    row_names_gp     = gpar(fontsize = 8),
-    column_names_gp  = gpar(fontsize = 8),
+    cluster_rows      = TRUE,
+    cluster_columns   = TRUE,
+    row_names_gp      = gpar(fontsize = 8),
+    column_names_gp   = gpar(fontsize = 8),
     heatmap_legend_param = list(
       title = bquote(bold("Scaled log"[2]~"expression"))
     ),
@@ -519,12 +545,7 @@ plot_macro_heatmap <- function(dat_combined, sig_only = FALSE) {
     legend_gp = gpar(fill = sig_colors)
   )
   
-  # Replace the draw block at the end of plot_macro_heatmap() with:
   list(ht = ht, sig_legend = sig_legend)
-  # ComplexHeatmap::draw(as(list(ht), "HeatmapList"), 
-  #                    heatmap_legend_side = "right", 
-  #                    annotation_legend_side = "right",
-  #                    merge_legends = TRUE) 
 }
 ```
 
@@ -567,7 +588,7 @@ ht_panel <- ht_to_ggplot(
   legend_list = list(ht_out$sig_legend),
   width       = 10,
   height      = 6.67,
-  res = 900
+  res         = 900
 )
 
 # Then in patchwork
@@ -585,7 +606,12 @@ wrap_elements(deg_barplot + theme(axis.title.x = element_blank(),
 ht_panel +
 plot_layout(design = layout) +
 plot_annotation(tag_levels = "A") &
-theme(plot.tag = element_text(size = 24, face = "bold", family = "arial"))
+theme(plot.tag = element_text(size = 24, face = "bold", family = "Arial")) -> p
+
+p
+
+ggsave(here("output/pdf_figures/Figure_4.pdf"), 
+       plot = p, width = 12, height = 12, units = "in", device = cairo_pdf)
 ```
 
 # Supplement

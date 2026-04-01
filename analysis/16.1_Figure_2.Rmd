@@ -237,7 +237,8 @@ unnest(enframe(setNames(str_split(labels$`non-overlapping marker genes`, ", "),
                name = "cluster"),
        cols = gene) %>%
   arrange(cluster) %>%
-  distinct() -> markers
+  distinct() %>%
+  dplyr::filter(gene != "MALAT1") -> markers
 
 markers <- markers[markers$gene %in% rownames(seuLst[[2]]),]
 
@@ -389,7 +390,12 @@ GGGIIIII
   plot_annotation(tag_levels = "A") &
   theme(plot.tag = element_text(size = 24,
                                 face = "bold",
-                                family = "arial"))
+                                family = "arial")) -> p
+
+p
+
+ggsave(here("output/pdf_figures/Figure_2.pdf"), 
+       plot = p, width = 16, height = 22, units = "in", device = cairo_pdf)
 ```
 
 

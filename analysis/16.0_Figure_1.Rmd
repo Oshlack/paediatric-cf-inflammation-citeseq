@@ -637,8 +637,13 @@ f1f
 
 # Figure 1
 
-```{r, fig.asp=1, fig.width=13}
+```{r, fig.asp=1.25, fig.width=13}
+library(png)
+library(grid)
+
 layout = "
+AAAAAAAA
+AAAAAAAA
 BBBCCCCC
 BBBCCCCC
 BBBCCCCC
@@ -653,7 +658,16 @@ FFFFGGGG
 FFFFGGGG
 FFFFGGGG
 "
-(wrap_elements(f1b + theme(plot.margin = unit(rep(0,4), "cm"))) + 
+
+img <- readPNG(here("output/Figure1A.png"))
+f1a <- rasterGrob(img, interpolate = TRUE)
+
+(wrap_elements(f1a) +
+wrap_elements(f1b + annotate("text", x = -Inf, y = Inf, 
+           label = paste0(formatC(nrow(seu@meta.data), format = "d", big.mark = ","), " cells"),
+           hjust = -0.1, vjust = 1.5, 
+           size = 4) + 
+                theme(plot.margin = unit(rep(0,4), "cm"))) + 
     wrap_elements(f1c + theme(plot.margin = unit(rep(0,4), "cm"))) + 
     wrap_elements(f1d + theme(plot.margin = unit(rep(0,4), "cm"))) + 
     wrap_plots(list(f1e %>% 
@@ -661,12 +675,16 @@ FFFFGGGG
                       grid::grid.grabExpr())) +
     wrap_elements(f1f + theme(plot.margin = unit(rep(0,4), "cm")))) + 
   plot_layout(design = layout) +
-  plot_annotation(tag_levels = list(c("B","C","D","E","F"))) &
+  plot_annotation(tag_levels = list(c("A","B","C","D","E","F"))) &
   theme(plot.tag = element_text(size = 24,
-                                face = "bold",
-                                family = "arial"))
-  
+                                face = "bold")) -> p
+
+p
+
+ggsave(here("output/pdf_figures/Figure_1.pdf"), 
+       plot = p, width = 13, height = 15, units = "in", device = cairo_pdf)
 ```
+
 
 # Supplement
 
