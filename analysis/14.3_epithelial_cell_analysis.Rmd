@@ -1,0 +1,498 @@
+---
+title: "Inflammation of Paediatric Pulmonary Diseases"
+subtitle: "DGE analysis of CF status in epithelial cells"
+author: "Jovana Maksimovic"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+site: workflowr::wflow_site
+output:
+  bookdown::html_document2:
+    base_format: workflowr::wflow_html
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+    number_sections: true
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# Load libraries
+
+```{r, message=FALSE, echo=FALSE}
+suppressPackageStartupMessages({
+  library(SingleCellExperiment)
+  library(edgeR)
+  library(tidyverse)
+  library(ggplot2)
+  library(Seurat)
+  library(dittoSeq)
+  library(here)
+  library(glue)
+  library(patchwork)
+  library(paletteer)
+  library(tidyHeatmap)
+  library(readxl)
+  library(AnnotationDbi)
+  library(org.Hs.eg.db)
+  library(speckle)
+  library(ggh4x)
+  library(dsb)
+})
+
+set.seed(42)
+options(scipen=999)
+options(future.globals.maxSize = 6500 * 1024^2)
+```
+
+# Load Data
+
+```{r}
+files <- here("data",
+              "C133_Neeland_merged",
+              "C133_Neeland_full_clean_decontx_other_cells_annotated_full.SEU.rds")
+
+seu <- readRDS(files)
+seu
+```
+# Rare cell populations
+
+```{r}
+DimPlot(seu, group.by = "ann_level_2")
+```
+
+# CFTR Expression
+
+```{r}
+samp_map <-
+c(
+  "CF.IVA" = "CF (iva)",
+  "CF.LUMA_IVA" = "CF (luma/iva)",
+  "CF.NO_MOD" = "CF (no mod)",
+  "NON_CF.CTRL" = "Non-CF control"
+)
+
+seu <- NormalizeData(seu)
+
+# Step 1: Get expression of CFTR and cell type metadata
+cftr_expr <- FetchData(seu, vars = c("CFTR"))
+cftr_expr$cell_type <- seu$ann_level_2  # replace with your actual column name
+cftr_expr$disease <- seu$Group
+cftr_expr <- cftr_expr %>% 
+  dplyr::filter(str_detect(cell_type, "epithelial")) %>%
+  mutate(Group = samp_map[disease])
+
+# Step 2: Calculate the percentage of expressing cells per cell type
+cftr_percent_by_type <- cftr_expr %>%
+  group_by(cell_type, Group) %>%
+  summarise(
+    total_cells = n(),
+    percent_expressing = 100 * sum(CFTR > 0) / n(),
+    .groups = "drop"
+  ) 
+
+# Step 3: View the result
+print(cftr_percent_by_type)
+```
+
+```{r, fig.asp=1}
+#Assuming 'cftr_percent_by_type' is the result from previous code
+ggplot(cftr_percent_by_type, aes(x = Group,
+                                 y = percent_expressing,
+                                 fill = cell_type)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +
+  geom_text(aes(label = paste0(round(percent_expressing, 1), "%")),
+            position = position_dodge(width = 0.9),
+            vjust = -0.3, size = 3) +
+  labs(title = "Percentage of Cells Expressing CFTR by Cell Type",
+       x = "Cell Type",
+       y = "Percent Expressing CFTR") +
+  theme_bw()
+
+ggplot(cftr_percent_by_type, aes(x = Group, 
+                                 y = percent_expressing,
+                                 fill = cell_type)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = paste0(round(percent_expressing, 1), "% (n=", total_cells, ")")),
+            position = position_stack(vjust = 0.5),
+            size = 3) +
+  labs(x = "Condition",
+       y = "% Cells Expressing CFTR",
+       fill = "Cell type") +
+  theme_minimal() -> percent_cftr
+
+percent_cftr
+```
+```{r}
+cftr_expr %>%
+  filter(str_detect(cell_type, "epithelial"),
+         CFTR != 0) %>%
+  ggplot(aes(x = cell_type, y = CFTR, color = Group)) +
+  geom_boxplot(outlier.shape = NA, 
+               position = position_dodge(width = 0.8), 
+               fill = NA) +
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.1, 
+                                              dodge.width = 0.8),
+              size = 1, alpha = 0.6) +
+  labs(x = "Cell Type", y = "CFTR Expression",
+       colour = "Condition") +
+  theme_minimal() + 
+  scale_colour_paletteer_d("RColorBrewer::Set2", direction = 1) -> cftr_exp_plot
+
+cftr_exp_plot
+```
+
+# DGE analysis
+
+Test genes previously identified as differentially expressed bewteen CF and CO in epithelial cells by [Sun and Zhou, 2025](https://doi.org/10.1016/j.compbiomed.2025.109748) and [Carraro et al., 2021](https://doi.org/10.1038/s41591-021-01332-7)
+
+```{r, fig.asp=5}
+carraro_ciliated <- data.frame(
+  Ciliated1_CO = c("FTL", "FTH1", "HSPB1", "NUDT14", "ARL6IP4", "CHCHD10", NA, NA, NA, NA),
+  Ciliated1_CF = c("DNAH5", "ABCA13", "PCM1", "SYNE1", "SYNE2", "SPEF2", "ANKRD26", "HYDIN", "CEP290", "DMD"),
+  Ciliated2_CO = c("PRDX1", "NQO1", "EPHX1", "TXN", "AKR1C3", "TALDO1", "ALDH3A1", "PSMB3", "DEGS2", "TUFM"),
+  Ciliated2_CF = c("AGR3", "LRRC6", "CTSS", "TSPAN19", "IPO11", "SMARCA5", "LTZFL1", "ENKUR", "MAP3K19", "SCGB2A1"),
+  Ciliated3_CO = c("EEF1D", "GAPDH", "DUSP23", "MGST1", "KRT19", "EEF1B2", "NACA", "ENO1", "BPIFB1", "PIP"),
+  Ciliated3_CF = c("SLC34A2", "HLA-DRB1", "CP", "GBP1", "HLA-DPA1", "PIGR", "CFH", "IFI6", NA, NA),
+  stringsAsFactors = FALSE
+) %>%
+  pivot_longer(cols = everything(), names_to = "subtype", values_to = "gene") %>%
+  filter(!is.na(gene)) %>%
+  separate(subtype, into = c("group", "condition"), sep = "_")
+
+carraro_secretory <- data.frame(
+  Secretory1_CF = c("FOS", "CXCL6", "DDIT4", "TNFAIP2", "SLC34A2", "TRIB1", "EGR1", "ATF3", "IFI27", "PPP1R15A", NA),
+  Secretory1_CO = c("S100A8", "S100A2", "LY6D", "SERPINB4", "KRT6A", "GPX2", "TXN", "CSTA", "ALDH3A1", NA, NA),
+  Secretory2_CF = c("MSMB", "BPIFA1", "TFF3", "BPIFB1", "C3", "HLA-DRA", "CD74", "SCL5A8", "DSP", NA, NA),
+  Secretory2_CO = c("S100A4", "S100A6", "AQP5", "KRT19", "FTL", "HSPB1", "NTS", "ADH1C", "KRT19", "MGST1", "AKR1C1"),
+  Secretory3_CF = c("DNAH12", "SPEF2", "SPAG17", "SYNE1", "DNAAF1", "DNAH11", "DNAH5", "CCDC146", "ZBBX", "CBR3", NA),
+  Secretory3_CO = c("LRRFIP1", "RAB13", "HNRNPM", "HMGB1", "YWHAB", "LRRIQ1", NA, NA, NA, NA, NA),
+  Secretory4_CF = c("DXCR", "TFF1", "GOLM1", "TCN1", "AZGP1", "ANG", "AGR3", "CPE", "SLC12A2", NA, NA),
+  Secretory4_CO = c("FTH1", "NUPR1", "EEF1D", "ADRIF", "ADI1", "OCIAD2", "NDUFA11", NA, NA, NA, NA),
+  Secretory5_CF = c("PRB3", "PIP", "PRB4", "PRR4", "LTF", "LYZ", "ZG16B", "MIA", NA, NA, NA),
+  Secretory5_CO = c("DUSP23", "PRELID1", NA, NA, NA, NA, NA, NA, NA, NA, NA),
+  stringsAsFactors = FALSE
+) %>%
+  pivot_longer(cols = everything(), names_to = "subtype", values_to = "gene") %>%
+  filter(!is.na(gene)) %>%
+  separate(subtype, into = c("group", "condition"), sep = "_")
+
+sun_zhou_targets <- c(
+  "EGR1", "PRDX1", "FTL", "COX6C", "SPRR3", 
+  "SAA1", "SAA2", "S100A6", "S100A2", "FOS", 
+  "ALDH3A1", "TXN", "GPX2", "CSTA", "GSTP1", 
+  "TSPAN8", "GCLC", "DDX17", "FAM3B", "PSCA", 
+  "PTMA", "TNFAIP2", "COX5A"
+)
+```
+
+```{r, fig.width=4, fig.asp=2.75}
+DotPlot(subset(seu, cells = which(str_detect(seu$ann_level_3, "secretory"))), 
+        features = sun_zhou_targets, 
+        group.by = "Group",
+        cols = c("#e0ecf4", "#88419d"))  +
+  theme_minimal() +
+  labs(
+    x = "Gene",
+    y = "Cell type",
+    title = "Secretory: Sun and Zhou 2025"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    plot.title = element_text(hjust = 0.5)
+  ) +
+  coord_flip()
+
+DotPlot(subset(seu, cells = which(str_detect(seu$ann_level_3, "ciliated"))), 
+        features = sun_zhou_targets, 
+        group.by = "Group",
+        cols = c("#e0ecf4", "#88419d"))  +
+  theme_minimal() +
+  labs(
+    x = "Gene",
+    y = "Cell type",
+    title = "Ciliated: Sun and Zhou 2025"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    plot.title = element_text(hjust = 0.5)
+  )+
+  coord_flip()
+
+DotPlot(subset(seu, cells = which(str_detect(seu$ann_level_3, "secretory"))), 
+        features = unique(carraro_secretory$gene), 
+        group.by = "Group",
+        cols = c("#e0ecf4", "#88419d"))  +
+  theme_minimal() +
+  labs(
+    x = "Gene",
+    y = "Cell type",
+    title = "Secretory: Carraro 2021"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    plot.title = element_text(hjust = 0.5)
+  )+
+  coord_flip()
+
+DotPlot(subset(seu, cells = which(str_detect(seu$ann_level_3, "ciliated"))), 
+        features = unique(carraro_ciliated$gene), 
+        group.by = "Group",
+        cols = c("#e0ecf4", "#88419d"))  +
+  theme_minimal() +
+  labs(
+    x = "Gene",
+    y = "Cell type",
+    title = "Ciliated: Carraro 2021"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    plot.title = element_text(hjust = 0.5)
+  )+
+  coord_flip()
+```
+
+```{r}
+target_genes <- unique(c(sun_zhou_targets,
+                         carraro_ciliated$gene,
+                         carraro_secretory$gene))
+logcounts <- normCounts(DGEList(as.matrix(seu[["RNA"]]@counts)),
+                        log = TRUE, prior.count = 0.5)
+```
+
+```{r}
+# limma-trend for DE
+Idents(seu) <- "Group"
+cell_type <- unique(seu$ann_level_3[str_detect(seu$ann_level_3, "ciliated")])
+
+subcounts <- logcounts[rownames(logcounts) %in% target_genes, seu$ann_level_3 %in% cell_type]
+
+clustgrp <- fct_drop(factor(Idents(seu))[seu$ann_level_3 %in% cell_type])
+donor <- factor(seu$Participant[seu$ann_level_3 %in% cell_type])
+
+design <- model.matrix(~ 0 + clustgrp + donor)
+colnames(design)[1:(length(levels(clustgrp)))] <- levels(clustgrp)
+design <- design[,-which(colnames(design) %in% nonEstimable(design))]
+
+mycont <- makeContrasts(CF.IVAvsCF.NO_MOD = CF.IVA - CF.NO_MOD,
+                        COvsCF = NON_CF.CTRL - CF.NO_MOD,  
+                        levels = design)
+
+fit <- lmFit(subcounts, design)
+
+fit.cont <- contrasts.fit(fit, contrasts = mycont)
+fit.cont <- eBayes(fit.cont, trend = TRUE, robust = TRUE)
+
+fit.cont <- treat(fit.cont, fc=1.2)
+dt <- decideTests(fit.cont)
+summary(dt)
+```
+
+
+```{r}
+cutoff <- 0.05
+coef = 1
+top <- rownames(topTreat(fit.cont, p.value = cutoff, num = "Inf", 
+                         coef = coef))
+top_n <- length(top)
+
+subcounts %>%
+  data.frame %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(-gene, names_to = "cell", values_to = "logexp") %>%
+  left_join(seu@meta.data %>%
+              rownames_to_column(var = "cell") %>%
+              dplyr::select(cell,
+                            Group) %>%
+              mutate(cell = paste0("X", cell),
+                     cell = gsub("-","\\.", cell))) %>%
+  filter(gene %in% head(top, n = top_n),
+         Group %in% names(mycont[,coef][mycont[,coef] != 0])) %>%
+  mutate(gene = factor(gene, levels = head(top, n = top_n)),
+         Group = samp_map[Group]) %>%
+  ggplot(aes(x = Group, y = logexp, colour = Group)) +
+  geom_jitter(width = 0.2, size = 1, alpha = 0.3, stroke = 0) +
+  stat_summary(fun = "mean", geom = "point", colour = "black") +
+  facet_wrap(~ gene, scales = "free_y", ncol = 4) +
+  theme_bw() +
+  labs(x = "Condition", y = "Expression (log CPM)") +
+  theme(strip.text = element_text(size = 10),
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+  ggtitle(glue("Top {top_n} DEGs for {colnames(mycont)[coef]} in {cell_type}")) -> ciliated_iva
+
+ciliated_iva
+```
+
+```{r, fig.asp=1}
+coef = 2
+top <- rownames(topTreat(fit.cont, p.value = cutoff, num = "Inf", 
+                         coef = coef))
+top_n <- length(top)
+
+subcounts %>%
+  data.frame %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(-gene, names_to = "cell", values_to = "logexp") %>%
+  left_join(seu@meta.data %>%
+              rownames_to_column(var = "cell") %>%
+              dplyr::select(cell,
+                            Group) %>%
+              mutate(cell = paste0("X", cell),
+                     cell = gsub("-","\\.", cell))) %>%
+  filter(gene %in% head(top, n = top_n),
+         Group %in% names(mycont[,coef][mycont[,coef] != 0])) %>%
+  mutate(gene = factor(gene, levels = head(top, n = top_n)),
+         Group = samp_map[Group]) %>%
+  ggplot(aes(x = Group, y = logexp, colour = Group)) +
+  geom_jitter(width = 0.2, size = 1, alpha = 0.3, stroke = 0) +
+  stat_summary(fun = "mean", geom = "point", colour = "black") +
+  facet_wrap(~ gene, scales = "free_y", ncol = 5) +
+  theme_bw() +
+  labs(x = "Condition", y = "Expression (log CPM)") +
+  theme(strip.text = element_text(size = 10),
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+  ggtitle(glue("Top {top_n} DEGs for {colnames(mycont)[coef]} in {cell_type}")) -> ciliated_cf
+
+ciliated_cf
+```
+
+
+```{r}
+cell_type <- unique(seu$ann_level_3[str_detect(seu$ann_level_3, "secretory")])
+subcounts <- logcounts[rownames(logcounts) %in% target_genes, seu$ann_level_3 %in% cell_type]
+
+clustgrp <- fct_drop(factor(Idents(seu))[seu$ann_level_3 %in% cell_type])
+donor <- factor(seu$Participant[seu$ann_level_3 %in% cell_type])
+
+design <- model.matrix(~ 0 + clustgrp + donor)
+colnames(design)[1:(length(levels(clustgrp)))] <- levels(clustgrp)
+design <- design[,-which(colnames(design) %in% nonEstimable(design))]
+
+mycont <- makeContrasts(CF.IVAvsCF.NO_MOD = CF.IVA - CF.NO_MOD,
+                        COvsCF = NON_CF.CTRL - CF.NO_MOD,  
+                        levels = design)
+
+fit <- lmFit(subcounts, design)
+
+fit.cont <- contrasts.fit(fit, contrasts = mycont)
+fit.cont <- eBayes(fit.cont, trend = TRUE, robust = TRUE)
+
+fit.cont <- treat(fit.cont, fc=1.2)
+dt <- decideTests(fit.cont)
+summary(dt)
+```
+
+```{r, fig.asp=0.5}
+coef = 1
+top <- rownames(topTreat(fit.cont, p.value = cutoff, num = "Inf", 
+                         coef = coef))
+top_n <- length(top)
+
+subcounts %>%
+  data.frame %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(-gene, names_to = "cell", values_to = "logexp") %>%
+  left_join(seu@meta.data %>%
+              rownames_to_column(var = "cell") %>%
+              dplyr::select(cell,
+                            Group) %>%
+              mutate(cell = paste0("X", cell),
+                     cell = gsub("-","\\.", cell))) %>%
+  filter(gene %in% head(top, n = top_n),
+         Group %in% names(mycont[,coef][mycont[,coef] != 0])) %>%
+  mutate(gene = factor(gene, levels = head(top, n = top_n)),
+         Group = samp_map[Group]) %>%
+  ggplot(aes(x = Group, y = logexp, colour = Group)) +
+  geom_jitter(width = 0.2, size = 1, alpha = 0.3, stroke = 0) +
+  stat_summary(fun = "mean", geom = "point", colour = "black") +
+  facet_wrap(~ gene, scales = "free_y", ncol = 5) +
+  theme_bw() +
+  labs(x = "Condition", y = "Expression (log CPM)") +
+  theme(strip.text = element_text(size = 10),
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+  ggtitle(glue("Top {top_n} DEGs for {colnames(mycont)[coef]} in secretory cells")) -> secretory_iva
+
+secretory_iva
+```
+
+```{r, fig.asp=1}
+coef = 2
+top <- rownames(topTreat(fit.cont, p.value = cutoff, num = "Inf", 
+                         coef = coef))
+top_n <- length(top)
+
+subcounts %>%
+  data.frame %>%
+  rownames_to_column(var = "gene") %>%
+  pivot_longer(-gene, names_to = "cell", values_to = "logexp") %>%
+  left_join(seu@meta.data %>%
+              rownames_to_column(var = "cell") %>%
+              dplyr::select(cell,
+                            Group) %>%
+              mutate(cell = paste0("X", cell),
+                     cell = gsub("-","\\.", cell))) %>%
+  filter(gene %in% head(top, n = top_n),
+         Group %in% names(mycont[,coef][mycont[,coef] != 0])) %>%
+  mutate(gene = factor(gene, levels = head(top, n = top_n)),
+         Group = samp_map[Group]) %>%
+  ggplot(aes(x = Group, y = logexp, colour = Group)) +
+  geom_jitter(width = 0.2, size = 1, alpha = 0.3, stroke = 0) +
+  stat_summary(fun = "mean", geom = "point", colour = "black") +
+  facet_wrap(~ gene, scales = "free_y", ncol = 5) +
+  theme_bw() +
+  labs(x = "Condition", y = "Expression (log CPM)") +
+  theme(strip.text = element_text(size = 10),
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+  ggtitle(glue("Top {top_n} DEGs for {colnames(mycont)[coef]} in secretory cells")) -> secretory_cf
+
+secretory_cf
+```
+
+# Supplement
+
+```{r, fig.asp=1}
+((percent_cftr + theme(plot.margin = margin(rep(0,4)))) / 
+                       cftr_exp_plot + theme(plot.margin = margin(rep(0,4)))) +
+  plot_annotation(tag_levels = "A") &
+  theme(plot.tag = element_text(size = 24,
+                                face = "bold",
+                                family = "arial"))
+```
+
+```{r, fig.asp=1.5}
+layout <- "
+A
+A
+A
+B
+B
+"
+((ciliated_cf + theme(plot.margin = margin(rep(0,4)))) + 
+    ciliated_iva + theme(plot.margin = margin(rep(0,4)))) +
+  plot_annotation(tag_levels = "A") +
+  plot_layout(design = layout)&
+  theme(plot.tag = element_text(size = 24,
+                                face = "bold",
+                                family = "arial"),
+        legend.position = "none",
+        plot.title = element_blank())
+```
+```{r, fig.asp=1.5}
+layout <- "
+A
+A
+A
+A
+B
+"
+((secretory_cf + theme(plot.margin = margin(rep(0,4)))) + 
+    secretory_iva + theme(plot.margin = margin(rep(0,4)))) +
+  plot_annotation(tag_levels = "A") +
+  plot_layout(design = layout)&
+  theme(plot.tag = element_text(size = 24,
+                                face = "bold",
+                                family = "arial"),
+        legend.position = "none",
+        plot.title = element_blank())
+```

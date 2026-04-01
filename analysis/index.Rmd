@@ -1,5 +1,5 @@
 ---
-title: "Single-cell atlas of BAL from preschool cystic fibrosis reveals key inflammatory pathways modified by ivacaftor in the early life lung"
+title: "Single-cell profiling of BAL in preschool cystic fibrosis reveals macrophage dysregulation and ivacaftor-modified inflammatory programs in the early life lung"
 description: |
 author:
   - name: Jovana Maksimovic
@@ -14,16 +14,16 @@ output:
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, number_sections = FALSE)
 ```
 
-This site presents the code and results of the analyses described in the pre-print: [“Single-cell atlas of BAL from preschool cystic fibrosis reveals key inflammatory pathways modified by ivacaftor in the early life lung”]().
+This site presents the code and results of the analyses described in the manuscript: [“Single-cell profiling of BAL in preschool cystic fibrosis reveals macrophage dysregulation and ivacaftor-modified inflammatory programs in the early life lung”](https://doi.org/10.1016/j.mucimm.2026.03.012).
 
 All the code and results of this analysis are available from GitHub at [https://github.com/Oshlack/paediatric-cf-inflammation-citeseq](https://github.com/Oshlack/paediatric-cf-inflammation-citeseq). To reproduce the complete analysis follow the instructions on the [getting started](getting_started.html) page.
 
 # Abstract {-}
 
-Aberrant inflammation and structural lung damage occurs early in life for people with cystic fibrosis (CF). Even in the era of CFTR modulators, anti-inflammatory therapy may still be needed to prevent establishment, and lifelong consequences, of bronchiectasis. In this study, we integrated transcriptome-wide single-cell RNA sequencing data, highly multiplexed surface protein expression, and functional pathway analysis to comprehensively investigate inflammatory cell responses in 37 BAL samples from children with CF and 8 BAL samples from non-CF controls. We show widespread dysregulation of macrophage function in the preschool CF lung, including alterations in pathways associated with SARS-COV-1 and -2 responses, TNF/IFN signalling and cholesterol homeostasis, that were further altered by the early development of bronchiectasis. We showed that the CFTR modulator ivacaftor restores some of these macrophage-related functional deficits and reduces expression of pathways associated with neutrophil infiltration, however the modulator lumacaftor/ivacaftor was not associated with any detectable change in response. This work represents the most comprehensive, multi-omic single-cell analysis of bronchoalveolar lavage from preschool children and the results inform the future development of anti-inflammatory therapy for children with CF.
+Aberrant inflammation and structural lung damage occurs early in life for people with cystic fibrosis (CF). Even in the era of CFTR modulators, anti-inflammatory therapy may still be needed to prevent establishment and lifelong consequences of bronchiectasis. In this study, we integrated transcriptome-wide single-cell RNA sequencing data and highly multiplexed surface protein expression to create the largest comprehensive paediatric lower airway atlas of >190,000 cells from 45 bronchoalveolar lavage (BAL) samples resulting in 43 immune and epithelial cell populations, all available for exploration on CELLxGENE. We then investigated inflammatory cell responses in children with CF to show widespread gene expression dysregulation of macrophage populations in the preschool CF lung. This included alterations in pathways associated with TNF and IFN signalling, cholesterol homeostasis, as well as pulmonary fibrosis, that were further altered by the early development of bronchiectasis. We showed that the CFTR modulator ivacaftor restores some of these macrophage-related functional deficits and reduces expression of pathways associated with neutrophil infiltration, however the modulator lumacaftor/ivacaftor did not result in any detectable changes in transcriptional response. This work represents a comprehensive, multi-omic single-cell analysis of BAL from preschool children and the results may inform the future development of anti-inflammatory therapy for children with CF.
 
 # Authors {-}
-Jovana Maksimovic^1,2,9\*^, Shivanthan Shanthikumar ^2,3,4\*^, George Howitt^1,9^, Gunjan Dixit^1,9^, Peter F Hickey^5,6^, William Ho^5^, Casey J.A. Anttila^5^, Daniel V. Brown^5^, Anne Senabouth^7,8^, Dominik Kaczorowski^7,8^, Daniela Amann-Zalcenstein^5,6^, Joseph E. Powell^7,8^, Sarath C. Ranganathan^2,3,4^, Alicia Oshlack^1,9,10^, Melanie R. Neeland^2,3#^.
+Jovana Maksimovic^1,2,9\*^, Shivanthan Shanthikumar ^2,3,4\*^, George Howitt^1,9^, Gunjan Dixit^1,9^, Peter F Hickey^5,6^, William Ho^5^, Casey J.A. Anttila^5^, Daniel V. Brown^5^, Anne Senabouth^7,8^, Dominik Kaczorowski^7,8^, Daniela Amann-Zalcenstein^5,6^, Joseph E. Powell^7,8^, Sarath C. Ranganathan^2,3,4^, Alicia Oshlack^1,9^, Melanie R. Neeland^2,3#^.
 
 ^1^ Computational Biology Program, Peter MacCallum Cancer Centre, Parkville, VIC, Australia
 
@@ -42,8 +42,6 @@ Jovana Maksimovic^1,2,9\*^, Shivanthan Shanthikumar ^2,3,4\*^, George Howitt^1,9
 ^8^ UNSW Cellular Genomics Futures Institute, University of New South Wales, Sydney, NSW, Australia
 
 ^9^ Sir Peter MacCallum Department of Oncology, University of Melbourne, Parkville, VIC, Australia
-
-^10^ School of Mathematics and Statistics, University of Melbourne, Parkville, VIC, Australia
 
 ^\*^Contributed equally
 
@@ -109,6 +107,7 @@ Follow the links below to view the different parts of the analysis.
     i) [CD4 T-cells](14.0_DGE_analysis_CD4-T-cells.html) 
     ii) [CD8 T-cells](14.1_DGE_analysis_CD8-T-cells.html)
     iii) [DC cells](14.2_DGE_analysis_DC-cells.html)
+    iv) [Epithelial cells](14.3_epithelial_cell_analysis.html)
     
 <!-- line break -->
 15. Analyse cell types proportions
@@ -129,24 +128,12 @@ Follow the links below to view the different parts of the analysis.
     vii) [Supplementary Figures](16.6_Supplementary_Figures.html)    
 
 <!-- line break -->
-<!-- To ensure reproducibility, I had to install these versions of the following packages specifically: Seurat_4.4.0,  SeuratObject_4.1.4, SeuratData_0.2.2 (very specifically this commit "satijalab/seurat-data@d6a8ce61ccb21a3b204f194d07009772c822791d", Azimuth_0.4.6. -->
-
-<!-- As per this issue, https://github.com/satijalab/seurat-object/issues/165, if there is an error running sctransform, remove all relevant packages (and purge if using renv) and then install using the following method exactly, to build from source. -->
-
-<!-- if (!requireNamespace("remotes", quietly = TRUE)) { -->
-<!--   install.packages("remotes") -->
-<!-- } -->
-<!-- options(repos = c("https://satijalab.r-universe.dev", getOption("repos"))) -->
-<!-- remotes::install_version("SeuratObject", "4.1.4") -->
-<!-- remotes::install_version("Seurat", "4.4.0", upgrade = FALSE) # remotes will try to upgrade SeuratObject to v5, we need to tell it no -->
-
-
 # Licenses {-}
 
 The code in this analysis is covered by the [MIT license][mit] and the written
 content on this website is covered by a [Creative Commons CC-BY][cc] license.
 
-
+<!-- line break -->
 # Version Information  {-}
 
 **R version**: `r R.version.string`
