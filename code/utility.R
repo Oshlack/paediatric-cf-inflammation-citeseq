@@ -1,4 +1,30 @@
-
+#' Add gene-level annotation and feature flags to a SingleCellExperiment object
+#'
+#' Enriches the rowData of a SingleCellExperiment with gene metadata from
+#' Ensembl (via EnsDb.Hsapiens.v86) and NCBI (via Homo.sapiens), and appends
+#' logical flag columns indicating mitochondrial, ribosomal, sex-chromosome,
+#' and pseudogene status.
+#'
+#' @param sce A SingleCellExperiment object whose rownames are Ensembl gene IDs
+#'   (GENEID format, e.g. "ENSG00000000003").
+#'
+#' @return The input \code{sce} with additional columns appended to
+#'   \code{rowData}: Ensembl and NCBI annotation fields, plus logical flags
+#'   \code{is_ribo}, \code{is_sex}, \code{is_mito}, and \code{is_pseudogene}.
+#'
+#' @details
+#' Annotation columns added (prefixed \code{ENSEMBL.}) come from
+#' EnsDb.Hsapiens.v86 and include biotype, gene name, genomic coordinates,
+#' chromosome, and symbol. NCBI columns (prefixed \code{NCBI.}) are drawn from
+#' Homo.sapiens (org.Hs.eg.db + TxDb.Hsapiens.UCSC.hg19.knownGene) and
+#' include aliases, Entrez ID, RefSeq accessions, gene name, and symbol.
+#' Ribosomal gene membership combines a name-pattern grep with the curated
+#' MSigDB C2 KEGG_RIBOSOME gene set.
+#'
+#' @examples
+#' \dontrun{
+#'   sce <- add_gene_information(sce)
+#' }
 add_gene_information <- function(sce){
   require(AnnotationDbi)
   require(EnsDb.Hsapiens.v86)
@@ -70,6 +96,22 @@ add_gene_information <- function(sce){
   sce
 }
 
+#' Parse a GMT file into a named list of gene sets
+#'
+#' Reads a Gene Matrix Transposed (GMT) file and returns a named list where
+#' each element corresponds to one gene set. The gene set name (column 1) is
+#' used as the list element name, and the remaining columns (after the URL in
+#' column 2) contain the Entrez gene IDs for that set.
+#'
+#' @param file_path Character string; path to a .gmt file.
+#'
+#' @return A named list of character vectors. Each name is a gene set
+#'   identifier and each vector contains the Entrez IDs belonging to that set.
+#'
+#' @examples
+#' \dontrun{
+#'   gene_sets <- convert_gmt_to_list("c2.all.v2023.1.Hs.entrez.gmt")
+#' }
 convert_gmt_to_list <- function(file_path){
   # Read the file content
   lines <- readLines(file_path)
@@ -96,6 +138,26 @@ convert_gmt_to_list <- function(file_path){
   gene_sets
 }
 
+#' Plot multi-dimensional scaling across successive PC pairs, coloured by a sample factor
+#'
+#' Computes an MDS layout (via \code{limma::plotMDS} on log-CPM values) for
+#' four pairs of leading dimensions (1-2, 2-3, 3-4, 4-5) and assembles them
+#' into a 2×2 patchwork, with a shared colour legend for the specified grouping
+#' variable.
+#'
+#' @param data An \code{edgeR} DGEList object containing raw counts and a
+#'   \code{samples} data frame with a \code{sample.id} column.
+#' @param factor Character string; the name of a column in \code{data$samples}
+#'   to use for point colour. Passed to \code{eval(parse(text = ...))} so
+#'   quoted column names are accepted (e.g. \code{"Group"}).
+#' @param lab Character string; legend title for the colour aesthetic.
+#'
+#' @return A patchwork object containing four ggplot panels.
+#'
+#' @examples
+#' \dontrun{
+#'   mds_by_factor(dge, factor = "Group", lab = "Treatment group")
+#' }
 mds_by_factor <- function(data, factor, lab){
   dims <- list(c(1,2), c(2:3), c(3,4), c(4,5))
   p <- vector("list", length(dims))
@@ -132,11 +194,26 @@ mds_by_factor <- function(data, factor, lab){
     theme(legend.position = "bottom")
 }
 
+#' Volcano plot for differential expression results
+#'
+#' Draws a volcano plot (-log10 p-value vs log2 fold-change) for the top
+#' table returned by edgeR, colouring points by DE direction (up/down/not
+#' significant) and labelling genes that pass the FDR threshold.
+#'
+#' @param top Data frame of DE results as returned by \code{edgeR::topTags}
+#'   (rownames are gene symbols).
+#' @param cutoff Numeric; FDR threshold for significance (e.g. \code{0.05}).
+#' @param dt Matrix returned by \code{edgeR::decideTests}; used to classify
+#'   genes as up-regulated (+1), down-regulated (-1), or not significant (0).
+#' @param pval_col Character string; name of the p-value column in \code{top}
+#'   to plot on the y-axis (e.g. \code{"PValue"}).
+#' @param fdr_col Character string; name of the adjusted p-value column used
+#'   for the significance colour and gene labelling (e.g. \code{"FDR"}).
+#' @param pal Character vector of colours for DE status levels (up, down,
+#'   not significant).
+#'
+#' @return A ggplot object.
 top_deg_volcano <- function(top, cutoff, dt, pval_col, fdr_col, pal){
-  
-  # pal <- ifelse(sum(summary(dt)[c(1,3),]) < 2,
-  #               ifelse(summary(dt)[1,] == 1, pal[-2], pal[-1]),
-  #               pal)
   
   top %>% 
     mutate(sig = ifelse(!!sym(fdr_col) <= cutoff, glue("<= {cutoff}"), 
@@ -165,6 +242,28 @@ top_deg_volcano <- function(top, cutoff, dt, pval_col, fdr_col, pal){
     theme(legend.position = "bottom")
 }
 
+#' Strip chart of normalised expression for top differentially expressed genes
+#'
+#' Plots per-sample log-CPM expression (both raw and TMM-normalised) as a
+#' jittered strip chart for the top DE genes from a given contrast, faceted
+#' by gene. A horizontal bar indicates the group mean. Only groups involved
+#' in the contrast are shown.
+#'
+#' @param raw_counts DGEList or count matrix of raw counts.
+#' @param norm_counts DGEList or count matrix of normalised counts (e.g.
+#'   post-\code{calcNormFactors}).
+#' @param group_info Data frame mapping sample identifiers to group labels;
+#'   must contain a \code{Group} column and a column matching the sample names
+#'   in the count matrices.
+#' @param contr Single-column contrast matrix (genes × 1) defining the
+#'   comparison; groups with non-zero weights are displayed.
+#' @param top Data frame of DE results (rownames are gene identifiers); genes
+#'   are taken from the first \code{num} rows that also pass \code{cutoff}.
+#' @param num Integer; maximum number of genes to plot (default \code{9}).
+#' @param severity Logical; if \code{TRUE} severity suffixes (\code{.M},
+#'   \code{.S}) are retained in group labels, otherwise they are stripped.
+#'
+#' @return A ggplot object.
 top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, num = 9,
                                severity = FALSE){
   # plot up to top X DGE
@@ -196,10 +295,10 @@ top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, 
                 width = 0.15,
                 size = 1.25) +
     stat_summary(geom = "point",
-      fun.y = "mean",
-      col = "black",
-      shape = "_",
-      size = 14) +
+                 fun.y = "mean",
+                 col = "black",
+                 shape = "_",
+                 size = 14) +
     geom_jitter(aes(x = Group,
                     y = raw), stat = "identity",
                 width = 0.15,
@@ -219,10 +318,24 @@ top_deg_stripchart <- function(raw_counts, norm_counts, group_info, contr, top, 
     ggtitle(colnames(contr))
 }
 
+#' Dot plot of top CAMERA competitive gene set results
+#'
+#' Visualises the top \code{num} gene sets from each entry in a named list of
+#' CAMERA results as a dot plot, with point size proportional to gene set size
+#' and x-axis showing -log10(FDR). A dashed line marks the FDR = 0.05
+#' threshold. Results are faceted by comparison type.
+#'
+#' @param results_list Named list of CAMERA result data frames (as returned by
+#'   \code{limma::camera} or \code{limma::cameraPR}), one per contrast or
+#'   gene set collection.
+#' @param num Integer; maximum number of top sets to show per facet
+#'   (default \code{10}).
+#'
+#' @return A ggplot object.
 top_camera_sets <- function(results_list, num = 10){
   
-   pal <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
- 
+  pal <- c(paletteer::paletteer_d("RColorBrewer::Set1")[2:1], "grey") 
+  
   lapply(seq_along(results_list), function(i){
     results_list[[i]] %>%
       data.frame %>%
@@ -246,6 +359,22 @@ top_camera_sets <- function(results_list, num = 10){
     ggtitle("Camera gene set analysis")
 }
 
+#' Dot plot of top CAMERA results, faceted by cell type and comparison
+#'
+#' Similar to \code{top_camera_sets} but labels each facet with both the
+#' comparison name and the current cell type (via the \code{cell} variable in
+#' the calling environment). Gene set source prefixes (GO, REACTOME, etc.) are
+#' replaced with compact bracketed abbreviations. Y-axis positions are set by
+#' rank so labels remain readable when sets differ across facets.
+#'
+#' @param results_list Named list of CAMERA result data frames.
+#' @param num Integer; maximum number of top sets per facet (default \code{10}).
+#' @param wrap_width Integer; character width at which gene set names are
+#'   wrapped (default \code{75}).
+#' @param labeller Character string or labeller function passed to
+#'   \code{facet_wrap} (default \code{"label_value"}).
+#'
+#' @return A ggplot object.
 top_camera_sets_by_cell <- function(results_list, num = 10, wrap_width = 75,
                                     labeller = "label_value"){
   
@@ -270,7 +399,7 @@ top_camera_sets_by_cell <- function(results_list, num = 10, wrap_width = 75,
     # wrap in curly brackets so we can access the augmented dataset multiple times
     {
       ggplot(., aes(x = -log10(FDR), y = Rank,
-                 colour = Direction)) +
+                    colour = Direction)) +
         geom_point(aes(size = NGenes)) +
         facet_wrap(~Type, ncol = 1, scales = "free_y",
                    labeller = labeller) +
@@ -289,6 +418,19 @@ top_camera_sets_by_cell <- function(results_list, num = 10, wrap_width = 75,
 }
 
 
+#' Dot plot of top over-representation analysis (ORA) results
+#'
+#' Visualises the top \code{num} gene sets per contrast from a named list of
+#' ORA results. Point colour encodes the gene ratio (overlap / universe size)
+#' on a plasma viridis scale; point size encodes gene set size. A dashed line
+#' marks FDR = 0.05. Results are faceted by comparison type.
+#'
+#' @param results_list Named list of ORA result data frames (e.g. as returned
+#'   by \code{gene_set_test_ora}).
+#' @param num Integer; maximum number of top sets to display per facet
+#'   (default \code{10}).
+#'
+#' @return A ggplot object.
 top_ora_sets <- function(results_list, num = 10){
   
   lapply(seq_along(results_list), function(i){
@@ -316,6 +458,20 @@ top_ora_sets <- function(results_list, num = 10){
     ggtitle("Over-representation gene set analysis")
 }
 
+#' Dot plot of top ORA results, faceted by cell type and comparison
+#'
+#' Analogous to \code{top_camera_sets_by_cell} but for ORA output. Gene ratio
+#' (DE / N) is mapped to a continuous plasma colour scale. Facet labels
+#' combine the comparison name and the cell type from the calling environment.
+#'
+#' @param results_list Named list of ORA result data frames.
+#' @param num Integer; maximum number of top sets per facet (default \code{10}).
+#' @param wrap_width Integer; character width for wrapping gene set names
+#'   (default \code{75}).
+#' @param labeller Character string or labeller function for \code{facet_wrap}
+#'   (default \code{"label_value"}).
+#'
+#' @return A ggplot object.
 top_ora_sets_by_cell <- function(results_list, num = 10, wrap_width = 75,
                                  labeller = "label_value"){
   
@@ -358,6 +514,28 @@ top_ora_sets_by_cell <- function(results_list, num = 10, wrap_width = 75,
     }
 }
 
+#' Run over-representation analysis (ORA) across multiple gene set collections
+#'
+#' For each gene set collection in \code{gene_sets_list}, tests for enrichment
+#' of \code{deg} (significant DE genes) against the full gene universe using
+#' \code{missMethyl::gsaseq} / \code{topGSA}. Annotates the top 50 results
+#' with the gene symbols of the overlapping DE genes, computes the gene ratio
+#' (k/n), and writes a CSV for each collection to \code{cellDir}.
+#'
+#' @param gene_sets_list Named list of gene set collections; each element is
+#'   itself a named list mapping gene set names to vectors of Entrez IDs.
+#' @param deg Character vector of significant DE gene identifiers (Ensembl or
+#'   the key type accepted by \code{gns}).
+#' @param gns Named character vector mapping gene identifiers to Entrez IDs
+#'   (used to convert \code{deg} and the full universe for ORA).
+#' @param contr Single-column contrast matrix; used only to derive the output
+#'   file name via \code{colnames(contr)}.
+#' @param cellDir Character string; directory path where CSV result files are
+#'   written.
+#'
+#' @return A named list (one element per collection) of ORA result data frames,
+#'   each augmented with \code{DEG.GENES} (comma-separated symbols), \code{k}
+#'   (overlap size), \code{n} (total DE genes), and \code{GR} (gene ratio).
 gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
   
   # GeneRatio = k/n
@@ -379,20 +557,20 @@ gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
       # code adapted from Belinda Phipson missMethyl::gsameth 06/12/2024
       sig_genes_entrez <- sig_genes[sig_genes %in% gene_sets_list[[i]][[rownames(tmp)[j]]]]
       sig_genes_symbol <- suppressMessages(AnnotationDbi::select(org.Hs.eg.db, 
-                                                               keys = sig_genes_entrez,
-                                                               columns = "SYMBOL"))
+                                                                 keys = sig_genes_entrez,
+                                                                 columns = "SYMBOL"))
       paste(sig_genes_symbol$SYMBOL,collapse=",")
     })) -> tmp$DEG.GENES
     
     tmp$k <- sapply(strsplit(tmp$DEG.GENES, ","), length)
     tmp$n <- length(deg)
     tmp$GR <- tmp$k/tmp$n
-      
+    
     data.table::fwrite(tmp %>%
-                  data.frame %>%
-                  rownames_to_column(var = "Set"),
-                file = file.path(cellDir, glue("ORA.{names(gene_sets_list[i])}.{colnames(contr)}.csv")),
-                sep = ",", quote = "auto")
+                         data.frame %>%
+                         rownames_to_column(var = "Set"),
+                       file = file.path(cellDir, glue("ORA.{names(gene_sets_list[i])}.{colnames(contr)}.csv")),
+                       sep = ",", quote = "auto")
     
     tmp
   })
@@ -401,6 +579,30 @@ gene_set_test_ora <- function(gene_sets_list, deg, gns, contr, cellDir){
   ora_list
 }
 
+#' Run CAMERA competitive gene set testing across multiple collections
+#'
+#' For each gene set collection in \code{gene_sets_list}, maps gene sets to
+#' indices in the fitted model via \code{limma::ids2indices} and runs a
+#' pre-ranked CAMERA test (\code{limma::cameraPR}) using the supplied signed
+#' likelihood ratio statistic. The top 50 results are annotated with DE gene
+#' symbols and written to CSV.
+#'
+#' @param gene_sets_list Named list of gene set collections; each element maps
+#'   gene set names to vectors of Entrez IDs.
+#' @param gns Named character vector mapping gene identifiers (rownames of the
+#'   fit) to Entrez IDs.
+#' @param lrt Object returned by \code{edgeR::glmLRT}; rownames define the
+#'   gene universe.
+#' @param statistic Numeric vector of pre-ranked statistics (one per gene),
+#'   e.g. signed LR statistics: \code{sign(logFC) * sqrt(LR)}.
+#' @param contr Single-column contrast matrix; column name used in output
+#'   filenames.
+#' @param cellDir Character string; directory where CSV results are written.
+#' @param deg Character vector of significant DE gene identifiers.
+#'
+#' @return A named list (one element per collection) of CAMERA result data
+#'   frames augmented with a \code{DEG.GENES} column of comma-separated gene
+#'   symbols.
 gene_set_test_camera <- function(gene_sets_list, gns, lrt, statistic, contr, cellDir, deg){
   
   cam_list <- lapply(seq_along(gene_sets_list), function(i){
@@ -434,6 +636,34 @@ gene_set_test_camera <- function(gene_sets_list, gns, lrt, statistic, contr, cel
   cam_list
 }
 
+#' Assemble a per-contrast DE summary panel (volcano + stripchart + ORA + CAMERA)
+#'
+#' Iterates over each contrast in \code{contr}, runs LRT differential
+#' expression, saves the full results table to CSV, and—for contrasts with at
+#' least one significant gene—performs ORA and CAMERA gene set tests, then
+#' assembles a composite patchwork panel containing a volcano plot, strip
+#' chart, ORA dot plot, and CAMERA dot plot.
+#'
+#' @param contr Contrast matrix (genes × contrasts) defining all comparisons.
+#' @param cutoff Numeric FDR threshold for significance (e.g. \code{0.05}).
+#' @param cellDir Character string; output directory for CSV result files.
+#' @param gene_sets_list Named list of gene set collections passed to
+#'   \code{gene_set_test_ora} and \code{gene_set_test_camera}.
+#' @param gns Named Entrez ID vector for gene set mapping.
+#' @param raw_counts Raw count DGEList for strip chart plotting.
+#' @param norm_counts Normalised count DGEList for strip chart plotting.
+#' @param group_info Sample-level metadata data frame.
+#' @param layout patchwork layout specification string for panel arrangement.
+#' @param pal Colour palette vector for volcano/strip chart DE direction.
+#' @param severity Logical vector (length == \code{ncol(contr)}); passed to
+#'   \code{top_deg_stripchart} for each contrast.
+#' @param pval_col Character; p-value column name for the volcano y-axis
+#'   (default \code{"PValue"}).
+#' @param fdr_col Character; FDR column name for significance colouring
+#'   (default \code{"FDR"}).
+#'
+#' @return A list of patchwork objects (one per contrast); elements for
+#'   contrasts with no significant genes are \code{NULL}.
 plot_ruv_results_summary <- function(contr, cutoff, cellDir, gene_sets_list, gns,
                                      raw_counts, norm_counts, group_info, layout, 
                                      pal, severity,
@@ -450,8 +680,8 @@ plot_ruv_results_summary <- function(contr, cutoff, cellDir, gene_sets_list, gns
       # top DGE results
       data.table::fwrite(top %>%
                            rownames_to_column(var = "gene"), 
-                  file = file.path(cellDir, glue("{colnames(contr)[i]}.csv")),
-                  sep = ",", quote = "auto")
+                         file = file.path(cellDir, glue("{colnames(contr)[i]}.csv")),
+                         sep = ",", quote = "auto")
       
       deg <- rownames(top)[top$FDR < cutoff]
       ora_list <- gene_set_test_ora(gene_sets_list, deg, gns, 
@@ -487,8 +717,26 @@ plot_ruv_results_summary <- function(contr, cutoff, cellDir, gene_sets_list, gns
   p
 }
 
+#' Load custom gene lists from a CSV and map gene symbols to Entrez IDs
+#'
+#' Reads a wide-format CSV where each column represents a named gene set
+#' (header = set name, rows = gene symbols). Pivots to long format, looks up
+#' Entrez IDs via \code{org.Hs.eg.db}, and returns a named list of Entrez ID
+#' vectors, one per gene set.
+#'
+#' @param file Character string; path to a comma-delimited CSV file with gene
+#'   symbols arranged in columns (one column per gene set, column headers are
+#'   set names).
+#'
+#' @return A named list where each element is a character vector of Entrez IDs
+#'   for the corresponding gene set.
+#'
+#' @examples
+#' \dontrun{
+#'   custom_sets <- create_custom_gene_lists_from_file("gene_lists.csv")
+#' }
 create_custom_gene_lists_from_file <- function(file = file){
-
+  
   read.csv2(file = file,
             header = TRUE, sep = ",") %>% 
     pivot_longer(cols = everything()) %>%
@@ -504,6 +752,21 @@ create_custom_gene_lists_from_file <- function(file = file){
   split(tmp$entrez, tmp$source)
 }
 
+#' UMAP coloured by cell type annotation with repelled cluster labels
+#'
+#' Draws a Seurat \code{DimPlot} UMAP coloured by the specified annotation
+#' level, removes the legend, and overlays bold repelled cluster labels using
+#' \code{LabelClusters}. Axis elements are suppressed for a clean plot.
+#'
+#' @param seu A Seurat object with a UMAP reduction computed.
+#' @param ann_level Character string; name of the metadata column to use for
+#'   colouring and labelling (e.g. \code{"cell_type_l2"}).
+#' @param cluster_pal Character string; a paletteer palette identifier (e.g.
+#'   \code{"ggsci::default_igv"}) used to colour clusters.
+#' @param direction Integer; palette direction, \code{1} (default) or
+#'   \code{-1} to reverse.
+#'
+#' @return A ggplot object with cluster labels overlaid.
 draw_umap_with_labels <- function(seu, ann_level, cluster_pal, direction = 1){
   DimPlot(seu, 
           group.by = ann_level, label = F, repel = T,
@@ -522,6 +785,39 @@ draw_umap_with_labels <- function(seu, ann_level, cluster_pal, direction = 1){
   
 }
 
+#' Seurat dot plot of top marker genes, faceted by cluster with coloured strips
+#'
+#' Selects the top \code{num} marker genes per cluster (ranked by
+#' \code{avg_log2FC} when available), draws a Seurat \code{DotPlot} with a
+#' two-colour gradient, and facets columns by cluster using
+#' \code{ggh4x::facet_grid2} with palette-matched strip backgrounds. Y-axis
+#' labels and strip text can be remapped via \code{lab_map}.
+#'
+#' @param seu A Seurat object.
+#' @param markers Data frame of marker genes as returned by
+#'   \code{Seurat::FindAllMarkers}, containing at minimum \code{cluster} and
+#'   \code{gene} columns.
+#' @param ann_level Character string; metadata column used as the
+#'   \code{group.by} axis in \code{DotPlot}.
+#' @param cluster_pal Character string; paletteer palette for strip and point
+#'   colours.
+#' @param lab_map Named character vector mapping raw cluster/cell-type labels
+#'   to display labels; used for both y-axis tick labels and facet strip text.
+#' @param direction Integer; palette direction (default \code{1}).
+#' @param num Integer; number of top markers to select per cluster
+#'   (default \code{5}).
+#' @param assay Character string; Seurat assay to use (default \code{"SCT"}).
+#' @param strip.text.size Numeric; font size for facet strip labels
+#'   (default \code{8}).
+#' @param strip.text.blank Logical; if \code{TRUE} strip labels are blank
+#'   (colours only), useful when labels are shown elsewhere (default
+#'   \code{FALSE}).
+#' @param strip.alpha Numeric in [0,1]; alpha applied to strip fill colours
+#'   (default \code{0.75}).
+#' @param dot.scale Numeric; passed to \code{Seurat::DotPlot} to control dot
+#'   size scaling (default \code{4}).
+#'
+#' @return A ggplot object.
 draw_marker_gene_dotplot <- function(seu, markers, ann_level, cluster_pal, 
                                      lab_map, direction = 1, num = 5, assay = "SCT",
                                      strip.text.size = 8, strip.text.blank = FALSE,
@@ -620,12 +916,34 @@ draw_marker_gene_dotplot <- function(seu, markers, ann_level, cluster_pal,
   
 }
 
+#' Stacked bar chart of cell type proportions per sample, faceted by condition
+#'
+#' Computes arcsine-transformed cell type proportions via
+#' \code{propeller::getTransformedProps}, then draws a stacked bar chart with
+#' samples on the x-axis, coloured by cell type, and faceted by condition
+#' group using \code{ggh4x::facet_grid2} with palette-matched coloured strip
+#' backgrounds. A colour legend for condition groups is generated via an
+#' invisible point layer.
+#'
+#' @param seu A Seurat object with \code{sample.id} and \code{Group} metadata
+#'   columns.
+#' @param ann_level Character string; metadata column containing cell type
+#'   labels.
+#' @param cluster_pal Character string; paletteer palette for cell type fill
+#'   colours.
+#' @param strip_colours Named character vector mapping group names to hex
+#'   colours for facet strip backgrounds; names must match levels of
+#'   \code{seu$Group}.
+#' @param direction Integer; palette direction for \code{cluster_pal}
+#'   (default \code{1}).
+#'
+#' @return A ggplot object.
 draw_cell_type_proportions_barplot <- function(seu, ann_level, cluster_pal,
                                                strip_colours, direction = 1){
-
+  
   props <- getTransformedProps(clusters = seu@meta.data[,ann_level],
                                sample = seu$sample.id, transform="asin")
-
+  
   strip <- ggh4x::strip_themed(
     background_x = ggh4x::elem_list_rect(
       fill = unname(strip_colours)
@@ -656,8 +974,8 @@ draw_cell_type_proportions_barplot <- function(seu, ann_level, cluster_pal,
     ggplot(aes(x = sample, y = Freq, fill = clusters)) +
     geom_bar(stat = "identity", color = "black", size = 0.1) +
     # ---- legend-only layer for facet colours ----
-    #invisible points create a legend for `colour = Group`
-    geom_point(data = legend_df,
+  #invisible points create a legend for `colour = Group`
+  geom_point(data = legend_df,
              aes(x = sample, y = Freq, colour = Group),
              size = 0, alpha = 0, inherit.aes = FALSE) +
     theme_classic() +
@@ -682,7 +1000,6 @@ draw_cell_type_proportions_barplot <- function(seu, ann_level, cluster_pal,
       drop   = FALSE
     ) +
     guides(
-      #colour = guide_legend(override.aes = list(size = 4, alpha = 1), order = 1),
       colour = guide_legend(
         override.aes = list(
           shape = 15,        # filled square
@@ -701,14 +1018,33 @@ draw_cell_type_proportions_barplot <- function(seu, ann_level, cluster_pal,
     scale_y_continuous(expand = expansion(mult = c(0.02, 0.02)))
 }
 
+#' Heatmap of top DE genes for a given contrast
+#'
+#' Filters log-CPM expression to the relevant sample groups and top 50 DE
+#' genes (by FDR rank), then draws a row-scaled heatmap using
+#' \code{tidyHeatmap::heatmap} with a red-white-blue diverging palette.
+#' Columns are not clustered; the group axis is determined automatically from
+#' the contrast name.
+#'
+#' @param top Data frame of DE results (rownames are gene IDs); only the first
+#'   \code{min(50, nrow(top))} genes are shown.
+#' @param comparison Character string; contrast name used to parse which sample
+#'   groups to include (e.g. \code{"IVA-CF"}).
+#' @param counts DGEList or count matrix from which log-CPM values are derived.
+#' @param sample_data Data frame (or DataFrame) of sample metadata containing
+#'   at minimum \code{sample.id}, \code{Group}, \code{Group_severity},
+#'   \code{Severity}, and \code{Age} columns.
+#'
+#' @return A \code{tidyHeatmap} / ComplexHeatmap object, or \code{NULL}
+#'   invisibly if \code{top} has zero rows.
 top_deg_heatmap <- function(top, comparison, counts, sample_data){
   
   if(nrow(top) > 0) {
     groups <- unlist(str_split(str_remove_all(comparison, "-?0.5\\*|-?1\\*"), " "))
     if(any(str_detect(groups, "IVA"))) groups <- unique(str_remove_all(groups, "\\.M|\\.S"))
     group_column <- ifelse(all(groups %in% ySub$samples$Group),
-                          "Group",
-                          "Group_severity")
+                           "Group",
+                           "Group_severity")
     
     edgeR::cpm(counts, log = TRUE) %>% 
       data.frame %>%
@@ -724,13 +1060,9 @@ top_deg_heatmap <- function(top, comparison, counts, sample_data){
                                 Severity,
                                 Age),
                 by = c("Sample" = "sample.id")) %>%
-      #dplyr::filter(Group_severity %in% groups) %>%
       dplyr::filter(!!sym(group_column) %in% groups) %>%
-      #dplyr::filter(Gene %in% rownames(top)) %>%
-      #dplyr::filter(Gene %in% rownames(top)[abs(top$logFC) > 0.5]) %>%
       dplyr::filter(Gene %in% rownames(top)[1:min(50, nrow(top))]) %>%
       group_by(!!sym(group_column)) -> dat
-      #group_by(Group) -> dat
     
     tidyHeatmap::heatmap(
       .data = dat,
@@ -753,6 +1085,33 @@ top_deg_heatmap <- function(top, comparison, counts, sample_data){
   }
 }
 
+#' Aggregate significant DE results across cell types from pre-fitted edgeR objects
+#'
+#' Loads a list of RDS files (each containing a fitted edgeR model and contrast
+#' matrix), runs \code{glmTreat} for the named contrast, and row-binds the
+#' significant results across all cell types into a single data frame. Cell
+#' type identity is parsed from the filename prefix. Results are filtered to
+#' \code{FDR < cutoff}, joined to cell-frequency weights, and sorted by
+#' descending cell frequency then log fold-change.
+#'
+#' @param files Character vector of paths to RDS files. Each file must contain
+#'   a list with elements \code{$fit} (a fitted DGEGLM) and \code{$contr} (a
+#'   contrast matrix); the cell type label is extracted from the filename
+#'   prefix (everything before the first \code{.}).
+#' @param cont_name Character string; name of the contrast column in
+#'   \code{$contr} to test.
+#' @param cell_freq Data frame with a \code{cell} column (matching filename
+#'   prefixes) and an \code{n} column used to weight the sort order.
+#' @param treat_lfc Numeric; minimum absolute log2 fold-change passed to
+#'   \code{glmTreat} (default \code{0}, equivalent to \code{glmLRT}).
+#' @param cutoff Numeric; FDR threshold for filtering significant genes
+#'   (default \code{0.05}).
+#' @param suffix Character string; filename suffix used in documentation only
+#'   (default \code{".all_samples.fit.rds"}).
+#'
+#' @return A data frame with columns \code{gene}, \code{sig} (DE direction),
+#'   \code{cell}, \code{logFC}, and \code{FDR}, restricted to significant
+#'   results and sorted by cell frequency then \code{logFC}.
 get_deg_data <- function(files, cont_name, cell_freq, treat_lfc = 0, 
                          cutoff = 0.05, suffix = ".all_samples.fit.rds"){
   
@@ -782,6 +1141,28 @@ get_deg_data <- function(files, cont_name, cell_freq, treat_lfc = 0,
 }  
 
 
+#' Volcano plot overlaying standard LRT and glmTreat significance for a single cell type
+#'
+#' Loads a pre-fitted edgeR object for a given cell type, runs both
+#' \code{glmLRT} and \code{glmTreat} for the contrast named by the
+#' \code{cont_name} variable in the calling environment, and draws a volcano
+#' plot that distinguishes four gene categories: not significant (grey);
+#' significant by LRT only (coloured outline); significant by both LRT and
+#' \code{glmTreat} (filled, labelled). This layered display makes the
+#' additional stringency of the fold-change threshold immediately visible.
+#'
+#' @param cell Character string; cell type label used to construct the RDS
+#'   file path as \code{here("data", "intermediate_objects", paste0(cell, suffix))}.
+#' @param suffix Character string; filename suffix appended to \code{cell}
+#'   (e.g. \code{".all_samples.fit.rds"}).
+#' @param cutoff Numeric; FDR threshold for the significance dashed line and
+#'   \code{decideTests} calls (default \code{0.05}).
+#' @param lfc_cutoff Numeric; minimum absolute log2 fold-change for
+#'   \code{glmTreat}; \code{0} reduces to standard LRT (default \code{0}).
+#'
+#' @return A ggplot object.
+#'
+#' @note Relies on \code{cont_name} being defined in the calling environment.
 draw_treat_volcano_plot <- function(cell, suffix, cutoff = 0.05, lfc_cutoff = 0){
   f <- here("data",
             "intermediate_objects",
@@ -820,4 +1201,4 @@ draw_treat_volcano_plot <- function(cell, suffix, cutoff = 0.05, lfc_cutoff = 0)
     labs(x = "log2(FC)",
          y = "-log10(FDR)")
   
-} 
+}
