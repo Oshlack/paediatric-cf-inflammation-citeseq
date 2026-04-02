@@ -487,6 +487,14 @@ fit2 <- eBayes(fit2, robust=TRUE, trend=FALSE)
 pvalue <- 0.05
 summary(decideTests(fit2, p.value = pvalue))
 ```
+Save the `limma` fit object as an RDS object for downstream use in plotting, etc.
+
+```{r}
+# save proportion analysis results
+saveRDS(fit2, file = here("data",
+                          "intermediate_objects",
+                          glue("prop.ann_level1.all.fit.rds")))
+```
 
 ## Results
 
