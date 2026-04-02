@@ -481,6 +481,15 @@ pvalue <- 0.05
 summary(decideTests(fit2, p.value = pvalue))
 ```
 
+Save the `limma` fit object as an RDS object for downstream use in plotting, etc.
+
+```{r}
+# save proportion analysis results
+saveRDS(fit2, file = here("data",
+                          "intermediate_objects",
+                          glue("prop.ann_level3.non-macrophages.fit.rds")))
+```
+
 ## Results
 
 ```{r, fig.asp=1.5, fig.width=8, results='asis'}
