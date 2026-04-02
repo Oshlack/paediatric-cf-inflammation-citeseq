@@ -451,6 +451,8 @@ for(k in 1:6){
     ifelse(ySub$samples$Participant == d, 1, 0)  
   }, USE.NAMES = TRUE)
   
+  design <- cbind(design, dups)
+  
   contr <- makeContrasts(CF.NO_MODvNON_CF.CTRL = 0.5*(CF.NO_MOD.M + CF.NO_MOD.S) - NON_CF.CTRL,
                          CF.IVAvNON_CF.CTRL = 0.5*(CF.IVA.M + CF.IVA.S) - NON_CF.CTRL,
                          CF.LUMA_IVAvNON_CF.CTRL = 0.5*(CF.LUMA_IVA.M + CF.LUMA_IVA.S) - NON_CF.CTRL,
@@ -696,7 +698,8 @@ plot_ruv_results_summary(contr, cutoff, cellDir, gene_sets_list, gns,
                          group_info = data.frame(Group = group, 
                                                  sample = rownames(ySub$samples)),
                          layout,
-                         pal) -> p
+                         pal,
+                         severity = rep(FALSE, ncol(contr))) -> p
 p
 ```
 
@@ -960,6 +963,8 @@ for(k in 1:6){
     ifelse(ySub$samples$Participant == d, 1, 0)
   }, USE.NAMES = TRUE)
 
+  design <- cbind(design, dups)
+  
   contr <- makeContrasts(CF.IVAvCF.NO_MOD = 0.5*(CF.IVA.S + CF.IVA.M) - 0.5*(CF.NO_MOD.S + CF.NO_MOD.M),
                          CF.LUMA_IVAvCF.NO_MOD = 0.5*(CF.LUMA_IVA.S + CF.LUMA_IVA.M) - 0.5*(CF.NO_MOD.S + CF.NO_MOD.M),
                          CF.NO_MOD.SvCF.NO_MOD.M = CF.NO_MOD.S - CF.NO_MOD.M,
@@ -1203,7 +1208,8 @@ plot_ruv_results_summary(contr, cutoff, cellDir, gene_sets_list, gns,
                          group_info = data.frame(Group = group,
                                                  sample = rownames(ySub$samples)),
                          layout,
-                         pal) -> p
+                         pal,
+                         severity = c(FALSE, FALSE, TRUE)) -> p
 p
 ```
 
