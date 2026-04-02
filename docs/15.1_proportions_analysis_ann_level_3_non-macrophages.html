@@ -11,11 +11,11 @@
 
 <meta name="author" content="Jovana Maksimovic" />
 
-<meta name="date" content="2024-12-31" />
+<meta name="date" content="2026-04-02" />
 
 <title>Inflammation of Paediatric Pulmonary Diseases</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -356,7 +356,7 @@ Diseases</h1>
 <h3 class="subtitle">Cell type proportions analysis: annotation level
 3</h3>
 <h4 class="author">Jovana Maksimovic</h4>
-<h4 class="date">December 31, 2024</h4>
+<h4 class="date">April 02, 2026</h4>
 
 </div>
 
@@ -385,7 +385,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-12-31
+<strong>Last updated:</strong> 2026-04-02
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -394,8 +394,9 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 aria-hidden="true"></span> 0
 </p>
 <p>
-<strong>Knit directory:</strong> <code>paed-inflammation-CITEseq/</code>
-<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+<strong>Knit directory:</strong>
+<code>paediatric-cf-inflammation-citeseq/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
 title="This is the local directory in which the code in this file was executed.">
 </span>
 </p>
@@ -516,15 +517,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreeb8122104f9392ade140a3cee22d3cf189c0630b3targetblankb812210a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree9fe3efb4cd44d643632b1c37d437e0b4cf9e4d4ftargetblank9fe3efba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/b8122104f9392ade140a3cee22d3cf189c0630b3" target="_blank">b812210</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/9fe3efb4cd44d643632b1c37d437e0b4cf9e4d4f" target="_blank">9fe3efb</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsatlassianpetermacorgaubitbucketscmospaedinflammationciteseqtreeb8122104f9392ade140a3cee22d3cf189c0630b3targetblankb812210a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomOshlackpaediatriccfinflammationciteseqtree9fe3efb4cd44d643632b1c37d437e0b4cf9e4d4ftargetblank9fe3efba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +535,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/tree/b8122104f9392ade140a3cee22d3cf189c0630b3" target="_blank">b812210</a>.
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/tree/9fe3efb4cd44d643632b1c37d437e0b4cf9e4d4f" target="_blank">9fe3efb</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -551,72 +552,315 @@ were generated:
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
     Ignored:    analysis/obsolete/
+    Ignored:    code/obsolete/
+    Ignored:    data/.DS_Store
+    Ignored:    data/C133_Neeland_batch0/
     Ignored:    data/C133_Neeland_batch1/
+    Ignored:    data/C133_Neeland_batch2/
+    Ignored:    data/C133_Neeland_batch3/
+    Ignored:    data/C133_Neeland_batch4/
+    Ignored:    data/C133_Neeland_batch5/
+    Ignored:    data/C133_Neeland_batch6/
     Ignored:    data/C133_Neeland_merged/
-    Ignored:    output/dge_analysis/obsolete/
+    Ignored:    data/Neeland_processed_data_1.h5ad
+    Ignored:    data/Neeland_processed_data_2.h5ad
+    Ignored:    data/Neeland_processed_data_3.h5ad
+    Ignored:    data/intermediate_objects/.DS_Store
+    Ignored:    data/updated_h5ad_files/
+    Ignored:    output/.DS_Store
     Ignored:    renv/library/
     Ignored:    renv/staging/
 
 Untracked files:
-    Untracked:  analysis/14.0_DGE_analysis_T-cells.Rmd
-    Untracked:  analysis/15.2_proportions_analysis_ann_level_3_macrophages.Rmd
-    Untracked:  analysis/17.0_Figure_3.Rmd
-    Untracked:  analysis/17.0_Figure_4.Rmd
-    Untracked:  analysis/17.0_Figure_5.Rmd
-    Untracked:  analysis/figure/
-    Untracked:  broad_markers_seurat.csv
-    Untracked:  code/background_job.R
-    Untracked:  code/reverse_modifier_severity_comparisons.sh
-    Untracked:  data/intermediate_objects/CD4 T cells.CF_samples.fit.rds
-    Untracked:  data/intermediate_objects/CD4 T cells.all_samples.fit.rds
-    Untracked:  data/intermediate_objects/CD8 T cells.CF_samples.fit.rds
-    Untracked:  data/intermediate_objects/CD8 T cells.all_samples.fit.rds
-    Untracked:  data/intermediate_objects/DC cells.CF_samples.fit.rds
-    Untracked:  data/intermediate_objects/DC cells.all_samples.fit.rds
-    Untracked:  data/intermediate_objects/T cells.CF_samples.fit.rds
-    Untracked:  data/intermediate_objects/T cells.all_samples.fit.rds
-    Untracked:  output/dge_analysis/T cells/
+    Untracked:  C133_Neeland_preprocessed_SCEs.tar.gz
+    Untracked:  analysis/cellxgene_submission.Rmd
+    Untracked:  data/GOBP_CYTOKINE_MEDIATED_SIGNALING_PATHWAY.v2025.1.Hs.tsv
+    Untracked:  data/cellxgene_cell_ontologies_ann_level_3.xlsx
+    Untracked:  data/gencode.v44.primary_assembly.annotation.gtf
 
 Unstaged changes:
-    Modified:   .gitignore
-    Modified:   analysis/06.0_azimuth_annotation.Rmd
-    Modified:   analysis/09.0_integrate_cluster_macro_cells.Rmd
-    Modified:   analysis/13.1_DGE_analysis_macro-alveolar.Rmd
-    Deleted:    analysis/14.0_proportions_analysis_ann_level_1.Rmd
-    Deleted:    analysis/14.1_proportions_analysis_ann_level_3_non-macrophages.Rmd
-    Deleted:    analysis/14.2_proportions_analysis_ann_level_3_macrophages.Rmd
-    Modified:   analysis/15.0_Figure_1.Rmd
-    Modified:   analysis/15.0_proportions_analysis_ann_level_1.Rmd
-    Modified:   analysis/16.0_Figure_2.Rmd
-    Modified:   analysis/17.0_Supplementary_Figure_ADTs.Rmd
-    Modified:   code/utility.R
-    Modified:   data/cluster_annotations/marker_proteins_TNK_supp.xlsx
-    Modified:   data/cluster_annotations/marker_proteins_macrophages_supp.xlsx
-    Modified:   data/cluster_annotations/marker_proteins_other_supp.xlsx
-    Modified:   data/cluster_annotations/seurat_markers_all_cells.rds
+    Modified:   .DS_Store
+    Modified:   analysis/15.2_proportions_analysis_ann_level_3_macrophages.Rmd
+    Modified:   data/intermediate_objects/CD4 T cells.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/CD4 T cells.all_samples.fit.rds
+    Modified:   data/intermediate_objects/CD8 T cells.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/CD8 T cells.all_samples.fit.rds
+    Modified:   data/intermediate_objects/DC cells.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/DC cells.all_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-APOC2+.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-APOC2+.all_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-CCL.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-CCL.all_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-IFI27.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-IFI27.all_samples.fit.rds
     Modified:   data/intermediate_objects/macro-alveolar.CF_samples.fit.rds
     Modified:   data/intermediate_objects/macro-alveolar.all_samples.fit.rds
-    Modified:   output/dge_analysis/macro-alveolar/ORA.FIBROSIS.CF.IVAvCF.NO_MOD.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.GO.CF.IVAvCF.NO_MOD.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.GO.CF.IVAvNON_CF.CTRL.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.GO.CF.NO_MODvNON_CF.CTRL.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.HALLMARK.CF.IVAvCF.NO_MOD.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.HALLMARK.CF.IVAvNON_CF.CTRL.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.REACTOME.CF.IVAvCF.NO_MOD.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.REACTOME.CF.IVAvNON_CF.CTRL.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   data/intermediate_objects/macro-lipid.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-lipid.all_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-monocyte-derived.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-monocyte-derived.all_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-proliferating.CF_samples.fit.rds
+    Modified:   data/intermediate_objects/macro-proliferating.all_samples.fit.rds
+    Modified:   output/dge_analysis/CD4 T cells/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD4 T cells/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD4 T cells/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD4 T cells/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD4 T cells/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD4 T cells/ORA.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD4 T cells/ORA.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD8 T cells/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/CD8 T cells/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/CD8 T cells/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/CD8 T cells/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/DC cells/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/DC cells/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/DC cells/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/DC cells/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/DC cells/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/DC cells/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/DC cells/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-APOC2+/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-CCL/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-CCL/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-CCL/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-CCL/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-IFI27/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-IFI27/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-IFI27/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-IFI27/ORA.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-alveolar/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-alveolar/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-alveolar/CF.NO_MODvNON_CF.CTRL.csv
     Modified:   output/dge_analysis/macro-alveolar/ORA.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
     Modified:   output/dge_analysis/macro-alveolar/ORA.WP.CF.IVAvCF.NO_MOD.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.WP.CF.IVAvNON_CF.CTRL.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
-    Modified:   output/dge_analysis/macro-alveolar/ORA.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-lipid/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-lipid/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-lipid/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-lipid/ORA.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-lipid/ORA.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-lipid/ORA.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/ORA.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-monocyte-derived/ORA.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-proliferating/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-proliferating/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-proliferating/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macro-proliferating/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macro-proliferating/ORA.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-proliferating/ORA.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macro-proliferating/ORA.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.FIBROSIS.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.HALLMARK.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CAM.WP.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/CF.LUMA_IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.IVAvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.NO_MOD.SvCF.NO_MOD.M.csv
+    Modified:   output/dge_analysis/macrophages/ORA.GO.CF.NO_MODvNON_CF.CTRL.csv
+    Modified:   output/dge_analysis/macrophages/ORA.HALLMARK.CF.IVAvCF.NO_MOD.csv
+    Modified:   output/dge_analysis/macrophages/ORA.REACTOME.CF.NO_MODvNON_CF.CTRL.csv
 
 </code></pre>
 <p>
@@ -631,7 +875,6 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
 These are the previous versions of the repository in which changes were
 made to the R Markdown
@@ -669,7 +912,41 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://atlassian.petermac.org.au/bitbucket/scm/os/paed-inflammation-citeseq/blob/b8122104f9392ade140a3cee22d3cf189c0630b3/analysis/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd" target="_blank">b812210</a>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/9fe3efb4cd44d643632b1c37d437e0b4cf9e4d4f/analysis/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd" target="_blank">9fe3efb</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2026-04-02
+</td>
+<td>
+wflow_publish("analysis/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Oshlack/paediatric-cf-inflammation-citeseq/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/15.1_proportions_analysis_ann_level_3_non-macrophages.html" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/b8122104f9392ade140a3cee22d3cf189c0630b3/analysis/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd" target="_blank">b812210</a>
 </td>
 <td>
 Jovana Maksimovic
@@ -727,9 +1004,9 @@ seu</code></pre>
 <pre><code>An object of class Seurat 
 19973 features across 29198 samples within 1 assay 
 Active assay: RNA (19973 features, 0 variable features)</code></pre>
-<pre><code>            used   (Mb) gc trigger   (Mb)  max used   (Mb)
-Ncells  11753109  627.7   20174885 1077.5  14082532  752.1
-Vcells 138257994 1054.9  375135597 2862.1 328405239 2505.6</code></pre>
+<pre><code>            used   (Mb) gc trigger   (Mb) limit (Mb)  max used   (Mb)
+Ncells  10038300  536.2   18172217  970.6         NA  13228918  706.6
+Vcells 135352200 1032.7  371646198 2835.5      65536 325508180 2483.5</code></pre>
 </div>
 <div id="analyse-cell-type-proportions" class="section level1">
 <h1>Analyse Cell type proportions</h1>
@@ -2281,6 +2558,43 @@ ggplot(aes(x = sample, y = Freq, fill = clusters)) +
   labs(y = &quot;Proportion&quot;, fill = &quot;Cell Label&quot;) +
   facet_grid(~Group, scales = &quot;free_x&quot;, space = &quot;free_x&quot;)</code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-7-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-7-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="no.-cells-per-sample" class="section level2">
 <h2>No. cells per sample</h2>
@@ -2296,6 +2610,43 @@ ggplot(aes(x = sample.id, y = ncells, fill = Disease)) +
   facet_grid(~Group, scales = &quot;free_x&quot;, space = &quot;free_x&quot;) +
   geom_hline(yintercept = 100, linetype = &quot;dashed&quot;)</code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-8-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-8-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cell-proportions-by-cell-type" class="section level2">
 <h2>Cell proportions by cell type</h2>
@@ -2312,6 +2663,43 @@ ggplot(aes(x = clusters, y = Freq, fill = clusters)) +
   labs(y = &quot;Proportion&quot;) +
   NoLegend()</code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-9-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="explore-sources-of-variation" class="section level1">
@@ -2353,6 +2741,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-10-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>dims &lt;- list(c(1,2), c(2:3), c(3,4), c(4,5))
 p &lt;- vector(&quot;list&quot;, length(dims))
 
@@ -2385,6 +2810,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-11-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cell-proportion-data" class="section level2">
 <h2>Cell proportion data</h2>
@@ -2422,6 +2884,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-12-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>dims &lt;- list(c(1,2), c(2:3), c(3,4), c(4,5))
 p &lt;- vector(&quot;list&quot;, length(dims))
 
@@ -2455,6 +2954,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-13-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>dims &lt;- list(c(1,2), c(2:3), c(3,4), c(4,5))
 p &lt;- vector(&quot;list&quot;, length(dims))
 
@@ -2487,6 +3023,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-14-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>dims &lt;- list(c(1,2), c(2:3), c(3,4), c(4,5))
 p &lt;- vector(&quot;list&quot;, length(dims))
 
@@ -2519,6 +3092,43 @@ for(i in 1:length(dims)){
 wrap_plots(p, cols = 2) + plot_layout(guides = &quot;collect&quot;) &amp;
   theme(legend.position = &quot;bottom&quot;) </code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-15-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="principal-components-versus-traits" class="section level1">
@@ -2534,6 +3144,43 @@ components.</p>
 loadings = PCs$x # pc loadings
 plot(PCs, type=&quot;lines&quot;) # scree plot</code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
+Past versions of unnamed-chunk-16-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-16-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-16-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Collect all of the known sample traits.</p>
 <pre class="r"><code>nGenes = nrow(props$TransformedProps)
 nSamples = ncol(props$TransformedProps)
@@ -3154,6 +3801,43 @@ WGCNA::labeledHeatmap(Matrix = t(moduleTraitCor),
                       zlim = c(-1,1),
                       main = paste(&quot;PCA-trait relationships: Top 10 PCs&quot;))</code></pre>
 <p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-1">
+Past versions of unnamed-chunk-18-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-18-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/Oshlack/paediatric-cf-inflammation-citeseq/blob/7aa5438ae77028c1c3a913f2e8167b87dcd5e9ff/docs/figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-18-1.png" target="_blank">7aa5438</a>
+</td>
+<td>
+Jovana Maksimovic
+</td>
+<td>
+2024-12-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="statistical-analysis-using-propeller-and-limma"
 class="section level1">
@@ -3344,6 +4028,12 @@ Up                         0                0                     0
 Down                         0
 NotSig                      27
 Up                           0</code></pre>
+<p>Save the <code>limma</code> fit object as an RDS object for
+downstream use in plotting, etc.</p>
+<pre class="r"><code># save proportion analysis results
+saveRDS(fit2, file = here(&quot;data&quot;,
+                          &quot;intermediate_objects&quot;,
+                          glue(&quot;prop.ann_level3.non-macrophages.fit.rds&quot;)))</code></pre>
 <div id="results" class="section level2">
 <h2>Results</h2>
 <pre class="r"><code>p &lt;- vector(&quot;list&quot;, ncol(contr))
@@ -3652,7 +4342,7 @@ for(i in 1:ncol(contr)){
 </tr>
 </tbody>
 </table>
-<p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-23-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-24-1.png" width="768" style="display: block; margin: auto;" /></p>
 <table>
 <caption>CF.IVAvCF.NO_MOD</caption>
 <colgroup>
@@ -3921,7 +4611,7 @@ for(i in 1:ncol(contr)){
 </tr>
 </tbody>
 </table>
-<p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-23-2.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-24-2.png" width="768" style="display: block; margin: auto;" /></p>
 <table>
 <caption>CF.LUMA_IVAvCF.NO_MOD</caption>
 <colgroup>
@@ -4190,7 +4880,7 @@ for(i in 1:ncol(contr)){
 </tr>
 </tbody>
 </table>
-<p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-23-3.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-24-3.png" width="768" style="display: block; margin: auto;" /></p>
 <table>
 <caption>CF.NO_MOD.SvCF.NO_MOD.M</caption>
 <colgroup>
@@ -4459,7 +5149,7 @@ for(i in 1:ncol(contr)){
 </tr>
 </tbody>
 </table>
-<p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-23-4.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/15.1_proportions_analysis_ann_level_3_non-macrophages.Rmd/unnamed-chunk-24-4.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="session-info" class="section level1 appendix">
@@ -4473,26 +5163,27 @@ software (click triangle to expand)
 <pre><code>─ Session info ───────────────────────────────────────────────────────────────
  setting  value
  version  R version 4.3.3 (2024-02-29)
- os       Ubuntu 22.04.4 LTS
- system   x86_64, linux-gnu
+ os       macOS 15.5
+ system   aarch64, darwin20
  ui       X11
  language (EN)
- collate  en_AU.UTF-8
- ctype    en_AU.UTF-8
- tz       Etc/UTC
- date     2024-12-31
- pandoc   3.1.1 @ /usr/lib/rstudio-server/bin/quarto/bin/tools/ (via rmarkdown)
+ collate  en_US.UTF-8
+ ctype    en_US.UTF-8
+ tz       Australia/Melbourne
+ date     2026-04-02
+ pandoc   3.6.3 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/aarch64/ (via rmarkdown)
+ quarto   1.8.25 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto
 
 ─ Packages ───────────────────────────────────────────────────────────────────
  ! package              * version    date (UTC) lib source
  P abind                  1.4-5      2016-07-21 [?] RSPM (R 4.3.0)
- P AnnotationDbi        * 1.64.1     2023-11-03 [?] Bioconductor
+ P AnnotationDbi        * 1.64.1     2023-11-02 [?] Bioconductor
  P backports              1.4.1      2021-12-13 [?] RSPM (R 4.3.0)
  P base64enc              0.1-3      2015-07-28 [?] RSPM (R 4.3.0)
- P Biobase              * 2.62.0     2023-10-24 [?] Bioconductor
- P BiocGenerics         * 0.48.1     2023-11-01 [?] Bioconductor
+ P Biobase              * 2.62.0     2023-10-26 [?] Bioconductor
+ P BiocGenerics         * 0.48.1     2023-11-02 [?] Bioconductor
  P BiocManager            1.30.22    2023-08-08 [?] RSPM (R 4.3.0)
- P Biostrings             2.70.2     2024-01-28 [?] Bioconductor 3.18 (R 4.3.3)
+ P Biostrings             2.70.2     2024-01-30 [?] Bioconductor 3.18 (R 4.3.2)
  P bit                    4.0.5      2022-11-15 [?] RSPM (R 4.3.0)
  P bit64                  4.0.5      2020-08-30 [?] RSPM (R 4.3.0)
  P bitops                 1.0-7      2021-04-24 [?] RSPM (R 4.3.0)
@@ -4502,107 +5193,106 @@ software (click triangle to expand)
  P callr                  3.7.3      2022-11-02 [?] RSPM (R 4.3.0)
  P checkmate              2.3.1      2023-12-04 [?] RSPM (R 4.3.0)
  P circlize               0.4.15     2022-05-10 [?] RSPM (R 4.3.0)
- P cli                    3.6.2      2023-12-11 [?] RSPM (R 4.3.0)
+ P cli                    3.6.5      2025-04-23 [?] RSPM
  P clue                   0.3-65     2023-09-23 [?] RSPM (R 4.3.0)
- P cluster                2.1.6      2023-12-01 [?] CRAN (R 4.3.2)
+ P cluster                2.1.6      2023-12-01 [?] CRAN (R 4.3.3)
  P clustree             * 0.5.1      2023-11-05 [?] RSPM (R 4.3.0)
- P codetools              0.2-19     2023-02-01 [?] CRAN (R 4.2.2)
+ P codetools              0.2-19     2023-02-01 [?] CRAN (R 4.3.3)
  P colorspace             2.1-0      2023-01-23 [?] RSPM (R 4.3.0)
- P ComplexHeatmap         2.18.0     2023-10-24 [?] Bioconductor
+ P ComplexHeatmap         2.18.0     2023-10-26 [?] Bioconductor
  P cowplot                1.1.3      2024-01-22 [?] RSPM (R 4.3.0)
  P crayon                 1.5.2      2022-09-29 [?] RSPM (R 4.3.0)
  P data.table             1.15.0     2024-01-30 [?] RSPM (R 4.3.0)
  P DBI                    1.2.1      2024-01-12 [?] RSPM (R 4.3.0)
- P DelayedArray           0.28.0     2023-10-24 [?] Bioconductor
+ P DelayedArray           0.28.0     2023-11-06 [?] Bioconductor
  P deldir                 2.0-2      2023-11-23 [?] RSPM (R 4.3.0)
  P dendextend             1.17.1     2023-03-25 [?] RSPM (R 4.3.0)
  P digest                 0.6.34     2024-01-11 [?] RSPM (R 4.3.0)
- P dittoSeq             * 1.14.2     2024-02-09 [?] Bioconductor 3.18 (R 4.3.3)
+ P dittoSeq             * 1.14.2     2024-02-10 [?] Bioconductor 3.18 (R 4.3.2)
  P doParallel             1.0.17     2022-02-07 [?] RSPM (R 4.3.0)
  P dplyr                * 1.1.4      2023-11-17 [?] RSPM (R 4.3.0)
  P dynamicTreeCut         1.63-1     2016-03-11 [?] RSPM (R 4.3.0)
- P edgeR                * 4.0.15     2024-02-11 [?] Bioconductor 3.18 (R 4.3.3)
+ P edgeR                * 4.0.15     2024-02-10 [?] Bioconductor 3.18 (R 4.3.2)
  P ellipsis               0.3.2      2021-04-29 [?] RSPM (R 4.3.0)
  P evaluate               0.23       2023-11-01 [?] RSPM (R 4.3.0)
  P fansi                  1.0.6      2023-12-08 [?] RSPM (R 4.3.0)
  P farver                 2.1.1      2022-07-06 [?] RSPM (R 4.3.0)
- P fastcluster            1.2.6      2024-01-12 [?] RSPM (R 4.3.0)
+ P fastcluster            1.3.0      2025-05-07 [?] RSPM
  P fastmap                1.1.1      2023-02-24 [?] RSPM (R 4.3.0)
  P fitdistrplus           1.1-11     2023-04-25 [?] RSPM (R 4.3.0)
  P forcats              * 1.0.0      2023-01-29 [?] RSPM (R 4.3.0)
  P foreach                1.5.2      2022-02-02 [?] RSPM (R 4.3.0)
- P foreign                0.8-86     2023-11-28 [?] CRAN (R 4.3.2)
+ P foreign                0.8-86     2023-11-28 [?] CRAN (R 4.3.3)
  P Formula                1.2-5      2023-02-24 [?] RSPM (R 4.3.0)
- P fs                     1.6.3      2023-07-20 [?] RSPM (R 4.3.0)
+ P fs                     1.6.6      2025-04-12 [?] RSPM
  P future                 1.33.1     2023-12-22 [?] RSPM (R 4.3.0)
  P future.apply           1.11.1     2023-12-21 [?] RSPM (R 4.3.0)
  P generics               0.1.3      2022-07-05 [?] RSPM (R 4.3.0)
- P GenomeInfoDb         * 1.38.6     2024-02-08 [?] Bioconductor 3.18 (R 4.3.3)
- P GenomeInfoDbData       1.2.11     2024-04-23 [?] Bioconductor
- P GenomicRanges        * 1.54.1     2023-10-29 [?] Bioconductor
+ P GenomeInfoDb         * 1.38.6     2024-02-10 [?] Bioconductor 3.18 (R 4.3.2)
+ P GenomeInfoDbData       1.2.11     2024-02-16 [?] Bioconductor
+ P GenomicRanges        * 1.54.1     2023-10-30 [?] Bioconductor
  P GetoptLong             1.0.5      2020-12-15 [?] RSPM (R 4.3.0)
  P getPass                0.2-4      2023-12-10 [?] RSPM (R 4.3.0)
  P ggforce                0.4.2      2024-02-19 [?] RSPM (R 4.3.0)
- P ggplot2              * 3.5.0      2024-02-23 [?] RSPM (R 4.3.0)
+ P ggplot2              * 3.5.2      2025-04-09 [?] RSPM
  P ggraph               * 2.2.0      2024-02-27 [?] RSPM (R 4.3.0)
  P ggrepel                0.9.5      2024-01-10 [?] RSPM (R 4.3.0)
  P ggridges               0.5.6      2024-01-23 [?] RSPM (R 4.3.0)
  P git2r                  0.33.0     2023-11-26 [?] RSPM (R 4.3.0)
- P glmGamPoi            * 1.14.3     2024-02-11 [?] Bioconductor 3.18 (R 4.3.3)
+ P glmGamPoi            * 1.14.3     2024-02-10 [?] Bioconductor 3.18 (R 4.3.2)
  P GlobalOptions          0.1.2      2020-06-10 [?] RSPM (R 4.3.0)
  P globals                0.16.2     2022-11-21 [?] RSPM (R 4.3.0)
- P glue                 * 1.7.0      2024-01-09 [?] RSPM (R 4.3.0)
- P GO.db                  3.18.0     2024-04-23 [?] Bioconductor
+ P glue                 * 1.8.0      2024-09-30 [?] RSPM
+ P GO.db                  3.18.0     2024-02-21 [?] Bioconductor
  P goftest                1.2-3      2021-10-07 [?] RSPM (R 4.3.0)
  P graphlayouts           1.1.0      2024-01-19 [?] RSPM (R 4.3.0)
  P gridExtra              2.3        2017-09-09 [?] RSPM (R 4.3.0)
- P gtable                 0.3.4      2023-08-21 [?] RSPM (R 4.3.0)
+ P gtable                 0.3.6      2024-10-25 [?] RSPM
  P here                 * 1.0.1      2020-12-13 [?] RSPM (R 4.3.0)
- P highr                  0.10       2022-12-22 [?] RSPM (R 4.3.0)
  P Hmisc                  5.1-1      2023-09-12 [?] RSPM (R 4.3.0)
  P hms                    1.1.3      2023-03-21 [?] RSPM (R 4.3.0)
  P htmlTable              2.4.2      2023-10-29 [?] RSPM (R 4.3.0)
- P htmltools              0.5.7      2023-11-03 [?] RSPM (R 4.3.0)
+ P htmltools              0.5.8.1    2024-04-04 [?] RSPM
  P htmlwidgets            1.6.4      2023-12-06 [?] RSPM (R 4.3.0)
  P httpuv                 1.6.14     2024-01-26 [?] RSPM (R 4.3.0)
  P httr                   1.4.7      2023-08-15 [?] RSPM (R 4.3.0)
  P ica                    1.0-3      2022-07-08 [?] RSPM (R 4.3.0)
  P igraph                 2.0.1.1    2024-01-30 [?] RSPM (R 4.3.0)
- P impute                 1.76.0     2023-10-24 [?] Bioconductor
- P IRanges              * 2.36.0     2023-10-24 [?] Bioconductor
+ P impute                 1.76.0     2023-10-26 [?] Bioconductor
+ P IRanges              * 2.36.0     2023-10-26 [?] Bioconductor
  P irlba                  2.3.5.1    2022-10-03 [?] RSPM (R 4.3.0)
  P iterators              1.0.14     2022-02-05 [?] RSPM (R 4.3.0)
  P jquerylib              0.1.4      2021-04-26 [?] RSPM (R 4.3.0)
  P jsonlite               1.8.8      2023-12-04 [?] RSPM (R 4.3.0)
- P KEGGREST               1.42.0     2023-10-24 [?] Bioconductor
- P KernSmooth             2.23-24    2024-05-17 [?] RSPM (R 4.3.0)
- P knitr                  1.45       2023-10-30 [?] RSPM (R 4.3.0)
+ P KEGGREST               1.42.0     2023-10-26 [?] Bioconductor
+ P KernSmooth             2.23-22    2023-07-10 [?] CRAN (R 4.3.3)
+ P knitr                  1.50       2025-03-16 [?] RSPM
  P labeling               0.4.3      2023-08-29 [?] RSPM (R 4.3.0)
  P later                  1.3.2      2023-12-06 [?] RSPM (R 4.3.0)
- P lattice                0.22-5     2023-10-24 [?] CRAN (R 4.3.1)
+ P lattice                0.22-5     2023-10-24 [?] CRAN (R 4.3.3)
  P lazyeval               0.2.2      2019-03-15 [?] RSPM (R 4.3.0)
  P leiden                 0.4.3.1    2023-11-17 [?] RSPM (R 4.3.0)
  P lifecycle              1.0.4      2023-11-07 [?] RSPM (R 4.3.0)
- P limma                * 3.58.1     2023-10-31 [?] Bioconductor
+ P limma                * 3.58.1     2023-11-02 [?] Bioconductor
  P listenv                0.9.1      2024-01-29 [?] RSPM (R 4.3.0)
  P lmtest                 0.9-40     2022-03-21 [?] RSPM (R 4.3.0)
  P locfit                 1.5-9.8    2023-06-11 [?] RSPM (R 4.3.0)
  P lubridate            * 1.9.3      2023-09-27 [?] RSPM (R 4.3.0)
  P magrittr               2.0.3      2022-03-30 [?] RSPM (R 4.3.0)
- P MASS                   7.3-60.0.1 2024-01-13 [?] RSPM (R 4.3.0)
+ P MASS                   7.3-60.0.1 2024-01-13 [?] CRAN (R 4.3.3)
  P Matrix                 1.6-5      2024-01-11 [?] CRAN (R 4.3.3)
- P MatrixGenerics       * 1.14.0     2023-10-24 [?] Bioconductor
+ P MatrixGenerics       * 1.14.0     2023-10-26 [?] Bioconductor
  P matrixStats          * 1.2.0      2023-12-11 [?] RSPM (R 4.3.0)
  P memoise                2.0.1      2021-11-26 [?] RSPM (R 4.3.0)
  P mime                   0.12       2021-09-28 [?] RSPM (R 4.3.0)
  P miniUI                 0.1.1.1    2018-05-18 [?] RSPM (R 4.3.0)
  P munsell                0.5.0      2018-06-12 [?] RSPM (R 4.3.0)
- P nlme                   3.1-164    2023-11-27 [?] RSPM (R 4.3.0)
- P nnet                   7.3-19     2023-05-03 [?] CRAN (R 4.3.1)
- P org.Hs.eg.db         * 3.18.0     2024-04-23 [?] Bioconductor
+ P nlme                   3.1-164    2023-11-27 [?] CRAN (R 4.3.3)
+ P nnet                   7.3-19     2023-05-03 [?] CRAN (R 4.3.3)
+ P org.Hs.eg.db         * 3.18.0     2024-02-21 [?] Bioconductor
  P paletteer            * 1.6.0      2024-01-21 [?] RSPM (R 4.3.0)
  P parallelly             1.37.0     2024-02-14 [?] RSPM (R 4.3.0)
- P patchwork            * 1.2.0      2024-01-08 [?] RSPM (R 4.3.0)
+ P patchwork            * 1.3.1      2025-06-21 [?] RSPM
  P pbapply                1.7-2      2023-06-27 [?] RSPM (R 4.3.0)
  P pheatmap               1.0.12     2019-01-04 [?] RSPM (R 4.3.0)
  P pillar                 1.9.0      2023-03-22 [?] RSPM (R 4.3.0)
@@ -4611,7 +5301,7 @@ software (click triangle to expand)
  P plyr                   1.8.9      2023-10-02 [?] RSPM (R 4.3.0)
  P png                    0.1-8      2022-11-29 [?] RSPM (R 4.3.0)
  P polyclip               1.10-6     2023-09-27 [?] RSPM (R 4.3.0)
- P preprocessCore         1.64.0     2023-10-24 [?] Bioconductor
+ P preprocessCore         1.64.0     2023-10-26 [?] Bioconductor
  P processx               3.8.3      2023-12-10 [?] RSPM (R 4.3.0)
  P progressr              0.14.0     2023-08-10 [?] RSPM (R 4.3.0)
  P promises               1.2.1      2023-08-10 [?] RSPM (R 4.3.0)
@@ -4625,50 +5315,50 @@ software (click triangle to expand)
  P RCurl                  1.98-1.14  2024-01-09 [?] RSPM (R 4.3.0)
  P readr                * 2.1.5      2024-01-10 [?] RSPM (R 4.3.0)
  P rematch2               2.1.2      2020-05-01 [?] RSPM (R 4.3.0)
-   renv                   1.0.3      2023-09-19 [1] CRAN (R 4.3.3)
+   renv                   1.1.4      2025-03-20 [1] CRAN (R 4.3.3)
  P reshape2               1.4.4      2020-04-09 [?] RSPM (R 4.3.0)
- P reticulate             1.35.0     2024-01-31 [?] RSPM (R 4.3.0)
+ P reticulate             1.42.0     2025-03-25 [?] RSPM
  P rjson                  0.2.21     2022-01-09 [?] RSPM (R 4.3.0)
- P rlang                  1.1.3      2024-01-10 [?] RSPM (R 4.3.0)
- P rmarkdown              2.25       2023-09-18 [?] RSPM (R 4.3.0)
+ P rlang                  1.1.6      2025-04-11 [?] RSPM
+ P rmarkdown              2.29       2024-11-04 [?] RSPM
  P ROCR                   1.0-11     2020-05-02 [?] RSPM (R 4.3.0)
- P rpart                  4.1.23     2023-12-05 [?] RSPM (R 4.3.0)
+ P rpart                  4.1.23     2023-12-05 [?] CRAN (R 4.3.3)
  P rprojroot              2.0.4      2023-11-05 [?] RSPM (R 4.3.0)
  P RSQLite                2.3.5      2024-01-21 [?] RSPM (R 4.3.0)
  P rstudioapi             0.15.0     2023-07-07 [?] RSPM (R 4.3.0)
  P Rtsne                  0.17       2023-12-07 [?] RSPM (R 4.3.0)
- P S4Arrays               1.2.0      2023-10-24 [?] Bioconductor
- P S4Vectors            * 0.40.2     2023-11-23 [?] Bioconductor 3.18 (R 4.3.3)
- P sass                   0.4.8      2023-12-06 [?] RSPM (R 4.3.0)
+ P S4Arrays               1.2.0      2023-10-26 [?] Bioconductor
+ P S4Vectors            * 0.40.2     2023-11-25 [?] Bioconductor 3.18 (R 4.3.2)
+ P sass                   0.4.10     2025-04-11 [?] RSPM
  P scales                 1.3.0      2023-11-28 [?] RSPM (R 4.3.0)
  P scattermore            1.2        2023-06-12 [?] RSPM (R 4.3.0)
-   sctransform            0.4.1      2023-10-19 [1] RSPM (R 4.3.0)
- P sessioninfo            1.2.2      2021-12-06 [?] RSPM (R 4.3.0)
-   Seurat               * 4.4.0      2024-04-25 [1] https://satijalab.r-universe.dev (R 4.3.3)
-   SeuratObject         * 4.1.4      2024-04-25 [1] https://satijalab.r-universe.dev (R 4.3.3)
+ P sctransform            0.4.1      2023-10-19 [?] RSPM (R 4.3.0)
+ P sessioninfo            1.2.3      2025-02-05 [?] RSPM
+ P Seurat               * 4.4.0      2023-09-28 [?] RSPM (R 4.3.2)
+ P SeuratObject         * 4.1.4      2023-09-26 [?] RSPM (R 4.3.2)
  P shape                  1.4.6      2021-05-19 [?] RSPM (R 4.3.0)
  P shiny                  1.8.0      2023-11-17 [?] RSPM (R 4.3.0)
- P SingleCellExperiment * 1.24.0     2023-10-24 [?] Bioconductor
+ P SingleCellExperiment * 1.24.0     2023-11-06 [?] Bioconductor
  P sp                     2.1-3      2024-01-30 [?] RSPM (R 4.3.0)
- P SparseArray            1.2.4      2024-02-11 [?] Bioconductor 3.18 (R 4.3.3)
+ P SparseArray            1.2.4      2024-02-10 [?] Bioconductor 3.18 (R 4.3.2)
  P spatstat.data          3.0-4      2024-01-15 [?] RSPM (R 4.3.0)
  P spatstat.explore       3.2-6      2024-02-01 [?] RSPM (R 4.3.0)
  P spatstat.geom          3.2-8      2024-01-26 [?] RSPM (R 4.3.0)
  P spatstat.random        3.2-2      2023-11-29 [?] RSPM (R 4.3.0)
  P spatstat.sparse        3.0-3      2023-10-24 [?] RSPM (R 4.3.0)
  P spatstat.utils         3.0-4      2023-10-24 [?] RSPM (R 4.3.0)
- P speckle              * 1.2.0      2023-10-24 [?] Bioconductor
+ P speckle              * 1.2.0      2023-10-26 [?] Bioconductor
  P statmod                1.5.0      2023-01-06 [?] RSPM (R 4.3.0)
  P stringi                1.8.3      2023-12-11 [?] RSPM (R 4.3.0)
  P stringr              * 1.5.1      2023-11-14 [?] RSPM (R 4.3.0)
- P SummarizedExperiment * 1.32.0     2023-10-24 [?] Bioconductor
- P survival               3.7-0      2024-06-05 [?] RSPM (R 4.3.0)
+ P SummarizedExperiment * 1.32.0     2023-11-06 [?] Bioconductor
+ P survival               3.5-8      2024-02-14 [?] CRAN (R 4.3.3)
  P tensor                 1.5        2012-05-05 [?] RSPM (R 4.3.0)
  P tibble               * 3.2.1      2023-03-20 [?] RSPM (R 4.3.0)
  P tidygraph              1.3.1      2024-01-30 [?] RSPM (R 4.3.0)
- P tidyHeatmap          * 1.8.1      2022-05-20 [?] RSPM (R 4.3.3)
+ P tidyHeatmap          * 1.8.1      2022-05-20 [?] RSPM (R 4.3.2)
  P tidyr                * 1.3.1      2024-01-24 [?] RSPM (R 4.3.0)
- P tidyselect             1.2.0      2022-10-10 [?] RSPM (R 4.3.0)
+ P tidyselect             1.2.1      2024-03-11 [?] RSPM
  P tidyverse            * 2.0.0      2023-02-22 [?] RSPM (R 4.3.0)
  P timechange             0.3.0      2024-01-18 [?] RSPM (R 4.3.0)
  P tweenr                 2.0.3      2024-02-26 [?] RSPM (R 4.3.0)
@@ -4678,20 +5368,21 @@ software (click triangle to expand)
  P vctrs                  0.6.5      2023-12-01 [?] RSPM (R 4.3.0)
  P viridis                0.6.5      2024-01-29 [?] RSPM (R 4.3.0)
  P viridisLite            0.4.2      2023-05-02 [?] RSPM (R 4.3.0)
- P WGCNA                  1.72-5     2023-12-07 [?] RSPM (R 4.3.3)
+ P WGCNA                  1.73       2024-09-18 [?] RSPM
  P whisker                0.4.1      2022-12-05 [?] RSPM (R 4.3.0)
  P withr                  3.0.0      2024-01-16 [?] RSPM (R 4.3.0)
- P workflowr            * 1.7.1      2023-08-23 [?] RSPM (R 4.3.0)
- P xfun                   0.42       2024-02-08 [?] RSPM (R 4.3.0)
+ P workflowr            * 1.7.1      2023-08-23 [?] RSPM (R 4.3.2)
+ P xfun                   0.52       2025-04-02 [?] RSPM
  P xtable                 1.8-4      2019-04-21 [?] RSPM (R 4.3.0)
- P XVector                0.42.0     2023-10-24 [?] Bioconductor
+ P XVector                0.42.0     2023-10-26 [?] Bioconductor
  P yaml                   2.3.8      2023-12-11 [?] RSPM (R 4.3.0)
- P zlibbioc               1.48.0     2023-10-24 [?] Bioconductor
+ P zlibbioc               1.48.0     2023-10-26 [?] Bioconductor
  P zoo                    1.8-12     2023-04-13 [?] RSPM (R 4.3.0)
 
- [1] /mnt/allandata/jovana_data/paed-inflammation-CITEseq/renv/library/R-4.3/x86_64-pc-linux-gnu
- [2] /home/jovana/.cache/R/renv/sandbox/R-4.3/x86_64-pc-linux-gnu/9a444a72
+ [1] /Users/maksimovicjovana/Library/CloudStorage/OneDrive-PeterMac/Desktop/projects/collaborative_research/paediatric-cf-inflammation-citeseq/renv/library/R-4.3/aarch64-apple-darwin20
+ [2] /Users/maksimovicjovana/Library/Caches/org.R-project.R/R/renv/sandbox/R-4.3/aarch64-apple-darwin20/ac5c2659
 
+ * ── Packages attached to the search path.
  P ── Loaded and on-disk path mismatch.
 
 ──────────────────────────────────────────────────────────────────────────────</code></pre>
@@ -4706,23 +5397,18 @@ Session information
 <div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.3.3 (2024-02-29)
-Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 22.04.4 LTS
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS 15.5
 
 Matrix products: default
-BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
-LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
 
 locale:
- [1] LC_CTYPE=en_AU.UTF-8       LC_NUMERIC=C              
- [3] LC_TIME=en_AU.UTF-8        LC_COLLATE=en_AU.UTF-8    
- [5] LC_MONETARY=en_AU.UTF-8    LC_MESSAGES=en_AU.UTF-8   
- [7] LC_PAPER=en_AU.UTF-8       LC_NAME=C                 
- [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-[11] LC_MEASUREMENT=en_AU.UTF-8 LC_IDENTIFICATION=C       
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
-time zone: Etc/UTC
-tzcode source: system (glibc)
+time zone: Australia/Melbourne
+tzcode source: internal
 
 attached base packages:
 [1] stats4    stats     graphics  grDevices datasets  utils     methods  
@@ -4730,8 +5416,8 @@ attached base packages:
 
 other attached packages:
  [1] here_1.0.1                  tidyHeatmap_1.8.1          
- [3] paletteer_1.6.0             patchwork_1.2.0            
- [5] speckle_1.2.0               glue_1.7.0                 
+ [3] paletteer_1.6.0             patchwork_1.3.1            
+ [5] speckle_1.2.0               glue_1.8.0                 
  [7] org.Hs.eg.db_3.18.0         AnnotationDbi_1.64.1       
  [9] clustree_0.5.1              ggraph_2.2.0               
 [11] dittoSeq_1.14.2             glmGamPoi_1.14.3           
@@ -4740,7 +5426,7 @@ other attached packages:
 [17] stringr_1.5.1               dplyr_1.1.4                
 [19] purrr_1.0.2                 readr_2.1.5                
 [21] tidyr_1.3.1                 tibble_3.2.1               
-[23] ggplot2_3.5.0               tidyverse_2.0.0            
+[23] ggplot2_3.5.2               tidyverse_2.0.0            
 [25] edgeR_4.0.15                limma_3.58.1               
 [27] SingleCellExperiment_1.24.0 SummarizedExperiment_1.32.0
 [29] Biobase_2.62.0              GenomicRanges_1.54.1       
@@ -4750,16 +5436,16 @@ other attached packages:
 [37] workflowr_1.7.1            
 
 loaded via a namespace (and not attached):
-  [1] fs_1.6.3                spatstat.sparse_3.0-3   bitops_1.0-7           
+  [1] fs_1.6.6                spatstat.sparse_3.0-3   bitops_1.0-7           
   [4] httr_1.4.7              RColorBrewer_1.1-3      doParallel_1.0.17      
   [7] dynamicTreeCut_1.63-1   backports_1.4.1         tools_4.3.3            
  [10] sctransform_0.4.1       utf8_1.2.4              R6_2.5.1               
  [13] lazyeval_0.2.2          uwot_0.1.16             GetoptLong_1.0.5       
  [16] withr_3.0.0             sp_2.1-3                gridExtra_2.3          
- [19] preprocessCore_1.64.0   progressr_0.14.0        WGCNA_1.72-5           
- [22] cli_3.6.2               spatstat.explore_3.2-6  labeling_0.4.3         
- [25] sass_0.4.8              spatstat.data_3.0-4     ggridges_0.5.6         
- [28] pbapply_1.7-2           foreign_0.8-86          sessioninfo_1.2.2      
+ [19] preprocessCore_1.64.0   progressr_0.14.0        WGCNA_1.73             
+ [22] cli_3.6.5               spatstat.explore_3.2-6  labeling_0.4.3         
+ [25] sass_0.4.10             spatstat.data_3.0-4     ggridges_0.5.6         
+ [28] pbapply_1.7-2           foreign_0.8-86          sessioninfo_1.2.3      
  [31] parallelly_1.37.0       impute_1.76.0           rstudioapi_0.15.0      
  [34] RSQLite_2.3.5           generics_0.1.3          shape_1.4.6            
  [37] ica_1.0-3               spatstat.random_3.2-2   dendextend_1.17.1      
@@ -4769,44 +5455,49 @@ loaded via a namespace (and not attached):
  [49] grid_4.3.3              blob_1.2.4              promises_1.2.1         
  [52] crayon_1.5.2            miniUI_0.1.1.1          lattice_0.22-5         
  [55] cowplot_1.1.3           KEGGREST_1.42.0         pillar_1.9.0           
- [58] knitr_1.45              ComplexHeatmap_2.18.0   rjson_0.2.21           
+ [58] knitr_1.50              ComplexHeatmap_2.18.0   rjson_0.2.21           
  [61] future.apply_1.11.1     codetools_0.2-19        leiden_0.4.3.1         
  [64] getPass_0.2-4           data.table_1.15.0       vctrs_0.6.5            
- [67] png_0.1-8               gtable_0.3.4            rematch2_2.1.2         
- [70] cachem_1.0.8            xfun_0.42               S4Arrays_1.2.0         
- [73] mime_0.12               tidygraph_1.3.1         survival_3.7-0         
+ [67] png_0.1-8               gtable_0.3.6            rematch2_2.1.2         
+ [70] cachem_1.0.8            xfun_0.52               S4Arrays_1.2.0         
+ [73] mime_0.12               tidygraph_1.3.1         survival_3.5-8         
  [76] pheatmap_1.0.12         iterators_1.0.14        statmod_1.5.0          
  [79] ellipsis_0.3.2          fitdistrplus_1.1-11     ROCR_1.0-11            
  [82] nlme_3.1-164            bit64_4.0.5             RcppAnnoy_0.0.22       
  [85] rprojroot_2.0.4         bslib_0.6.1             irlba_2.3.5.1          
- [88] rpart_4.1.23            KernSmooth_2.23-24      Hmisc_5.1-1            
+ [88] rpart_4.1.23            KernSmooth_2.23-22      Hmisc_5.1-1            
  [91] colorspace_2.1-0        DBI_1.2.1               nnet_7.3-19            
- [94] tidyselect_1.2.0        processx_3.8.3          bit_4.0.5              
+ [94] tidyselect_1.2.1        processx_3.8.3          bit_4.0.5              
  [97] compiler_4.3.3          git2r_0.33.0            htmlTable_2.4.2        
 [100] DelayedArray_0.28.0     plotly_4.10.4           checkmate_2.3.1        
 [103] scales_1.3.0            lmtest_0.9-40           callr_3.7.3            
 [106] digest_0.6.34           goftest_1.2-3           spatstat.utils_3.0-4   
-[109] rmarkdown_2.25          XVector_0.42.0          base64enc_0.1-3        
-[112] htmltools_0.5.7         pkgconfig_2.0.3         highr_0.10             
-[115] fastmap_1.1.1           rlang_1.1.3             GlobalOptions_0.1.2    
-[118] htmlwidgets_1.6.4       shiny_1.8.0             farver_2.1.1           
-[121] jquerylib_0.1.4         zoo_1.8-12              jsonlite_1.8.8         
-[124] RCurl_1.98-1.14         magrittr_2.0.3          Formula_1.2-5          
-[127] GenomeInfoDbData_1.2.11 munsell_0.5.0           Rcpp_1.0.12            
-[130] viridis_0.6.5           reticulate_1.35.0       stringi_1.8.3          
-[133] zlibbioc_1.48.0         MASS_7.3-60.0.1         plyr_1.8.9             
-[136] parallel_4.3.3          listenv_0.9.1           ggrepel_0.9.5          
-[139] deldir_2.0-2            Biostrings_2.70.2       graphlayouts_1.1.0     
-[142] splines_4.3.3           tensor_1.5              hms_1.1.3              
-[145] circlize_0.4.15         locfit_1.5-9.8          ps_1.7.6               
-[148] fastcluster_1.2.6       igraph_2.0.1.1          spatstat.geom_3.2-8    
-[151] reshape2_1.4.4          evaluate_0.23           renv_1.0.3             
-[154] BiocManager_1.30.22     tzdb_0.4.0              foreach_1.5.2          
-[157] tweenr_2.0.3            httpuv_1.6.14           RANN_2.6.1             
-[160] polyclip_1.10-6         future_1.33.1           clue_0.3-65            
-[163] scattermore_1.2         ggforce_0.4.2           xtable_1.8-4           
-[166] later_1.3.2             viridisLite_0.4.2       memoise_2.0.1          
-[169] cluster_2.1.6           timechange_0.3.0        globals_0.16.2         </code></pre>
+[109] rmarkdown_2.29          XVector_0.42.0          base64enc_0.1-3        
+[112] htmltools_0.5.8.1       pkgconfig_2.0.3         fastmap_1.1.1          
+[115] rlang_1.1.6             GlobalOptions_0.1.2     htmlwidgets_1.6.4      
+[118] shiny_1.8.0             farver_2.1.1            jquerylib_0.1.4        
+[121] zoo_1.8-12              jsonlite_1.8.8          RCurl_1.98-1.14        
+[124] magrittr_2.0.3          Formula_1.2-5           GenomeInfoDbData_1.2.11
+[127] munsell_0.5.0           Rcpp_1.0.12             viridis_0.6.5          
+[130] reticulate_1.42.0       stringi_1.8.3           zlibbioc_1.48.0        
+[133] MASS_7.3-60.0.1         plyr_1.8.9              parallel_4.3.3         
+[136] listenv_0.9.1           ggrepel_0.9.5           deldir_2.0-2           
+[139] Biostrings_2.70.2       graphlayouts_1.1.0      splines_4.3.3          
+[142] tensor_1.5              hms_1.1.3               circlize_0.4.15        
+[145] locfit_1.5-9.8          ps_1.7.6                igraph_2.0.1.1         
+[148] fastcluster_1.3.0       spatstat.geom_3.2-8     reshape2_1.4.4         
+[151] evaluate_0.23           renv_1.1.4              BiocManager_1.30.22    
+[154] tzdb_0.4.0              foreach_1.5.2           tweenr_2.0.3           
+[157] httpuv_1.6.14           RANN_2.6.1              polyclip_1.10-6        
+[160] future_1.33.1           clue_0.3-65             scattermore_1.2        
+[163] ggforce_0.4.2           xtable_1.8-4            later_1.3.2            
+[166] viridisLite_0.4.2       memoise_2.0.1           cluster_2.1.6          
+[169] timechange_0.3.0        globals_0.16.2         </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 
